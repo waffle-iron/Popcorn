@@ -180,7 +180,7 @@ namespace Popcorn.Migrations
                 c => new
                     {
                         Id = c.Int(nullable: false, identity: true),
-                        Version = c.String(maxLength: 4000),
+                        CreatedOn = c.DateTime(nullable: false),
                     })
                 .PrimaryKey(t => t.Id);
             
