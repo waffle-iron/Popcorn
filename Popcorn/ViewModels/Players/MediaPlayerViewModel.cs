@@ -22,26 +22,6 @@ namespace Popcorn.ViewModels.Players
 
         #region Commands
 
-        #region Command -> ChangeScreenModeCommand
-
-        private RelayCommand _changeScreenModeCommand;
-
-        /// <summary>
-        /// Command used to change screen mode (fullscreen or boxed)
-        /// </summary>
-        public RelayCommand ChangeScreenModeCommand
-        {
-            get
-            {
-                return _changeScreenModeCommand ??
-                       (_changeScreenModeCommand =
-                           new RelayCommand(
-                               () => Main.IsFullScreen = !Main.IsFullScreen));
-            }
-        }
-
-        #endregion
-
         #region Command -> StopPlayingMediaCommand
 
         /// <summary>

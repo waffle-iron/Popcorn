@@ -78,29 +78,29 @@ namespace Popcorn.UserControls.Players.Trailer
                 }
 
                 var vm = DataContext as TrailerPlayerViewModel;
-                if (vm == null)
-                    return;
+                if (vm != null)
+                {
+                    if (vm.Trailer.Uri == null)
+                        return;
 
-                if (vm.Trailer.Uri == null)
-                    return;
+                    // start the timer used to report time on MediaPlayerSliderProgress
+                    MediaPlayerTimer = new DispatcherTimer {Interval = TimeSpan.FromSeconds(1)};
+                    MediaPlayerTimer.Tick += MediaPlayerTimerTick;
+                    MediaPlayerTimer.Start();
 
-                // start the timer used to report time on MediaPlayerSliderProgress
-                MediaPlayerTimer = new DispatcherTimer {Interval = TimeSpan.FromSeconds(1)};
-                MediaPlayerTimer.Tick += MediaPlayerTimerTick;
-                MediaPlayerTimer.Start();
+                    // start the activity timer used to manage visibility of the PlayerStatusBar
+                    ActivityTimer = new DispatcherTimer {Interval = TimeSpan.FromSeconds(3)};
+                    ActivityTimer.Tick += OnInactivity;
+                    ActivityTimer.Start();
 
-                // start the activity timer used to manage visibility of the PlayerStatusBar
-                ActivityTimer = new DispatcherTimer {Interval = TimeSpan.FromSeconds(3)};
-                ActivityTimer.Tick += OnInactivity;
-                ActivityTimer.Start();
+                    InputManager.Current.PreProcessInput += OnActivity;
 
-                InputManager.Current.PreProcessInput += OnActivity;
+                    vm.StoppedPlayingMedia += OnStoppedPlayingMedia;
+                    Player.VlcMediaPlayer.EndReached += MediaPlayerEndReached;
 
-                vm.StoppedPlayingMedia += OnStoppedPlayingMedia;
-                Player.VlcMediaPlayer.EndReached += MediaPlayerEndReached;
-
-                Player.LoadMedia(vm.Trailer.Uri);
-                PlayMedia();
+                    Player.LoadMedia(vm.Trailer.Uri);
+                    PlayMedia();
+                }
             }
         }
 

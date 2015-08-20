@@ -284,7 +284,6 @@
       <SubType>Component</SubType>
     </Compile>
     <Compile Include="Messaging\ChangeLanguageMessage.cs" />
-    <Compile Include="Messaging\LoginMessage.cs" />
     <Compile Include="Messaging\ManageExceptionMessage.cs" />
     <Compile Include="Messaging\DownloadMovieMessage.cs" />
     <Compile Include="Messaging\LoadMovieMessage.cs" />
@@ -415,7 +414,6 @@
     <Compile Include="ViewModels\Settings\SettingsViewModel.cs" />
     <Compile Include="ViewModels\Tabs\SeenTabViewModel.cs" />
     <Compile Include="ViewModels\Trailer\TrailerViewModel.cs" />
-    <Compile Include="ViewModels\User\UserViewModel.cs" />
     <Compile Include="ViewModels\ViewModelLocator.cs" />
     <Compile Include="ViewModels\Tabs\TabsViewModel.cs" />
     <Page Include="Controls\CapitalizeText.xaml">

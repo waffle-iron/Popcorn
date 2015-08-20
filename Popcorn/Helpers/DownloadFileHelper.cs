@@ -90,7 +90,7 @@ namespace Popcorn.Helpers
                     }
                     catch (ObjectDisposedException)
                     {
-                        //TODO:Manage the disposed client when cancel async
+                        Logger.Info($"DownloadFileTaskAsync (can't cancel download, it has finished previously): {remotePath}");
                     }
 
                     watch.Stop();

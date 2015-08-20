@@ -92,6 +92,7 @@ namespace Popcorn.ViewModels.Tabs
                     LastPage = Page;
 
                 IsLoadingMovies = false;
+                CurrentNumberOfMovies = Movies.Count();
 
                 await MovieHistoryService.ComputeMovieHistoryAsync(movies);
                 await MovieService.DownloadCoverImageAsync(movies);

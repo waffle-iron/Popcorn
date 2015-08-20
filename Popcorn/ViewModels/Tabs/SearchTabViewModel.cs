@@ -110,7 +110,7 @@ namespace Popcorn.ViewModels.Tabs
 
             SearchFilter = searchFilter;
             Page++;
-            var lastPage = int.MaxValue;
+            int lastPage;
             if (!LastPageFilterMapping.ContainsKey(searchFilter) ||
                 (LastPageFilterMapping.TryGetValue(searchFilter, out lastPage) && Page < lastPage))
             {
@@ -132,6 +132,7 @@ namespace Popcorn.ViewModels.Tabs
                     }
 
                     IsLoadingMovies = false;
+                    CurrentNumberOfMovies = Movies.Count();
 
                     await MovieHistoryService.ComputeMovieHistoryAsync(movies);
                     await MovieService.DownloadCoverImageAsync(movies);

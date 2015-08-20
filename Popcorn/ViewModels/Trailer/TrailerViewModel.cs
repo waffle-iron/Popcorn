@@ -164,14 +164,13 @@ namespace Popcorn.ViewModels.Trailer
 
                     if (video == null)
                     {
-                        // TODO: Inform loading trailer failed
+                        Messenger.Default.Send(new ManageExceptionMessage(new Exception(LocalizationProviderHelper.GetLocalizedValue<string>("TrailerNotAvailable"))));
                         Messenger.Default.Send(new StopPlayingTrailerMessage());
                         return;
                     }
 
                     if (!ct.IsCancellationRequested)
                     {
-                        // Inform we have loaded trailer successfully
                         TrailerPlayer = new TrailerPlayerViewModel(new Models.Trailer.Trailer(new Uri(video.DownloadUrl)));
                     }
                 }

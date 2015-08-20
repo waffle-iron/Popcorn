@@ -338,7 +338,7 @@ namespace Popcorn.Services.Movie
         /// </summary>
         /// <param name="id">Movie's id</param>
         /// <returns>Movie searched by movie id</returns>
-        public async Task<MovieShort> GetMovieById(int id)
+        private static async Task<MovieShort> GetMovieById(int id)
         {
             var watch = Stopwatch.StartNew();
 

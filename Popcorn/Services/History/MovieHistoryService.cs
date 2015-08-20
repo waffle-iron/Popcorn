@@ -145,7 +145,7 @@ namespace Popcorn.Services.History
         /// Set the movie as favorite
         /// </summary>
         /// <param name="movie">Favorite movie</param>
-        public async Task SetFavoriteMovieAsync(MovieShort movie)
+        public static async Task SetFavoriteMovieAsync(MovieShort movie)
         {
             await Task.Run(async () =>
             {
@@ -266,7 +266,7 @@ namespace Popcorn.Services.History
                 var userData = await context.MovieHistory.FirstOrDefaultAsync();
                 if (userData == null)
                 {
-                    context.MovieHistory.AddOrUpdate(new Entity.Movie.MovieHistory
+                    context.MovieHistory.AddOrUpdate(new MovieHistory
                     {
                         Created = DateTime.Now,
                         MoviesShort = new List<Entity.Movie.MovieShort>(),

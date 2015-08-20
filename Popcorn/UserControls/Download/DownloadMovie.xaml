@@ -201,7 +201,7 @@
                        Grid.Row="2" Grid.ColumnSpan="3" Grid.Column="1" HorizontalAlignment="Center" VerticalAlignment="Center">
                 <customControls:DownloadMovieProgress DownloadProgress="{Binding MovieDownloadProgress}"
                                                       DownloadRate="{Binding MovieDownloadRate}"
-                                                      MovieTitle="{Binding Movie.Title}"></customControls:DownloadMovieProgress>
+                                                      MovieTitle="{Binding Movie.Title}"/>
             </Label>
             <controls:MetroProgressBar x:Name="BufferingMovieProgressBar"
                                        Minimum="0.0"

@@ -1,5 +1,4 @@
 ﻿using System.Windows;
-using Popcorn.Helpers;
 
 namespace Popcorn.Controls
 {

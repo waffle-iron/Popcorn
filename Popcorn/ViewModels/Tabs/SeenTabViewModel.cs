@@ -89,11 +89,10 @@ namespace Popcorn.ViewModels.Tabs
             }
 
             IsLoadingMovies = false;
-            await MovieService.DownloadCoverImageAsync(moviesToAdd);
-
             IsMovieFound = Movies.Any();
             CurrentNumberOfMovies = Movies.Count();
             MaxNumberOfMovies = movies.Count();
+            await MovieService.DownloadCoverImageAsync(moviesToAdd);
         }
 
         #endregion

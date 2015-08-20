@@ -74,6 +74,11 @@ namespace Popcorn.ViewModels
                 SimpleIoc.Default.Unregister<MovieService>();
             }
 
+            if (SimpleIoc.Default.IsRegistered<MovieHistoryService>())
+            {
+                SimpleIoc.Default.Unregister<MovieHistoryService>();
+            }
+
             if (SimpleIoc.Default.IsRegistered<ApplicationSettingsService>())
             {
                 SimpleIoc.Default.Unregister<ApplicationSettingsService>();

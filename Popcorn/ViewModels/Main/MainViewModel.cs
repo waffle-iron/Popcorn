@@ -779,7 +779,7 @@ namespace Popcorn.ViewModels.Main
         /// <returns>Task</returns>
         private async Task Signin(Models.Account.User user)
         {
-            var bearer = await UserService.Signin(user, new CancellationToken());
+            await UserService.Signin(user, new CancellationToken());
         }
 
         #endregion

@@ -92,18 +92,18 @@ namespace Popcorn
                 if (updateInfo.ReleasesToApply.Any())
                 {
                     Logger.Info(
-                        $"A new update has been found!\nCurrently installed version: {updateInfo.CurrentlyInstalledVersion?.Version?.Build}. New update: {updateInfo.FutureReleaseEntry?.Version?.Build}");
+                        $"A new update has been found!\n Currently installed version: {updateInfo.CurrentlyInstalledVersion?.Version?.Major}.{updateInfo.CurrentlyInstalledVersion?.Version?.Minor}.{updateInfo.CurrentlyInstalledVersion?.Version?.Build} - New update: {updateInfo.FutureReleaseEntry?.Version?.Major}.{updateInfo.FutureReleaseEntry?.Version?.Minor}.{updateInfo.FutureReleaseEntry?.Version?.Build}");
 
                     await UpdateManager.DownloadReleases(updateInfo.ReleasesToApply, x =>
                     {
                         Logger.Info(
-                            "Downloading new update... {0}%", x);
+                            $"Downloading new update... {x}%");
                     });
 
                     await UpdateManager.ApplyReleases(updateInfo, x =>
                     {
                         Logger.Info(
-                            "Applying... {0}%", x);
+                            $"Applying... {x}%");
                     });
 
                     Logger.Info(
@@ -117,10 +117,10 @@ namespace Popcorn
                     return;
                 }
             }
-            catch (Exception)
+            catch (Exception ex)
             {
                 Logger.Error(
-                    "Something went wrong when trying to update app.");
+                    $"Something went wrong when trying to update app. {ex.Message}");
             }
 
             watchStart.Stop();

@@ -8,7 +8,6 @@ using Popcorn.Models.Movie;
 using GalaSoft.MvvmLight.CommandWpf;
 using Popcorn.Helpers;
 using Popcorn.Messaging;
-using Popcorn.Services.User;
 using GalaSoft.MvvmLight.Ioc;
 using Popcorn.Services.History;
 using Popcorn.Services.Movie;
@@ -28,15 +27,6 @@ namespace Popcorn.ViewModels.Tabs
         /// Services used to interact with movies
         /// </summary>
         protected MovieService MovieService { get; }
-
-        #endregion
-
-        #region Property -> UserService
-
-        /// <summary>
-        /// Services used to interacts with user
-        /// </summary>
-        protected UserService UserService { get; }
 
         #endregion
 
@@ -212,7 +202,6 @@ namespace Popcorn.ViewModels.Tabs
             RegisterCommands();
             CancellationLoadNextPageToken = new CancellationTokenSource();
             MovieService = SimpleIoc.Default.GetInstance<MovieService>();
-            UserService = SimpleIoc.Default.GetInstance<UserService>();
             MovieHistoryService = SimpleIoc.Default.GetInstance<MovieHistoryService>();
             MaxMoviesPerPage = Constants.MaxMoviesPerPage;
         }

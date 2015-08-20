@@ -8,7 +8,6 @@
              lex:ResxLocalizationProvider.DefaultAssembly="Popcorn"
              lex:ResxLocalizationProvider.DefaultDictionary="Resources"
              xmlns:converters="clr-namespace:Popcorn.Converters"
-             xmlns:controls="clr-namespace:MahApps.Metro.Controls;assembly=MahApps.Metro"
              xmlns:trailer="clr-namespace:Popcorn.ViewModels.Trailer"
              xmlns:trailerVm="clr-namespace:Popcorn.ViewModels.Players.Trailer"
              xmlns:trailerUc="clr-namespace:Popcorn.UserControls.Players.Trailer"
@@ -18,7 +17,6 @@
     <UserControl.Resources>
         <ResourceDictionary>
             <converters:RatioConverter x:Key="RatioConverter" />
-            <converters:BoolToInverseVisibilityConverter x:Key="BoolToInverseVisibilityConverter" />
 
             <DataTemplate DataType="{x:Type trailerVm:TrailerPlayerViewModel}">
                 <trailerUc:TrailerPlayer></trailerUc:TrailerPlayer>

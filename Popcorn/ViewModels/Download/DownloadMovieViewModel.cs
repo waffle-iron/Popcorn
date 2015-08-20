@@ -80,16 +80,7 @@ namespace Popcorn.ViewModels.Download
 
         #region Property -> IsMovieBuffered
 
-        private bool _isMovieBuffered;
-
-        /// <summary>
-        /// Specify if a movie is buffered
-        /// </summary>
-        public bool IsMovieBuffered
-        {
-            get { return _isMovieBuffered; }
-            set { Set(() => IsMovieBuffered, ref _isMovieBuffered, value); }
-        }
+        private bool IsMovieBuffered { get; set; }
 
         #endregion
 
@@ -357,7 +348,7 @@ namespace Popcorn.ViewModels.Download
                         }
                     }
                 }
-            });
+            }, ct);
         }
 
         #endregion
