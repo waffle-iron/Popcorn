@@ -34,7 +34,7 @@ namespace Popcorn.Controls
         /// </summary>
         public IEnumerable<string> Genres
         {
-            get { return (IEnumerable<string>)GetValue(GenresProperty); }
+            private get { return (IEnumerable<string>)GetValue(GenresProperty); }
             set { SetValue(GenresProperty, value); }
         }
 

@@ -46,7 +46,7 @@ Temporary Items
 packages/AutoFixture.3.31.3
 packages/AutoFixture.NUnit2.3.31.0
 packages/CommonServiceLocator.1.3
-packages/DeltaCompressionDotNet.2.0.0.0-rc1
+packages/DeltaCompressionDotNet.1.0.0
 packages/Microsoft.Web.Xdt.2.1.1
 packages/Mono.Cecil.0.9.6.1
 packages/MvvmLight.5.1.1.0
@@ -55,8 +55,7 @@ packages/Newtonsoft.Json.7.0.1
 packages/Nuget.Core.2.8.6
 packages/NUnit.2.6.4
 packages/Ragnar.0.6.0
-packages/RestSharp.105.1.0
-packages/RestSharp.105.2.1
+packages/RestSharp.105.2.2
 packages/Splat.1.6.2
 packages/squirrel.windows.0.99.2
 packages/TMDbLib.0.8.3
@@ -86,5 +85,6 @@ Popcorn/Popcorn
 # Sonar folder
 .sonar
 
-# Squirrel package
+# Squirrel
 *.nupkg
+SquirrelTemp/

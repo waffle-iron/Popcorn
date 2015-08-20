@@ -27,12 +27,7 @@ namespace Popcorn.Converters
             System.Globalization.CultureInfo culture)
         {
             var isFullscreen = (bool) value;
-            if (isFullscreen)
-            {
-                return WindowState.Maximized;
-            }
-
-            return WindowState.Normal;
+            return isFullscreen ? WindowState.Maximized : WindowState.Normal;
         }
 
         /// <summary>

@@ -5,33 +5,32 @@ using System.Windows;
 using System.Windows.Input;
 using MahApps.Metro.Controls.Dialogs;
 using System.Collections.Generic;
+using Popcorn.Helpers;
 
 namespace Popcorn.Dialogs
 {
     public class SignupDialogSettings : MetroDialogSettings
     {
-        private const string DefaultTitle = "Signup";
-        private const string DefaultSignupButtonText = "Signup";
-        private const string DefaultMessage = "Connect with your account to access social functionalities of Popcorn.";
-        private const string DefaultUsernameWatermark = "User name...";
-        private const string DefaultFirstNameWatermark = "First name...";
-        private const string DefaultLastNameWatermark = "Last name...";
-        private const string DefaultEmailWatermark = "Email...";
-        private const string DefaultPasswordWatermark = "Password...";
-        private const string DefaultConfirmPasswordWatermark = "Confirm password...";
+        private readonly string _defaultTitle = LocalizationProviderHelper.GetLocalizedValue<string>("SignupLabel");
+        private readonly string _defaultMessage = LocalizationProviderHelper.GetLocalizedValue<string>("SigninMessage");
+        private readonly string _defaultUsernameWatermark = LocalizationProviderHelper.GetLocalizedValue<string>("UserNameWatermark");
+        private readonly string _defaultFirstNameWatermark = LocalizationProviderHelper.GetLocalizedValue<string>("FirstNameWatermark");
+        private readonly string _defaultLastNameWatermark = LocalizationProviderHelper.GetLocalizedValue<string>("LastNameWatermark");
+        private readonly string _defaultEmailWatermark = LocalizationProviderHelper.GetLocalizedValue<string>("EmailWatermark");
+        private readonly string _defaultPasswordWatermark = LocalizationProviderHelper.GetLocalizedValue<string>("PasswordWatermark");
+        private readonly string _defaultConfirmPasswordWatermark = LocalizationProviderHelper.GetLocalizedValue<string>("ConfirmPasswordWatermark");
         private const bool DefaultEnablePasswordPreview = false;
 
         public SignupDialogSettings()
         {
-            Title = DefaultTitle;
-            Message = DefaultMessage;
-            SignupButtonText = DefaultSignupButtonText;
-            UsernameWatermark = DefaultUsernameWatermark;
-            FirstNameWatermark = DefaultFirstNameWatermark;
-            LastNameWatermark = DefaultLastNameWatermark;
-            EmailWatermark = DefaultEmailWatermark;
-            PasswordWatermark = DefaultPasswordWatermark;
-            ConfirmPasswordWatermark = DefaultConfirmPasswordWatermark;
+            Title = _defaultTitle;
+            Message = _defaultMessage;
+            UsernameWatermark = _defaultUsernameWatermark;
+            FirstNameWatermark = _defaultFirstNameWatermark;
+            LastNameWatermark = _defaultLastNameWatermark;
+            EmailWatermark = _defaultEmailWatermark;
+            PasswordWatermark = _defaultPasswordWatermark;
+            ConfirmPasswordWatermark = _defaultConfirmPasswordWatermark;
             EnablePasswordPreview = DefaultEnablePasswordPreview;
         }
 
@@ -73,7 +72,6 @@ namespace Popcorn.Dialogs
             InitializeComponent();
             Message = settings.Message;
             Title = settings.Title;
-            SignupButtonText = settings.SignupButtonText;
             UsernameWatermark = settings.UsernameWatermark;
             FirstNameWatermark = settings.FirstNameWatermark;
             LastNameWatermark = settings.LastNameWatermark;
@@ -133,49 +131,21 @@ namespace Popcorn.Dialogs
 
             escapeKeyHandler = (sender, e) =>
             {
-                if (e.Key == Key.Escape)
-                {
-                    cleanUpHandlers();
+                if (e.Key != Key.Escape) return;
+                cleanUpHandlers();
 
-                    tcs.TrySetResult(null);
-                }
+                tcs.TrySetResult(null);
             };
 
             signupKeyHandler = (sender, e) =>
             {
-                if (e.Key == Key.Enter)
-                {
-                    var isValid = IsUsernameValid(Username)
-                                   && IsEmailValid(Email)
-                                   && IsFirstNameValid(FirstName)
-                                   && IsLastNameValid(LastName)
-                                   && IsPasswordValid(Password)
-                                   && IsConfirmPasswordValid(ConfirmPassword);
-                    if (isValid)
-                    {
-                        cleanUpHandlers();
-
-                        tcs.TrySetResult(new SignupDialogData
-                        {
-                            Username = Username,
-                            FirstName = FirstName,
-                            LastName = LastName,
-                            Email = Email,
-                            Password = Password,
-                            ConfirmPassword = ConfirmPassword
-                        });
-                    }
-                }
-            };
-
-            signupHandler = (sender, e) =>
-            {
+                if (e.Key != Key.Enter) return;
                 var isValid = IsUsernameValid(Username)
-                               && IsEmailValid(Email)
-                               && IsFirstNameValid(FirstName)
-                               && IsLastNameValid(LastName)
-                               && IsPasswordValid(Password)
-                               && IsConfirmPasswordValid(ConfirmPassword);
+                              && IsEmailValid(Email)
+                              && IsFirstNameValid(FirstName)
+                              && IsLastNameValid(LastName)
+                              && IsPasswordValid(Password)
+                              && IsConfirmPasswordValid(ConfirmPassword);
                 if (isValid)
                 {
                     cleanUpHandlers();
@@ -189,18 +159,38 @@ namespace Popcorn.Dialogs
                         Password = Password,
                         ConfirmPassword = ConfirmPassword
                     });
-
-                    e.Handled = true;
                 }
+            };
+
+            signupHandler = (sender, e) =>
+            {
+                var isValid = IsUsernameValid(Username)
+                               && IsEmailValid(Email)
+                               && IsFirstNameValid(FirstName)
+                               && IsLastNameValid(LastName)
+                               && IsPasswordValid(Password)
+                               && IsConfirmPasswordValid(ConfirmPassword);
+                if (!isValid) return;
+                cleanUpHandlers();
+
+                tcs.TrySetResult(new SignupDialogData
+                {
+                    Username = Username,
+                    FirstName = FirstName,
+                    LastName = LastName,
+                    Email = Email,
+                    Password = Password,
+                    ConfirmPassword = ConfirmPassword
+                });
+
+                e.Handled = true;
             };
 
             cancelKeyHandler = (sender, e) =>
             {
-                if (e.Key == Key.Enter)
-                {
-                    cleanUpHandlers();
-                    tcs.TrySetResult(null);
-                }
+                if (e.Key != Key.Enter) return;
+                cleanUpHandlers();
+                tcs.TrySetResult(null);
             };
 
             cancelHandler = (sender, e) =>
@@ -264,8 +254,6 @@ namespace Popcorn.Dialogs
         public static readonly DependencyProperty ConfirmPasswordProperty = DependencyProperty.Register("ConfirmPassword", typeof(string), typeof(SignupDialog), new PropertyMetadata(default(string)));
         public static readonly DependencyProperty PasswordWatermarkProperty = DependencyProperty.Register("PasswordWatermark", typeof(string), typeof(SignupDialog), new PropertyMetadata(default(string)));
         public static readonly DependencyProperty ConfirmPasswordWatermarkProperty = DependencyProperty.Register("ConfirmPasswordWatermark", typeof(string), typeof(SignupDialog), new PropertyMetadata(default(string)));
-        public static readonly DependencyProperty SignupButtonTextProperty = DependencyProperty.Register("SignupButtonText", typeof(string), typeof(SignupDialog), new PropertyMetadata("Signup"));
-        public static readonly DependencyProperty CancelButtonTextProperty = DependencyProperty.Register("CancelButtonText", typeof(string), typeof(SignupDialog), new PropertyMetadata("Cancel"));
 
         public string Message
         {
@@ -343,18 +331,6 @@ namespace Popcorn.Dialogs
         {
             get { return (string)GetValue(ConfirmPasswordWatermarkProperty); }
             set { SetValue(ConfirmPasswordWatermarkProperty, value); }
-        }
-
-        public string SignupButtonText
-        {
-            get { return (string)GetValue(SignupButtonTextProperty); }
-            set { SetValue(SignupButtonTextProperty, value); }
-        }
-
-        public string CancelButtonText
-        {
-            get { return (string)GetValue(CancelButtonTextProperty); }
-            set { SetValue(CancelButtonTextProperty, value); }
         }
 
         // Validates the Username property, updating the errors collection as needed.
@@ -468,12 +444,10 @@ namespace Popcorn.Dialogs
             if (!_errors.ContainsKey(propertyName))
                 _errors[propertyName] = new List<string>();
 
-            if (!_errors[propertyName].Contains(error))
-            {
-                if (isWarning) _errors[propertyName].Add(error);
-                else _errors[propertyName].Insert(0, error);
-                RaiseErrorsChanged(propertyName);
-            }
+            if (_errors[propertyName].Contains(error)) return;
+            if (isWarning) _errors[propertyName].Add(error);
+            else _errors[propertyName].Insert(0, error);
+            RaiseErrorsChanged(propertyName);
         }
 
         // Removes the specified error from the errors collection if it is
@@ -491,8 +465,7 @@ namespace Popcorn.Dialogs
 
         private void RaiseErrorsChanged(string propertyName)
         {
-            if (ErrorsChanged != null)
-                ErrorsChanged(this, new DataErrorsChangedEventArgs(propertyName));
+            ErrorsChanged?.Invoke(this, new DataErrorsChangedEventArgs(propertyName));
         }
 
         #region INotifyDataErrorInfo Members

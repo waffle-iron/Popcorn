@@ -1,8 +1,8 @@
 ﻿using System.Collections.Generic;
 using Newtonsoft.Json;
-using Popcorn.Models.Torrent;
 using GalaSoft.MvvmLight;
 using Popcorn.Models.Cast;
+using Popcorn.Models.Torrent.Deserialized;
 
 namespace Popcorn.Models.Movie.Json
 {
@@ -33,7 +33,7 @@ namespace Popcorn.Models.Movie.Json
         public int Runtime { get; set; }
 
         [JsonProperty("genres")]
-        public IEnumerable<string> Genres;
+        protected IEnumerable<string> Genres;
 
         [JsonProperty("language")]
         public string Language { get; set; }
@@ -63,7 +63,7 @@ namespace Popcorn.Models.Movie.Json
         public string DescriptionIntro { get; set; }
 
         [JsonProperty("description_full")]
-        public string DescriptionFull;
+        protected string DescriptionFull;
 
         [JsonProperty("yt_trailer_code")]
         public string YtTrailerCode { get; set; }

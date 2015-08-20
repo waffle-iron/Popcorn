@@ -220,7 +220,7 @@ namespace Popcorn.Services.Language
         {
             MovieService.ChangeTmdbLanguage(language);
             LocalizeDictionary.Instance.Culture = new CultureInfo(language.Culture);
-            Messenger.Default.Send(new ChangeLanguageMessage(language));
+            Messenger.Default.Send(new ChangeLanguageMessage());
         }
 
         #endregion

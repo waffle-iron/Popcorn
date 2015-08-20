@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using System.Windows.Data;
 
 namespace Popcorn.Converters
@@ -19,14 +20,7 @@ namespace Popcorn.Converters
         public object Convert(object[] values, Type targetType, object parameter,
             System.Globalization.CultureInfo culture)
         {
-            var visible = true;
-            foreach (var value in values)
-            {
-                if (value is bool)
-                {
-                    visible = visible && (bool) value;
-                }
-            }
+            var visible = values.OfType<bool>().Aggregate(true, (current, value) => current && value);
 
             return visible ? System.Windows.Visibility.Visible : System.Windows.Visibility.Collapsed;
         }

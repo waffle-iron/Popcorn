@@ -158,9 +158,8 @@ namespace Popcorn.Helpers
             const string xaml =
                 "<DataTemplate><Border b:TabContent.InternalTabControl=\"{Binding RelativeSource={RelativeSource AncestorType=TabControl}}\" /></DataTemplate>";
 
-            var context = new ParserContext();
+            var context = new ParserContext {XamlTypeMapper = new XamlTypeMapper(new string[0])};
 
-            context.XamlTypeMapper = new XamlTypeMapper(new string[0]);
             context.XamlTypeMapper.AddMappingProcessingInstruction("b", typeof (TabContent).Namespace,
                 typeof (TabContent).Assembly.FullName);
 
@@ -239,7 +238,7 @@ namespace Popcorn.Helpers
 
         private class ContentManager
         {
-            private TabControl _tabControl;
+            private readonly TabControl _tabControl;
             private Decorator _border;
 
             public ContentManager(TabControl tabControl, Decorator border)

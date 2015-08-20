@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using Newtonsoft.Json;
-using Popcorn.Models.Torrent;
 using GalaSoft.MvvmLight;
+using Popcorn.Models.Torrent.Deserialized;
 
 namespace Popcorn.Models.Movie.Json
 {

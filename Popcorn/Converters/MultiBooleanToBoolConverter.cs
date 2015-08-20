@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using System.Windows.Data;
 
 namespace Popcorn.Converters
@@ -19,16 +20,7 @@ namespace Popcorn.Converters
         public object Convert(object[] values, Type targetType, object parameter,
             System.Globalization.CultureInfo culture)
         {
-            var boolean = false;
-            foreach (var value in values)
-            {
-                if (value is bool)
-                {
-                    boolean = boolean || (bool) value;
-                }
-            }
-
-            return boolean;
+            return values.OfType<bool>().Aggregate(false, (current, value) => current || value);
         }
 
         /// <summary>

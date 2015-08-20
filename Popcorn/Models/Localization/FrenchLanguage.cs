@@ -32,7 +32,7 @@ namespace Popcorn.Models.Localization
         /// <summary>
         /// Language's culture
         /// </summary>
-        public string Culture { get; set; }
+        public string Culture { get; }
 
         #endregion
 

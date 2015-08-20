@@ -33,7 +33,7 @@ namespace Popcorn.Controls
         /// </summary>
         public string Text
         {
-            get { return (string)GetValue(TextProperty); }
+            private get { return (string)GetValue(TextProperty); }
             set { SetValue(TextProperty, value); }
         }
 

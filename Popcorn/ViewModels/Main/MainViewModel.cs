@@ -101,10 +101,7 @@ namespace Popcorn.ViewModels.Main
         private bool IsManagingException
         {
             get { return _isManagingException; }
-            set
-            {
-                Set(() => IsManagingException, ref _isManagingException, value);
-            }
+            set { Set(() => IsManagingException, ref _isManagingException, value); }
         }
 
         #endregion
@@ -510,13 +507,9 @@ namespace Popcorn.ViewModels.Main
                 {
                     // Remove the movie tab
                     MoviePlayerViewModel moviePlayer = null;
-                    foreach (var tab in Tabs)
+                    foreach (var mediaViewModel in Tabs.OfType<MoviePlayerViewModel>())
                     {
-                        var mediaViewModel = tab as MoviePlayerViewModel;
-                        if (mediaViewModel != null)
-                        {
-                            moviePlayer = mediaViewModel;
-                        }
+                        moviePlayer = mediaViewModel;
                     }
                     if (moviePlayer != null)
                     {
@@ -534,6 +527,8 @@ namespace Popcorn.ViewModels.Main
                 {
                     await SearchMovies(message.Filter);
                 });
+
+            Messenger.Default.Register<NewUpdateMessage>(this, UpdateApplication);
         }
 
         #endregion
@@ -549,21 +544,17 @@ namespace Popcorn.ViewModels.Main
             {
                 if (SelectedTab is GreatestTabViewModel)
                     return;
-                foreach (var tab in Tabs)
+                foreach (var greatestTab in Tabs.OfType<GreatestTabViewModel>())
                 {
-                    var greatestTab = tab as GreatestTabViewModel;
-                    if (greatestTab != null)
-                    {
-                        SelectedTab = greatestTab;
-                        IsGreatestTabSelected = true;
-                        IsPopularTabSelected = false;
-                        IsRecentTabSelected = false;
-                        IsSearchTabSelected = false;
-                        IsFavoritesTabSelected = false;
-                        IsSeenTabSelected = false;
-                        if (SelectedTab.Page == 0)
-                            await SelectedTab.LoadMoviesAsync();
-                    }
+                    SelectedTab = greatestTab;
+                    IsGreatestTabSelected = true;
+                    IsPopularTabSelected = false;
+                    IsRecentTabSelected = false;
+                    IsSearchTabSelected = false;
+                    IsFavoritesTabSelected = false;
+                    IsSeenTabSelected = false;
+                    if (SelectedTab.Page == 0)
+                        await SelectedTab.LoadMoviesAsync();
                 }
             });
 
@@ -571,19 +562,15 @@ namespace Popcorn.ViewModels.Main
             {
                 if (SelectedTab is PopularTabViewModel)
                     return;
-                foreach (var tab in Tabs)
+                foreach (var popularTab in Tabs.OfType<PopularTabViewModel>())
                 {
-                    var popularTab = tab as PopularTabViewModel;
-                    if (popularTab != null)
-                    {
-                        SelectedTab = popularTab;
-                        IsPopularTabSelected = true;
-                        IsGreatestTabSelected = false;
-                        IsRecentTabSelected = false;
-                        IsSearchTabSelected = false;
-                        IsFavoritesTabSelected = false;
-                        IsSeenTabSelected = false;
-                    }
+                    SelectedTab = popularTab;
+                    IsPopularTabSelected = true;
+                    IsGreatestTabSelected = false;
+                    IsRecentTabSelected = false;
+                    IsSearchTabSelected = false;
+                    IsFavoritesTabSelected = false;
+                    IsSeenTabSelected = false;
                 }
             });
 
@@ -591,21 +578,17 @@ namespace Popcorn.ViewModels.Main
             {
                 if (SelectedTab is RecentTabViewModel)
                     return;
-                foreach (var tab in Tabs)
+                foreach (var recentTab in Tabs.OfType<RecentTabViewModel>())
                 {
-                    var recentTab = tab as RecentTabViewModel;
-                    if (recentTab != null)
-                    {
-                        SelectedTab = recentTab;
-                        IsRecentTabSelected = true;
-                        IsGreatestTabSelected = false;
-                        IsPopularTabSelected = false;
-                        IsSearchTabSelected = false;
-                        IsFavoritesTabSelected = false;
-                        IsSeenTabSelected = false;
-                        if (SelectedTab.Page == 0)
-                            await SelectedTab.LoadMoviesAsync();
-                    }
+                    SelectedTab = recentTab;
+                    IsRecentTabSelected = true;
+                    IsGreatestTabSelected = false;
+                    IsPopularTabSelected = false;
+                    IsSearchTabSelected = false;
+                    IsFavoritesTabSelected = false;
+                    IsSeenTabSelected = false;
+                    if (SelectedTab.Page == 0)
+                        await SelectedTab.LoadMoviesAsync();
                 }
             });
 
@@ -613,19 +596,15 @@ namespace Popcorn.ViewModels.Main
             {
                 if (SelectedTab is SearchTabViewModel)
                     return;
-                foreach (var tab in Tabs)
+                foreach (var searchTab in Tabs.OfType<SearchTabViewModel>())
                 {
-                    var searchTab = tab as SearchTabViewModel;
-                    if (searchTab != null)
-                    {
-                        SelectedTab = searchTab;
-                        IsSearchTabSelected = true;
-                        IsGreatestTabSelected = false;
-                        IsPopularTabSelected = false;
-                        IsRecentTabSelected = false;
-                        IsFavoritesTabSelected = false;
-                        IsSeenTabSelected = false;
-                    }
+                    SelectedTab = searchTab;
+                    IsSearchTabSelected = true;
+                    IsGreatestTabSelected = false;
+                    IsPopularTabSelected = false;
+                    IsRecentTabSelected = false;
+                    IsFavoritesTabSelected = false;
+                    IsSeenTabSelected = false;
                 }
             });
 
@@ -633,21 +612,17 @@ namespace Popcorn.ViewModels.Main
             {
                 if (SelectedTab is FavoritesTabViewModel)
                     return;
-                foreach (var tab in Tabs)
+                foreach (var favoritesTab in Tabs.OfType<FavoritesTabViewModel>())
                 {
-                    var favoritesTab = tab as FavoritesTabViewModel;
-                    if (favoritesTab != null)
-                    {
-                        SelectedTab = favoritesTab;
-                        IsFavoritesTabSelected = true;
-                        IsGreatestTabSelected = false;
-                        IsPopularTabSelected = false;
-                        IsRecentTabSelected = false;
-                        IsSearchTabSelected = false;
-                        IsSeenTabSelected = false;
-                        if (SelectedTab.Page == 0)
-                            await SelectedTab.LoadMoviesAsync();
-                    }
+                    SelectedTab = favoritesTab;
+                    IsFavoritesTabSelected = true;
+                    IsGreatestTabSelected = false;
+                    IsPopularTabSelected = false;
+                    IsRecentTabSelected = false;
+                    IsSearchTabSelected = false;
+                    IsSeenTabSelected = false;
+                    if (SelectedTab.Page == 0)
+                        await SelectedTab.LoadMoviesAsync();
                 }
             });
 
@@ -655,21 +630,17 @@ namespace Popcorn.ViewModels.Main
             {
                 if (SelectedTab is SeenTabViewModel)
                     return;
-                foreach (var tab in Tabs)
+                foreach (var seenTab in Tabs.OfType<SeenTabViewModel>())
                 {
-                    var seenTab = tab as SeenTabViewModel;
-                    if (seenTab != null)
-                    {
-                        SelectedTab = seenTab;
-                        IsSeenTabSelected = true;
-                        IsGreatestTabSelected = false;
-                        IsPopularTabSelected = false;
-                        IsRecentTabSelected = false;
-                        IsSearchTabSelected = false;
-                        IsFavoritesTabSelected = false;
-                        if(SelectedTab.Page == 0)
-                            await SelectedTab.LoadMoviesAsync();
-                    }
+                    SelectedTab = seenTab;
+                    IsSeenTabSelected = true;
+                    IsGreatestTabSelected = false;
+                    IsPopularTabSelected = false;
+                    IsRecentTabSelected = false;
+                    IsSearchTabSelected = false;
+                    IsFavoritesTabSelected = false;
+                    if (SelectedTab.Page == 0)
+                        await SelectedTab.LoadMoviesAsync();
                 }
             });
 
@@ -687,20 +658,18 @@ namespace Popcorn.ViewModels.Main
 
                 ViewModelLocator.Cleanup();
 
-                if (Directory.Exists(Constants.MovieDownloads))
+                if (!Directory.Exists(Constants.MovieDownloads)) return;
+                foreach (
+                    var filePath in Directory.GetFiles(Constants.MovieDownloads, "*.*", SearchOption.AllDirectories)
+                    )
                 {
-                    foreach (
-                        var filePath in Directory.GetFiles(Constants.MovieDownloads, "*.*", SearchOption.AllDirectories)
-                        )
+                    try
                     {
-                        try
-                        {
-                            File.Delete(filePath);
-                        }
-                        catch (Exception ex)
-                        {
-                            Logger.Error(ex.Message);
-                        }
+                        File.Delete(filePath);
+                    }
+                    catch (Exception ex)
+                    {
+                        Logger.Error(ex.Message);
                     }
                 }
             });
@@ -708,6 +677,31 @@ namespace Popcorn.ViewModels.Main
             OpenSettingsCommand = new RelayCommand(() => { IsSettingsFlyoutOpen = true; });
 
             InitializeAsyncCommand = new RelayCommand(async () => await InitializeAsync());
+        }
+
+        #endregion
+
+        #region Method -> UpdateApplication
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="msg"></param>
+        private void UpdateApplication(NewUpdateMessage msg)
+        {
+            Task.Run(async () =>
+            {
+                var updateDialog =
+                    new UpdateDialog(
+                        new UpdateDialogSettings(LocalizationProviderHelper.GetLocalizedValue<string>("NewUpdateLabel"),
+                            LocalizationProviderHelper.GetLocalizedValue<string>("NewUpdateDescriptionLabel"),
+                            msg.UpdateDetails));
+                await DialogCoordinator.ShowMetroDialogAsync(this, updateDialog);
+                var updateDialogResult = await updateDialog.WaitForButtonPressAsync();
+                await DialogCoordinator.HideMetroDialogAsync(this, updateDialog);
+
+                msg.CallBack(updateDialogResult.Restart);
+            });
         }
 
         #endregion
@@ -819,7 +813,10 @@ namespace Popcorn.ViewModels.Main
 
             DispatcherHelper.CheckBeginInvokeOnUI(async () =>
             {
-                var exceptionDialog = new ExceptionDialog(new ExceptionDialogSettings(LocalizationProviderHelper.GetLocalizedValue<string>("EmbarrassingError"), exception.Message));
+                var exceptionDialog =
+                    new ExceptionDialog(
+                        new ExceptionDialogSettings(
+                            LocalizationProviderHelper.GetLocalizedValue<string>("EmbarrassingError"), exception.Message));
                 await DialogCoordinator.ShowMetroDialogAsync(this, exceptionDialog);
                 await exceptionDialog.WaitForButtonPressAsync();
                 IsManagingException = false;
@@ -840,28 +837,22 @@ namespace Popcorn.ViewModels.Main
             if (string.IsNullOrEmpty(criteria))
             {
                 // The search filter is empty. We have to find the search tab if any
-                foreach (var tab in Tabs)
+                foreach (var searchTabToRemove in Tabs.OfType<SearchTabViewModel>())
                 {
-                    var searchTab = tab as SearchTabViewModel;
-                    if (searchTab != null)
+                    // The search tab is currently selected in the UI, we have to pick a different selected tab prior deleting
+                    if (searchTabToRemove == SelectedTab)
                     {
-                        // We've found it
-                        var searchTabToRemove = searchTab;
-                        // The search tab is currently selected in the UI, we have to pick a different selected tab prior deleting
-                        if (searchTabToRemove == SelectedTab)
-                        {
-                            SelectedTab = Tabs.FirstOrDefault();
-                        }
-
-                        Tabs.Remove(searchTabToRemove);
-                        searchTabToRemove.Cleanup();
-                        IsMovieSearchActive = false;
-                        IsGreatestTabSelected = false;
-                        IsPopularTabSelected = true;
-                        IsRecentTabSelected = false;
-                        IsSearchTabSelected = false;
-                        return;
+                        SelectedTab = Tabs.FirstOrDefault();
                     }
+
+                    Tabs.Remove(searchTabToRemove);
+                    searchTabToRemove.Cleanup();
+                    IsMovieSearchActive = false;
+                    IsGreatestTabSelected = false;
+                    IsPopularTabSelected = true;
+                    IsRecentTabSelected = false;
+                    IsSearchTabSelected = false;
+                    return;
                 }
             }
             else
@@ -872,21 +863,16 @@ namespace Popcorn.ViewModels.Main
                 IsRecentTabSelected = false;
                 IsSearchTabSelected = true;
 
-                foreach (var tab in Tabs)
+                foreach (var searchTab in Tabs.OfType<SearchTabViewModel>())
                 {
-                    // Looking for a Search tab. If any, search movies with the criteria, and select this tab to be shown in the UI
-                    var searchTab = tab as SearchTabViewModel;
-                    if (searchTab != null)
+                    await searchTab.SearchMoviesAsync(criteria);
+
+                    if (SelectedTab != searchTab)
                     {
-                        await searchTab.SearchMoviesAsync(criteria);
-
-                        if (SelectedTab != searchTab)
-                        {
-                            SelectedTab = searchTab;
-                        }
-
-                        return;
+                        SelectedTab = searchTab;
                     }
+
+                    return;
                 }
 
                 Tabs.Add(new SearchTabViewModel());

@@ -22,18 +22,14 @@ namespace Popcorn.Converters
         /// <returns>CachedImage</returns>
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
-            if (!string.IsNullOrEmpty(value?.ToString()))
-            {
-                var path = value.ToString();
-                var bi = new BitmapImage();
-                bi.BeginInit();
-                bi.UriSource = new Uri(path);
-                bi.CacheOption = BitmapCacheOption.OnLoad;
-                bi.EndInit();
-                return bi;
-            }
-
-            return null;
+            if (string.IsNullOrEmpty(value?.ToString())) return null;
+            var path = value.ToString();
+            var bi = new BitmapImage();
+            bi.BeginInit();
+            bi.UriSource = new Uri(path);
+            bi.CacheOption = BitmapCacheOption.OnLoad;
+            bi.EndInit();
+            return bi;
         }
 
         /// <summary>

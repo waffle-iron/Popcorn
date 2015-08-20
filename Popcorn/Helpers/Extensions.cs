@@ -58,11 +58,9 @@ namespace Popcorn.Helpers
                 else if (!string.IsNullOrEmpty(childName))
                 {
                     var frameworkElement = child as FrameworkElement;
-                    if (frameworkElement != null && frameworkElement.Name == childName)
-                    {
-                        foundChild = (T) child;
-                        break;
-                    }
+                    if (frameworkElement == null || frameworkElement.Name != childName) continue;
+                    foundChild = (T) child;
+                    break;
                 }
                 else
                 {

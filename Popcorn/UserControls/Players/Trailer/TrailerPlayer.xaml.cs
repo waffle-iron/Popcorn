@@ -245,12 +245,10 @@ namespace Popcorn.UserControls.Players.Trailer
         /// <param name="e">EventArgs</param>
         private void MediaPlayerTimerTick(object sender, EventArgs e)
         {
-            if ((Player != null) && (!UserIsDraggingMediaPlayerSlider))
-            {
-                MediaPlayerSliderProgress.Minimum = 0;
-                MediaPlayerSliderProgress.Maximum = Player.Length.TotalSeconds;
-                MediaPlayerSliderProgress.Value = Player.Time.TotalSeconds;
-            }
+            if ((Player == null) || (UserIsDraggingMediaPlayerSlider)) return;
+            MediaPlayerSliderProgress.Minimum = 0;
+            MediaPlayerSliderProgress.Maximum = Player.Length.TotalSeconds;
+            MediaPlayerSliderProgress.Value = Player.Time.TotalSeconds;
         }
 
         #endregion
@@ -264,19 +262,17 @@ namespace Popcorn.UserControls.Players.Trailer
         /// <param name="e">CanExecuteRoutedEventArgs</param>
         private void MediaPlayerPlayCanExecute(object sender, CanExecuteRoutedEventArgs e)
         {
-            if (MediaPlayerStatusBarItemPlay != null && MediaPlayerStatusBarItemPause != null)
+            if (MediaPlayerStatusBarItemPlay == null || MediaPlayerStatusBarItemPause == null) return;
+            e.CanExecute = Player != null;
+            if (MediaPlayerIsPlaying)
             {
-                e.CanExecute = Player != null;
-                if (MediaPlayerIsPlaying)
-                {
-                    MediaPlayerStatusBarItemPlay.Visibility = Visibility.Collapsed;
-                    MediaPlayerStatusBarItemPause.Visibility = Visibility.Visible;
-                }
-                else
-                {
-                    MediaPlayerStatusBarItemPlay.Visibility = Visibility.Visible;
-                    MediaPlayerStatusBarItemPause.Visibility = Visibility.Collapsed;
-                }
+                MediaPlayerStatusBarItemPlay.Visibility = Visibility.Collapsed;
+                MediaPlayerStatusBarItemPause.Visibility = Visibility.Visible;
+            }
+            else
+            {
+                MediaPlayerStatusBarItemPlay.Visibility = Visibility.Visible;
+                MediaPlayerStatusBarItemPause.Visibility = Visibility.Collapsed;
             }
         }
 
@@ -291,19 +287,17 @@ namespace Popcorn.UserControls.Players.Trailer
         /// <param name="e">CanExecuteRoutedEventArgs</param>
         private void MediaPlayerPauseCanExecute(object sender, CanExecuteRoutedEventArgs e)
         {
-            if (MediaPlayerStatusBarItemPlay != null && MediaPlayerStatusBarItemPause != null)
+            if (MediaPlayerStatusBarItemPlay == null || MediaPlayerStatusBarItemPause == null) return;
+            e.CanExecute = MediaPlayerIsPlaying;
+            if (MediaPlayerIsPlaying)
             {
-                e.CanExecute = MediaPlayerIsPlaying;
-                if (MediaPlayerIsPlaying)
-                {
-                    MediaPlayerStatusBarItemPlay.Visibility = Visibility.Collapsed;
-                    MediaPlayerStatusBarItemPause.Visibility = Visibility.Visible;
-                }
-                else
-                {
-                    MediaPlayerStatusBarItemPlay.Visibility = Visibility.Visible;
-                    MediaPlayerStatusBarItemPause.Visibility = Visibility.Collapsed;
-                }
+                MediaPlayerStatusBarItemPlay.Visibility = Visibility.Collapsed;
+                MediaPlayerStatusBarItemPause.Visibility = Visibility.Visible;
+            }
+            else
+            {
+                MediaPlayerStatusBarItemPlay.Visibility = Visibility.Visible;
+                MediaPlayerStatusBarItemPause.Visibility = Visibility.Collapsed;
             }
         }
 
@@ -418,38 +412,36 @@ namespace Popcorn.UserControls.Players.Trailer
         private void OnActivity(object sender, PreProcessInputEventArgs e)
         {
             var inputEventArgs = e.StagingItem.Input;
-            if (inputEventArgs is MouseEventArgs || inputEventArgs is KeyboardEventArgs)
+            if (!(inputEventArgs is MouseEventArgs) && !(inputEventArgs is KeyboardEventArgs)) return;
+            var mouseEventArgs = e.StagingItem.Input as MouseEventArgs;
+
+            // no button is pressed and the position is still the same as the application became inactive
+            if (mouseEventArgs?.LeftButton == MouseButtonState.Released &&
+                mouseEventArgs.RightButton == MouseButtonState.Released &&
+                mouseEventArgs.MiddleButton == MouseButtonState.Released &&
+                mouseEventArgs.XButton1 == MouseButtonState.Released &&
+                mouseEventArgs.XButton2 == MouseButtonState.Released &&
+                InactiveMousePosition == mouseEventArgs.GetPosition(Container))
+                return;
+
+            if (!PlayerStatusBar.Opacity.Equals(0.0))
+                return;
+
+            var opacityAnimation = new DoubleAnimationUsingKeyFrames
             {
-                var mouseEventArgs = e.StagingItem.Input as MouseEventArgs;
-
-                // no button is pressed and the position is still the same as the application became inactive
-                if (mouseEventArgs?.LeftButton == MouseButtonState.Released &&
-                    mouseEventArgs.RightButton == MouseButtonState.Released &&
-                    mouseEventArgs.MiddleButton == MouseButtonState.Released &&
-                    mouseEventArgs.XButton1 == MouseButtonState.Released &&
-                    mouseEventArgs.XButton2 == MouseButtonState.Released &&
-                    InactiveMousePosition == mouseEventArgs.GetPosition(Container))
-                    return;
-
-                if (!PlayerStatusBar.Opacity.Equals(0.0))
-                    return;
-
-                var opacityAnimation = new DoubleAnimationUsingKeyFrames
+                Duration = new Duration(TimeSpan.FromSeconds(0.1)),
+                KeyFrames = new DoubleKeyFrameCollection
                 {
-                    Duration = new Duration(TimeSpan.FromSeconds(0.1)),
-                    KeyFrames = new DoubleKeyFrameCollection
+                    new EasingDoubleKeyFrame(0.0, KeyTime.FromPercent(0)),
+                    new EasingDoubleKeyFrame(1.0, KeyTime.FromPercent(1.0), new PowerEase
                     {
-                        new EasingDoubleKeyFrame(0.0, KeyTime.FromPercent(0)),
-                        new EasingDoubleKeyFrame(1.0, KeyTime.FromPercent(1.0), new PowerEase
-                        {
-                            EasingMode = EasingMode.EaseInOut
-                        })
-                    }
-                };
+                        EasingMode = EasingMode.EaseInOut
+                    })
+                }
+            };
 
-                PlayerStatusBar.BeginAnimation(OpacityProperty, opacityAnimation);
-                PlayerStatusBar.Visibility = Visibility.Visible;
-            }
+            PlayerStatusBar.BeginAnimation(OpacityProperty, opacityAnimation);
+            PlayerStatusBar.Visibility = Visibility.Visible;
         }
 
         #endregion

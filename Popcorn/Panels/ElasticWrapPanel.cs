@@ -34,16 +34,14 @@ namespace Popcorn.Panels
         /// </summary>
         private int _columns;
 
-        public int Columns
+        private int Columns
         {
             get { return _columns; }
             set
             {
-                if (_columns != value)
-                {
-                    _columns = value;
-                    OnNumberOfColumnsChanged(new NumberOfColumnChangedEventArgs(value));
-                }
+                if (_columns == value) return;
+                _columns = value;
+                OnNumberOfColumnsChanged(new NumberOfColumnChangedEventArgs(value));
             }
         }
 
@@ -57,7 +55,6 @@ namespace Popcorn.Panels
         public double DesiredColumnWidth
         {
             private get { return (double) GetValue(DesiredColumnWidthProperty); }
-
             set { SetValue(DesiredColumnWidthProperty, value); }
         }
 
@@ -102,60 +99,55 @@ namespace Popcorn.Panels
         /// <returns>Computed arranged size</returns>
         protected override Size ArrangeOverride(Size finalSize)
         {
-            if (Columns != 0)
+            if (Columns == 0) return base.ArrangeOverride(finalSize);
+            var columnWidth = Math.Floor(finalSize.Width/Columns);
+            var totalHeight = 0.0;
+            var top = 0.0;
+            var rowHeight = 0.0;
+            var overflow = 0.0;
+            var column = 0;
+            var index = 0;
+            var overflowAlreadyCount = false;
+
+            foreach (UIElement child in Children)
             {
-                var columnWidth = Math.Floor(finalSize.Width/Columns);
-                var totalHeight = 0.0;
-                var top = 0.0;
-                var rowHeight = 0.0;
-                var overflow = 0.0;
-                var column = 0;
-                var index = 0;
-                var overflowAlreadyCount = false;
+                // Compute the tile size and position
+                child.Arrange(new Rect(columnWidth*column, top, columnWidth, child.DesiredSize.Height));
+                column++;
+                rowHeight = Children.Count >= Columns
+                    ? Math.Max(rowHeight, child.DesiredSize.Height)
+                    : Math.Min(rowHeight, child.DesiredSize.Height);
+                index++;
 
-                foreach (UIElement child in Children)
+                // Check if the current element is at the end of a row and add an height overflow to get enough space for the next elements of the second row
+                if (column == Columns && Children.Count != index && (Children.Count - index + 1) <= Columns &&
+                    !overflowAlreadyCount)
                 {
-                    // Compute the tile size and position
-                    child.Arrange(new Rect(columnWidth*column, top, columnWidth, child.DesiredSize.Height));
-                    column++;
-                    rowHeight = Children.Count >= Columns
-                        ? Math.Max(rowHeight, child.DesiredSize.Height)
-                        : Math.Min(rowHeight, child.DesiredSize.Height);
-                    index++;
-
-                    // Check if the current element is at the end of a row and add an height overflow to get enough space for the next elements of the second row
-                    if (column == Columns && Children.Count != index && (Children.Count - index + 1) <= Columns &&
-                        !overflowAlreadyCount)
+                    overflow = rowHeight;
+                    totalHeight += rowHeight;
+                    overflowAlreadyCount = true;
+                }
+                else
+                {
+                    if (!overflowAlreadyCount)
                     {
-                        overflow = rowHeight;
                         totalHeight += rowHeight;
-                        overflowAlreadyCount = true;
-                    }
-                    else
-                    {
-                        if (!overflowAlreadyCount)
-                        {
-                            totalHeight += rowHeight;
-                        }
-                    }
-
-                    if (column == Columns)
-                    {
-                        column = 0;
-                        top += rowHeight;
-                        rowHeight = 0;
                     }
                 }
 
-                if (Children.Count >= Columns)
-                {
-                    totalHeight = totalHeight/Columns + overflow;
-                }
-
-                Height = totalHeight;
-                finalSize.Height = totalHeight;
-
+                if (column != Columns) continue;
+                column = 0;
+                top += rowHeight;
+                rowHeight = 0;
             }
+
+            if (Children.Count >= Columns)
+            {
+                totalHeight = totalHeight/Columns + overflow;
+            }
+
+            Height = totalHeight;
+            finalSize.Height = totalHeight;
             return base.ArrangeOverride(finalSize);
         }
 

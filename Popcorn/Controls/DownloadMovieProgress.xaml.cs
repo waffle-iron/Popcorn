@@ -58,7 +58,7 @@ namespace Popcorn.Controls
         /// </summary>
         public double DownloadProgress
         {
-            get { return (double) GetValue(DownloadProgressProperty); }
+            private get { return (double) GetValue(DownloadProgressProperty); }
             set { SetValue(DownloadProgressProperty, value); }
         }
 
@@ -71,7 +71,7 @@ namespace Popcorn.Controls
         /// </summary>
         public double DownloadRate
         {
-            get { return (double) GetValue(DownloadRateProperty); }
+            private get { return (double) GetValue(DownloadRateProperty); }
             set { SetValue(DownloadRateProperty, value); }
         }
 
@@ -84,7 +84,7 @@ namespace Popcorn.Controls
         /// </summary>
         public string MovieTitle
         {
-            get { return (string) GetValue(MovieTitleProperty); }
+            private get { return (string) GetValue(MovieTitleProperty); }
             set { SetValue(MovieTitleProperty, value); }
         }
 
@@ -101,7 +101,7 @@ namespace Popcorn.Controls
         {
             InitializeComponent();
             DisplayText.Text =
-                        $"{LocalizationProviderHelper.GetLocalizedValue<string>("BufferingLabel")} : {Math.Round(DownloadProgress * 50, 0)} % ({DownloadRate} kB/s)";
+                $"{LocalizationProviderHelper.GetLocalizedValue<string>("BufferingLabel")} : {Math.Round(DownloadProgress*50, 0)} % ({DownloadRate} kB/s)";
         }
 
         #endregion
@@ -135,16 +135,9 @@ namespace Popcorn.Controls
             }
             else
             {
-                if (DownloadRate >= 1000)
-                {
-                    DisplayText.Text =
-                        $"{LocalizationProviderHelper.GetLocalizedValue<string>("BufferingLabel")} : {Math.Round(DownloadProgress*50, 0)} % ({DownloadRate/1000} MB/s)";
-                }
-                else
-                {
-                    DisplayText.Text =
-                        $"{LocalizationProviderHelper.GetLocalizedValue<string>("BufferingLabel")} : {Math.Round(DownloadProgress*50, 0)} % ({DownloadRate} kB/s)";
-                }
+                DisplayText.Text = DownloadRate >= 1000
+                    ? $"{LocalizationProviderHelper.GetLocalizedValue<string>("BufferingLabel")} : {Math.Round(DownloadProgress*50, 0)} % ({DownloadRate/1000} MB/s)"
+                    : $"{LocalizationProviderHelper.GetLocalizedValue<string>("BufferingLabel")} : {Math.Round(DownloadProgress*50, 0)} % ({DownloadRate} kB/s)";
             }
         }
 

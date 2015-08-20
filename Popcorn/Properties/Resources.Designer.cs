@@ -97,6 +97,15 @@ namespace Popcorn.Properties {
         }
         
         /// <summary>
+        ///   Recherche une chaîne localisée semblable à Confirm password....
+        /// </summary>
+        public static string ConfirmPasswordWatermark {
+            get {
+                return ResourceManager.GetString("ConfirmPasswordWatermark", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Recherche une chaîne localisée semblable à You seem to have an internet connection error. Please retry..
         /// </summary>
         public static string ConnectionErrorDescriptionPopup {
@@ -151,6 +160,15 @@ namespace Popcorn.Properties {
         }
         
         /// <summary>
+        ///   Recherche une chaîne localisée semblable à Email....
+        /// </summary>
+        public static string EmailWatermark {
+            get {
+                return ResourceManager.GetString("EmailWatermark", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Recherche une chaîne localisée semblable à That&apos;s embarrassing....
         /// </summary>
         public static string EmbarrassingError {
@@ -178,6 +196,15 @@ namespace Popcorn.Properties {
         }
         
         /// <summary>
+        ///   Recherche une chaîne localisée semblable à First name....
+        /// </summary>
+        public static string FirstNameWatermark {
+            get {
+                return ResourceManager.GetString("FirstNameWatermark", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Recherche une chaîne localisée semblable à Greatest.
         /// </summary>
         public static string GreatestTitleTab {
@@ -192,6 +219,24 @@ namespace Popcorn.Properties {
         public static string LanguageLabel {
             get {
                 return ResourceManager.GetString("LanguageLabel", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Recherche une chaîne localisée semblable à Last name....
+        /// </summary>
+        public static string LastNameWatermark {
+            get {
+                return ResourceManager.GetString("LastNameWatermark", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Recherche une chaîne localisée semblable à Label.
+        /// </summary>
+        public static string LaterLabel {
+            get {
+                return ResourceManager.GetString("LaterLabel", resourceCulture);
             }
         }
         
@@ -250,6 +295,33 @@ namespace Popcorn.Properties {
         }
         
         /// <summary>
+        ///   Recherche une chaîne localisée semblable à A new update has been applied. Would you like to restart now?.
+        /// </summary>
+        public static string NewUpdateDescriptionLabel {
+            get {
+                return ResourceManager.GetString("NewUpdateDescriptionLabel", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Recherche une chaîne localisée semblable à New update.
+        /// </summary>
+        public static string NewUpdateLabel {
+            get {
+                return ResourceManager.GetString("NewUpdateLabel", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Recherche une chaîne localisée semblable à Now.
+        /// </summary>
+        public static string NowLabel {
+            get {
+                return ResourceManager.GetString("NowLabel", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Recherche une chaîne localisée semblable à Off.
         /// </summary>
         public static string OffLabel {
@@ -273,6 +345,15 @@ namespace Popcorn.Properties {
         public static string OnLabel {
             get {
                 return ResourceManager.GetString("OnLabel", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Recherche une chaîne localisée semblable à Password....
+        /// </summary>
+        public static string PasswordWatermark {
+            get {
+                return ResourceManager.GetString("PasswordWatermark", resourceCulture);
             }
         }
         
@@ -367,6 +448,33 @@ namespace Popcorn.Properties {
         }
         
         /// <summary>
+        ///   Recherche une chaîne localisée semblable à Signin.
+        /// </summary>
+        public static string SigninLabel {
+            get {
+                return ResourceManager.GetString("SigninLabel", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Recherche une chaîne localisée semblable à Connect with your account to access social functionalities of Popcorn..
+        /// </summary>
+        public static string SigninMessage {
+            get {
+                return ResourceManager.GetString("SigninMessage", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Recherche une chaîne localisée semblable à Signup.
+        /// </summary>
+        public static string SignupLabel {
+            get {
+                return ResourceManager.GetString("SignupLabel", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Recherche une chaîne localisée semblable à Subtitles.
         /// </summary>
         public static string SubtitlesLabel {
@@ -394,11 +502,29 @@ namespace Popcorn.Properties {
         }
         
         /// <summary>
+        ///   Recherche une chaîne localisée semblable à Release informations.
+        /// </summary>
+        public static string UpdateReleasesInformationsLabel {
+            get {
+                return ResourceManager.GetString("UpdateReleasesInformationsLabel", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Recherche une chaîne localisée semblable à Upload limit (kB/s).
         /// </summary>
         public static string UploadLimitLabel {
             get {
                 return ResourceManager.GetString("UploadLimitLabel", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Recherche une chaîne localisée semblable à Username....
+        /// </summary>
+        public static string UsernameWatermark {
+            get {
+                return ResourceManager.GetString("UsernameWatermark", resourceCulture);
             }
         }
         

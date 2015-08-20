@@ -282,7 +282,7 @@ namespace Popcorn.ViewModels.Movie
         /// <param name="movie">The movie to load</param>
         private async Task LoadMovieAsync(MovieShort movie)
         {
-            Messenger.Default.Send(new LoadMovieMessage(movie));
+            Messenger.Default.Send(new LoadMovieMessage());
             IsMovieLoading = true;
             try
             {

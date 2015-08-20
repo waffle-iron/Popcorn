@@ -17,7 +17,6 @@ namespace Popcorn.Controls
 
         public int RatingValue
         {
-            get { return (int) GetValue(RatingValueProperty); }
             set
             {
                 if (value < 0)

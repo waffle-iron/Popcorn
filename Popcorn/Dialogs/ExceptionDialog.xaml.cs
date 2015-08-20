@@ -30,7 +30,7 @@ namespace Popcorn.Dialogs
 
         internal Task WaitForButtonPressAsync()
         {
-            TaskCompletionSource<SigninDialogData> tcs = new TaskCompletionSource<SigninDialogData>();
+            TaskCompletionSource<object> tcs = new TaskCompletionSource<object>();
 
             RoutedEventHandler okHandler = null;
             KeyEventHandler okKeyHandler = null;
@@ -57,22 +57,18 @@ namespace Popcorn.Dialogs
 
             escapeKeyHandler = (sender, e) =>
             {
-                if (e.Key == Key.Escape)
-                {
-                    cleanUpHandlers();
+                if (e.Key != Key.Escape) return;
+                cleanUpHandlers();
 
-                    tcs.TrySetResult(null);
-                }
+                tcs.TrySetResult(null);
             };
 
             okKeyHandler = (sender, e) =>
             {
-                if (e.Key == Key.Enter)
-                {
-                    cleanUpHandlers();
+                if (e.Key != Key.Enter) return;
+                cleanUpHandlers();
 
-                    tcs.TrySetResult(null);
-                }
+                tcs.TrySetResult(null);
             };
 
             okHandler = (sender, e) =>

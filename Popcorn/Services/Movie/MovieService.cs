@@ -299,109 +299,6 @@ namespace Popcorn.Services.Movie
 
         #endregion
 
-        #region Method -> GetMoviesByIdAsync
-
-        /// <summary>
-        /// Get movies by Id
-        /// </summary>
-        /// <param name="ids">Movies' Ids</param>
-        /// <param name="ct">Cancellation token</param>
-        /// <returns>Movies searched by ids</returns>
-        public async Task<IEnumerable<MovieShort>> GetMoviesByIdAsync(IEnumerable<int> ids,
-            CancellationToken ct)
-        {
-            var watch = Stopwatch.StartNew();
-
-            var moviesIds = ids.ToList();
-            var movies = new List<MovieShort>();
-
-            await moviesIds.ForEachAsync(GetMovieById,
-                (id, t) =>
-                {
-                    movies.Add(t);
-                });
-
-            watch.Stop();
-            var elapsedMs = watch.ElapsedMilliseconds;
-            Logger.Debug(
-                $"GetMoviesByIdAsync ({string.Join(";", moviesIds)}) in {elapsedMs} milliseconds.");
-
-            return movies;
-        }
-
-        #endregion
-
-        #region Method -> GetMovieById
-
-        /// <summary>
-        /// Get movie by id
-        /// </summary>
-        /// <param name="id">Movie's id</param>
-        /// <returns>Movie searched by movie id</returns>
-        private static async Task<MovieShort> GetMovieById(int id)
-        {
-            var watch = Stopwatch.StartNew();
-
-            var restClient = new RestClient(Constants.YtsApiEndpoint);
-            var request = new RestRequest("/{segment}", Method.GET);
-            request.AddUrlSegment("segment", "movie_details.json");
-            request.AddParameter("movie_id", id);
-            request.AddParameter("with_cast", true);
-            request.AddParameter("with_images", true);
-
-            var response = await restClient.ExecuteGetTaskAsync(request);
-            if (response.ErrorException != null)
-                Messenger.Default.Send(new ManageExceptionMessage(new WebException(response.ErrorException.Message)));
-
-            var movie = new MovieShort();
-            await Task.Run(() =>
-            {
-                var wrapper = JsonConvert.DeserializeObject<WrapperMovieFullDeserialized>(response.Content);
-                if (wrapper == null)
-                    return;
-
-                var rating = Convert.ToDouble(movie.Rating, CultureInfo.InvariantCulture);
-                rating /= 2.0;
-
-                movie = new MovieShort
-                {
-                    ApiVersion = wrapper.Meta.ApiVersion,
-                    DateUploaded = wrapper.Movie.DateUploaded,
-                    DateUploadedUnix = wrapper.Movie.DateUploadedUnix,
-                    ExecutionTime = wrapper.Meta.ExecutionTime,
-                    Genres = wrapper.Movie.Genres,
-                    Id = wrapper.Movie.Id,
-                    ImdbCode = wrapper.Movie.ImdbCode,
-                    IsFavorite = false,
-                    HasBeenSeen = false,
-                    Language = wrapper.Movie.Language,
-                    MediumCoverImage = wrapper.Movie.Images.MediumCoverImage,
-                    CoverImagePath = string.Empty,
-                    MpaRating = wrapper.Movie.MpaRating,
-                    RatingValue = rating,
-                    Runtime = wrapper.Movie.Runtime,
-                    ServerTime = wrapper.Meta.ServerTime,
-                    ServerTimezone = wrapper.Meta.ServerTimezone,
-                    SmallCoverImage = wrapper.Movie.Images.SmallCoverImage,
-                    State = wrapper.Status,
-                    Title = wrapper.Movie.TitleLong,
-                    TitleLong = wrapper.Movie.TitleLong,
-                    Torrents = wrapper.Movie.Torrents,
-                    Url = wrapper.Movie.Url,
-                    Year = wrapper.Movie.Year
-                };
-            });
-
-            watch.Stop();
-            var elapsedMs = watch.ElapsedMilliseconds;
-            Logger.Debug(
-                $"GetMovieById ({id}) in {elapsedMs} milliseconds.");
-
-            return movie;
-        }
-
-        #endregion
-
         #region Method -> GetMovieFullDetailsAsync
 
         /// <summary>
@@ -551,7 +448,7 @@ namespace Popcorn.Services.Movie
         /// </summary>
         /// <param name="wrapper">Wrapped movies</param>
         /// <returns>List of movies</returns>
-        private static List<MovieShort> GetMoviesListFromWrapper(WrapperMovieShortDeserialized wrapper)
+        private static IEnumerable<MovieShort> GetMoviesListFromWrapper(WrapperMovieShortDeserialized wrapper)
         {
             var movies = new List<MovieShort>();
             foreach (var movie in wrapper.Data.Movies)

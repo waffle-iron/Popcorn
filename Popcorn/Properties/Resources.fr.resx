@@ -234,4 +234,46 @@
   <data name="SeenTitleTab" xml:space="preserve">
     <value>Visionnés</value>
   </data>
+  <data name="NewUpdateDescriptionLabel" xml:space="preserve">
+    <value>Une nouvelle mise à jour a été appliquée. Voulez-vous redémarrer ?</value>
+  </data>
+  <data name="NewUpdateLabel" xml:space="preserve">
+    <value>Nouvelle mise à jour</value>
+  </data>
+  <data name="PasswordWatermark" xml:space="preserve">
+    <value>Mot de passe...</value>
+  </data>
+  <data name="SigninLabel" xml:space="preserve">
+    <value>Se connecter</value>
+  </data>
+  <data name="SigninMessage" xml:space="preserve">
+    <value>Connectez-vous avec votre compte pour accéder aux fonctionnalités sociales de Popcorn.</value>
+  </data>
+  <data name="SignupLabel" xml:space="preserve">
+    <value>S'enregistrer</value>
+  </data>
+  <data name="UsernameWatermark" xml:space="preserve">
+    <value>Nom d'utilisateur...</value>
+  </data>
+  <data name="ConfirmPasswordWatermark" xml:space="preserve">
+    <value>Confirmation du mot de passe...</value>
+  </data>
+  <data name="EmailWatermark" xml:space="preserve">
+    <value>Adresse mail...</value>
+  </data>
+  <data name="FirstNameWatermark" xml:space="preserve">
+    <value>Nom...</value>
+  </data>
+  <data name="LastNameWatermark" xml:space="preserve">
+    <value>Prénom...</value>
+  </data>
+  <data name="LaterLabel" xml:space="preserve">
+    <value>Plus tard</value>
+  </data>
+  <data name="NowLabel" xml:space="preserve">
+    <value>Maintenant</value>
+  </data>
+  <data name="UpdateReleasesInformationsLabel" xml:space="preserve">
+    <value>Nouveautés</value>
+  </data>
 </root>

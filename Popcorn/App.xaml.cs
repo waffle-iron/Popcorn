@@ -3,8 +3,10 @@ using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
+using GalaSoft.MvvmLight.Messaging;
 using GalaSoft.MvvmLight.Threading;
 using NLog;
+using Popcorn.Messaging;
 using Squirrel;
 using WPFLocalizeExtension.Engine;
 
@@ -107,8 +109,19 @@ namespace Popcorn
                     });
 
                     Logger.Info(
-                        "A new update has been applied. Restarting...");
-                    UpdateManager.RestartApp();
+                        "A new update has been applied.");
+
+                    var releaseNotes =
+                        string.Format($"({string.Join("\r\n", updateInfo.FetchReleaseNotes().Select(x => x.Value))})");
+
+                    Messenger.Default.Send(new NewUpdateMessage(restart =>
+                    {
+                        if (!restart) return;
+
+                        Logger.Info(
+                            "Restarting...");
+                        UpdateManager.RestartApp();
+                    }, releaseNotes));
                 }
                 else
                 {

@@ -1,6 +1,4 @@
-﻿using System;
-using System.Windows.Documents;
-using GalaSoft.MvvmLight;
+﻿using GalaSoft.MvvmLight;
 using Newtonsoft.Json;
 
 namespace Popcorn.Models.Subtitle.Json

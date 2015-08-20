@@ -90,10 +90,8 @@ namespace Popcorn.Services.History
                 {
                     await context.MovieHistory.LoadAsync();
                     var movieHistory = await context.MovieHistory.FirstOrDefaultAsync();
-                    foreach (var movie in movieHistory.MoviesShort.Where(p => p.IsFavorite))
-                    {
-                        movies.Add(MovieShortFromEntityToModel(movie));
-                    }
+                    movies.AddRange(movieHistory.MoviesShort.Where(p => p.IsFavorite)
+                        .Select(MovieShortFromEntityToModel));
                 }
             });
 
@@ -123,10 +121,8 @@ namespace Popcorn.Services.History
                 {
                     await context.MovieHistory.LoadAsync();
                     var movieHistory = await context.MovieHistory.FirstOrDefaultAsync();
-                    foreach (var movie in movieHistory.MoviesShort.Where(p => p.HasBeenSeen))
-                    {
-                        movies.Add(MovieShortFromEntityToModel(movie));
-                    }
+                    movies.AddRange(
+                        movieHistory.MoviesShort.Where(p => p.HasBeenSeen).Select(MovieShortFromEntityToModel));
                 }
             });
 
@@ -294,24 +290,20 @@ namespace Popcorn.Services.History
         /// <returns>Short movie model</returns>
         private static MovieShort MovieShortFromEntityToModel(Entity.Movie.MovieShort movie)
         {
-            var torrents = new List<Torrent>();
-            foreach (var torrent in movie.Torrents)
+            var torrents = movie.Torrents.Select(torrent => new Torrent
             {
-                torrents.Add(new Torrent
-                {
-                    DateUploaded = torrent.DateUploaded,
-                    Url = torrent.Url,
-                    Quality = torrent.Quality,
-                    DateUploadedMix = torrent.DateUploadedMix,
-                    Framerate = torrent.Framerate,
-                    Hash = torrent.Hash,
-                    Peers = torrent.Peers,
-                    Resolution = torrent.Resolution,
-                    Seeds = torrent.Seeds,
-                    Size = torrent.Size,
-                    SizeBytes = torrent.SizeBytes
-                });
-            }
+                DateUploaded = torrent.DateUploaded,
+                Url = torrent.Url,
+                Quality = torrent.Quality,
+                DateUploadedMix = torrent.DateUploadedMix,
+                Framerate = torrent.Framerate,
+                Hash = torrent.Hash,
+                Peers = torrent.Peers,
+                Resolution = torrent.Resolution,
+                Seeds = torrent.Seeds,
+                Size = torrent.Size,
+                SizeBytes = torrent.SizeBytes
+            }).ToList();
 
             return new MovieShort
             {
@@ -353,33 +345,25 @@ namespace Popcorn.Services.History
         /// <returns>Short movie entity</returns>
         private static Entity.Movie.MovieShort MovieShortFromModelToEntity(MovieShort movie)
         {
-            var torrents = new List<Entity.Movie.Torrent>();
-            foreach (var torrent in movie.Torrents)
+            var torrents = movie.Torrents.Select(torrent => new Entity.Movie.Torrent
             {
-                torrents.Add(new Entity.Movie.Torrent
-                {
-                    DateUploaded = torrent.DateUploaded,
-                    Url = torrent.Url,
-                    Quality = torrent.Quality,
-                    DateUploadedMix = torrent.DateUploadedMix,
-                    Framerate = torrent.Framerate,
-                    Hash = torrent.Hash,
-                    Peers = torrent.Peers,
-                    Resolution = torrent.Resolution,
-                    Seeds = torrent.Seeds,
-                    Size = torrent.Size,
-                    SizeBytes = torrent.SizeBytes
-                });
-            }
+                DateUploaded = torrent.DateUploaded,
+                Url = torrent.Url,
+                Quality = torrent.Quality,
+                DateUploadedMix = torrent.DateUploadedMix,
+                Framerate = torrent.Framerate,
+                Hash = torrent.Hash,
+                Peers = torrent.Peers,
+                Resolution = torrent.Resolution,
+                Seeds = torrent.Seeds,
+                Size = torrent.Size,
+                SizeBytes = torrent.SizeBytes
+            }).ToList();
 
-            var genres = new List<Genre>();
-            foreach (var genre in movie.Genres)
+            var genres = movie.Genres.Select(genre => new Genre
             {
-                genres.Add(new Genre
-                {
-                    Name = genre
-                });
-            }
+                Name = genre
+            }).ToList();
 
             var movieShort = new Entity.Movie.MovieShort
             {
@@ -423,33 +407,25 @@ namespace Popcorn.Services.History
         /// <returns>Full movie entity</returns>
         private static Entity.Movie.MovieFull MovieFullFromModelToEntity(MovieFull movie)
         {
-            var torrents = new List<Entity.Movie.Torrent>();
-            foreach (var torrent in movie.Torrents)
+            var torrents = movie.Torrents.Select(torrent => new Entity.Movie.Torrent
             {
-                torrents.Add(new Entity.Movie.Torrent
-                {
-                    DateUploaded = torrent.DateUploaded,
-                    Url = torrent.Url,
-                    Quality = torrent.Quality,
-                    DateUploadedMix = torrent.DateUploadedMix,
-                    Framerate = torrent.Framerate,
-                    Hash = torrent.Hash,
-                    Peers = torrent.Peers,
-                    Resolution = torrent.Resolution,
-                    Seeds = torrent.Seeds,
-                    Size = torrent.Size,
-                    SizeBytes = torrent.SizeBytes
-                });
-            }
+                DateUploaded = torrent.DateUploaded,
+                Url = torrent.Url,
+                Quality = torrent.Quality,
+                DateUploadedMix = torrent.DateUploadedMix,
+                Framerate = torrent.Framerate,
+                Hash = torrent.Hash,
+                Peers = torrent.Peers,
+                Resolution = torrent.Resolution,
+                Seeds = torrent.Seeds,
+                Size = torrent.Size,
+                SizeBytes = torrent.SizeBytes
+            }).ToList();
 
-            var genres = new List<Genre>();
-            foreach (var genre in movie.Genres)
+            var genres = movie.Genres.Select(genre => new Genre
             {
-                genres.Add(new Genre
-                {
-                    Name = genre
-                });
-            }
+                Name = genre
+            }).ToList();
 
             var images = new Images
             {
@@ -465,30 +441,22 @@ namespace Popcorn.Services.History
                 MediumScreenshotImage2 = movie.Images.MediumScreenshotImage2
             };
 
-            var actors = new List<Actor>();
-            foreach (var actor in movie.Actors)
+            var actors = movie.Actors.Select(actor => new Actor
             {
-                actors.Add(new Actor
-                {
-                    CharacterName = actor.CharacterName,
-                    MediumImage = actor.MediumImage,
-                    Name = actor.Name,
-                    SmallImage = actor.SmallImage,
-                    SmallImagePath = actor.SmallImagePath
-                });
-            }
+                CharacterName = actor.CharacterName,
+                MediumImage = actor.MediumImage,
+                Name = actor.Name,
+                SmallImage = actor.SmallImage,
+                SmallImagePath = actor.SmallImagePath
+            }).ToList();
 
-            var directors = new List<Director>();
-            foreach (var actor in movie.Directors)
+            var directors = movie.Directors.Select(actor => new Director
             {
-                directors.Add(new Director
-                {
-                    MediumImage = actor.MediumImage,
-                    Name = actor.Name,
-                    SmallImage = actor.SmallImage,
-                    SmallImagePath = actor.SmallImagePath
-                });
-            }
+                MediumImage = actor.MediumImage,
+                Name = actor.Name,
+                SmallImage = actor.SmallImage,
+                SmallImagePath = actor.SmallImagePath
+            }).ToList();
 
             var movieFull = new Entity.Movie.MovieFull
             {

@@ -1,6 +1,6 @@
 ﻿using Newtonsoft.Json;
 
-namespace Popcorn.Models.Torrent
+namespace Popcorn.Models.Torrent.Deserialized
 {
     public class TorrentDeserialized
     {

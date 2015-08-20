@@ -50,7 +50,7 @@ namespace Popcorn.ViewModels.Players.Movie
         public async Task HasSeenMovie()
         {
             await MovieHistoryService.SetHasBeenSeenMovieAsync(Movie);
-            Messenger.Default.Send(new ChangeHasBeenSeenMovieMessage(Movie));
+            Messenger.Default.Send(new ChangeHasBeenSeenMovieMessage());
             Messenger.Default.Send(new StopPlayingMovieMessage());
         }
         #endregion

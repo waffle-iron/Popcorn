@@ -155,8 +155,11 @@ namespace Popcorn.ViewModels.Trailer
                     {
                         if (ex is WebException || ex is VideoNotAvailableException || ex is YoutubeParseException)
                         {
-                            if(ex is VideoNotAvailableException)
-                                Messenger.Default.Send(new ManageExceptionMessage(new Exception(LocalizationProviderHelper.GetLocalizedValue<string>("TrailerNotAvailable"))));
+                            if (ex is VideoNotAvailableException)
+                                Messenger.Default.Send(
+                                    new ManageExceptionMessage(
+                                        new Exception(
+                                            LocalizationProviderHelper.GetLocalizedValue<string>("TrailerNotAvailable"))));
                             Messenger.Default.Send(new StopPlayingTrailerMessage());
                             return;
                         }
@@ -164,14 +167,17 @@ namespace Popcorn.ViewModels.Trailer
 
                     if (video == null)
                     {
-                        Messenger.Default.Send(new ManageExceptionMessage(new Exception(LocalizationProviderHelper.GetLocalizedValue<string>("TrailerNotAvailable"))));
+                        Messenger.Default.Send(
+                            new ManageExceptionMessage(
+                                new Exception(LocalizationProviderHelper.GetLocalizedValue<string>("TrailerNotAvailable"))));
                         Messenger.Default.Send(new StopPlayingTrailerMessage());
                         return;
                     }
 
                     if (!ct.IsCancellationRequested)
                     {
-                        TrailerPlayer = new TrailerPlayerViewModel(new Models.Trailer.Trailer(new Uri(video.DownloadUrl)));
+                        TrailerPlayer =
+                            new TrailerPlayerViewModel(new Models.Trailer.Trailer(new Uri(video.DownloadUrl)));
                     }
                 }
                 catch (WebException e)
@@ -220,31 +226,29 @@ namespace Popcorn.ViewModels.Trailer
         private VideoInfo GetVideoByStreamingQuality(IEnumerable<VideoInfo> videosToProcess,
             Constants.YoutubeStreamingQuality quality)
         {
-            var videos = videosToProcess.ToList(); // Prevent multiple enumeration
-
-            if (quality == Constants.YoutubeStreamingQuality.High)
+            while (true)
             {
-                // Choose high quality Youtube video
-                return videos.OrderByDescending(x => x.Resolution)
-                    .FirstOrDefault();
+                var videos = videosToProcess.ToList(); // Prevent multiple enumeration
+
+                if (quality == Constants.YoutubeStreamingQuality.High)
+                {
+                    // Choose high quality Youtube video
+                    return videos.OrderByDescending(x => x.Resolution).FirstOrDefault();
+                }
+
+                // Pick the video with the requested quality settings
+                var preferredResolutions = StreamingQualityMap[quality];
+
+                var preferredVideos =
+                    videos.Where(info => preferredResolutions.Contains(info.Resolution))
+                        .OrderByDescending(info => info.Resolution);
+
+                var video = preferredVideos.FirstOrDefault();
+
+                if (video != null) return video;
+                videosToProcess = videos;
+                quality = (Constants.YoutubeStreamingQuality) (((int) quality) - 1);
             }
-
-            // Pick the video with the requested quality settings
-            var preferredResolutions = StreamingQualityMap[quality];
-
-            var preferredVideos = videos
-                .Where(info => preferredResolutions.Contains(info.Resolution))
-                .OrderByDescending(info => info.Resolution);
-
-            var video = preferredVideos.FirstOrDefault();
-
-            if (video == null)
-            {
-                // We search for an other video quality if none has been found
-                return GetVideoByStreamingQuality(videos, (Constants.YoutubeStreamingQuality) (((int) quality) - 1));
-            }
-
-            return video;
         }
 
         #endregion
