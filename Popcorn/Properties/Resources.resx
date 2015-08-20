@@ -268,12 +268,12 @@
     <value>Last name...</value>
   </data>
   <data name="LaterLabel" xml:space="preserve">
-    <value>Label</value>
+    <value>Later</value>
   </data>
   <data name="NowLabel" xml:space="preserve">
     <value>Now</value>
   </data>
   <data name="UpdateReleasesInformationsLabel" xml:space="preserve">
-    <value>Release informations</value>
+    <value>Release informations:</value>
   </data>
 </root>

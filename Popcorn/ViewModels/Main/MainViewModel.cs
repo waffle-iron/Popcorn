@@ -4,9 +4,11 @@ using GalaSoft.MvvmLight;
 using GalaSoft.MvvmLight.Messaging;
 using GalaSoft.MvvmLight.CommandWpf;
 using System.Collections.ObjectModel;
+using System.Diagnostics;
 using System.IO;
 using System.Net;
 using System.Net.Sockets;
+using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
 using GalaSoft.MvvmLight.Ioc;
@@ -20,6 +22,8 @@ using Popcorn.Helpers;
 using Popcorn.Services.User;
 using Popcorn.ViewModels.Tabs;
 using Popcorn.ViewModels.Players.Movie;
+using RestSharp.Extensions;
+using Squirrel;
 
 namespace Popcorn.ViewModels.Main
 {
@@ -38,6 +42,15 @@ namespace Popcorn.ViewModels.Main
         #endregion
 
         #region Properties
+
+        #region Property -> UpdateManager
+
+        /// <summary>
+        /// Used to update application
+        /// </summary>
+        private UpdateManager UpdateManager { get; set; }
+
+        #endregion
 
         #region Property -> UserService
 
@@ -461,6 +474,9 @@ namespace Popcorn.ViewModels.Main
         /// <returns>Instance of MainViewModel</returns>
         private async Task InitializeAsync()
         {
+            AppDomain.CurrentDomain.ProcessExit += (sender, args) => UpdateManager.Dispose();
+            UpdateManager = new UpdateManager(Constants.UpdateServerUrl, Constants.ApplicationName);
+
             Tabs.Add(new PopularTabViewModel());
             SelectedTab = Tabs.First();
             await SelectedTab.LoadMoviesAsync();
@@ -474,6 +490,8 @@ namespace Popcorn.ViewModels.Main
             Tabs.Add(new RecentTabViewModel());
             Tabs.Add(new FavoritesTabViewModel());
             Tabs.Add(new SeenTabViewModel());
+
+            await StartUpdateProcessAsync();
         }
 
         #endregion
@@ -529,8 +547,6 @@ namespace Popcorn.ViewModels.Main
                 {
                     await SearchMovies(message.Filter);
                 });
-
-            Messenger.Default.Register<NewUpdateMessage>(this, UpdateApplication);
         }
 
         #endregion
@@ -681,31 +697,6 @@ namespace Popcorn.ViewModels.Main
             OpenSettingsCommand = new RelayCommand(() => { IsSettingsFlyoutOpen = true; });
 
             InitializeAsyncCommand = new RelayCommand(async () => await InitializeAsync());
-        }
-
-        #endregion
-
-        #region Method -> UpdateApplication
-
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="msg"></param>
-        private void UpdateApplication(NewUpdateMessage msg)
-        {
-            Task.Run(async () =>
-            {
-                var updateDialog =
-                    new UpdateDialog(
-                        new UpdateDialogSettings(LocalizationProviderHelper.GetLocalizedValue<string>("NewUpdateLabel"),
-                            LocalizationProviderHelper.GetLocalizedValue<string>("NewUpdateDescriptionLabel"),
-                            msg.UpdateDetails));
-                await DialogCoordinator.ShowMetroDialogAsync(this, updateDialog);
-                var updateDialogResult = await updateDialog.WaitForButtonPressAsync();
-                await DialogCoordinator.HideMetroDialogAsync(this, updateDialog);
-
-                msg.CallBack(updateDialogResult.Restart);
-            });
         }
 
         #endregion
@@ -887,6 +878,101 @@ namespace Popcorn.ViewModels.Main
                     await searchMovieTab.SearchMoviesAsync(criteria);
                 }
             }
+        }
+
+        #endregion
+
+        #region Method -> StartUpdateProcessAsync
+
+        /// <summary>
+        /// Look for update then download and apply if any
+        /// </summary>
+        /// <returns></returns>
+        private async Task StartUpdateProcessAsync()
+        {
+            var watchStart = Stopwatch.StartNew();
+
+            Logger.Info(
+                "Looking for updates...");
+            try
+            {
+                SquirrelAwareApp.HandleEvents(
+                    onInitialInstall: v => UpdateManager.CreateShortcutForThisExe(),
+                    onAppUpdate: v => UpdateManager.CreateShortcutForThisExe(),
+                    onAppUninstall: v => UpdateManager.RemoveShortcutForThisExe());
+
+                var updateInfo = await UpdateManager.CheckForUpdate();
+                if (updateInfo == null)
+                {
+                    Logger.Error(
+                        "Problem while trying to check new updates.");
+                    return;
+                }
+
+                if (updateInfo.ReleasesToApply.Any())
+                {
+                    Logger.Info(
+                        $"A new update has been found!\n Currently installed version: {updateInfo.CurrentlyInstalledVersion?.Version?.Major}.{updateInfo.CurrentlyInstalledVersion?.Version?.Minor}.{updateInfo.CurrentlyInstalledVersion?.Version?.Build} - New update: {updateInfo.FutureReleaseEntry?.Version?.Major}.{updateInfo.FutureReleaseEntry?.Version?.Minor}.{updateInfo.FutureReleaseEntry?.Version?.Build}");
+
+                    await UpdateManager.DownloadReleases(updateInfo.ReleasesToApply, x =>
+                    {
+                        Logger.Info(
+                            $"Downloading new update... {x}%");
+                    });
+
+                    await UpdateManager.ApplyReleases(updateInfo, x =>
+                    {
+                        Logger.Info(
+                            $"Applying... {x}%");
+                    });
+
+                    Logger.Info(
+                        "A new update has been applied.");
+
+                    var releaseInfos = string.Empty;
+                    foreach (var releaseInfo in updateInfo.FetchReleaseNotes())
+                    {
+                        var info = releaseInfo.Value;
+
+                        var pFrom = info.IndexOf("<p>", StringComparison.InvariantCulture) + "<p>".Length;
+                        var pTo = info.LastIndexOf("</p>", StringComparison.InvariantCulture);
+
+                        releaseInfos = string.Concat(releaseInfos, info.Substring(pFrom, pTo - pFrom), Environment.NewLine);
+                    }
+
+                    var updateDialog =
+                        new UpdateDialog(
+                            new UpdateDialogSettings(
+                                LocalizationProviderHelper.GetLocalizedValue<string>("NewUpdateLabel"),
+                                LocalizationProviderHelper.GetLocalizedValue<string>("NewUpdateDescriptionLabel"),
+                                releaseInfos));
+                    await DialogCoordinator.ShowMetroDialogAsync(this, updateDialog);
+                    var updateDialogResult = await updateDialog.WaitForButtonPressAsync();
+                    await DialogCoordinator.HideMetroDialogAsync(this, updateDialog);
+
+                    if (!updateDialogResult.Restart) return;
+
+                    Logger.Info(
+                        "Restarting...");
+                    UpdateManager.RestartApp();
+                }
+                else
+                {
+                    Logger.Info(
+                        "No update available.");
+                    return;
+                }
+            }
+            catch (Exception ex)
+            {
+                Logger.Error(
+                    $"Something went wrong when trying to update app. {ex.Message}");
+            }
+
+            watchStart.Stop();
+            var elapsedStartMs = watchStart.ElapsedMilliseconds;
+            Logger.Info(
+                "Finished looking for updates.", elapsedStartMs);
         }
 
         #endregion

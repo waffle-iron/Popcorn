@@ -232,7 +232,7 @@ namespace Popcorn.Properties {
         }
         
         /// <summary>
-        ///   Recherche une chaîne localisée semblable à Label.
+        ///   Recherche une chaîne localisée semblable à Later.
         /// </summary>
         public static string LaterLabel {
             get {
@@ -502,7 +502,7 @@ namespace Popcorn.Properties {
         }
         
         /// <summary>
-        ///   Recherche une chaîne localisée semblable à Release informations.
+        ///   Recherche une chaîne localisée semblable à Release informations:.
         /// </summary>
         public static string UpdateReleasesInformationsLabel {
             get {
