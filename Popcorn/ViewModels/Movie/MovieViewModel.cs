@@ -7,6 +7,7 @@ using GalaSoft.MvvmLight.Ioc;
 using GalaSoft.MvvmLight.Messaging;
 using System.Threading;
 using System.Threading.Tasks;
+using NLog;
 using Popcorn.Messaging;
 using Popcorn.Models.Movie;
 using Popcorn.Services.Movie;
@@ -20,6 +21,15 @@ namespace Popcorn.ViewModels.Movie
     /// </summary>
     public sealed class MovieViewModel : ViewModelBase
     {
+        #region Logger
+
+        /// <summary>
+        /// Logger of the class
+        /// </summary>
+        private static readonly Logger Logger = LogManager.GetCurrentClassLogger();
+
+        #endregion
+
         #region Properties
 
         #region Property -> MovieService
@@ -207,6 +217,8 @@ namespace Popcorn.ViewModels.Movie
         /// </summary>
         public MovieViewModel()
         {
+            Logger.Debug("Initializing a new instance of MovieViewModel");
+
             RegisterMessages();
             RegisterCommands();
             CancellationLoadingToken = new CancellationTokenSource();
@@ -282,6 +294,9 @@ namespace Popcorn.ViewModels.Movie
         /// <param name="movie">The movie to load</param>
         private async Task LoadMovieAsync(MovieShort movie)
         {
+            Logger.Info(
+                $"Loading movie: {movie.Title}");
+
             Messenger.Default.Send(new LoadMovieMessage());
             IsMovieLoading = true;
             try
@@ -292,9 +307,13 @@ namespace Popcorn.ViewModels.Movie
                 await MovieService.DownloadDirectorImageAsync(Movie);
                 await MovieService.DownloadActorImageAsync(Movie);
                 await MovieService.DownloadBackgroundImageAsync(Movie);
+                Logger.Info(
+                    $"Movie loaded: {movie.Title}");
             }
             catch (Exception ex) when (ex is SocketException || ex is WebException)
             {
+                Logger.Info(
+                    $"Error while loading movie {movie.Title}: {ex.Message}");
                 Messenger.Default.Send(new ManageExceptionMessage(ex));
             }
         }
@@ -308,6 +327,9 @@ namespace Popcorn.ViewModels.Movie
         /// </summary>
         private void StopLoadingMovie()
         {
+            Logger.Debug(
+                "Stop loading movie");
+
             IsMovieLoading = false;
             CancellationLoadingToken?.Cancel();
         }
@@ -321,6 +343,9 @@ namespace Popcorn.ViewModels.Movie
         /// </summary>
         private void StopLoadingTrailer()
         {
+            Logger.Debug(
+                "Stop loading trailer");
+
             IsTrailerLoading = false;
             CancellationLoadingTrailerToken?.Cancel();
             CancellationLoadingTrailerToken?.Dispose();
@@ -337,6 +362,9 @@ namespace Popcorn.ViewModels.Movie
         /// </summary>
         private void StopPlayingTrailer()
         {
+            Logger.Debug(
+                "Stop playing trailer");
+
             IsPlayingTrailer = false;
             Trailer?.Cleanup();
             Trailer = null;
@@ -351,6 +379,9 @@ namespace Popcorn.ViewModels.Movie
         /// </summary>
         private void StopPlayingMovie()
         {
+            Logger.Debug(
+                "Stop playing movie");
+
             IsDownloadingMovie = false;
             DownloadMovie?.Cleanup();
             DownloadMovie = null;
@@ -360,6 +391,9 @@ namespace Popcorn.ViewModels.Movie
 
         public override void Cleanup()
         {
+            Logger.Debug(
+                "Cleaning up MovieViewModel");
+
             StopLoadingMovie();
             CancellationLoadingToken?.Dispose();
             StopPlayingMovie();

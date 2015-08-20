@@ -115,7 +115,11 @@ namespace Popcorn.Services.Movie
 
             var response = await restClient.ExecuteGetTaskAsync(request, ct);
             if (response.ErrorException != null)
+            {
+                Logger.Error(
+                    $"Error while loading popular movies: {response.ErrorException.Message}");
                 Messenger.Default.Send(new ManageExceptionMessage(new WebException(response.ErrorException.Message)));
+            }
 
             var wrapper =
                 await Task.Run(() => JsonConvert.DeserializeObject<WrapperMovieShortDeserialized>(response.Content), ct);
@@ -135,16 +139,16 @@ namespace Popcorn.Services.Movie
 
         #endregion
 
-        #region Method -> GetTopRatedMoviesAsync
+        #region Method -> GetGreatestMoviesAsync
 
         /// <summary>
-        /// Get top rated movies by page
+        /// Get greatest movies by page
         /// </summary>
         /// <param name="page">Page to return</param>
         /// <param name="limit">The maximum number of movies to return</param>
         /// <param name="ct">Cancellation token</param>
         /// <returns>Top rated movies and the number of movies found</returns>
-        public async Task<Tuple<IEnumerable<MovieShort>, int>> GetTopRatedMoviesAsync(int page,
+        public async Task<Tuple<IEnumerable<MovieShort>, int>> GetGreatestMoviesAsync(int page,
             int limit,
             CancellationToken ct)
         {
@@ -169,7 +173,11 @@ namespace Popcorn.Services.Movie
 
             var response = await restClient.ExecuteGetTaskAsync(request, ct);
             if (response.ErrorException != null)
+            {
+                Logger.Error(
+                    $"Error while loading greatest movies: {response.ErrorException.Message}");
                 Messenger.Default.Send(new ManageExceptionMessage(new WebException(response.ErrorException.Message)));
+            }
 
             var wrapper =
                 await Task.Run(() => JsonConvert.DeserializeObject<WrapperMovieShortDeserialized>(response.Content), ct);
@@ -182,7 +190,7 @@ namespace Popcorn.Services.Movie
             watch.Stop();
             var elapsedMs = watch.ElapsedMilliseconds;
             Logger.Debug(
-                $"GetTopRatedMoviesAsync ({page}, {limit}) in {elapsedMs} milliseconds.");
+                $"GetGreatestMoviesAsync ({page}, {limit}) in {elapsedMs} milliseconds.");
 
             return new Tuple<IEnumerable<MovieShort>, int>(movies, nbMovies);
         }
@@ -223,7 +231,11 @@ namespace Popcorn.Services.Movie
 
             var response = await restClient.ExecuteGetTaskAsync(request, ct);
             if (response.ErrorException != null)
+            {
+                Logger.Error(
+                    $"Error while loading recent movies: {response.ErrorException.Message}");
                 Messenger.Default.Send(new ManageExceptionMessage(new WebException(response.ErrorException.Message)));
+            }
 
             var wrapper =
                 await Task.Run(() => JsonConvert.DeserializeObject<WrapperMovieShortDeserialized>(response.Content), ct);
@@ -279,7 +291,11 @@ namespace Popcorn.Services.Movie
 
             var response = await restClient.ExecuteGetTaskAsync(request, ct);
             if (response.ErrorException != null)
+            {
+                Logger.Error(
+                    $"Error while searching movies: {response.ErrorException.Message}");
                 Messenger.Default.Send(new ManageExceptionMessage(new WebException(response.ErrorException.Message)));
+            }
 
             var wrapper =
                 await Task.Run(() => JsonConvert.DeserializeObject<WrapperMovieShortDeserialized>(response.Content), ct);
@@ -319,7 +335,11 @@ namespace Popcorn.Services.Movie
 
             var response = await restClient.ExecuteGetTaskAsync(request);
             if (response.ErrorException != null)
+            {
+                Logger.Error(
+                    $"Error while loading the movie {movieToLoad.Title}: {response.ErrorException.Message}");
                 Messenger.Default.Send(new ManageExceptionMessage(new WebException(response.ErrorException.Message)));
+            }
 
             var movie = new MovieFull();
             await Task.Run(() =>
@@ -401,6 +421,8 @@ namespace Popcorn.Services.Movie
                 }
                 catch (Exception ex) when (ex is SocketException || ex is WebException)
                 {
+                    Logger.Error(
+                        $"Error while translating movie {movieToTranslate.Title}: {ex.Message}");
                     Messenger.Default.Send(new ManageExceptionMessage(ex));
                 }
             });
@@ -408,7 +430,7 @@ namespace Popcorn.Services.Movie
             watch.Stop();
             var elapsedMs = watch.ElapsedMilliseconds;
             Logger.Debug(
-                $"TranslateMovieShort ({movieToTranslate.ImdbCode}) in {elapsedMs} milliseconds.");
+                $"TranslateMovieShortAsync ({movieToTranslate.ImdbCode}) in {elapsedMs} milliseconds.");
         }
 
         #endregion
@@ -511,6 +533,8 @@ namespace Popcorn.Services.Movie
             }
             catch (Exception ex) when (ex is SocketException || ex is WebException)
             {
+                Logger.Error(
+                    $"Error while getting the movie's trailer of {movie.Title}: {ex.Message}");
                 Messenger.Default.Send(new ManageExceptionMessage(ex));
             }
 
@@ -540,7 +564,11 @@ namespace Popcorn.Services.Movie
 
             var response = await restClient.ExecuteGetTaskAsync(request, ct);
             if (response.ErrorException != null)
+            {
+                Logger.Error(
+                    $"Error while getting the movie's subtitles of {movie.Title}: {response.ErrorException.Message}");
                 Messenger.Default.Send(new ManageExceptionMessage(new Exception(response.ErrorException.Message)));
+            }
 
             var wrapper =
                 await Task.Run(() => JsonConvert.DeserializeObject<SubtitlesWrapperDeserialized>(response.Content), ct);
@@ -663,6 +691,8 @@ namespace Popcorn.Services.Movie
                 }
                 catch (Exception ex) when (ex is SocketException || ex is WebException)
                 {
+                    Logger.Error(
+                        $"Error while downloading background image of the movie {movie.Title}: {ex.Message}");
                     Messenger.Default.Send(new ManageExceptionMessage(ex));
                 }
             });
@@ -686,20 +716,28 @@ namespace Popcorn.Services.Movie
             var watch = Stopwatch.StartNew();
 
             var moviesToProcess = movies.ToList();
-
-            await
-                moviesToProcess.ForEachAsync(
-                    movie =>
-                        DownloadFileHelper.DownloadFileTaskAsync(movie.MediumCoverImage,
-                            Constants.CoverMoviesDirectory + movie.ImdbCode + Constants.ImageFileExtension,
-                            int.MaxValue),
-                    (movie, t) =>
-                    {
-                        if (t.Item3 == null && !string.IsNullOrEmpty(t.Item2))
+            try
+            {
+                await
+                    moviesToProcess.ForEachAsync(
+                        movie =>
+                            DownloadFileHelper.DownloadFileTaskAsync(movie.MediumCoverImage,
+                                Constants.CoverMoviesDirectory + movie.ImdbCode + Constants.ImageFileExtension,
+                                int.MaxValue),
+                        (movie, t) =>
                         {
-                            movie.CoverImagePath = t.Item2;
-                        }
-                    });
+                            if (t.Item3 == null && !string.IsNullOrEmpty(t.Item2))
+                            {
+                                movie.CoverImagePath = t.Item2;
+                            }
+                        });
+            }
+            catch (Exception ex) when (ex is SocketException || ex is WebException)
+            {
+                Logger.Error(
+                    $"Error while downloading a cover image of the movies {string.Join(";", moviesToProcess.Select(a => a.Title))}: {ex.Message}");
+                Messenger.Default.Send(new ManageExceptionMessage(ex));
+            }
 
             watch.Stop();
             var elapsedMs = watch.ElapsedMilliseconds;
@@ -727,18 +765,27 @@ namespace Popcorn.Services.Movie
                 movie.Images.LargeCoverImage
             };
 
-            await
-                posterPath.ForEachAsync(
-                    poster =>
-                        DownloadFileHelper.DownloadFileTaskAsync(poster,
-                            Constants.PosterMovieDirectory + movie.ImdbCode + Constants.ImageFileExtension),
-                    (poster, t) =>
-                    {
-                        if (t.Item3 == null && !string.IsNullOrEmpty(t.Item2))
+            try
+            {
+                await
+                    posterPath.ForEachAsync(
+                        poster =>
+                            DownloadFileHelper.DownloadFileTaskAsync(poster,
+                                Constants.PosterMovieDirectory + movie.ImdbCode + Constants.ImageFileExtension),
+                        (poster, t) =>
                         {
-                            movie.PosterImagePath = t.Item2;
-                        }
-                    });
+                            if (t.Item3 == null && !string.IsNullOrEmpty(t.Item2))
+                            {
+                                movie.PosterImagePath = t.Item2;
+                            }
+                        });
+            }
+            catch (Exception ex) when (ex is SocketException || ex is WebException)
+            {
+                Logger.Error(
+                    $"Error while downloading poster image of the movie {movie.Title}: {ex.Message}");
+                Messenger.Default.Send(new ManageExceptionMessage(ex));
+            }
 
             watch.Stop();
             var elapsedMs = watch.ElapsedMilliseconds;
@@ -761,18 +808,27 @@ namespace Popcorn.Services.Movie
             if (movie.Directors == null)
                 return;
 
-            await
-                movie.Directors.ForEachAsync(
-                    director =>
-                        DownloadFileHelper.DownloadFileTaskAsync(director.SmallImage,
-                            Constants.DirectorMovieDirectory + director.Name + Constants.ImageFileExtension),
-                    (director, t) =>
-                    {
-                        if (t.Item3 == null && !string.IsNullOrEmpty(t.Item2))
+            try
+            {
+                await
+                    movie.Directors.ForEachAsync(
+                        director =>
+                            DownloadFileHelper.DownloadFileTaskAsync(director.SmallImage,
+                                Constants.DirectorMovieDirectory + director.Name + Constants.ImageFileExtension),
+                        (director, t) =>
                         {
-                            director.SmallImagePath = t.Item2;
-                        }
-                    });
+                            if (t.Item3 == null && !string.IsNullOrEmpty(t.Item2))
+                            {
+                                director.SmallImagePath = t.Item2;
+                            }
+                        });
+            }
+            catch (Exception ex) when (ex is SocketException || ex is WebException)
+            {
+                Logger.Error(
+                    $"Error while downloading a director image of the movie {movie.Title}: {ex.Message}");
+                Messenger.Default.Send(new ManageExceptionMessage(ex));
+            }
 
             watch.Stop();
             var elapsedMs = watch.ElapsedMilliseconds;
@@ -795,18 +851,27 @@ namespace Popcorn.Services.Movie
             if (movie.Actors == null)
                 return;
 
-            await
-                movie.Actors.ForEachAsync(
-                    actor =>
-                        DownloadFileHelper.DownloadFileTaskAsync(actor.SmallImage,
-                            Constants.ActorMovieDirectory + actor.Name + Constants.ImageFileExtension),
-                    (actor, t) =>
-                    {
-                        if (t.Item3 == null && !string.IsNullOrEmpty(t.Item2))
+            try
+            {
+                await
+                    movie.Actors.ForEachAsync(
+                        actor =>
+                            DownloadFileHelper.DownloadFileTaskAsync(actor.SmallImage,
+                                Constants.ActorMovieDirectory + actor.Name + Constants.ImageFileExtension),
+                        (actor, t) =>
                         {
-                            actor.SmallImagePath = t.Item2;
-                        }
-                    });
+                            if (t.Item3 == null && !string.IsNullOrEmpty(t.Item2))
+                            {
+                                actor.SmallImagePath = t.Item2;
+                            }
+                        });
+            }
+            catch (Exception ex) when (ex is SocketException || ex is WebException)
+            {
+                Logger.Error(
+                    $"Error while downloading an actor image of the movie {movie.Title}: {ex.Message}");
+                Messenger.Default.Send(new ManageExceptionMessage(ex));
+            }
 
             watch.Stop();
             var elapsedMs = watch.ElapsedMilliseconds;

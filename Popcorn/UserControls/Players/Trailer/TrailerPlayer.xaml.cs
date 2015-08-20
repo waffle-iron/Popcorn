@@ -7,6 +7,7 @@ using System.Windows.Input;
 using System.Windows.Media.Animation;
 using System.Windows.Threading;
 using GalaSoft.MvvmLight.Threading;
+using NLog;
 using xZune.Vlc.Interop.Media;
 using Popcorn.ViewModels.Players.Trailer;
 
@@ -17,6 +18,15 @@ namespace Popcorn.UserControls.Players.Trailer
     /// </summary>
     public partial class TrailerPlayer : IDisposable
     {
+        #region Logger
+
+        /// <summary>
+        /// Logger of the class
+        /// </summary>
+        private static readonly Logger Logger = LogManager.GetCurrentClassLogger();
+
+        #endregion
+
         #region Property -> Volume
 
         /// <summary>
@@ -48,6 +58,9 @@ namespace Popcorn.UserControls.Players.Trailer
         /// </summary>
         public TrailerPlayer()
         {
+            Logger.Debug(
+                "Initializing a new instance of TrailerPlayer.");
+
             InitializeComponent();
 
             Loaded += OnLoaded;
@@ -115,6 +128,8 @@ namespace Popcorn.UserControls.Players.Trailer
         /// <param name="e">EventArgs</param>
         private void OnUnloaded(object sender, EventArgs e)
         {
+            Logger.Debug(
+                "TrailerPlayer unloaded.");
             PauseMedia();
         }
 
@@ -178,6 +193,8 @@ namespace Popcorn.UserControls.Players.Trailer
         /// <param name="e">EventArgs</param>
         private void MediaPlayerEndReached(object sender, EventArgs e)
         {
+            Logger.Info(
+                "Trailer's end reached.");
             DispatcherHelper.CheckBeginInvokeOnUI(() =>
             {
                 var vm = DataContext as TrailerPlayerViewModel;
@@ -197,6 +214,8 @@ namespace Popcorn.UserControls.Players.Trailer
         /// </summary>
         private void PlayMedia()
         {
+            Logger.Debug(
+                "Playing trailer.");
             Player.Play();
             MediaPlayerIsPlaying = true;
 
@@ -213,6 +232,8 @@ namespace Popcorn.UserControls.Players.Trailer
         /// </summary>
         private void PauseMedia()
         {
+            Logger.Debug(
+                "Pausing trailer.");
             Player.PauseOrResume();
             MediaPlayerIsPlaying = false;
 
@@ -231,6 +252,8 @@ namespace Popcorn.UserControls.Players.Trailer
         /// <param name="e">EventArgs</param>
         private void OnStoppedPlayingMedia(object sender, EventArgs e)
         {
+            Logger.Debug(
+                "Stop playing the trailer.");
             Dispose();
         }
 
@@ -345,6 +368,8 @@ namespace Popcorn.UserControls.Players.Trailer
         /// <param name="e">ExecutedRoutedEventArgs</param>
         private void MediaPlayerPlayExecuted(object sender, ExecutedRoutedEventArgs e)
         {
+            Logger.Debug(
+                "Play the trailer.");
             PlayMedia();
         }
 
@@ -359,6 +384,8 @@ namespace Popcorn.UserControls.Players.Trailer
         /// <param name="e">CanExecuteRoutedEventArgs</param>
         private void MediaPlayerPauseExecuted(object sender, ExecutedRoutedEventArgs e)
         {
+            Logger.Debug(
+                "Pause the trailer.");
             PauseMedia();
         }
 
@@ -461,6 +488,9 @@ namespace Popcorn.UserControls.Players.Trailer
             if (Disposed)
                 return;
 
+            Logger.Debug(
+                "Disposing TrailerPlayer.");
+
             Loaded -= OnLoaded;
             Unloaded -= OnUnloaded;
 
@@ -477,8 +507,17 @@ namespace Popcorn.UserControls.Players.Trailer
 
             DispatcherHelper.CheckBeginInvokeOnUI(async () =>
             {
+                Logger.Debug(
+                    "Stoping the TrailerPlayer VLC player.");
                 await Player.StopAsync();
+
+                Logger.Debug(
+                    "TrailerPlayer VLC player stopped.");
                 Player.Dispose();
+
+                Logger.Debug(
+                    "TrailerPlayer VLC player disposed.");
+
                 var vm = DataContext as TrailerPlayerViewModel;
                 if (vm != null)
                 {
@@ -486,6 +525,9 @@ namespace Popcorn.UserControls.Players.Trailer
                 }
 
                 Disposed = true;
+
+                Logger.Debug(
+                    "TrailerPlayer disposed.");
 
                 if (disposing)
                 {

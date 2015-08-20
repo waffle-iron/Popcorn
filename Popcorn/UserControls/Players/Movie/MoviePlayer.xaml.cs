@@ -7,6 +7,7 @@ using System.Windows.Input;
 using System.Windows.Media.Animation;
 using System.Windows.Threading;
 using GalaSoft.MvvmLight.Threading;
+using NLog;
 using xZune.Vlc.Interop.Media;
 using Popcorn.ViewModels.Players.Movie;
 
@@ -17,6 +18,15 @@ namespace Popcorn.UserControls.Players.Movie
     /// </summary>
     public partial class MoviePlayer : IDisposable
     {
+        #region Logger
+
+        /// <summary>
+        /// Logger of the class
+        /// </summary>
+        private static readonly Logger Logger = LogManager.GetCurrentClassLogger();
+
+        #endregion
+
         #region Property -> Volume
 
         /// <summary>
@@ -48,6 +58,9 @@ namespace Popcorn.UserControls.Players.Movie
         /// </summary>
         public MoviePlayer()
         {
+            Logger.Debug(
+                "Initializing a new instance of MoviePlayer.");
+
             InitializeComponent();
 
             Loaded += OnLoaded;
@@ -120,6 +133,9 @@ namespace Popcorn.UserControls.Players.Movie
         /// <param name="e">EventArgs</param>
         private void OnUnloaded(object sender, EventArgs e)
         {
+            Logger.Debug(
+                "MoviePlayer unloaded.");
+
             PauseMedia();
         }
 
@@ -183,6 +199,9 @@ namespace Popcorn.UserControls.Players.Movie
         /// <param name="e">EventArgs</param>
         private void MediaPlayerEndReached(object sender, EventArgs e)
         {
+            Logger.Info(
+                "Movie's end reached.");
+
             DispatcherHelper.CheckBeginInvokeOnUI(async () =>
             {
                 var vm = DataContext as MoviePlayerViewModel;
@@ -202,6 +221,9 @@ namespace Popcorn.UserControls.Players.Movie
         /// </summary>
         private void PlayMedia()
         {
+            Logger.Debug(
+                "Playing movie.");
+
             Player.Play();
             MediaPlayerIsPlaying = true;
 
@@ -218,6 +240,9 @@ namespace Popcorn.UserControls.Players.Movie
         /// </summary>
         private void PauseMedia()
         {
+            Logger.Debug(
+                "Pausing movie.");
+
             Player.PauseOrResume();
             MediaPlayerIsPlaying = false;
 
@@ -236,6 +261,9 @@ namespace Popcorn.UserControls.Players.Movie
         /// <param name="e">EventArgs</param>
         private void OnStoppedPlayingMedia(object sender, EventArgs e)
         {
+            Logger.Debug(
+                "Stop playing the movie.");
+
             Dispose();
         }
 
@@ -350,6 +378,8 @@ namespace Popcorn.UserControls.Players.Movie
         /// <param name="e">ExecutedRoutedEventArgs</param>
         private void MediaPlayerPlayExecuted(object sender, ExecutedRoutedEventArgs e)
         {
+            Logger.Debug(
+                "Play the movie.");
             PlayMedia();
         }
 
@@ -364,6 +394,9 @@ namespace Popcorn.UserControls.Players.Movie
         /// <param name="e">CanExecuteRoutedEventArgs</param>
         private void MediaPlayerPauseExecuted(object sender, ExecutedRoutedEventArgs e)
         {
+            Logger.Debug(
+                "Pause the movie.");
+
             PauseMedia();
         }
 
@@ -466,6 +499,9 @@ namespace Popcorn.UserControls.Players.Movie
             if (Disposed)
                 return;
 
+            Logger.Debug(
+                "Disposing MoviePlayer.");
+
             Loaded -= OnLoaded;
             Unloaded -= OnUnloaded;
 
@@ -482,8 +518,20 @@ namespace Popcorn.UserControls.Players.Movie
 
             DispatcherHelper.CheckBeginInvokeOnUI(async () =>
             {
+                Logger.Debug(
+                    "Stoping the MoviePlayer VLC player.");
+
                 await Player.StopAsync();
+
+                Logger.Debug(
+                    "MoviePlayer VLC player stopped.");
+
                 Player.Dispose();
+
+
+                Logger.Debug(
+                    "MoviePlayer VLC player disposed.");
+
                 var vm = DataContext as MoviePlayerViewModel;
                 if (vm != null)
                 {
@@ -491,6 +539,9 @@ namespace Popcorn.UserControls.Players.Movie
                 }
 
                 Disposed = true;
+
+                Logger.Debug(
+                    "MoviePlayer disposed.");
 
                 if (disposing)
                 {

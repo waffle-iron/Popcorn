@@ -9,6 +9,7 @@ using GalaSoft.MvvmLight.CommandWpf;
 using Popcorn.Helpers;
 using Popcorn.Messaging;
 using GalaSoft.MvvmLight.Ioc;
+using NLog;
 using Popcorn.Services.History;
 using Popcorn.Services.Movie;
 
@@ -19,6 +20,15 @@ namespace Popcorn.ViewModels.Tabs
     /// </summary>
     public class TabsViewModel : ViewModelBase
     {
+        #region Logger
+
+        /// <summary>
+        /// Logger of the class
+        /// </summary>
+        private static readonly Logger Logger = LogManager.GetCurrentClassLogger();
+
+        #endregion
+
         #region Properties
 
         #region Property -> MovieService
@@ -198,6 +208,8 @@ namespace Popcorn.ViewModels.Tabs
         /// </summary>
         protected TabsViewModel()
         {
+            Logger.Debug("Initializing a new instance of TabsViewModel");
+
             RegisterMessages();
             RegisterCommands();
             CancellationLoadNextPageToken = new CancellationTokenSource();
@@ -267,6 +279,7 @@ namespace Popcorn.ViewModels.Tabs
         {
             return null;
         }
+
         #endregion
 
         #region Method -> StopLoadingNextPage
@@ -276,6 +289,9 @@ namespace Popcorn.ViewModels.Tabs
         /// </summary>
         private void StopLoadingNextPage()
         {
+            Logger.Info(
+                "Stop loading next movie page.");
+
             CancellationLoadNextPageToken?.Cancel();
             CancellationLoadNextPageToken = new CancellationTokenSource();
         }
@@ -284,6 +300,9 @@ namespace Popcorn.ViewModels.Tabs
 
         public override void Cleanup()
         {
+            Logger.Debug(
+                "Cleaning a TabViewModel.");
+
             StopLoadingNextPage();
             CancellationLoadNextPageToken?.Dispose();
 

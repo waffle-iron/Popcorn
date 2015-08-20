@@ -1,6 +1,7 @@
 ﻿using GalaSoft.MvvmLight;
 using GalaSoft.MvvmLight.CommandWpf;
 using GalaSoft.MvvmLight.Messaging;
+using NLog;
 using Popcorn.Messaging;
 
 namespace Popcorn.ViewModels.Search
@@ -10,6 +11,15 @@ namespace Popcorn.ViewModels.Search
     /// </summary>
     public sealed class SearchViewModel : ViewModelBase
     {
+        #region Logger
+
+        /// <summary>
+        /// Logger of the class
+        /// </summary>
+        private static readonly Logger Logger = LogManager.GetCurrentClassLogger();
+
+        #endregion
+
         #region Properties
 
         #region Property -> SearchFilter
@@ -49,6 +59,8 @@ namespace Popcorn.ViewModels.Search
         /// </summary>
         public SearchViewModel()
         {
+            Logger.Debug("Initializing a new instance of SearchViewModel");
+
             RegisterMessages();
             RegisterCommands();
         }
@@ -68,6 +80,7 @@ namespace Popcorn.ViewModels.Search
             {
                 if (e.PropertyName == GetPropertyName(() => SearchFilter) && string.IsNullOrEmpty(e.NewValue))
                 {
+
                     Messenger.Default.Send(new SearchMovieMessage(string.Empty));
                 }
             });
@@ -83,7 +96,12 @@ namespace Popcorn.ViewModels.Search
         private void RegisterCommands()
         {
             SearchMovieCommand =
-                new RelayCommand(() => { Messenger.Default.Send(new SearchMovieMessage(SearchFilter)); });
+                new RelayCommand(() =>
+                {
+                    Logger.Debug(
+                        $"New search criteria: {SearchFilter}");
+                    Messenger.Default.Send(new SearchMovieMessage(SearchFilter));
+                });
         }
 
         #endregion

@@ -1,9 +1,11 @@
 ﻿using System;
+using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
 using GalaSoft.MvvmLight.CommandWpf;
 using GalaSoft.MvvmLight.Ioc;
 using GalaSoft.MvvmLight.Messaging;
+using NLog;
 using Popcorn.Helpers;
 using Popcorn.Messaging;
 using Popcorn.ViewModels.Main;
@@ -15,6 +17,15 @@ namespace Popcorn.ViewModels.Tabs
     /// </summary>
     public sealed class PopularTabViewModel : TabsViewModel
     {
+        #region Logger
+
+        /// <summary>
+        /// Logger of the class
+        /// </summary>
+        private static readonly Logger Logger = LogManager.GetCurrentClassLogger();
+
+        #endregion
+
         #region Constructor
 
         /// <summary>
@@ -22,6 +33,9 @@ namespace Popcorn.ViewModels.Tabs
         /// </summary>
         public PopularTabViewModel()
         {
+            Logger.Debug(
+                "Initializing a new instance of PopularTabViewModel");
+
             RegisterMessages();
             RegisterCommands();
             TabName = LocalizationProviderHelper.GetLocalizedValue<string>("PopularTitleTab");
@@ -72,6 +86,11 @@ namespace Popcorn.ViewModels.Tabs
             if (Page == LastPage)
                 return;
 
+            var watch = Stopwatch.StartNew();
+
+            Logger.Info(
+                $"Loading page {Page} of the most popular movies...");
+
             Page++;
             IsLoadingMovies = true;
             try
@@ -96,10 +115,17 @@ namespace Popcorn.ViewModels.Tabs
 
                 await MovieHistoryService.ComputeMovieHistoryAsync(movies);
                 await MovieService.DownloadCoverImageAsync(movies);
+
+                watch.Stop();
+                var elapsedMs = watch.ElapsedMilliseconds;
+                Logger.Info(
+                    $"Loaded page {Page} of the most popular movies in {elapsedMs} milliseconds.");
             }
-            catch (Exception)
+            catch (Exception exception)
             {
                 Page--;
+                Logger.Info(
+                    $"Error while loading page {Page} of the most popular movies : {exception.Message}");
             }
             finally
             {

@@ -1,8 +1,10 @@
-﻿using System.Linq;
+﻿using System.Diagnostics;
+using System.Linq;
 using System.Threading.Tasks;
 using GalaSoft.MvvmLight.CommandWpf;
 using GalaSoft.MvvmLight.Ioc;
 using GalaSoft.MvvmLight.Messaging;
+using NLog;
 using Popcorn.Comparers;
 using Popcorn.Helpers;
 using Popcorn.Messaging;
@@ -12,6 +14,15 @@ namespace Popcorn.ViewModels.Tabs
 {
     public class FavoritesTabViewModel : TabsViewModel
     {
+        #region Logger
+
+        /// <summary>
+        /// Logger of the class
+        /// </summary>
+        private static readonly Logger Logger = LogManager.GetCurrentClassLogger();
+
+        #endregion
+
         #region Constructor
 
         /// <summary>
@@ -19,6 +30,8 @@ namespace Popcorn.ViewModels.Tabs
         /// </summary>
         public FavoritesTabViewModel()
         {
+            Logger.Debug(
+                "Initializing a new instance of FavoritesTabViewModel");
             RegisterMessages();
             RegisterCommands();
             TabName = LocalizationProviderHelper.GetLocalizedValue<string>("FavoritesTitleTab");
@@ -73,6 +86,11 @@ namespace Popcorn.ViewModels.Tabs
         /// </summary>
         public override async Task LoadMoviesAsync()
         {
+            var watch = Stopwatch.StartNew();
+
+            Logger.Info(
+                "Loading favorites movies...");
+
             IsLoadingMovies = true;
             var favoritesMovies = await MovieHistoryService.GetFavoritesMoviesAsync();
             var movies = favoritesMovies.ToList();
@@ -93,6 +111,11 @@ namespace Popcorn.ViewModels.Tabs
             CurrentNumberOfMovies = Movies.Count();
             MaxNumberOfMovies = movies.Count();
             await MovieService.DownloadCoverImageAsync(moviesToAdd);
+
+            watch.Stop();
+            var elapsedMs = watch.ElapsedMilliseconds;
+            Logger.Info(
+                $"Loaded favorites movies in {elapsedMs} milliseconds.");
         }
 
         #endregion

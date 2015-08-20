@@ -1,6 +1,7 @@
 ﻿using GalaSoft.MvvmLight;
 using GalaSoft.MvvmLight.CommandWpf;
 using GalaSoft.MvvmLight.Messaging;
+using NLog;
 using Popcorn.Messaging;
 using Popcorn.Models.Movie;
 using Popcorn.ViewModels.Subtitles;
@@ -12,6 +13,15 @@ namespace Popcorn.ViewModels.MovieSettings
     /// </summary>
     public sealed class MovieSettingsViewModel : ViewModelBase
     {
+        #region Logger
+
+        /// <summary>
+        /// Logger of the class
+        /// </summary>
+        private static readonly Logger Logger = LogManager.GetCurrentClassLogger();
+
+        #endregion
+
         #region Property -> Movie
 
         private MovieFull _movie;
@@ -56,6 +66,9 @@ namespace Popcorn.ViewModels.MovieSettings
             {
                 return _setSubtitlesCommand ?? (_setSubtitlesCommand = new RelayCommand(async () =>
                 {
+                    Logger.Info(
+                        $"Setting subtitles for movie: {Movie.Title}");
+
                     Movie.SelectedSubtitle = null;
                     if (Subtitles == null)
                     {
@@ -63,6 +76,8 @@ namespace Popcorn.ViewModels.MovieSettings
                     }
                     else
                     {
+                        Logger.Info(
+                            $"Disabling subtitles for movie: {Movie.Title}");
                         Subtitles.Cleanup();
                         Subtitles = null;
                     }
@@ -120,6 +135,8 @@ namespace Popcorn.ViewModels.MovieSettings
         /// <param name="movie">The movie</param>
         public MovieSettingsViewModel(MovieFull movie)
         {
+            Logger.Debug("Initializing a new instance of MovieSettingsViewModel");
+
             Movie = movie;
         }
 
@@ -129,6 +146,9 @@ namespace Popcorn.ViewModels.MovieSettings
 
         public override void Cleanup()
         {
+            Logger.Debug(
+                "Cleaning up MovieSettingsViewModel");
+
             Subtitles?.Cleanup();
             base.Cleanup();
         }

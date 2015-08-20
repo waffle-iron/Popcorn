@@ -2,6 +2,7 @@
 using System.Threading.Tasks;
 using GalaSoft.MvvmLight.CommandWpf;
 using GalaSoft.MvvmLight.Messaging;
+using NLog;
 using Popcorn.Messaging;
 using Popcorn.Models.Movie;
 
@@ -12,6 +13,15 @@ namespace Popcorn.ViewModels.Players.Movie
     /// </summary>
     public sealed class MoviePlayerViewModel : MediaPlayerViewModel
     {
+        #region Logger
+
+        /// <summary>
+        /// Logger of the class
+        /// </summary>
+        private static readonly Logger Logger = LogManager.GetCurrentClassLogger();
+
+        #endregion
+
         #region Property -> Movie
 
         /// <summary>
@@ -44,6 +54,7 @@ namespace Popcorn.ViewModels.Players.Movie
         #region Methods
 
         #region -> Method
+
         /// <summary>
         /// When a movie has been seen, save this information in user data
         /// </summary>
@@ -53,6 +64,7 @@ namespace Popcorn.ViewModels.Players.Movie
             Messenger.Default.Send(new ChangeHasBeenSeenMovieMessage());
             Messenger.Default.Send(new StopPlayingMovieMessage());
         }
+
         #endregion
 
         #region Method -> RegisterMessages
@@ -86,6 +98,9 @@ namespace Popcorn.ViewModels.Players.Movie
 
         public override void Cleanup()
         {
+            Logger.Debug(
+                $"Cleaning up MoviePlayerViewModel");
+
             OnStoppedPlayingMedia(new EventArgs());
 
             base.Cleanup();

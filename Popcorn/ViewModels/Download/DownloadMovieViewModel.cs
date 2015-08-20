@@ -12,6 +12,7 @@ using System.IO;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using NLog;
 using Popcorn.Services.Movie;
 using Popcorn.ViewModels.Settings;
 
@@ -22,6 +23,15 @@ namespace Popcorn.ViewModels.Download
     /// </summary>
     public sealed class DownloadMovieViewModel : ViewModelBase
     {
+        #region Logger
+
+        /// <summary>
+        /// Logger of the class
+        /// </summary>
+        private static readonly Logger Logger = LogManager.GetCurrentClassLogger();
+
+        #endregion
+
         #region Properties
 
         #region Property -> MovieService
@@ -176,6 +186,7 @@ namespace Popcorn.ViewModels.Download
         /// <param name="movie">The movie to download</param>
         public DownloadMovieViewModel(MovieFull movie)
         {
+            Logger.Debug("Initializing a new instance of DownloadMovieViewModel");
             RegisterMessages();
             RegisterCommands();
             CancellationDownloadingMovieToken = new CancellationTokenSource();
@@ -205,7 +216,8 @@ namespace Popcorn.ViewModels.Download
 
                     IsDownloadingSubtitles = true;
                     await
-                        MovieService.DownloadSubtitleAsync(message.Movie, reportDownloadSubtitles, CancellationDownloadingMovieToken);
+                        MovieService.DownloadSubtitleAsync(message.Movie, reportDownloadSubtitles,
+                            CancellationDownloadingMovieToken);
                     IsDownloadingSubtitles = false;
                     await
                         DownloadMovieAsync(message.Movie,
@@ -216,6 +228,7 @@ namespace Popcorn.ViewModels.Download
         #endregion
 
         #region Method -> RegisterCommands
+
         /// <summary>
         /// Register commands
         /// </summary>
@@ -223,6 +236,7 @@ namespace Popcorn.ViewModels.Download
         {
             StopDownloadingMovieCommand = new RelayCommand(StopDownloadingMovie);
         }
+
         #endregion
 
         #region Method -> ReportMovieDownloadRate
@@ -288,6 +302,9 @@ namespace Popcorn.ViewModels.Download
             {
                 using (var session = new Session())
                 {
+                    Logger.Debug(
+                        $"Start downloading movie : {movie.Title}");
+
                     IsDownloadingMovie = true;
 
                     session.ListenOn(6881, 6889);
@@ -311,10 +328,10 @@ namespace Popcorn.ViewModels.Download
                     while (IsDownloadingMovie)
                     {
                         var status = handle.QueryStatus();
-                        var progress = status.Progress * 100.0;
+                        var progress = status.Progress*100.0;
 
                         downloadProgress?.Report(progress);
-                        var test = Math.Round(status.DownloadRate / 1024.0, 0);
+                        var test = Math.Round(status.DownloadRate/1024.0, 0);
                         downloadRate?.Report(test);
 
                         handle.FlushCache();
@@ -360,6 +377,9 @@ namespace Popcorn.ViewModels.Download
         /// </summary>
         private void StopDownloadingMovie()
         {
+            Logger.Debug(
+                "Stop downloading movie");
+
             IsDownloadingMovie = false;
             IsMovieBuffered = false;
             CancellationDownloadingMovieToken?.Cancel();
@@ -370,6 +390,9 @@ namespace Popcorn.ViewModels.Download
 
         public override void Cleanup()
         {
+            Logger.Debug(
+                "Cleaning up TrailerViewModel");
+
             StopDownloadingMovie();
             CancellationDownloadingMovieToken?.Dispose();
             MovieSettings?.Cleanup();

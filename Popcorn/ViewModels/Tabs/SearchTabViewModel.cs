@@ -1,12 +1,15 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 using System.Threading;
 using GalaSoft.MvvmLight.Messaging;
 using System.Threading.Tasks;
 using Popcorn.Helpers;
 using Popcorn.Messaging;
 using System.Collections.Generic;
+using System.Diagnostics;
 using GalaSoft.MvvmLight.CommandWpf;
 using GalaSoft.MvvmLight.Ioc;
+using NLog;
 using Popcorn.ViewModels.Main;
 
 namespace Popcorn.ViewModels.Tabs
@@ -16,6 +19,15 @@ namespace Popcorn.ViewModels.Tabs
     /// </summary>
     public sealed class SearchTabViewModel : TabsViewModel
     {
+        #region Logger
+
+        /// <summary>
+        /// Logger of the class
+        /// </summary>
+        private static readonly Logger Logger = LogManager.GetCurrentClassLogger();
+
+        #endregion
+
         #region Property -> CancellationSearchMoviesToken
 
         /// <summary>
@@ -50,6 +62,9 @@ namespace Popcorn.ViewModels.Tabs
         /// </summary>
         public SearchTabViewModel()
         {
+            Logger.Debug(
+                "Initializing a new instance of SearchTabViewModel");
+
             RegisterMessages();
             RegisterCommands();
             CancellationSearchToken = new CancellationTokenSource();
@@ -108,6 +123,11 @@ namespace Popcorn.ViewModels.Tabs
                 Page = 0;
             }
 
+            var watch = Stopwatch.StartNew();
+
+            Logger.Info(
+                $"Loading page {Page} of the movie search with criteria: {searchFilter}");
+
             SearchFilter = searchFilter;
             Page++;
             int lastPage;
@@ -140,10 +160,18 @@ namespace Popcorn.ViewModels.Tabs
                     {
                         LastPageFilterMapping.Add(searchFilter, Page);
                     }
+
+
+                    watch.Stop();
+                    var elapsedMs = watch.ElapsedMilliseconds;
+                    Logger.Info(
+                        $"Loaded page {Page} of the search with criteria {searchFilter} in {elapsedMs} milliseconds.");
                 }
-                catch
+                catch (Exception exception)
                 {
                     Page--;
+                    Logger.Info(
+                        $"Error while loading page {Page} of the search with criteria {searchFilter}: {exception.Message}");
                 }
                 finally
                 {
@@ -165,6 +193,9 @@ namespace Popcorn.ViewModels.Tabs
         /// </summary>
         private void StopSearchingMovies()
         {
+            Logger.Info(
+                "Stop searching movies.");
+
             CancellationSearchToken?.Cancel();
             CancellationSearchToken = new CancellationTokenSource();
         }
@@ -175,6 +206,9 @@ namespace Popcorn.ViewModels.Tabs
 
         public override void Cleanup()
         {
+            Logger.Debug(
+                "Cleaning up SearchTabViewModel.");
+
             StopSearchingMovies();
             CancellationSearchToken?.Dispose();
 

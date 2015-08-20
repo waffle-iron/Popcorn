@@ -56,11 +56,9 @@ namespace Popcorn.Services.History
                     foreach (var movie in movies.ToList())
                     {
                         var entityMovie = history.MoviesShort.FirstOrDefault(p => p.MovieId == movie.Id);
-                        if (entityMovie != null)
-                        {
-                            movie.IsFavorite = entityMovie.IsFavorite;
-                            movie.HasBeenSeen = entityMovie.HasBeenSeen;
-                        }
+                        if (entityMovie == null) continue;
+                        movie.IsFavorite = entityMovie.IsFavorite;
+                        movie.HasBeenSeen = entityMovie.HasBeenSeen;
                     }
                 }
 
@@ -185,7 +183,7 @@ namespace Popcorn.Services.History
                 watch.Stop();
                 var elapsedMs = watch.ElapsedMilliseconds;
                 Logger.Debug(
-                    $"LikeMovieAsync ({movie.ImdbCode}) in {elapsedMs} milliseconds.");
+                    $"SetFavoriteMovieAsync ({movie.ImdbCode}) in {elapsedMs} milliseconds.");
             });
         }
 
@@ -241,7 +239,7 @@ namespace Popcorn.Services.History
                 watch.Stop();
                 var elapsedMs = watch.ElapsedMilliseconds;
                 Logger.Debug(
-                    $"SeenMovieAsync ({movie.ImdbCode}) in {elapsedMs} milliseconds.");
+                    $"SetHasBeenSeenMovieAsync ({movie.ImdbCode}) in {elapsedMs} milliseconds.");
             });
         }
 

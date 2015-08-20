@@ -1,10 +1,13 @@
-﻿using System.Linq;
+﻿using System;
+using System.Diagnostics;
+using System.Linq;
 using System.Threading.Tasks;
 using GalaSoft.MvvmLight.Messaging;
 using Popcorn.Helpers;
 using Popcorn.Messaging;
 using GalaSoft.MvvmLight.CommandWpf;
 using GalaSoft.MvvmLight.Ioc;
+using NLog;
 using Popcorn.ViewModels.Main;
 
 namespace Popcorn.ViewModels.Tabs
@@ -14,6 +17,15 @@ namespace Popcorn.ViewModels.Tabs
     /// </summary>
     public sealed class RecentTabViewModel : TabsViewModel
     {
+        #region Logger
+
+        /// <summary>
+        /// Logger of the class
+        /// </summary>
+        private static readonly Logger Logger = LogManager.GetCurrentClassLogger();
+
+        #endregion
+
         #region Constructor
 
         /// <summary>
@@ -21,6 +33,9 @@ namespace Popcorn.ViewModels.Tabs
         /// </summary>
         public RecentTabViewModel()
         {
+            Logger.Debug(
+                "Initializing a new instance of RecentTabViewModel");
+
             RegisterMessages();
             RegisterCommands();
             TabName = LocalizationProviderHelper.GetLocalizedValue<string>("RecentTitleTab");
@@ -71,6 +86,11 @@ namespace Popcorn.ViewModels.Tabs
             if (Page == LastPage)
                 return;
 
+            var watch = Stopwatch.StartNew();
+
+            Logger.Info(
+                $"Loading page {Page} of the most popular movies...");
+
             Page++;
             IsLoadingMovies = true;
             try
@@ -95,10 +115,17 @@ namespace Popcorn.ViewModels.Tabs
 
                 await MovieHistoryService.ComputeMovieHistoryAsync(movies);
                 await MovieService.DownloadCoverImageAsync(movies);
+
+                watch.Stop();
+                var elapsedMs = watch.ElapsedMilliseconds;
+                Logger.Info(
+                    $"Loaded page {Page} of the most recent movies in {elapsedMs} milliseconds.");
             }
-            catch
+            catch (Exception exception)
             {
                 Page--;
+                Logger.Info(
+                    $"Error while loading page {Page} of the most recent movies : {exception.Message}");
             }
             finally
             {

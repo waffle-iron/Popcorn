@@ -438,6 +438,8 @@ namespace Popcorn.ViewModels.Main
         /// </summary>
         private MainViewModel(IDialogCoordinator dialogCoordinator)
         {
+            Logger.Debug("Initializing a new instance of MainViewModel");
+
             UserService = SimpleIoc.Default.GetInstance<UserService>();
             RegisterMessages();
             RegisterCommands();
@@ -665,6 +667,8 @@ namespace Popcorn.ViewModels.Main
                 {
                     try
                     {
+                        Logger.Info(
+                            $"Deleting file: {filePath}");
                         File.Delete(filePath);
                     }
                     catch (Exception ex)
@@ -901,6 +905,9 @@ namespace Popcorn.ViewModels.Main
         ///<param name="e">Event data</param>
         private void OnWindowStateChanged(WindowStateChangedEventArgs e)
         {
+            Logger.Debug(
+                "Window state changed");
+
             var handler = WindowStageChanged;
             handler?.Invoke(this, e);
         }

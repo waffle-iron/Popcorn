@@ -1,6 +1,7 @@
 ﻿using System;
 using GalaSoft.MvvmLight.CommandWpf;
 using GalaSoft.MvvmLight.Messaging;
+using NLog;
 using Popcorn.Messaging;
 
 namespace Popcorn.ViewModels.Players.Trailer
@@ -10,6 +11,15 @@ namespace Popcorn.ViewModels.Players.Trailer
     /// </summary>
     public sealed class TrailerPlayerViewModel : MediaPlayerViewModel
     {
+        #region Logger
+
+        /// <summary>
+        /// Logger of the class
+        /// </summary>
+        private static readonly Logger Logger = LogManager.GetCurrentClassLogger();
+
+        #endregion
+
         #region Property -> Trailer
 
         private Models.Trailer.Trailer _trailer;
@@ -58,6 +68,9 @@ namespace Popcorn.ViewModels.Players.Trailer
 
         public override void Cleanup()
         {
+            Logger.Debug(
+                $"Cleaning up MoviePlayerViewModel");
+
             OnStoppedPlayingMedia(new EventArgs());
 
             base.Cleanup();

@@ -2,6 +2,7 @@
 using GalaSoft.MvvmLight;
 using Popcorn.Models.Localization;
 using GalaSoft.MvvmLight.CommandWpf;
+using NLog;
 
 namespace Popcorn.ViewModels.Settings
 {
@@ -10,6 +11,15 @@ namespace Popcorn.ViewModels.Settings
     /// </summary>
     public sealed class SettingsViewModel : ViewModelBase
     {
+        #region Logger
+
+        /// <summary>
+        /// Logger of the class
+        /// </summary>
+        private static readonly Logger Logger = LogManager.GetCurrentClassLogger();
+
+        #endregion
+
         #region Properties
 
         #region Property -> DownloadLimit
@@ -79,6 +89,8 @@ namespace Popcorn.ViewModels.Settings
         /// </summary>
         public SettingsViewModel()
         {
+            Logger.Debug("Initializing a new instance of SettingsViewModel");
+
             RegisterCommands();
         }
 

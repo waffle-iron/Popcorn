@@ -10,6 +10,7 @@ using System.Linq;
 using System.Net;
 using System.Threading;
 using System.Threading.Tasks;
+using NLog;
 using Popcorn.Services.Movie;
 using Popcorn.ViewModels.Players.Trailer;
 using YoutubeExtractor;
@@ -21,6 +22,15 @@ namespace Popcorn.ViewModels.Trailer
     /// </summary>
     public sealed class TrailerViewModel : ViewModelBase
     {
+        #region Logger
+
+        /// <summary>
+        /// Logger of the class
+        /// </summary>
+        private static readonly Logger Logger = LogManager.GetCurrentClassLogger();
+
+        #endregion
+
         #region Properties
 
         #region Property -> MovieService
@@ -82,6 +92,8 @@ namespace Popcorn.ViewModels.Trailer
         /// <param name="movie">Movie's trailer</param>
         private TrailerViewModel(MovieFull movie)
         {
+            Logger.Debug("Initializing a new instance of TrailerViewModel");
+
             MovieService = SimpleIoc.Default.GetInstance<MovieService>();
             Movie = movie;
         }
@@ -129,6 +141,8 @@ namespace Popcorn.ViewModels.Trailer
         {
             await Task.Run(async () =>
             {
+                Logger.Info(
+                    $"Loading movie's trailer: {movie.Title}");
                 // Inform subscribers we are loading movie trailer
                 try
                 {
@@ -147,6 +161,8 @@ namespace Popcorn.ViewModels.Trailer
 
                         if (video != null && video.RequiresDecryption)
                         {
+                            Logger.Info(
+                                $"Decrypting Youtube trailer url: {video.Title}");
                             // Decrypt encoded Youtube video link 
                             await Task.Run(() => DownloadUrlResolver.DecryptDownloadUrl(video));
                         }
@@ -155,6 +171,8 @@ namespace Popcorn.ViewModels.Trailer
                     {
                         if (ex is WebException || ex is VideoNotAvailableException || ex is YoutubeParseException)
                         {
+                            Logger.Info(
+                                $"Failed loading movie's trailer: {movie.Title}");
                             if (ex is VideoNotAvailableException)
                                 Messenger.Default.Send(
                                     new ManageExceptionMessage(
@@ -167,6 +185,8 @@ namespace Popcorn.ViewModels.Trailer
 
                     if (video == null)
                     {
+                        Logger.Info(
+                            $"Failed loading movie's trailer: {movie.Title}");
                         Messenger.Default.Send(
                             new ManageExceptionMessage(
                                 new Exception(LocalizationProviderHelper.GetLocalizedValue<string>("TrailerNotAvailable"))));
@@ -176,6 +196,8 @@ namespace Popcorn.ViewModels.Trailer
 
                     if (!ct.IsCancellationRequested)
                     {
+                        Logger.Info(
+                            $"Movie's trailer loaded: {movie.Title}");
                         TrailerPlayer =
                             new TrailerPlayerViewModel(new Models.Trailer.Trailer(new Uri(video.DownloadUrl)));
                     }
@@ -255,6 +277,8 @@ namespace Popcorn.ViewModels.Trailer
 
         public override void Cleanup()
         {
+            Logger.Debug(
+                $"Cleaning up TrailerViewModel");
             TrailerPlayer?.Cleanup();
 
             base.Cleanup();
