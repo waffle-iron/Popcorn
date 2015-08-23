@@ -1,5 +1,7 @@
 # Popcorn
-Watch movies easier
+An application which aims to provide a simple interface to watch any movie.
+
+[![Build status](https://ci.appveyor.com/api/projects/status/2tijq4sm43r87lmf?svg=true)](https://ci.appveyor.com/project/bbougot/popcorn)
 
 ![Screenshot1](https://cloud.githubusercontent.com/assets/8962802/9370674/46d0d9dc-46d2-11e5-9627-26db73f56efd.jpg)
 
@@ -14,12 +16,6 @@ Watch movies easier
 ![Screenshot6](https://cloud.githubusercontent.com/assets/8962802/9288485/eff1c0e0-4348-11e5-8739-8b3296667816.jpg)
 
 ![Screenshot7](https://cloud.githubusercontent.com/assets/8962802/9288487/f5f93b26-4348-11e5-9331-7e414980699b.jpg)
-
-## What is Popcorn?
-Popcorn is a project which aims to provide a simple interface to watch any movie.
-
-## Is it legal?
-Depending on which country you live in, it may be not.
 
 ## It reminds me of something
 Well, you may be thinking about Popcorn Time, don't you? If so, yes. The concept is not new, and this project is clearly inspired from it. Also, my primary goal was to make an alternative, using .NET framework.
