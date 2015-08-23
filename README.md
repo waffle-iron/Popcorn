@@ -5,17 +5,9 @@ An application which aims to provide a simple interface to watch any movie.
 
 ![Screenshot1](https://cloud.githubusercontent.com/assets/8962802/9370674/46d0d9dc-46d2-11e5-9627-26db73f56efd.jpg)
 
-![Screenshot2](https://cloud.githubusercontent.com/assets/8962802/9288477/cc6a211c-4348-11e5-906c-68a28ca01893.jpg)
+![Screenshot2](https://cloud.githubusercontent.com/assets/8962802/9288484/e6f0a25e-4348-11e5-9317-f8c0dee12729.jpg)
 
-![Screenshot3](https://cloud.githubusercontent.com/assets/8962802/9288479/d6378914-4348-11e5-8cf3-a97ee39a0b68.jpg)
-
-![Screenshot4](https://cloud.githubusercontent.com/assets/8962802/9288481/dee26ee4-4348-11e5-972e-b7609bd07ca8.jpg)
-
-![Screenshot5](https://cloud.githubusercontent.com/assets/8962802/9288484/e6f0a25e-4348-11e5-9317-f8c0dee12729.jpg)
-
-![Screenshot6](https://cloud.githubusercontent.com/assets/8962802/9288485/eff1c0e0-4348-11e5-8739-8b3296667816.jpg)
-
-![Screenshot7](https://cloud.githubusercontent.com/assets/8962802/9288487/f5f93b26-4348-11e5-9331-7e414980699b.jpg)
+![Screenshot3](https://cloud.githubusercontent.com/assets/8962802/9288481/dee26ee4-4348-11e5-972e-b7609bd07ca8.jpg)
 
 ## It reminds me of something
 Well, you may be thinking about Popcorn Time, don't you? If so, yes. The concept is not new, and this project is clearly inspired from it. Also, my primary goal was to make an alternative, using .NET framework.
