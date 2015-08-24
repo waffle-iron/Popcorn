@@ -378,7 +378,7 @@
                          Grid.Column="2"
                          ItemsSource="{Binding GenresViewModel.MovieGenres}"
                          Style="{StaticResource ListBoxButtons}"
-                         ScrollViewer.VerticalScrollBarVisibility="Visible">
+                         ScrollViewer.VerticalScrollBarVisibility="Auto">
                     <ListBox.ItemTemplate>
                         <DataTemplate>
                             <RadioButton Style="{StaticResource FlatButton}"

@@ -120,6 +120,7 @@ namespace Popcorn.ViewModels.Tabs
                     LastPage = Page;
 
                 IsLoadingMovies = false;
+                IsMovieFound = Movies.Any();
                 CurrentNumberOfMovies = Movies.Count;
 
                 await MovieHistoryService.ComputeMovieHistoryAsync(movies);
