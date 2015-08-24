@@ -13,7 +13,6 @@ using RestSharp;
 using Popcorn.Helpers;
 using Popcorn.Models.Movie;
 using TMDbLib.Client;
-using TMDbLib.Objects.General;
 using TMDbLib.Objects.Movies;
 using Popcorn.Models.Localization;
 using System.Linq;
@@ -24,6 +23,7 @@ using GalaSoft.MvvmLight.Messaging;
 using Popcorn.Models.Movie.Json;
 using Popcorn.Models.Subtitle;
 using Popcorn.Models.Subtitle.Json;
+using TMDbLib.Objects.General;
 
 namespace Popcorn.Services.Movie
 {
@@ -81,6 +81,27 @@ namespace Popcorn.Services.Movie
 
         #endregion
 
+        #region Method -> GetGenresAsync
+
+        /// <summary>
+        /// Get all movie's genres
+        /// </summary>
+        /// <returns>Genres</returns>
+        public async Task<List<MovieGenre>> GetGenresAsync()
+        {
+            var genres = new List<MovieGenre>();
+            await Task.Run(() =>
+            {
+                var englishGenre = TmdbClient.GetMovieGenres(new EnglishLanguage().Culture);
+                genres.AddRange(TmdbClient.GetMovieGenres().Select(genre => new MovieGenre
+                {
+                    EnglishName = englishGenre.FirstOrDefault(p => p.Id == genre.Id)?.Name, TmdbGenre = genre
+                }));
+            });
+
+            return genres;
+        }
+        #endregion
         #region Method -> GetPopularMoviesAsync
 
         /// <summary>
@@ -89,10 +110,12 @@ namespace Popcorn.Services.Movie
         /// <param name="page">Page to return</param>
         /// <param name="limit">The maximum number of movies to return</param>
         /// <param name="ct">Cancellation token</param>
+        /// <param name="genre">The genre to filter</param>
         /// <returns>Popular movies and the number of movies found</returns>
         public async Task<Tuple<IEnumerable<MovieShort>, int>> GetPopularMoviesAsync(int page,
             int limit,
-            CancellationToken ct)
+            CancellationToken ct,
+            MovieGenre genre = null)
         {
             var watch = Stopwatch.StartNew();
 
@@ -111,6 +134,7 @@ namespace Popcorn.Services.Movie
             request.AddUrlSegment("segment", "list_movies.json");
             request.AddParameter("limit", limit);
             request.AddParameter("page", page);
+            if (genre != null) request.AddParameter("genre", genre.EnglishName);
             request.AddParameter("sort_by", "seeds");
 
             var response = await restClient.ExecuteGetTaskAsync(request, ct);
@@ -147,10 +171,12 @@ namespace Popcorn.Services.Movie
         /// <param name="page">Page to return</param>
         /// <param name="limit">The maximum number of movies to return</param>
         /// <param name="ct">Cancellation token</param>
+        /// <param name="genre">The genre to filter</param>
         /// <returns>Top rated movies and the number of movies found</returns>
         public async Task<Tuple<IEnumerable<MovieShort>, int>> GetGreatestMoviesAsync(int page,
             int limit,
-            CancellationToken ct)
+            CancellationToken ct,
+            MovieGenre genre = null)
         {
             var watch = Stopwatch.StartNew();
 
@@ -169,6 +195,7 @@ namespace Popcorn.Services.Movie
             request.AddUrlSegment("segment", "list_movies.json");
             request.AddParameter("limit", limit);
             request.AddParameter("page", page);
+            if (genre != null) request.AddParameter("genre", genre.EnglishName);
             request.AddParameter("sort_by", "rating");
 
             var response = await restClient.ExecuteGetTaskAsync(request, ct);
@@ -205,10 +232,12 @@ namespace Popcorn.Services.Movie
         /// <param name="page">Page to return</param>
         /// <param name="limit">The maximum number of movies to return</param>
         /// <param name="ct">Cancellation token</param>
+        /// <param name="genre">The genre to filter</param>
         /// <returns>Recent movies and the number of movies found</returns>
         public async Task<Tuple<IEnumerable<MovieShort>, int>> GetRecentMoviesAsync(int page,
             int limit,
-            CancellationToken ct)
+            CancellationToken ct,
+            MovieGenre genre = null)
         {
             var watch = Stopwatch.StartNew();
 
@@ -227,6 +256,7 @@ namespace Popcorn.Services.Movie
             request.AddUrlSegment("segment", "list_movies.json");
             request.AddParameter("limit", limit);
             request.AddParameter("page", page);
+            if (genre != null) request.AddParameter("genre", genre.EnglishName);
             request.AddParameter("sort_by", "year");
 
             var response = await restClient.ExecuteGetTaskAsync(request, ct);
@@ -264,11 +294,13 @@ namespace Popcorn.Services.Movie
         /// <param name="page">Page to return</param>
         /// <param name="limit">The maximum number of movies to return</param>
         /// <param name="ct">Cancellation token</param>
+        /// <param name="genre">The genre to filter</param>
         /// <returns>Searched movies and the number of movies found</returns>
         public async Task<Tuple<IEnumerable<MovieShort>, int>> SearchMoviesAsync(string criteria,
             int page,
             int limit,
-            CancellationToken ct)
+            CancellationToken ct,
+            MovieGenre genre)
         {
             var watch = Stopwatch.StartNew();
 
@@ -287,6 +319,7 @@ namespace Popcorn.Services.Movie
             request.AddUrlSegment("segment", "list_movies.json");
             request.AddParameter("limit", limit);
             request.AddParameter("page", page);
+            if (genre != null) request.AddParameter("genre", genre.EnglishName);
             request.AddParameter("query_term", criteria);
 
             var response = await restClient.ExecuteGetTaskAsync(request, ct);
@@ -722,8 +755,7 @@ namespace Popcorn.Services.Movie
                     moviesToProcess.ForEachAsync(
                         movie =>
                             DownloadFileHelper.DownloadFileTaskAsync(movie.MediumCoverImage,
-                                Constants.CoverMoviesDirectory + movie.ImdbCode + Constants.ImageFileExtension,
-                                int.MaxValue),
+                                Constants.CoverMoviesDirectory + movie.ImdbCode + Constants.ImageFileExtension),
                         (movie, t) =>
                         {
                             if (t.Item3 == null && !string.IsNullOrEmpty(t.Item2))

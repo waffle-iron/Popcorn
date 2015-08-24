@@ -70,6 +70,15 @@ namespace Popcorn.Properties {
         }
         
         /// <summary>
+        ///   Recherche une chaîne localisée semblable à All.
+        /// </summary>
+        public static string AllLabel {
+            get {
+                return ResourceManager.GetString("AllLabel", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Recherche une chaîne localisée semblable à Buffering.
         /// </summary>
         public static string BufferingLabel {
@@ -201,6 +210,15 @@ namespace Popcorn.Properties {
         public static string FirstNameWatermark {
             get {
                 return ResourceManager.GetString("FirstNameWatermark", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Recherche une chaîne localisée semblable à Genres.
+        /// </summary>
+        public static string GenresLabel {
+            get {
+                return ResourceManager.GetString("GenresLabel", resourceCulture);
             }
         }
         

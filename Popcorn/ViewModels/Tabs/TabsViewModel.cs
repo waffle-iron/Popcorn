@@ -12,6 +12,7 @@ using GalaSoft.MvvmLight.Ioc;
 using NLog;
 using Popcorn.Services.History;
 using Popcorn.Services.Movie;
+using TMDbLib.Objects.General;
 
 namespace Popcorn.ViewModels.Tabs
 {
@@ -61,6 +62,15 @@ namespace Popcorn.ViewModels.Tabs
             get { return _movies; }
             set { Set(() => Movies, ref _movies, value); }
         }
+
+        #endregion
+
+        #region Property -> Genre
+
+        /// <summary>
+        /// The current movie genre
+        /// </summary>
+        protected MovieGenre Genre { get; set; }
 
         #endregion
 
@@ -197,6 +207,15 @@ namespace Popcorn.ViewModels.Tabs
 
         #endregion
 
+        #region Command -> ChangeMovieGenreCommand
+
+        /// <summary>
+        /// Command used to load movie's genres
+        /// </summary>
+        public RelayCommand<MovieGenre> ChangeMovieGenreCommand { get; set; }
+
+        #endregion
+
         #endregion
 
         #region Constructors
@@ -265,6 +284,12 @@ namespace Popcorn.ViewModels.Tabs
                 {
                     await MovieHistoryService.SetFavoriteMovieAsync(movie);
                     Messenger.Default.Send(new ChangeFavoriteMovieMessage());
+                });
+
+            ChangeMovieGenreCommand =
+                new RelayCommand<MovieGenre>(genre =>
+                {
+                    Messenger.Default.Send(new ChangeSelectedGenreMessage(genre));
                 });
         }
 

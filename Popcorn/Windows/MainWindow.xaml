@@ -41,6 +41,8 @@
             <converters:BoolToVisibilityConverter x:Key="BoolToVisibilityConverter" />
             <converters:RatioConverter x:Key="RatioConverter" />
             <converters:BoolToInverseVisibilityConverter x:Key="BoolToInverseVisibilityConverter"/>
+            <converters:BoolToInverseBoolConverter x:Key="BoolToInverseBoolConverter"/>
+            <converters:NullAsTrueConverter x:Key="NullAsTrueConverter"></converters:NullAsTrueConverter>
 
             <Style x:Key="ListBoxButtons" TargetType="{x:Type ListBox}">
                 <Setter Property="Background" 
@@ -228,6 +230,10 @@
                     <RowDefinition Height="Auto"></RowDefinition>
                     <RowDefinition Height="2.5"></RowDefinition>
                     <RowDefinition Height="Auto"></RowDefinition>
+                    <RowDefinition Height="2.5"></RowDefinition>
+                    <RowDefinition Height="Auto"></RowDefinition>
+                    <RowDefinition Height="2.5"></RowDefinition>
+                    <RowDefinition Height="*"></RowDefinition>
                 </Grid.RowDefinitions>
                 <TextBlock Text="{lex:LocText MoviesLabel}" 
                        FontSize="14"
@@ -240,11 +246,12 @@
                          Style="{StaticResource ListBoxButtons}">
                     <ListBoxItem>
                         <RadioButton Style="{StaticResource FlatButton}"
-                            Height="40"
-                            Command="{Binding SelectPopularTab}"
-                            IsChecked="{Binding IsPopularTabSelected, Mode=OneWay}"
-                            VerticalAlignment="Center"
-                            HorizontalContentAlignment="Left">
+                                     GroupName="Movies"  
+                                     Height="40"
+                                     Command="{Binding SelectPopularTab}"
+                                     VerticalAlignment="Center"
+                                     HorizontalContentAlignment="Left"
+                                     IsChecked="{Binding IsMovieSearchActive, Converter={StaticResource BoolToInverseBoolConverter}, Mode=OneWay}">
                             <StackPanel Orientation="Horizontal">
                                 <Rectangle Width="20" Height="18" Fill="White">
                                     <Rectangle.OpacityMask>
@@ -257,11 +264,11 @@
                     </ListBoxItem>
                     <ListBoxItem>
                         <RadioButton Style="{StaticResource FlatButton}"
-                            Height="40"                            
-                            Command="{Binding SelectGreatestTab}"
-                            IsChecked="{Binding IsGreatestTabSelected, Mode=OneWay}"
-                            VerticalAlignment="Center"
-                            HorizontalContentAlignment="Left">
+                                     GroupName="Movies"
+                                     Height="40"     
+                                     Command="{Binding SelectGreatestTab}"
+                                     VerticalAlignment="Center"
+                                     HorizontalContentAlignment="Left">
                             <StackPanel Orientation="Horizontal">
                                 <Rectangle Width="20" Height="19" Fill="White">
                                     <Rectangle.OpacityMask>
@@ -274,11 +281,11 @@
                     </ListBoxItem>
                     <ListBoxItem>
                         <RadioButton Style="{StaticResource FlatButton}"
-                            Height="40"                  
-                            Command="{Binding SelectRecentTab}"
-                            IsChecked="{Binding IsRecentTabSelected, Mode=OneWay}"
-                            VerticalAlignment="Center"
-                            HorizontalContentAlignment="Left">
+                                     Height="40"               
+                                     Command="{Binding SelectRecentTab}"
+                                     GroupName="Movies"
+                                     VerticalAlignment="Center"
+                                     HorizontalContentAlignment="Left">
                             <StackPanel Orientation="Horizontal">
                                 <Rectangle Width="20" 
                                            Height="20" 
@@ -295,12 +302,13 @@
                             </StackPanel>
                         </RadioButton>
                     </ListBoxItem>
-                    <ListBoxItem Visibility="{Binding IsMovieSearchActive, Converter={StaticResource BoolToInverseVisibilityConverter}}">
+                    <ListBoxItem Visibility="{Binding IsMovieSearchActive, Converter={StaticResource BoolToInverseVisibilityConverter}, Mode=OneWay}">
                         <RadioButton Style="{StaticResource FlatButton}"
-                            Height="40"
-                            HorizontalContentAlignment="Left"
-                            Command="{Binding SelectSearchTab}"
-                            IsChecked="{Binding IsSearchTabSelected, Mode=OneWay}">
+                                     Height="40"
+                                     GroupName="Movies"
+                                     HorizontalContentAlignment="Left"
+                                     Command="{Binding SelectSearchTab}"
+                                     IsChecked="{Binding IsMovieSearchActive, Mode=OneWay}">
                             <StackPanel Orientation="Horizontal">
                                 <Rectangle Width="20" 
                                            Height="25" 
@@ -316,21 +324,21 @@
                     </ListBoxItem>
                 </ListBox>
                 <TextBlock Text="{lex:LocText CollectionsLabel}" 
-                       FontSize="14"
-                       Grid.Row="5"
-                       Foreground="#3c4c55"
-                       Grid.Column="1"
-                       Grid.ColumnSpan="2"></TextBlock>
+                           FontSize="14"
+                           Grid.Row="5"
+                           Foreground="#3c4c55"
+                           Grid.Column="1"
+                           Grid.ColumnSpan="2"></TextBlock>
                 <ListBox Grid.Row="7"
                          Grid.Column="2"
                          Style="{StaticResource ListBoxButtons}">
                     <ListBoxItem>
                         <RadioButton Style="{StaticResource FlatButton}"
-                            Height="40"
-                            Command="{Binding SelectFavoritesTab}"
-                            IsChecked="{Binding IsFavoritesTabSelected, Mode=OneWay}"
-                            VerticalAlignment="Center"
-                            HorizontalContentAlignment="Left">
+                                     Height="40"
+                                     GroupName="Movies"
+                                     Command="{Binding SelectFavoritesTab}"
+                                     VerticalAlignment="Center"
+                                     HorizontalContentAlignment="Left">
                             <StackPanel Orientation="Horizontal">
                                 <Rectangle Width="20" Height="18" Fill="White">
                                     <Rectangle.OpacityMask>
@@ -343,11 +351,12 @@
                     </ListBoxItem>
                     <ListBoxItem>
                         <RadioButton Style="{StaticResource FlatButton}"
-                            Height="40"                            
-                            Command="{Binding SelectSeenTab}"
-                            IsChecked="{Binding IsSeenTabSelected, Mode=OneWay}"
-                            VerticalAlignment="Center"
-                            HorizontalContentAlignment="Left">
+                                     Height="40"     
+                                     GroupName="Movies"
+                                     Command="{Binding SelectSeenTab}"
+                                     VerticalAlignment="Center"
+                                     HorizontalAlignment="Stretch"
+                                     HorizontalContentAlignment="Left">
                             <StackPanel Orientation="Horizontal">
                                 <Rectangle Width="20" Height="12" Fill="White">
                                     <Rectangle.OpacityMask>
@@ -358,6 +367,33 @@
                             </StackPanel>
                         </RadioButton>
                     </ListBoxItem>
+                </ListBox>
+                <TextBlock Text="{lex:LocText GenresLabel}" 
+                       FontSize="14"
+                       Grid.Row="9"
+                       Foreground="#3c4c55"
+                       Grid.Column="1"
+                       Grid.ColumnSpan="2"></TextBlock>
+                <ListBox Grid.Row="11"
+                         Grid.Column="2"
+                         ItemsSource="{Binding GenresViewModel.MovieGenres}"
+                         Style="{StaticResource ListBoxButtons}"
+                         ScrollViewer.VerticalScrollBarVisibility="Visible">
+                    <ListBox.ItemTemplate>
+                        <DataTemplate>
+                            <RadioButton Style="{StaticResource FlatButton}"
+                                         Height="40" 
+                                         GroupName="Genres"
+                                         VerticalAlignment="Center"
+                                         HorizontalAlignment="Stretch"
+                                         HorizontalContentAlignment="Left"
+                                         IsChecked="{Binding RelativeSource={RelativeSource PreviousData}, Converter={StaticResource NullAsTrueConverter}, Mode=OneWay}"
+                                         CommandParameter="{Binding}"
+                                         Command="{Binding DataContext.SelectedTab.ChangeMovieGenreCommand, ElementName=MenuBar}">
+                                    <TextBlock x:Name="GenreText" Margin="10,0,0,0" Text="{Binding TmdbGenre.Name}" FontSize="16"></TextBlock>
+                            </RadioButton>
+                        </DataTemplate>
+                    </ListBox.ItemTemplate>
                 </ListBox>
             </Grid>
         </Grid>

@@ -8,6 +8,7 @@ using Popcorn.Messaging;
 using GalaSoft.MvvmLight.CommandWpf;
 using GalaSoft.MvvmLight.Ioc;
 using NLog;
+using Popcorn.Models.Movie;
 using Popcorn.ViewModels.Main;
 
 namespace Popcorn.ViewModels.Tabs
@@ -55,6 +56,13 @@ namespace Popcorn.ViewModels.Tabs
             Messenger.Default.Register<ChangeLanguageMessage>(
                 this,
                 language => { TabName = LocalizationProviderHelper.GetLocalizedValue<string>("GreatestTitleTab"); });
+
+            Messenger.Default.Register<ChangeSelectedGenreMessage>(
+                this,
+                async message =>
+                {
+                    await LoadByGenreAsync(message.Genre);
+                });
         }
 
         #endregion
@@ -89,7 +97,7 @@ namespace Popcorn.ViewModels.Tabs
             var watch = Stopwatch.StartNew();
 
             Logger.Info(
-                $"Loading page {Page} of the greatest movies...");
+                $"Loading page {Page}...");
 
             Page++;
             IsLoadingMovies = true;
@@ -98,7 +106,8 @@ namespace Popcorn.ViewModels.Tabs
                 var movieResults =
                     await MovieService.GetGreatestMoviesAsync(Page,
                         MaxMoviesPerPage,
-                        CancellationLoadNextPageToken.Token);
+                        CancellationLoadNextPageToken.Token,
+                        Genre);
                 var movies = movieResults.Item1.ToList();
                 MaxNumberOfMovies = movieResults.Item2;
 
@@ -111,7 +120,7 @@ namespace Popcorn.ViewModels.Tabs
                     LastPage = Page;
 
                 IsLoadingMovies = false;
-                CurrentNumberOfMovies = Movies.Count();
+                CurrentNumberOfMovies = Movies.Count;
 
                 await MovieHistoryService.ComputeMovieHistoryAsync(movies);
                 await MovieService.DownloadCoverImageAsync(movies);
@@ -119,23 +128,40 @@ namespace Popcorn.ViewModels.Tabs
                 watch.Stop();
                 var elapsedMs = watch.ElapsedMilliseconds;
                 Logger.Info(
-                    $"Loaded page {Page} of the greatest movies in {elapsedMs} milliseconds.");
+                    $"Loaded page {Page} in {elapsedMs} milliseconds.");
             }
             catch (Exception exception)
             {
                 Page--;
 
                 Logger.Info(
-                    $"Error while loading page {Page} of the greatest movies : {exception.Message}");
+                    $"Error while loading page {Page}: {exception.Message}");
             }
             finally
             {
                 IsLoadingMovies = false;
                 IsMovieFound = Movies.Any();
-                CurrentNumberOfMovies = Movies.Count();
+                CurrentNumberOfMovies = Movies.Count;
                 if (!IsMovieFound)
                     Page = 0;
             }
+        }
+
+        #endregion
+
+        #region Method -> LoadByGenreAsync
+
+        /// <summary>
+        /// Load movies for a genre
+        /// </summary>
+        /// <param name="genre"></param>
+        /// <returns></returns>
+        private async Task LoadByGenreAsync(MovieGenre genre)
+        {
+            Genre = genre.TmdbGenre.Name == LocalizationProviderHelper.GetLocalizedValue<string>("AllLabel") ? null : genre;
+            Page = 0;
+            Movies.Clear();
+            await LoadMoviesAsync();
         }
 
         #endregion

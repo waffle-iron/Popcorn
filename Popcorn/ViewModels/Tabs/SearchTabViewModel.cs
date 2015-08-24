@@ -10,6 +10,7 @@ using System.Diagnostics;
 using GalaSoft.MvvmLight.CommandWpf;
 using GalaSoft.MvvmLight.Ioc;
 using NLog;
+using Popcorn.Models.Movie;
 using Popcorn.ViewModels.Main;
 
 namespace Popcorn.ViewModels.Tabs
@@ -86,6 +87,13 @@ namespace Popcorn.ViewModels.Tabs
             Messenger.Default.Register<ChangeLanguageMessage>(
                 this,
                 language => { TabName = LocalizationProviderHelper.GetLocalizedValue<string>("SearchTitleTab"); });
+
+            Messenger.Default.Register<ChangeSelectedGenreMessage>(
+                this,
+                async message =>
+                {
+                    await LoadByGenreAsync(message.Genre);
+                });
         }
 
         #endregion
@@ -126,7 +134,7 @@ namespace Popcorn.ViewModels.Tabs
             var watch = Stopwatch.StartNew();
 
             Logger.Info(
-                $"Loading page {Page} of the movie search with criteria: {searchFilter}");
+                $"Loading page {Page} with criteria: {searchFilter}");
 
             SearchFilter = searchFilter;
             Page++;
@@ -142,7 +150,8 @@ namespace Popcorn.ViewModels.Tabs
                         await MovieService.SearchMoviesAsync(searchFilter,
                             Page,
                             MaxMoviesPerPage,
-                            CancellationSearchToken.Token);
+                            CancellationSearchToken.Token,
+                            Genre);
                     var movies = movieResults.Item1.ToList();
                     MaxNumberOfMovies = movieResults.Item2;
 
@@ -152,7 +161,7 @@ namespace Popcorn.ViewModels.Tabs
                     }
 
                     IsLoadingMovies = false;
-                    CurrentNumberOfMovies = Movies.Count();
+                    CurrentNumberOfMovies = Movies.Count;
 
                     await MovieHistoryService.ComputeMovieHistoryAsync(movies);
                     await MovieService.DownloadCoverImageAsync(movies);
@@ -165,13 +174,13 @@ namespace Popcorn.ViewModels.Tabs
                     watch.Stop();
                     var elapsedMs = watch.ElapsedMilliseconds;
                     Logger.Info(
-                        $"Loaded page {Page} of the search with criteria {searchFilter} in {elapsedMs} milliseconds.");
+                        $"Loaded page {Page} with criteria {searchFilter} in {elapsedMs} milliseconds.");
                 }
                 catch (Exception exception)
                 {
                     Page--;
                     Logger.Info(
-                        $"Error while loading page {Page} of the search with criteria {searchFilter}: {exception.Message}");
+                        $"Error while loading page {Page} with criteria {searchFilter}: {exception.Message}");
                 }
                 finally
                 {
@@ -182,6 +191,23 @@ namespace Popcorn.ViewModels.Tabs
                         Page = 0;
                 }
             }
+        }
+
+        #endregion
+
+        #region Method -> LoadByGenreAsync
+
+        /// <summary>
+        /// Load movies for a genre
+        /// </summary>
+        /// <param name="genre"></param>
+        /// <returns></returns>
+        private async Task LoadByGenreAsync(MovieGenre genre)
+        {
+            Genre = genre.TmdbGenre.Name == LocalizationProviderHelper.GetLocalizedValue<string>("AllLabel") ? null : genre;
+            Page = 0;
+            Movies.Clear();
+            await LoadMoviesAsync();
         }
 
         #endregion

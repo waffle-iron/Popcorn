@@ -214,6 +214,7 @@
     <Compile Include="Converters\BoolToVisibilityConverter.cs" />
     <Compile Include="Converters\MultiBooleanToBoolConverter.cs" />
     <Compile Include="Converters\MultiBooleanToVisibilityConverter.cs" />
+    <Compile Include="Converters\NullAsTrueConverter.cs" />
     <Compile Include="Converters\UriToCachedImageConverter.cs" />
     <Compile Include="Converters\RatioConverter.cs" />
     <Compile Include="Converters\WindowStateToBooleanConverter.cs" />
@@ -253,11 +254,13 @@
     <Compile Include="Entity\Movie\Torrent.cs" />
     <Compile Include="Messaging\ChangeFavoriteMovieMessage.cs" />
     <Compile Include="Messaging\ChangeHasBeenSeenMovieMessage.cs" />
+    <Compile Include="Messaging\ChangeSelectedGenreMessage.cs" />
     <Compile Include="Migrations\201508192155425_Initial.cs" />
     <Compile Include="Migrations\201508192155425_Initial.Designer.cs">
       <DependentUpon>201508192155425_Initial.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
+    <Compile Include="Models\Movie\MovieGenre.cs" />
     <Compile Include="Panels\ElasticWrapPanel.cs" />
     <Compile Include="Entity\Localization\Language.cs" />
     <Compile Include="Entity\Application\Settings.cs" />
@@ -385,6 +388,7 @@
       <DependentUpon>Trailer.xaml</DependentUpon>
     </Compile>
     <Compile Include="ViewModels\Download\DownloadMovieViewModel.cs" />
+    <Compile Include="ViewModels\Genres\GenresViewModel.cs" />
     <Compile Include="ViewModels\Main\MainViewModel.cs" />
     <Compile Include="ViewModels\MovieSettings\MovieSettingsViewModel.cs" />
     <Compile Include="ViewModels\Players\MediaPlayerViewModel.cs" />

@@ -276,4 +276,10 @@
   <data name="UpdateReleasesInformationsLabel" xml:space="preserve">
     <value>Release informations:</value>
   </data>
+  <data name="GenresLabel" xml:space="preserve">
+    <value>Genres</value>
+  </data>
+  <data name="AllLabel" xml:space="preserve">
+    <value>All</value>
+  </data>
 </root>

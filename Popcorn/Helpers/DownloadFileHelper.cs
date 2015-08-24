@@ -28,7 +28,7 @@ namespace Popcorn.Helpers
         /// <param name="progress">Report the progress of the download</param>
         /// <param name="ct">Cancellation token</param>
         public static async Task<Tuple<string, string, Exception>> DownloadFileTaskAsync(string remotePath,
-            string localPath = null, int timeOut = 10000, IProgress<long> progress = null, CancellationTokenSource ct = null)
+            string localPath = null, int timeOut = int.MaxValue, IProgress<long> progress = null, CancellationTokenSource ct = null)
         {
             try
             {

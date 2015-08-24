@@ -9,6 +9,7 @@ using NLog;
 using Popcorn.Entity;
 using Popcorn.Entity.Cast;
 using Popcorn.Entity.Movie;
+using Popcorn.Models.Movie;
 using MovieFull = Popcorn.Models.Movie.MovieFull;
 using MovieShort = Popcorn.Models.Movie.MovieShort;
 using Torrent = Popcorn.Models.Torrent.Torrent;
@@ -77,7 +78,7 @@ namespace Popcorn.Services.History
         /// Get the favorites movies
         /// </summary>
         /// <returns>Favorites movies</returns>
-        public async Task<IEnumerable<MovieShort>> GetFavoritesMoviesAsync()
+        public async Task<IEnumerable<MovieShort>> GetFavoritesMoviesAsync(MovieGenre genre = null)
         {
             var watch = Stopwatch.StartNew();
 
@@ -88,8 +89,18 @@ namespace Popcorn.Services.History
                 {
                     await context.MovieHistory.LoadAsync();
                     var movieHistory = await context.MovieHistory.FirstOrDefaultAsync();
-                    movies.AddRange(movieHistory.MoviesShort.Where(p => p.IsFavorite)
-                        .Select(MovieShortFromEntityToModel));
+                    if (genre != null)
+                    {
+                        movies.AddRange(movieHistory.MoviesShort.Where(
+                            p => p.IsFavorite && p.Genres.Any(g => g.Name == genre.EnglishName))
+                            .Select(MovieShortFromEntityToModel));
+                    }
+                    else
+                    {
+                        movies.AddRange(movieHistory.MoviesShort.Where(
+                            p => p.IsFavorite)
+                            .Select(MovieShortFromEntityToModel));
+                    }
                 }
             });
 
@@ -108,7 +119,7 @@ namespace Popcorn.Services.History
         /// Get the seen movies
         /// </summary>
         /// <returns>Seen movies</returns>
-        public async Task<IEnumerable<MovieShort>> GetSeenMoviesAsync()
+        public async Task<IEnumerable<MovieShort>> GetSeenMoviesAsync(MovieGenre genre = null)
         {
             var watch = Stopwatch.StartNew();
 
@@ -119,8 +130,18 @@ namespace Popcorn.Services.History
                 {
                     await context.MovieHistory.LoadAsync();
                     var movieHistory = await context.MovieHistory.FirstOrDefaultAsync();
-                    movies.AddRange(
-                        movieHistory.MoviesShort.Where(p => p.HasBeenSeen).Select(MovieShortFromEntityToModel));
+                    if (genre != null)
+                    {
+                        movies.AddRange(
+                            movieHistory.MoviesShort.Where(p => p.HasBeenSeen && p.Genres.Any(g => g.Name == genre.EnglishName))
+                                .Select(MovieShortFromEntityToModel));
+                    }
+                    else
+                    {
+                        movies.AddRange(
+                            movieHistory.MoviesShort.Where(p => p.HasBeenSeen)
+                                .Select(MovieShortFromEntityToModel));
+                    }
                 }
             });
 
