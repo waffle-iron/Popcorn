@@ -20,3 +20,6 @@ Of course yes! Any pull-request will be considered.
 
 ## Visual Studio .sln
 The solution is built using Visual Studio 2015.
+
+## Updates
+Automatic incremental updates are checked and installed on startup if any. Releases are stored on Azure Storage and updates are managed using Squirrel.Windows. 
