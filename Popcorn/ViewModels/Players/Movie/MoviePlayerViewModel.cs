@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Threading;
 using System.Threading.Tasks;
 using GalaSoft.MvvmLight.CommandWpf;
 using GalaSoft.MvvmLight.Messaging;
@@ -60,7 +61,7 @@ namespace Popcorn.ViewModels.Players.Movie
         /// </summary>
         public async Task HasSeenMovie()
         {
-            await MovieHistoryService.SetHasBeenSeenMovieAsync(Movie);
+            await MovieHistoryService.SetHasBeenSeenMovieAsync(Movie, new CancellationTokenSource());
             Messenger.Default.Send(new ChangeHasBeenSeenMovieMessage());
             Messenger.Default.Send(new StopPlayingMovieMessage());
         }

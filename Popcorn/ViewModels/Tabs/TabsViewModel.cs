@@ -12,7 +12,6 @@ using GalaSoft.MvvmLight.Ioc;
 using NLog;
 using Popcorn.Services.History;
 using Popcorn.Services.Movie;
-using TMDbLib.Objects.General;
 
 namespace Popcorn.ViewModels.Tabs
 {
@@ -109,7 +108,7 @@ namespace Popcorn.ViewModels.Tabs
         /// <summary>
         /// Current page number of loaded movies
         /// </summary>
-        public int Page { get; protected set; }
+        protected int Page { get; set; }
 
         #endregion
 
@@ -131,12 +130,12 @@ namespace Popcorn.ViewModels.Tabs
 
         #endregion
 
-        #region Property -> CancellationLoadNextPageToken
+        #region Property -> CancellationLoadingMovies
 
         /// <summary>
         /// Token to cancel movie loading
         /// </summary>
-        protected CancellationTokenSource CancellationLoadNextPageToken { get; private set; }
+        protected CancellationTokenSource CancellationLoadingMovies { get; set; }
 
         #endregion
 
@@ -231,7 +230,7 @@ namespace Popcorn.ViewModels.Tabs
 
             RegisterMessages();
             RegisterCommands();
-            CancellationLoadNextPageToken = new CancellationTokenSource();
+            CancellationLoadingMovies = new CancellationTokenSource();
             MovieService = SimpleIoc.Default.GetInstance<MovieService>();
             MovieHistoryService = SimpleIoc.Default.GetInstance<MovieHistoryService>();
             MaxMoviesPerPage = Constants.MaxMoviesPerPage;
@@ -265,7 +264,7 @@ namespace Popcorn.ViewModels.Tabs
                 this,
                 async message =>
                 {
-                    await MovieHistoryService.ComputeMovieHistoryAsync(Movies);
+                    await MovieHistoryService.ComputeMovieHistoryAsync(Movies, CancellationLoadingMovies);
                 });
         }
 
@@ -282,7 +281,7 @@ namespace Popcorn.ViewModels.Tabs
             SetFavoriteMovieCommand =
                 new RelayCommand<MovieShort>(async movie =>
                 {
-                    await MovieHistoryService.SetFavoriteMovieAsync(movie);
+                    await MovieHistoryService.SetFavoriteMovieAsync(movie, CancellationLoadingMovies);
                     Messenger.Default.Send(new ChangeFavoriteMovieMessage());
                 });
 
@@ -307,18 +306,18 @@ namespace Popcorn.ViewModels.Tabs
 
         #endregion
 
-        #region Method -> StopLoadingNextPage
+        #region Method -> StopLoadingMovies
 
         /// <summary>
         /// Cancel the loading of the next page 
         /// </summary>
-        private void StopLoadingNextPage()
+        protected void StopLoadingMovies()
         {
             Logger.Info(
-                "Stop loading next movie page.");
+                "Stop loading movies.");
 
-            CancellationLoadNextPageToken?.Cancel();
-            CancellationLoadNextPageToken = new CancellationTokenSource();
+            CancellationLoadingMovies?.Cancel();
+            CancellationLoadingMovies = new CancellationTokenSource();
         }
 
         #endregion
@@ -328,8 +327,8 @@ namespace Popcorn.ViewModels.Tabs
             Logger.Debug(
                 "Cleaning a TabViewModel.");
 
-            StopLoadingNextPage();
-            CancellationLoadNextPageToken?.Dispose();
+            StopLoadingMovies();
+            CancellationLoadingMovies?.Dispose();
 
             base.Cleanup();
         }

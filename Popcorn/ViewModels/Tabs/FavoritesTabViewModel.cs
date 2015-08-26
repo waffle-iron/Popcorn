@@ -56,6 +56,7 @@ namespace Popcorn.ViewModels.Tabs
                 this,
                 async message =>
                 {
+                    StopLoadingMovies();
                     await LoadMoviesAsync();
                 });
 
@@ -63,6 +64,7 @@ namespace Popcorn.ViewModels.Tabs
                 this,
                 async message =>
                 {
+                    StopLoadingMovies();
                     await LoadByGenreAsync(message.Genre);
                 });
         }
@@ -80,6 +82,7 @@ namespace Popcorn.ViewModels.Tabs
             {
                 var mainViewModel = SimpleIoc.Default.GetInstance<MainViewModel>();
                 mainViewModel.IsConnectionInError = false;
+                StopLoadingMovies();
                 await LoadMoviesAsync();
             });
         }
@@ -93,35 +96,40 @@ namespace Popcorn.ViewModels.Tabs
         /// </summary>
         public override async Task LoadMoviesAsync()
         {
-            var watch = Stopwatch.StartNew();
-
-            Logger.Info(
-                "Loading movies...");
-
-            IsLoadingMovies = true;
-            var favoritesMovies = await MovieHistoryService.GetFavoritesMoviesAsync(Genre);
-            var movies = favoritesMovies.ToList();
-            Movies.Clear();
-            foreach (var movie in movies)
+            await Task.Run(async () =>
             {
-                Movies.Add(movie);
-            }
+                var watch = Stopwatch.StartNew();
 
-            IsLoadingMovies = false;
-            IsMovieFound = Movies.Any();
-            CurrentNumberOfMovies = Movies.Count;
-            MaxNumberOfMovies = movies.Count;
-            await MovieService.DownloadCoverImageAsync(Movies);
+                Logger.Info(
+                    "Loading movies...");
 
-            watch.Stop();
-            var elapsedMs = watch.ElapsedMilliseconds;
-            Logger.Info(
-                $"Loaded movies in {elapsedMs} milliseconds.");
+                IsLoadingMovies = true;
+                var favoritesMovies =
+                    await MovieHistoryService.GetFavoritesMoviesAsync(Genre, CancellationLoadingMovies.Token);
+                var movies = favoritesMovies.ToList();
+                Movies.Clear();
+                foreach (var movie in movies)
+                {
+                    Movies.Add(movie);
+                }
+
+                IsLoadingMovies = false;
+                IsMovieFound = Movies.Any();
+                CurrentNumberOfMovies = Movies.Count;
+                MaxNumberOfMovies = movies.Count;
+                await MovieService.DownloadCoverImageAsync(Movies, CancellationLoadingMovies);
+
+                watch.Stop();
+                var elapsedMs = watch.ElapsedMilliseconds;
+                Logger.Info(
+                    $"Loaded movies in {elapsedMs} milliseconds.");
+            }, CancellationLoadingMovies.Token);
         }
 
         #endregion
 
         #region Method -> LoadByGenreAsync
+
         /// <summary>
         /// Load movies for a genre
         /// </summary>
@@ -129,9 +137,13 @@ namespace Popcorn.ViewModels.Tabs
         /// <returns></returns>
         private async Task LoadByGenreAsync(MovieGenre genre)
         {
-            Genre = genre.TmdbGenre.Name == LocalizationProviderHelper.GetLocalizedValue<string>("AllLabel") ? null : genre;
+            StopLoadingMovies();
+            Genre = genre.TmdbGenre.Name == LocalizationProviderHelper.GetLocalizedValue<string>("AllLabel")
+                ? null
+                : genre;
             await LoadMoviesAsync();
         }
+
         #endregion
 
         #endregion

@@ -1,5 +1,6 @@
 ﻿using System.Diagnostics;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using GalaSoft.MvvmLight.CommandWpf;
 using GalaSoft.MvvmLight.Ioc;
@@ -57,6 +58,7 @@ namespace Popcorn.ViewModels.Tabs
                 this,
                 async message =>
                 {
+                    StopLoadingMovies();
                     await LoadMoviesAsync();
                 });
 
@@ -64,6 +66,7 @@ namespace Popcorn.ViewModels.Tabs
                 this,
                 async message =>
                 {
+                    StopLoadingMovies();
                     await LoadByGenreAsync(message.Genre);
                 });
         }
@@ -81,6 +84,7 @@ namespace Popcorn.ViewModels.Tabs
             {
                 var mainViewModel = SimpleIoc.Default.GetInstance<MainViewModel>();
                 mainViewModel.IsConnectionInError = false;
+                StopLoadingMovies();
                 await LoadMoviesAsync();
             });
         }
@@ -100,7 +104,7 @@ namespace Popcorn.ViewModels.Tabs
                 "Loading movies...");
 
             IsLoadingMovies = true;
-            var favoritesMovies = await MovieHistoryService.GetSeenMoviesAsync(Genre);
+            var favoritesMovies = await MovieHistoryService.GetSeenMoviesAsync(Genre, CancellationLoadingMovies);
             var movies = favoritesMovies.ToList();
             Movies.Clear();
             foreach (var movie in movies)
@@ -112,7 +116,7 @@ namespace Popcorn.ViewModels.Tabs
             IsMovieFound = Movies.Any();
             CurrentNumberOfMovies = Movies.Count;
             MaxNumberOfMovies = movies.Count;
-            await MovieService.DownloadCoverImageAsync(Movies);
+            await MovieService.DownloadCoverImageAsync(Movies, CancellationLoadingMovies);
 
             watch.Stop();
             var elapsedMs = watch.ElapsedMilliseconds;
@@ -131,6 +135,7 @@ namespace Popcorn.ViewModels.Tabs
         /// <returns></returns>
         private async Task LoadByGenreAsync(MovieGenre genre)
         {
+            StopLoadingMovies();
             Genre = genre.TmdbGenre.Name == LocalizationProviderHelper.GetLocalizedValue<string>("AllLabel") ? null : genre;
             await LoadMoviesAsync();
         }

@@ -166,21 +166,19 @@
                     Content="{lex:LocText SettingsMenuTitle}" />
         </controls:WindowCommands>
     </controls:MetroWindow.RightWindowCommands>
-    
+
     <controls:MetroWindow.Flyouts>
-        <controls:FlyoutsControl x:Name="FlyoutsControl">
-            <controls:Flyout x:Name="MoviePage" 
-                             Header="{Binding MoviePage.Movie.Title, Source={StaticResource Locator}}"
+        <controls:FlyoutsControl>
+            <controls:Flyout Header="{Binding MoviePage.Movie.Title, Source={StaticResource Locator}}"
                              IsOpen="{Binding IsMovieFlyoutOpen}"
                              Position="Right"
                              AnimateOpacity="True"
                              CloseCommand="{Binding CloseMoviePageCommand}"
                              CloseButtonVisibility="{Binding MoviePage.IsDownloadingMovie, Converter={StaticResource BoolToVisibilityConverter}, Source={StaticResource Locator}}"
                              Width="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType=controls:MetroWindow}, Path=ActualWidth, Mode=OneWay}">
-                <movieUserControl:Movie x:Name="MovieUc"></movieUserControl:Movie>
+                <movieUserControl:Movie/>
             </controls:Flyout>
-            <controls:Flyout x:Name="Settings"
-                             Header="{lex:LocText SettingsMenuTitle}"
+            <controls:Flyout Header="{lex:LocText SettingsMenuTitle}"
                              IsOpen="{Binding IsSettingsFlyoutOpen}"
                              Position="Right"
                              IsModal="True"
@@ -190,7 +188,7 @@
         </controls:FlyoutsControl>
     </controls:MetroWindow.Flyouts>
 
-    <Grid x:Name="LayoutRoot">
+    <Grid>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="Auto" MinWidth="220"></ColumnDefinition>
             <ColumnDefinition Width="*"></ColumnDefinition>
@@ -206,8 +204,7 @@
               Grid.Column="0" 
               Grid.Row="0" 
               Background="#cc4d4d">
-            <searchUserControl:Search x:Name="SearchUc"
-                                      Width="{Binding ElementName=SearchBar, Path=ActualWidth, Converter={StaticResource RatioConverter}, ConverterParameter=0.8}"/>
+            <searchUserControl:Search Width="{Binding ElementName=SearchBar, Path=ActualWidth, Converter={StaticResource RatioConverter}, ConverterParameter=0.8}"/>
         </Grid>
         <Grid x:Name="MenuBar"
               Grid.Column="0" 
@@ -390,7 +387,7 @@
                                          IsChecked="{Binding RelativeSource={RelativeSource PreviousData}, Converter={StaticResource NullAsTrueConverter}, Mode=OneWay}"
                                          CommandParameter="{Binding}"
                                          Command="{Binding DataContext.SelectedTab.ChangeMovieGenreCommand, ElementName=MenuBar}">
-                                    <TextBlock x:Name="GenreText" Margin="10,0,0,0" Text="{Binding TmdbGenre.Name}" FontSize="16"></TextBlock>
+                                <TextBlock x:Name="GenreText" Margin="10,0,0,0" Text="{Binding TmdbGenre.Name}" FontSize="16"></TextBlock>
                             </RadioButton>
                         </DataTemplate>
                     </ListBox.ItemTemplate>
@@ -406,8 +403,7 @@
                        Margin="16,0,0,10"
                        HorizontalAlignment="Left"
                        VerticalAlignment="Center"/>
-                <Label x:Name="MaxNumberOfMovies"
-                       Margin="5,0,0,0"
+                <Label Margin="5,0,0,0"
                        FontSize="18"
                        FontStyle="Italic"
                        Foreground="#484b4e"
@@ -450,7 +446,7 @@
                     <movieUc:MoviePlayer/>
                 </DataTemplate>
             </controls:MetroAnimatedSingleRowTabControl.Resources>
-            
+
             <controls:MetroAnimatedSingleRowTabControl.ItemContainerStyle>
                 <Style TargetType="{x:Type TabItem}">
                     <Setter Property="Visibility" Value="Collapsed"></Setter>

@@ -61,6 +61,7 @@ namespace Popcorn.ViewModels.Tabs
                 this,
                 async message =>
                 {
+                    StopLoadingMovies();
                     await LoadByGenreAsync(message.Genre);
                 });
         }
@@ -78,6 +79,7 @@ namespace Popcorn.ViewModels.Tabs
             {
                 var mainViewModel = SimpleIoc.Default.GetInstance<MainViewModel>();
                 mainViewModel.IsConnectionInError = false;
+                StopLoadingMovies();
                 await LoadMoviesAsync();
             });
         }
@@ -94,19 +96,17 @@ namespace Popcorn.ViewModels.Tabs
             if (Page == LastPage)
                 return;
 
+            IsLoadingMovies = true;
             var watch = Stopwatch.StartNew();
-
             Logger.Info(
                 $"Loading page {Page}...");
-
             Page++;
-            IsLoadingMovies = true;
             try
             {
                 var movieResults =
                     await MovieService.GetGreatestMoviesAsync(Page,
                         MaxMoviesPerPage,
-                        CancellationLoadNextPageToken.Token,
+                        CancellationLoadingMovies.Token,
                         Genre);
                 var movies = movieResults.Item1.ToList();
                 MaxNumberOfMovies = movieResults.Item2;
@@ -123,8 +123,8 @@ namespace Popcorn.ViewModels.Tabs
                 IsMovieFound = Movies.Any();
                 CurrentNumberOfMovies = Movies.Count;
 
-                await MovieHistoryService.ComputeMovieHistoryAsync(movies);
-                await MovieService.DownloadCoverImageAsync(movies);
+                await MovieHistoryService.ComputeMovieHistoryAsync(movies, CancellationLoadingMovies);
+                await MovieService.DownloadCoverImageAsync(movies, CancellationLoadingMovies);
 
                 watch.Stop();
                 var elapsedMs = watch.ElapsedMilliseconds;
@@ -158,6 +158,7 @@ namespace Popcorn.ViewModels.Tabs
         /// <returns></returns>
         private async Task LoadByGenreAsync(MovieGenre genre)
         {
+            StopLoadingMovies();
             Genre = genre.TmdbGenre.Name == LocalizationProviderHelper.GetLocalizedValue<string>("AllLabel") ? null : genre;
             Page = 0;
             Movies.Clear();

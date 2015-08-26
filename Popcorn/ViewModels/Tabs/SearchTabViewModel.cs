@@ -92,6 +92,7 @@ namespace Popcorn.ViewModels.Tabs
                 this,
                 async message =>
                 {
+                    StopSearchingMovies();
                     await LoadByGenreAsync(message.Genre);
                 });
         }
@@ -109,6 +110,7 @@ namespace Popcorn.ViewModels.Tabs
             {
                 var mainViewModel = SimpleIoc.Default.GetInstance<MainViewModel>();
                 mainViewModel.IsConnectionInError = false;
+                StopSearchingMovies();
                 await SearchMoviesAsync(SearchFilter);
             });
         }
@@ -121,6 +123,7 @@ namespace Popcorn.ViewModels.Tabs
         /// Search movies
         /// </summary>
         /// <param name="searchFilter">The parameter of the search</param>
+        /// <param name="ct">Used to cancel the task</param>
         public async Task SearchMoviesAsync(string searchFilter)
         {
             if (SearchFilter != searchFilter)
@@ -164,8 +167,8 @@ namespace Popcorn.ViewModels.Tabs
                     IsMovieFound = Movies.Any();
                     CurrentNumberOfMovies = Movies.Count;
 
-                    await MovieHistoryService.ComputeMovieHistoryAsync(movies);
-                    await MovieService.DownloadCoverImageAsync(movies);
+                    await MovieHistoryService.ComputeMovieHistoryAsync(movies, CancellationLoadingMovies);
+                    await MovieService.DownloadCoverImageAsync(movies, CancellationLoadingMovies);
                     if (!LastPageFilterMapping.ContainsKey(searchFilter) && !movies.Any())
                     {
                         LastPageFilterMapping.Add(searchFilter, Page);
@@ -187,7 +190,7 @@ namespace Popcorn.ViewModels.Tabs
                 {
                     IsLoadingMovies = false;
                     IsMovieFound = Movies.Any();
-                    CurrentNumberOfMovies = Movies.Count();
+                    CurrentNumberOfMovies = Movies.Count;
                     if (!IsMovieFound)
                         Page = 0;
                 }
@@ -205,6 +208,7 @@ namespace Popcorn.ViewModels.Tabs
         /// <returns></returns>
         private async Task LoadByGenreAsync(MovieGenre genre)
         {
+            StopSearchingMovies();
             Genre = genre.TmdbGenre.Name == LocalizationProviderHelper.GetLocalizedValue<string>("AllLabel") ? null : genre;
             Page = 0;
             Movies.Clear();

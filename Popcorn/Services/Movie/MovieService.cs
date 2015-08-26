@@ -744,7 +744,8 @@ namespace Popcorn.Services.Movie
         /// Download cover image for each of the movies provided
         /// </summary>
         /// <param name="movies">The movies to process</param>
-        public async Task DownloadCoverImageAsync(IEnumerable<MovieShort> movies)
+        /// <param name="ct">Used to cancel task</param>
+        public async Task DownloadCoverImageAsync(IEnumerable<MovieShort> movies, CancellationTokenSource ct)
         {
             var watch = Stopwatch.StartNew();
 
@@ -755,7 +756,7 @@ namespace Popcorn.Services.Movie
                     moviesToProcess.ForEachAsync(
                         movie =>
                             DownloadFileHelper.DownloadFileTaskAsync(movie.MediumCoverImage,
-                                Constants.CoverMoviesDirectory + movie.ImdbCode + Constants.ImageFileExtension),
+                                Constants.CoverMoviesDirectory + movie.ImdbCode + Constants.ImageFileExtension, ct: ct),
                         (movie, t) =>
                         {
                             if (t.Item3 == null && !string.IsNullOrEmpty(t.Item2))
@@ -769,6 +770,11 @@ namespace Popcorn.Services.Movie
                 Logger.Error(
                     $"Error while downloading a cover image of the movies {string.Join(";", moviesToProcess.Select(a => a.Title))}: {ex.Message}");
                 Messenger.Default.Send(new ManageExceptionMessage(ex));
+            }
+            catch (Exception ex) when (ex is TaskCanceledException)
+            {
+                Logger.Debug(
+    $"DownloadCoverImageAsync ({string.Join(";", moviesToProcess.Select(movie => movie.ImdbCode))}) : task cancelled.");
             }
 
             watch.Stop();
