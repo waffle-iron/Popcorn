@@ -36,13 +36,11 @@ namespace Popcorn.UserControls.Tabs
         private async void ScrollViewerScrollChanged(object sender, ScrollChangedEventArgs e)
         {
             var totalHeight = e.VerticalOffset + e.ViewportHeight;
-            if (totalHeight.Equals(e.ExtentHeight))
+            if (!totalHeight.Equals(e.ExtentHeight)) return;
+            var vm = DataContext as SearchTabViewModel;
+            if (vm != null && !vm.IsLoadingMovies)
             {
-                var vm = DataContext as SearchTabViewModel;
-                if (vm != null && !vm.IsLoadingMovies)
-                {
-                    await vm.SearchMoviesAsync(vm.SearchFilter);
-                }
+                await vm.SearchMoviesAsync(vm.SearchFilter);
             }
         }
 

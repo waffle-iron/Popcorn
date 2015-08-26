@@ -177,7 +177,7 @@ namespace Popcorn.ViewModels.Main
         public bool IsMovieSearchActive
         {
             get { return _isMovieSearchActive; }
-            set { Set(() => IsMovieSearchActive, ref _isMovieSearchActive, value); }
+            private set { Set(() => IsMovieSearchActive, ref _isMovieSearchActive, value); }
         }
 
         #endregion

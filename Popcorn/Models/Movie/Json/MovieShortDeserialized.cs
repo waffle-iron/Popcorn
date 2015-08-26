@@ -26,7 +26,7 @@ namespace Popcorn.Models.Movie.Json
         public int Year { get; set; }
 
         [JsonProperty("rating")]
-        public string Rating { get; set; }
+        public double Rating { get; set; }
 
         [JsonProperty("runtime")]
         public int Runtime { get; set; }

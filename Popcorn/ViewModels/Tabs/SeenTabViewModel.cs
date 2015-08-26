@@ -1,6 +1,6 @@
-﻿using System.Diagnostics;
+﻿using System;
+using System.Diagnostics;
 using System.Linq;
-using System.Threading;
 using System.Threading.Tasks;
 using GalaSoft.MvvmLight.CommandWpf;
 using GalaSoft.MvvmLight.Ioc;
@@ -62,13 +62,23 @@ namespace Popcorn.ViewModels.Tabs
                     await LoadMoviesAsync();
                 });
 
-            Messenger.Default.Register<ChangeSelectedGenreMessage>(
-                this,
-                async message =>
-                {
-                    StopLoadingMovies();
-                    await LoadByGenreAsync(message.Genre);
-                });
+            Messenger.Default.Register<PropertyChangedMessage<MovieGenre>>(this, async e =>
+            {
+                if (e.PropertyName != GetPropertyName(() => Genre) && Genre.Equals(e.NewValue)) return;
+                StopLoadingMovies();
+                Page = 0;
+                Movies.Clear();
+                await LoadMoviesAsync();
+            });
+
+            Messenger.Default.Register<PropertyChangedMessage<double>>(this, async e =>
+            {
+                if (e.PropertyName != GetPropertyName(() => Rating) && Rating.Equals(e.NewValue)) return;
+                StopLoadingMovies();
+                Page = 0;
+                Movies.Clear();
+                await LoadMoviesAsync();
+            });
         }
 
         #endregion
@@ -98,46 +108,45 @@ namespace Popcorn.ViewModels.Tabs
         /// </summary>
         public override async Task LoadMoviesAsync()
         {
-            var watch = Stopwatch.StartNew();
-
-            Logger.Info(
-                "Loading movies...");
-
-            IsLoadingMovies = true;
-            var favoritesMovies = await MovieHistoryService.GetSeenMoviesAsync(Genre, CancellationLoadingMovies);
-            var movies = favoritesMovies.ToList();
-            Movies.Clear();
-            foreach (var movie in movies)
+            try
             {
-                Movies.Add(movie);
+                if (Page == LastPage)
+                    return;
+
+                var watch = Stopwatch.StartNew();
+
+                Logger.Info(
+                    "Loading movies...");
+
+                IsLoadingMovies = true;
+                var favoritesMovies =
+                    await MovieHistoryService.GetSeenMoviesAsync(Genre, Rating, CancellationLoadingMovies);
+                var movies = favoritesMovies.ToList();
+                Movies.Clear();
+                foreach (var movie in movies)
+                {
+                    Movies.Add(movie);
+                }
+
+                if (!movies.Any())
+                    LastPage = Page;
+
+                IsLoadingMovies = false;
+                IsMovieFound = Movies.Any();
+                CurrentNumberOfMovies = Movies.Count;
+                MaxNumberOfMovies = movies.Count;
+                await MovieService.DownloadCoverImageAsync(Movies, CancellationLoadingMovies);
+
+                watch.Stop();
+                var elapsedMs = watch.ElapsedMilliseconds;
+                Logger.Info(
+                    $"Loaded movies in {elapsedMs} milliseconds.");
             }
-
-            IsLoadingMovies = false;
-            IsMovieFound = Movies.Any();
-            CurrentNumberOfMovies = Movies.Count;
-            MaxNumberOfMovies = movies.Count;
-            await MovieService.DownloadCoverImageAsync(Movies, CancellationLoadingMovies);
-
-            watch.Stop();
-            var elapsedMs = watch.ElapsedMilliseconds;
-            Logger.Info(
-                $"Loaded movies in {elapsedMs} milliseconds.");
-        }
-
-        #endregion
-
-        #region Method -> LoadByGenreAsync
-
-        /// <summary>
-        /// Load movies for a genre
-        /// </summary>
-        /// <param name="genre"></param>
-        /// <returns></returns>
-        private async Task LoadByGenreAsync(MovieGenre genre)
-        {
-            StopLoadingMovies();
-            Genre = genre.TmdbGenre.Name == LocalizationProviderHelper.GetLocalizedValue<string>("AllLabel") ? null : genre;
-            await LoadMoviesAsync();
+            catch (Exception exception)
+            {
+                Logger.Info(
+                    $"Error while loading page {Page}: {exception.Message}");
+            }
         }
 
         #endregion

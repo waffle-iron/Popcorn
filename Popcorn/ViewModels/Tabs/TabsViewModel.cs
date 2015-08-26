@@ -1,4 +1,5 @@
-﻿using System.Collections.ObjectModel;
+﻿using System;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
@@ -66,24 +67,30 @@ namespace Popcorn.ViewModels.Tabs
 
         #region Property -> Genre
 
+        private static MovieGenre _genre;
+
         /// <summary>
         /// The current movie genre
         /// </summary>
-        protected MovieGenre Genre { get; set; }
+        protected MovieGenre Genre
+        {
+            get { return _genre; }
+            private set { Set(() => Genre, ref _genre, value, true); }
+        }
 
         #endregion
 
         #region Property -> CurrentNumberOfMovies
 
-        private int _currentNumberofMovies;
+        private int _currentNumberOfMovies;
 
         /// <summary>
         /// The current number of movies in the tab
         /// </summary>
         public int CurrentNumberOfMovies
         {
-            get { return _currentNumberofMovies; }
-            set { Set(() => CurrentNumberOfMovies, ref _currentNumberofMovies, value); }
+            get { return _currentNumberOfMovies; }
+            set { Set(() => CurrentNumberOfMovies, ref _currentNumberOfMovies, value); }
         }
 
         #endregion
@@ -135,7 +142,7 @@ namespace Popcorn.ViewModels.Tabs
         /// <summary>
         /// Token to cancel movie loading
         /// </summary>
-        protected CancellationTokenSource CancellationLoadingMovies { get; set; }
+        protected CancellationTokenSource CancellationLoadingMovies { get; private set; }
 
         #endregion
 
@@ -180,6 +187,22 @@ namespace Popcorn.ViewModels.Tabs
         {
             get { return _isMoviesFound; }
             set { Set(() => IsMovieFound, ref _isMoviesFound, value); }
+        }
+
+        #endregion
+
+
+        #region Property -> Rating
+
+        private static double _rating;
+
+        /// <summary>
+        /// Movie rating filter
+        /// </summary>
+        public double Rating
+        {
+            get { return _rating; }
+            set { Set(() => Rating, ref _rating, value, true); }
         }
 
         #endregion
@@ -288,7 +311,10 @@ namespace Popcorn.ViewModels.Tabs
             ChangeMovieGenreCommand =
                 new RelayCommand<MovieGenre>(genre =>
                 {
-                    Messenger.Default.Send(new ChangeSelectedGenreMessage(genre));
+                    Genre = genre.TmdbGenre.Name ==
+                            LocalizationProviderHelper.GetLocalizedValue<string>("AllLabel")
+                        ? null
+                        : genre;
                 });
         }
 
@@ -301,7 +327,7 @@ namespace Popcorn.ViewModels.Tabs
         /// </summary>
         public virtual Task LoadMoviesAsync()
         {
-            return null;
+            throw new NotImplementedException();
         }
 
         #endregion

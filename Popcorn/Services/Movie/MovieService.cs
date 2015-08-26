@@ -95,13 +95,16 @@ namespace Popcorn.Services.Movie
                 var englishGenre = TmdbClient.GetMovieGenres(new EnglishLanguage().Culture);
                 genres.AddRange(TmdbClient.GetMovieGenres().Select(genre => new MovieGenre
                 {
-                    EnglishName = englishGenre.FirstOrDefault(p => p.Id == genre.Id)?.Name, TmdbGenre = genre
+                    EnglishName = englishGenre.FirstOrDefault(p => p.Id == genre.Id)?.Name,
+                    TmdbGenre = genre
                 }));
             });
 
             return genres;
         }
+
         #endregion
+
         #region Method -> GetPopularMoviesAsync
 
         /// <summary>
@@ -111,9 +114,11 @@ namespace Popcorn.Services.Movie
         /// <param name="limit">The maximum number of movies to return</param>
         /// <param name="ct">Cancellation token</param>
         /// <param name="genre">The genre to filter</param>
+        /// <param name="ratingFilter">Used to filter by rating</param>
         /// <returns>Popular movies and the number of movies found</returns>
         public async Task<Tuple<IEnumerable<MovieShort>, int>> GetPopularMoviesAsync(int page,
             int limit,
+            double ratingFilter,
             CancellationToken ct,
             MovieGenre genre = null)
         {
@@ -135,6 +140,7 @@ namespace Popcorn.Services.Movie
             request.AddParameter("limit", limit);
             request.AddParameter("page", page);
             if (genre != null) request.AddParameter("genre", genre.EnglishName);
+            request.AddParameter("minimum_rating", ratingFilter);
             request.AddParameter("sort_by", "seeds");
 
             var response = await restClient.ExecuteGetTaskAsync(request, ct);
@@ -172,9 +178,11 @@ namespace Popcorn.Services.Movie
         /// <param name="limit">The maximum number of movies to return</param>
         /// <param name="ct">Cancellation token</param>
         /// <param name="genre">The genre to filter</param>
+        /// <param name="ratingFilter">Used to filter by rating</param>
         /// <returns>Top rated movies and the number of movies found</returns>
         public async Task<Tuple<IEnumerable<MovieShort>, int>> GetGreatestMoviesAsync(int page,
             int limit,
+            double ratingFilter,
             CancellationToken ct,
             MovieGenre genre = null)
         {
@@ -196,6 +204,7 @@ namespace Popcorn.Services.Movie
             request.AddParameter("limit", limit);
             request.AddParameter("page", page);
             if (genre != null) request.AddParameter("genre", genre.EnglishName);
+            request.AddParameter("minimum_rating", ratingFilter);
             request.AddParameter("sort_by", "rating");
 
             var response = await restClient.ExecuteGetTaskAsync(request, ct);
@@ -233,9 +242,11 @@ namespace Popcorn.Services.Movie
         /// <param name="limit">The maximum number of movies to return</param>
         /// <param name="ct">Cancellation token</param>
         /// <param name="genre">The genre to filter</param>
+        /// <param name="ratingFilter">Used to filter by rating</param>
         /// <returns>Recent movies and the number of movies found</returns>
         public async Task<Tuple<IEnumerable<MovieShort>, int>> GetRecentMoviesAsync(int page,
             int limit,
+            double ratingFilter,
             CancellationToken ct,
             MovieGenre genre = null)
         {
@@ -257,6 +268,7 @@ namespace Popcorn.Services.Movie
             request.AddParameter("limit", limit);
             request.AddParameter("page", page);
             if (genre != null) request.AddParameter("genre", genre.EnglishName);
+            request.AddParameter("minimum_rating", ratingFilter);
             request.AddParameter("sort_by", "year");
 
             var response = await restClient.ExecuteGetTaskAsync(request, ct);
@@ -295,10 +307,12 @@ namespace Popcorn.Services.Movie
         /// <param name="limit">The maximum number of movies to return</param>
         /// <param name="ct">Cancellation token</param>
         /// <param name="genre">The genre to filter</param>
+        /// <param name="ratingFilter">Used to filter by rating</param>
         /// <returns>Searched movies and the number of movies found</returns>
         public async Task<Tuple<IEnumerable<MovieShort>, int>> SearchMoviesAsync(string criteria,
             int page,
             int limit,
+            double ratingFilter,
             CancellationToken ct,
             MovieGenre genre)
         {
@@ -320,6 +334,8 @@ namespace Popcorn.Services.Movie
             request.AddParameter("limit", limit);
             request.AddParameter("page", page);
             if (genre != null) request.AddParameter("genre", genre.EnglishName);
+            request.AddParameter("minimum_rating", ratingFilter);
+
             request.AddParameter("query_term", criteria);
 
             var response = await restClient.ExecuteGetTaskAsync(request, ct);
@@ -505,42 +521,33 @@ namespace Popcorn.Services.Movie
         /// <returns>List of movies</returns>
         private static IEnumerable<MovieShort> GetMoviesListFromWrapper(WrapperMovieShortDeserialized wrapper)
         {
-            var movies = new List<MovieShort>();
-            foreach (var movie in wrapper.Data.Movies)
+            return wrapper.Data.Movies.Select(movie => new MovieShort
             {
-                var rating = Convert.ToDouble(movie.Rating, CultureInfo.InvariantCulture);
-                rating /= 2.0;
-
-                movies.Add(new MovieShort
-                {
-                    ApiVersion = movie.ApiVersion,
-                    DateUploaded = movie.DateUploaded,
-                    DateUploadedUnix = movie.DateUploadedUnix,
-                    ExecutionTime = movie.ExecutionTime,
-                    Genres = movie.Genres,
-                    Id = movie.Id,
-                    ImdbCode = movie.ImdbCode,
-                    IsFavorite = false,
-                    HasBeenSeen = false,
-                    Language = movie.Language,
-                    MediumCoverImage = movie.MediumCoverImage,
-                    CoverImagePath = string.Empty,
-                    MpaRating = movie.MpaRating,
-                    RatingValue = rating,
-                    Runtime = movie.Runtime,
-                    ServerTime = movie.ServerTime,
-                    ServerTimezone = movie.ServerTimezone,
-                    SmallCoverImage = movie.SmallCoverImage,
-                    State = movie.State,
-                    Title = movie.Title,
-                    TitleLong = movie.TitleLong,
-                    Torrents = movie.Torrents,
-                    Url = movie.Url,
-                    Year = movie.Year
-                });
-            }
-
-            return movies;
+                ApiVersion = movie.ApiVersion,
+                DateUploaded = movie.DateUploaded,
+                DateUploadedUnix = movie.DateUploadedUnix,
+                ExecutionTime = movie.ExecutionTime,
+                Genres = movie.Genres,
+                Id = movie.Id,
+                ImdbCode = movie.ImdbCode,
+                IsFavorite = false,
+                HasBeenSeen = false,
+                Language = movie.Language,
+                MediumCoverImage = movie.MediumCoverImage,
+                CoverImagePath = string.Empty,
+                MpaRating = movie.MpaRating,
+                RatingValue = movie.Rating,
+                Runtime = movie.Runtime,
+                ServerTime = movie.ServerTime,
+                ServerTimezone = movie.ServerTimezone,
+                SmallCoverImage = movie.SmallCoverImage,
+                State = movie.State,
+                Title = movie.Title,
+                TitleLong = movie.TitleLong,
+                Torrents = movie.Torrents,
+                Url = movie.Url,
+                Year = movie.Year
+            }).ToList();
         }
 
         #endregion
@@ -774,7 +781,7 @@ namespace Popcorn.Services.Movie
             catch (Exception ex) when (ex is TaskCanceledException)
             {
                 Logger.Debug(
-    $"DownloadCoverImageAsync ({string.Join(";", moviesToProcess.Select(movie => movie.ImdbCode))}) : task cancelled.");
+                    $"DownloadCoverImageAsync ({string.Join(";", moviesToProcess.Select(movie => movie.ImdbCode))}) : task cancelled.");
             }
 
             watch.Stop();

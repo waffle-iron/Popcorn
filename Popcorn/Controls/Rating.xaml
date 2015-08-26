@@ -2,7 +2,8 @@
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
-             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:controls="clr-namespace:Popcorn.Controls"
              mc:Ignorable="d" 
              d:DesignHeight="300" d:DesignWidth="300">
     <Grid>
@@ -26,11 +27,11 @@
             <ColumnDefinition />
         </Grid.ColumnDefinitions>
 
-        <ToggleButton Grid.Column="0" Tag="1" Template="{StaticResource Ratingtemplate}" IsEnabled="False" />
-        <ToggleButton Grid.Column="1" Tag="2" Template="{StaticResource Ratingtemplate}" IsEnabled="False" />
-        <ToggleButton Grid.Column="2" Tag="3" Template="{StaticResource Ratingtemplate}" IsEnabled="False" />
-        <ToggleButton Grid.Column="3" Tag="4" Template="{StaticResource Ratingtemplate}" IsEnabled="False" />
-        <ToggleButton Grid.Column="4" Tag="5" Template="{StaticResource Ratingtemplate}" IsEnabled="False" />
+        <ToggleButton Grid.Column="0" Tag="1" Template="{StaticResource Ratingtemplate}" IsEnabled="{Binding StarButtonsEnabled, RelativeSource={RelativeSource AncestorType=controls:Rating}, Mode=TwoWay}" Click="ToggleStar"/>
+        <ToggleButton Grid.Column="1" Tag="2" Template="{StaticResource Ratingtemplate}" IsEnabled="{Binding StarButtonsEnabled, RelativeSource={RelativeSource AncestorType=controls:Rating}, Mode=TwoWay}" Click="ToggleStar"/>
+        <ToggleButton Grid.Column="2" Tag="3" Template="{StaticResource Ratingtemplate}" IsEnabled="{Binding StarButtonsEnabled, RelativeSource={RelativeSource AncestorType=controls:Rating}, Mode=TwoWay}" Click="ToggleStar"/>
+        <ToggleButton Grid.Column="3" Tag="4" Template="{StaticResource Ratingtemplate}" IsEnabled="{Binding StarButtonsEnabled, RelativeSource={RelativeSource AncestorType=controls:Rating}, Mode=TwoWay}" Click="ToggleStar"/>
+        <ToggleButton Grid.Column="4" Tag="5" Template="{StaticResource Ratingtemplate}" IsEnabled="{Binding StarButtonsEnabled, RelativeSource={RelativeSource AncestorType=controls:Rating}, Mode=TwoWay}" Click="ToggleStar"/>
 
     </Grid>
 </UserControl>

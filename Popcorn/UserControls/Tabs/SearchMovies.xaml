@@ -124,7 +124,8 @@
                                         HorizontalAlignment="Left" 
                                         VerticalAlignment="Center" 
                                         RatingValue="{Binding RatingValue}" 
-                                        Opacity="0.0"/>
+                                        Opacity="0.0"
+                                        StarButtonsEnabled="False"/>
                                     <Grid 
                                         Grid.Row="0"
                                         Grid.RowSpan="3"

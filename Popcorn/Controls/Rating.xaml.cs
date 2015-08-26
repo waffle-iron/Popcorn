@@ -13,7 +13,18 @@ namespace Popcorn.Controls
             typeof (int), typeof (Rating),
             new FrameworkPropertyMetadata(0, FrameworkPropertyMetadataOptions.BindsTwoWayByDefault, RatingChanged));
 
-        private const int Max = 5;
+        public static readonly DependencyProperty StartButtonsEnabledProperty =
+            DependencyProperty.Register("StarButtonsEnabled",
+                typeof (bool), typeof (Rating),
+                new FrameworkPropertyMetadata(false));
+
+        private const int Max = 10;
+
+        public bool StarButtonsEnabled
+        {
+            get { return (bool) GetValue(StartButtonsEnabledProperty); }
+            set { SetValue(StartButtonsEnabledProperty, value); }
+        }
 
         public int RatingValue
         {
@@ -43,6 +54,7 @@ namespace Popcorn.Controls
             }
 
             var newval = (int) e.NewValue;
+            newval /= 2;
             var childs = ((Grid) (rating.Content)).Children;
 
             ToggleButton button;
@@ -68,6 +80,37 @@ namespace Popcorn.Controls
         public Rating()
         {
             InitializeComponent();
+        }
+
+        private void ToggleStar(object sender, RoutedEventArgs e)
+        {
+            var button = sender as ToggleButton;
+            if (button == null)
+            {
+                return;
+            }
+
+            var tag = button.Tag as string;
+            switch (tag)
+            {
+                case null:
+                    return;
+                case "1":
+                    RatingValue = 2;
+                    break;
+                case "2":
+                    RatingValue = 4;
+                    break;
+                case "3":
+                    RatingValue = 6;
+                    break;
+                case "4":
+                    RatingValue = 8;
+                    break;
+                case "5":
+                    RatingValue = 10;
+                    break;
+            }
         }
     }
 }

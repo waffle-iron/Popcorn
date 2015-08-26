@@ -230,6 +230,10 @@
                     <RowDefinition Height="2.5"></RowDefinition>
                     <RowDefinition Height="Auto"></RowDefinition>
                     <RowDefinition Height="2.5"></RowDefinition>
+                    <RowDefinition Height="Auto"></RowDefinition>
+                    <RowDefinition Height="2.5"></RowDefinition>
+                    <RowDefinition Height="Auto"></RowDefinition>
+                    <RowDefinition Height="2.5"></RowDefinition>
                     <RowDefinition Height="*"></RowDefinition>
                 </Grid.RowDefinitions>
                 <TextBlock Text="{lex:LocText MoviesLabel}" 
@@ -365,13 +369,24 @@
                         </RadioButton>
                     </ListBoxItem>
                 </ListBox>
-                <TextBlock Text="{lex:LocText GenresLabel}" 
+                <TextBlock Text="{lex:LocText RatingLabel}" 
                        FontSize="14"
                        Grid.Row="9"
                        Foreground="#3c4c55"
                        Grid.Column="1"
+                       Grid.ColumnSpan="2"/>
+                <customControls:Rating Grid.Row="11"
+                                       Grid.Column="2"
+                                       RatingValue="{Binding SelectedTab.Rating, Mode=TwoWay}"
+                                       Width="125"
+                                       StarButtonsEnabled="True"/>
+                <TextBlock Text="{lex:LocText GenresLabel}" 
+                       FontSize="14"
+                       Grid.Row="13"
+                       Foreground="#3c4c55"
+                       Grid.Column="1"
                        Grid.ColumnSpan="2"></TextBlock>
-                <ListBox Grid.Row="11"
+                <ListBox Grid.Row="15"
                          Grid.Column="2"
                          ItemsSource="{Binding GenresViewModel.MovieGenres}"
                          Style="{StaticResource ListBoxButtons}"

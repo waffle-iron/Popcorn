@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using GalaSoft.MvvmLight.CommandWpf;
 using GalaSoft.MvvmLight.Ioc;
 using GalaSoft.MvvmLight.Messaging;
+using GalaSoft.MvvmLight.Threading;
 using NLog;
 using Popcorn.Helpers;
 using Popcorn.Messaging;
@@ -57,13 +58,23 @@ namespace Popcorn.ViewModels.Tabs
                 this,
                 language => { TabName = LocalizationProviderHelper.GetLocalizedValue<string>("PopularTitleTab"); });
 
-            Messenger.Default.Register<ChangeSelectedGenreMessage>(
-                this,
-                async message =>
-                {
-                    StopLoadingMovies();
-                    await LoadByGenreAsync(message.Genre);
-                });
+            Messenger.Default.Register<PropertyChangedMessage<MovieGenre>>(this, async e =>
+            {
+                if (e.PropertyName != GetPropertyName(() => Genre) && Genre.Equals(e.NewValue)) return;
+                StopLoadingMovies();
+                Page = 0;
+                Movies.Clear();
+                await LoadMoviesAsync();
+            });
+
+            Messenger.Default.Register<PropertyChangedMessage<double>>(this, async e =>
+            {
+                if (e.PropertyName != GetPropertyName(() => Rating) && Rating.Equals(e.NewValue)) return;
+                StopLoadingMovies();
+                Page = 0;
+                Movies.Clear();
+                await LoadMoviesAsync();
+            });
         }
 
         #endregion
@@ -93,21 +104,22 @@ namespace Popcorn.ViewModels.Tabs
         /// </summary>
         public override async Task LoadMoviesAsync()
         {
-            if (Page == LastPage)
-                return;
-
-            var watch = Stopwatch.StartNew();
-
-            Logger.Info(
-                $"Loading page {Page}...");
-
-            Page++;
-            IsLoadingMovies = true;
             try
             {
+                if (Page == LastPage)
+                    return;
+
+                var watch = Stopwatch.StartNew();
+
+                Logger.Info(
+                    $"Loading page {Page}...");
+
+                Page++;
+                IsLoadingMovies = true;
                 var movieResults =
                     await MovieService.GetPopularMoviesAsync(Page,
                         MaxMoviesPerPage,
+                        Rating,
                         CancellationLoadingMovies.Token,
                         Genre);
                 var movies = movieResults.Item1.ToList();
@@ -147,24 +159,6 @@ namespace Popcorn.ViewModels.Tabs
                 if (!IsMovieFound)
                     Page = 0;
             }
-        }
-
-        #endregion
-
-        #region Method -> LoadByGenreAsync
-
-        /// <summary>
-        /// Load movies for a genre
-        /// </summary>
-        /// <param name="genre"></param>
-        /// <returns></returns>
-        private async Task LoadByGenreAsync(MovieGenre genre)
-        {
-            StopLoadingMovies();
-            Genre = genre.TmdbGenre.Name == LocalizationProviderHelper.GetLocalizedValue<string>("AllLabel") ? null : genre;
-            Page = 0;
-            Movies.Clear();
-            await LoadMoviesAsync();
         }
 
         #endregion

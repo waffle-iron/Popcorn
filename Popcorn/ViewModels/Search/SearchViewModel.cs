@@ -80,7 +80,6 @@ namespace Popcorn.ViewModels.Search
             {
                 if (e.PropertyName == GetPropertyName(() => SearchFilter) && string.IsNullOrEmpty(e.NewValue))
                 {
-
                     Messenger.Default.Send(new SearchMovieMessage(string.Empty));
                 }
             });

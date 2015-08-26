@@ -403,6 +403,15 @@ namespace Popcorn.Properties {
         }
         
         /// <summary>
+        ///   Recherche une chaîne localisée semblable à Rating.
+        /// </summary>
+        public static string RatingLabel {
+            get {
+                return ResourceManager.GetString("RatingLabel", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Recherche une chaîne localisée semblable à Recent.
         /// </summary>
         public static string RecentTitleTab {

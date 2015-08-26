@@ -80,9 +80,11 @@ namespace Popcorn.Services.History
         /// Get the favorites movies
         /// </summary>
         /// <param name="genre">The genre of the movies</param>
+        /// <param name="ratingFilter">Used to filter by rating</param>
         /// <param name="ct">Userd to cancel task</param>
         /// <returns>Favorites movies</returns>
-        public async Task<IEnumerable<MovieShort>> GetFavoritesMoviesAsync(MovieGenre genre, CancellationToken ct)
+        public async Task<IEnumerable<MovieShort>> GetFavoritesMoviesAsync(MovieGenre genre, double ratingFilter,
+            CancellationToken ct)
         {
             var watch = Stopwatch.StartNew();
 
@@ -96,7 +98,9 @@ namespace Popcorn.Services.History
                     if (genre != null)
                     {
                         movies.AddRange(movieHistory.MoviesShort.Where(
-                            p => p.IsFavorite && p.Genres.Any(g => g.Name == genre.EnglishName))
+                            p =>
+                                p.IsFavorite && p.Genres.Any(g => g.Name == genre.EnglishName) &&
+                                p.Rating >= ratingFilter)
                             .Select(MovieShortFromEntityToModel));
                     }
                     else
@@ -124,8 +128,10 @@ namespace Popcorn.Services.History
         /// </summary>
         /// <returns>Seen movies</returns>
         /// <param name="genre">The genre of the movies</param>
+        /// <param name="ratingFilter">Used to filter by rating</param>
         /// <param name="ct">Used to cancel task</param>
-        public async Task<IEnumerable<MovieShort>> GetSeenMoviesAsync(MovieGenre genre, CancellationTokenSource ct)
+        public async Task<IEnumerable<MovieShort>> GetSeenMoviesAsync(MovieGenre genre, double ratingFilter,
+            CancellationTokenSource ct)
         {
             var watch = Stopwatch.StartNew();
 
@@ -138,15 +144,17 @@ namespace Popcorn.Services.History
                     var movieHistory = await context.MovieHistory.FirstOrDefaultAsync(ct.Token);
                     if (genre != null)
                     {
-                        movies.AddRange(
-                            movieHistory.MoviesShort.Where(p => p.HasBeenSeen && p.Genres.Any(g => g.Name == genre.EnglishName))
-                                .Select(MovieShortFromEntityToModel));
+                        movies.AddRange(movieHistory.MoviesShort.Where(
+                            p =>
+                                p.HasBeenSeen && p.Genres.Any(g => g.Name == genre.EnglishName) &&
+                                p.Rating >= ratingFilter)
+                            .Select(MovieShortFromEntityToModel));
                     }
                     else
                     {
-                        movies.AddRange(
-                            movieHistory.MoviesShort.Where(p => p.HasBeenSeen)
-                                .Select(MovieShortFromEntityToModel));
+                        movies.AddRange(movieHistory.MoviesShort.Where(
+                            p => p.HasBeenSeen)
+                            .Select(MovieShortFromEntityToModel));
                     }
                 }
             }, ct.Token);

@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Linq;
-using System.Threading;
 using GalaSoft.MvvmLight.Messaging;
 using System.Threading.Tasks;
 using Popcorn.Helpers;
@@ -26,15 +25,6 @@ namespace Popcorn.ViewModels.Tabs
         /// Logger of the class
         /// </summary>
         private static readonly Logger Logger = LogManager.GetCurrentClassLogger();
-
-        #endregion
-
-        #region Property -> CancellationSearchMoviesToken
-
-        /// <summary>
-        /// Token to cancel the search
-        /// </summary>
-        private CancellationTokenSource CancellationSearchToken { get; set; }
 
         #endregion
 
@@ -68,7 +58,6 @@ namespace Popcorn.ViewModels.Tabs
 
             RegisterMessages();
             RegisterCommands();
-            CancellationSearchToken = new CancellationTokenSource();
             TabName = LocalizationProviderHelper.GetLocalizedValue<string>("SearchTitleTab");
             LastPageFilterMapping = new Dictionary<string, int>();
         }
@@ -88,13 +77,23 @@ namespace Popcorn.ViewModels.Tabs
                 this,
                 language => { TabName = LocalizationProviderHelper.GetLocalizedValue<string>("SearchTitleTab"); });
 
-            Messenger.Default.Register<ChangeSelectedGenreMessage>(
-                this,
-                async message =>
-                {
-                    StopSearchingMovies();
-                    await LoadByGenreAsync(message.Genre);
-                });
+            Messenger.Default.Register<PropertyChangedMessage<MovieGenre>>(this, async e =>
+            {
+                if (e.PropertyName != GetPropertyName(() => Genre) && Genre.Equals(e.NewValue)) return;
+                StopLoadingMovies();
+                Page = 0;
+                Movies.Clear();
+                await SearchMoviesAsync(SearchFilter);
+            });
+
+            Messenger.Default.Register<PropertyChangedMessage<double>>(this, async e =>
+            {
+                if (e.PropertyName != GetPropertyName(() => Rating) && Rating.Equals(e.NewValue)) return;
+                StopLoadingMovies();
+                Page = 0;
+                Movies.Clear();
+                await SearchMoviesAsync(SearchFilter);
+            });
         }
 
         #endregion
@@ -110,7 +109,7 @@ namespace Popcorn.ViewModels.Tabs
             {
                 var mainViewModel = SimpleIoc.Default.GetInstance<MainViewModel>();
                 mainViewModel.IsConnectionInError = false;
-                StopSearchingMovies();
+                StopLoadingMovies();
                 await SearchMoviesAsync(SearchFilter);
             });
         }
@@ -123,29 +122,28 @@ namespace Popcorn.ViewModels.Tabs
         /// Search movies
         /// </summary>
         /// <param name="searchFilter">The parameter of the search</param>
-        /// <param name="ct">Used to cancel the task</param>
         public async Task SearchMoviesAsync(string searchFilter)
         {
-            if (SearchFilter != searchFilter)
+            try
             {
-                // We start an other search
-                StopSearchingMovies();
-                Movies.Clear();
-                Page = 0;
-            }
+                if (SearchFilter != searchFilter)
+                {
+                    // We start an other search
+                    StopLoadingMovies();
+                    Movies.Clear();
+                    Page = 0;
+                }
 
-            var watch = Stopwatch.StartNew();
+                var watch = Stopwatch.StartNew();
 
-            Logger.Info(
-                $"Loading page {Page} with criteria: {searchFilter}");
+                Logger.Info(
+                    $"Loading page {Page} with criteria: {searchFilter}");
 
-            SearchFilter = searchFilter;
-            Page++;
-            int lastPage;
-            if (!LastPageFilterMapping.ContainsKey(searchFilter) ||
-                (LastPageFilterMapping.TryGetValue(searchFilter, out lastPage) && Page < lastPage))
-            {
-                try
+                SearchFilter = searchFilter;
+                Page++;
+                int lastPage;
+                if (!LastPageFilterMapping.ContainsKey(searchFilter) ||
+                    (LastPageFilterMapping.TryGetValue(searchFilter, out lastPage) && Page <= lastPage))
                 {
                     IsLoadingMovies = true;
 
@@ -153,7 +151,8 @@ namespace Popcorn.ViewModels.Tabs
                         await MovieService.SearchMoviesAsync(searchFilter,
                             Page,
                             MaxMoviesPerPage,
-                            CancellationSearchToken.Token,
+                            Rating,
+                            CancellationLoadingMovies.Token,
                             Genre);
                     var movies = movieResults.Item1.ToList();
                     MaxNumberOfMovies = movieResults.Item2;
@@ -174,76 +173,30 @@ namespace Popcorn.ViewModels.Tabs
                         LastPageFilterMapping.Add(searchFilter, Page);
                     }
 
-
                     watch.Stop();
                     var elapsedMs = watch.ElapsedMilliseconds;
                     Logger.Info(
                         $"Loaded page {Page} with criteria {searchFilter} in {elapsedMs} milliseconds.");
                 }
-                catch (Exception exception)
-                {
-                    Page--;
-                    Logger.Info(
-                        $"Error while loading page {Page} with criteria {searchFilter}: {exception.Message}");
-                }
-                finally
-                {
-                    IsLoadingMovies = false;
-                    IsMovieFound = Movies.Any();
-                    CurrentNumberOfMovies = Movies.Count;
-                    if (!IsMovieFound)
-                        Page = 0;
-                }
+            }
+            catch (Exception exception)
+            {
+                Page--;
+                Logger.Info(
+                    $"Error while loading page {Page} with criteria {searchFilter}: {exception.Message}");
+            }
+            finally
+            {
+                IsLoadingMovies = false;
+                IsMovieFound = Movies.Any();
+                CurrentNumberOfMovies = Movies.Count;
+                if (!IsMovieFound)
+                    Page = 0;
             }
         }
 
         #endregion
 
-        #region Method -> LoadByGenreAsync
-
-        /// <summary>
-        /// Load movies for a genre
-        /// </summary>
-        /// <param name="genre"></param>
-        /// <returns></returns>
-        private async Task LoadByGenreAsync(MovieGenre genre)
-        {
-            StopSearchingMovies();
-            Genre = genre.TmdbGenre.Name == LocalizationProviderHelper.GetLocalizedValue<string>("AllLabel") ? null : genre;
-            Page = 0;
-            Movies.Clear();
-            await LoadMoviesAsync();
-        }
-
         #endregion
-
-        #region Method -> StopSearchingMovies
-
-        /// <summary>
-        /// Cancel searching movies
-        /// </summary>
-        private void StopSearchingMovies()
-        {
-            Logger.Info(
-                "Stop searching movies.");
-
-            CancellationSearchToken?.Cancel();
-            CancellationSearchToken = new CancellationTokenSource();
-        }
-
-        #endregion
-
-        #endregion
-
-        public override void Cleanup()
-        {
-            Logger.Debug(
-                "Cleaning up SearchTabViewModel.");
-
-            StopSearchingMovies();
-            CancellationSearchToken?.Dispose();
-
-            base.Cleanup();
-        }
     }
 }

@@ -254,7 +254,6 @@
     <Compile Include="Entity\Movie\Torrent.cs" />
     <Compile Include="Messaging\ChangeFavoriteMovieMessage.cs" />
     <Compile Include="Messaging\ChangeHasBeenSeenMovieMessage.cs" />
-    <Compile Include="Messaging\ChangeSelectedGenreMessage.cs" />
     <Compile Include="Migrations\201508192155425_Initial.cs" />
     <Compile Include="Migrations\201508192155425_Initial.Designer.cs">
       <DependentUpon>201508192155425_Initial.cs</DependentUpon>
