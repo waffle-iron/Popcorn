@@ -1,7 +1,6 @@
 ﻿using GalaSoft.MvvmLight;
-using TMDbLib.Objects.General;
 
-namespace Popcorn.Models.Movie
+namespace Popcorn.Models.Genre
 {
     public class MovieGenre : ObservableObject
     {
@@ -22,12 +21,12 @@ namespace Popcorn.Models.Movie
 
         #region Property -> TmdbGenre
 
-        private Genre _tmdbGenre;
+        private TMDbLib.Objects.General.Genre _tmdbGenre;
 
         /// <summary>
         /// Tmdb genre
         /// </summary>
-        public Genre TmdbGenre
+        public TMDbLib.Objects.General.Genre TmdbGenre
         {
             get { return _tmdbGenre; }
             set { Set(() => TmdbGenre, ref _tmdbGenre, value); }

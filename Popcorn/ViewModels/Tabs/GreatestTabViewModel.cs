@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Diagnostics;
 using System.Linq;
-using System.Threading;
 using System.Threading.Tasks;
 using GalaSoft.MvvmLight.Messaging;
 using Popcorn.Helpers;
@@ -9,7 +8,7 @@ using Popcorn.Messaging;
 using GalaSoft.MvvmLight.CommandWpf;
 using GalaSoft.MvvmLight.Ioc;
 using NLog;
-using Popcorn.Models.Movie;
+using Popcorn.Models.Genre;
 using Popcorn.ViewModels.Main;
 
 namespace Popcorn.ViewModels.Tabs
@@ -106,16 +105,14 @@ namespace Popcorn.ViewModels.Tabs
         {
             try
             {
-                if (Page == LastPage)
-                    return;
-
                 var watch = Stopwatch.StartNew();
+
+                Page++;
 
                 Logger.Info(
                     $"Loading page {Page}...");
 
                 IsLoadingMovies = true;
-                Page++;
 
                 var movieResults =
                     await MovieService.GetGreatestMoviesAsync(Page,
@@ -132,14 +129,11 @@ namespace Popcorn.ViewModels.Tabs
                     Movies.Add(movie);
                 }
 
-                if (!movies.Any() && MaxNumberOfMovies != 0)
-                    LastPage = Page;
-
                 IsLoadingMovies = false;
                 IsMovieFound = Movies.Any();
                 CurrentNumberOfMovies = Movies.Count;
 
-                await MovieHistoryService.ComputeMovieHistoryAsync(movies, CancellationLoadingMovies);
+                await MovieHistoryService.ComputeMovieHistoryAsync(movies);
                 await MovieService.DownloadCoverImageAsync(movies, CancellationLoadingMovies);
 
                 watch.Stop();
@@ -158,8 +152,6 @@ namespace Popcorn.ViewModels.Tabs
                 IsLoadingMovies = false;
                 IsMovieFound = Movies.Any();
                 CurrentNumberOfMovies = Movies.Count;
-                if (!IsMovieFound)
-                    Page = 0;
             }
         }
 

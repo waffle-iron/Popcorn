@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Diagnostics;
 using System.Linq;
-using System.Threading;
 using System.Threading.Tasks;
 using GalaSoft.MvvmLight.CommandWpf;
 using GalaSoft.MvvmLight.Ioc;
@@ -9,7 +8,7 @@ using GalaSoft.MvvmLight.Messaging;
 using NLog;
 using Popcorn.Helpers;
 using Popcorn.Messaging;
-using Popcorn.Models.Movie;
+using Popcorn.Models.Genre;
 using Popcorn.ViewModels.Main;
 
 namespace Popcorn.ViewModels.Tabs
@@ -111,9 +110,6 @@ namespace Popcorn.ViewModels.Tabs
         {
             try
             {
-                if (Page == LastPage)
-                    return;
-
                 var watch = Stopwatch.StartNew();
 
                 Logger.Info(
@@ -121,7 +117,7 @@ namespace Popcorn.ViewModels.Tabs
 
                 IsLoadingMovies = true;
                 var favoritesMovies =
-                    await MovieHistoryService.GetSeenMoviesAsync(Genre, Rating, CancellationLoadingMovies);
+                    await MovieHistoryService.GetSeenMoviesAsync(Genre, Rating);
 
                 var movies = favoritesMovies.ToList();
                 Movies.Clear();
@@ -130,13 +126,10 @@ namespace Popcorn.ViewModels.Tabs
                     Movies.Add(movie);
                 }
 
-                if (!movies.Any() && MaxNumberOfMovies != 0)
-                    LastPage = Page;
-
                 IsLoadingMovies = false;
                 IsMovieFound = Movies.Any();
                 CurrentNumberOfMovies = Movies.Count;
-                MaxNumberOfMovies = movies.Count;
+                MaxNumberOfMovies = Movies.Count;
                 await MovieService.DownloadCoverImageAsync(Movies, CancellationLoadingMovies);
 
                 watch.Stop();
@@ -148,6 +141,13 @@ namespace Popcorn.ViewModels.Tabs
             {
                 Logger.Info(
                     $"Error while loading page {Page}: {exception.Message}");
+            }
+            finally
+            {
+                IsLoadingMovies = false;
+                IsMovieFound = Movies.Any();
+                CurrentNumberOfMovies = Movies.Count;
+                MaxNumberOfMovies = Movies.Count;
             }
         }
 

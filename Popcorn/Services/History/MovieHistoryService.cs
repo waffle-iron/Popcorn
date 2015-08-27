@@ -10,10 +10,10 @@ using NLog;
 using Popcorn.Entity;
 using Popcorn.Entity.Cast;
 using Popcorn.Entity.Movie;
-using Popcorn.Models.Movie;
+using Popcorn.Models.Genre;
 using Popcorn.Models.Torrent.Deserialized;
-using MovieFull = Popcorn.Models.Movie.MovieFull;
-using MovieShort = Popcorn.Models.Movie.MovieShort;
+using MovieFull = Popcorn.Models.Movie.Full.MovieFull;
+using MovieShort = Popcorn.Models.Movie.Short.MovieShort;
 
 namespace Popcorn.Services.History
 {
@@ -39,8 +39,7 @@ namespace Popcorn.Services.History
         /// Retrieve from database and set the IsFavorite and HasBeenSeen properties of each movie in params, 
         /// </summary>
         /// <param name="movies">All movies to compute</param>
-        /// <param name="ct">Used to cancel task</param>
-        public async Task ComputeMovieHistoryAsync(IEnumerable<MovieShort> movies, CancellationTokenSource ct)
+        public async Task ComputeMovieHistoryAsync(IEnumerable<MovieShort> movies)
         {
             var watch = Stopwatch.StartNew();
 
@@ -48,12 +47,12 @@ namespace Popcorn.Services.History
             {
                 using (var context = new ApplicationDbContext())
                 {
-                    await context.MovieHistory.LoadAsync(ct.Token);
-                    var history = await context.MovieHistory.FirstOrDefaultAsync(ct.Token);
+                    await context.MovieHistory.LoadAsync();
+                    var history = await context.MovieHistory.FirstOrDefaultAsync();
                     if (history == null)
                     {
-                        await CreateMovieHistoryAsync(ct);
-                        history = await context.MovieHistory.FirstOrDefaultAsync(ct.Token);
+                        await CreateMovieHistoryAsync();
+                        history = await context.MovieHistory.FirstOrDefaultAsync();
                     }
 
                     foreach (var movie in movies.ToList())
@@ -64,12 +63,6 @@ namespace Popcorn.Services.History
                         movie.HasBeenSeen = entityMovie.HasBeenSeen;
                     }
                 }
-            }
-            catch (Exception exception) when (exception is TaskCanceledException || exception is OperationCanceledException)
-            {
-                watch.Stop();
-                Logger.Debug(
-                    "ComputeMovieHistoryAsync cancelled.");
             }
             catch (Exception exception)
             {
@@ -93,10 +86,8 @@ namespace Popcorn.Services.History
         /// </summary>
         /// <param name="genre">The genre of the movies</param>
         /// <param name="ratingFilter">Used to filter by rating</param>
-        /// <param name="ct">Userd to cancel task</param>
         /// <returns>Favorites movies</returns>
-        public async Task<IEnumerable<MovieShort>> GetFavoritesMoviesAsync(MovieGenre genre, double ratingFilter,
-            CancellationToken ct)
+        public async Task<IEnumerable<MovieShort>> GetFavoritesMoviesAsync(MovieGenre genre, double ratingFilter)
         {
             var watch = Stopwatch.StartNew();
 
@@ -106,8 +97,8 @@ namespace Popcorn.Services.History
             {
                 using (var context = new ApplicationDbContext())
                 {
-                    await context.MovieHistory.LoadAsync(ct);
-                    var movieHistory = await context.MovieHistory.FirstOrDefaultAsync(ct);
+                    await context.MovieHistory.LoadAsync();
+                    var movieHistory = await context.MovieHistory.FirstOrDefaultAsync();
                     if (genre != null)
                     {
                         movies.AddRange(movieHistory.MoviesShort.Where(
@@ -123,12 +114,6 @@ namespace Popcorn.Services.History
                             .Select(MovieShortFromEntityToModel));
                     }
                 }
-            }
-            catch (Exception exception) when (exception is TaskCanceledException || exception is OperationCanceledException)
-            {
-                watch.Stop();
-                Logger.Debug(
-                    "GetFavoritesMoviesIdAsync cancelled.");
             }
             catch (Exception exception)
             {
@@ -154,9 +139,7 @@ namespace Popcorn.Services.History
         /// <returns>Seen movies</returns>
         /// <param name="genre">The genre of the movies</param>
         /// <param name="ratingFilter">Used to filter by rating</param>
-        /// <param name="ct">Used to cancel task</param>
-        public async Task<IEnumerable<MovieShort>> GetSeenMoviesAsync(MovieGenre genre, double ratingFilter,
-            CancellationTokenSource ct)
+        public async Task<IEnumerable<MovieShort>> GetSeenMoviesAsync(MovieGenre genre, double ratingFilter)
         {
             var watch = Stopwatch.StartNew();
 
@@ -166,8 +149,8 @@ namespace Popcorn.Services.History
             {
                 using (var context = new ApplicationDbContext())
                 {
-                    await context.MovieHistory.LoadAsync(ct.Token);
-                    var movieHistory = await context.MovieHistory.FirstOrDefaultAsync(ct.Token);
+                    await context.MovieHistory.LoadAsync();
+                    var movieHistory = await context.MovieHistory.FirstOrDefaultAsync();
                     if (genre != null)
                     {
                         movies.AddRange(movieHistory.MoviesShort.Where(
@@ -183,12 +166,6 @@ namespace Popcorn.Services.History
                             .Select(MovieShortFromEntityToModel));
                     }
                 }
-            }
-            catch (Exception exception) when (exception is TaskCanceledException || exception is OperationCanceledException)
-            {
-                watch.Stop();
-                Logger.Debug(
-                    "GetSeenMoviesIdAsync cancelled.");
             }
             catch (Exception exception)
             {
@@ -225,7 +202,7 @@ namespace Popcorn.Services.History
                     var movieHistory = await context.MovieHistory.FirstOrDefaultAsync(ct.Token);
                     if (movieHistory == null)
                     {
-                        await CreateMovieHistoryAsync(ct);
+                        await CreateMovieHistoryAsync();
                         movieHistory = await context.MovieHistory.FirstOrDefaultAsync(ct.Token);
                     }
 
@@ -254,12 +231,6 @@ namespace Popcorn.Services.History
                     await context.SaveChangesAsync(ct.Token);
                 }
             }
-            catch (Exception exception) when (exception is TaskCanceledException || exception is OperationCanceledException)
-            {
-                watch.Stop();
-                Logger.Debug(
-                    "SetFavoriteMovieAsync cancelled.");
-            }
             catch (Exception exception)
             {
                 watch.Stop();
@@ -281,8 +252,7 @@ namespace Popcorn.Services.History
         /// Set a movie as seen
         /// </summary>
         /// <param name="movie">Seen movie</param>
-        /// <param name="ct">Used to cancel task</param>
-        public async Task SetHasBeenSeenMovieAsync(MovieFull movie, CancellationTokenSource ct)
+        public async Task SetHasBeenSeenMovieAsync(MovieFull movie)
         {
             var watch = Stopwatch.StartNew();
 
@@ -290,12 +260,12 @@ namespace Popcorn.Services.History
             {
                 using (var context = new ApplicationDbContext())
                 {
-                    await context.MovieHistory.LoadAsync(ct.Token);
-                    var movieHistory = await context.MovieHistory.FirstOrDefaultAsync(ct.Token);
+                    await context.MovieHistory.LoadAsync();
+                    var movieHistory = await context.MovieHistory.FirstOrDefaultAsync();
                     if (movieHistory == null)
                     {
-                        await CreateMovieHistoryAsync(ct);
-                        movieHistory = await context.MovieHistory.FirstOrDefaultAsync(ct.Token);
+                        await CreateMovieHistoryAsync();
+                        movieHistory = await context.MovieHistory.FirstOrDefaultAsync();
                     }
 
                     if (movieHistory.MoviesFull == null)
@@ -320,14 +290,8 @@ namespace Popcorn.Services.History
                         }
                     }
 
-                    await context.SaveChangesAsync(ct.Token);
+                    await context.SaveChangesAsync();
                 }
-            }
-            catch (Exception exception) when (exception is TaskCanceledException || exception is OperationCanceledException)
-            {
-                watch.Stop();
-                Logger.Debug(
-                    "SetHasBeenSeenMovieAsync cancelled.");
             }
             catch (Exception exception)
             {
@@ -349,8 +313,7 @@ namespace Popcorn.Services.History
         /// <summary>
         /// Scaffold UserData Table on database if empty
         /// </summary>
-        /// <param name="ct">Used to cancel task</param>
-        private static async Task CreateMovieHistoryAsync(CancellationTokenSource ct)
+        private static async Task CreateMovieHistoryAsync()
         {
             var watch = Stopwatch.StartNew();
 
@@ -358,8 +321,8 @@ namespace Popcorn.Services.History
             {
                 using (var context = new ApplicationDbContext())
                 {
-                    await context.MovieHistory.LoadAsync(ct.Token);
-                    var userData = await context.MovieHistory.FirstOrDefaultAsync(ct.Token);
+                    await context.MovieHistory.LoadAsync();
+                    var userData = await context.MovieHistory.FirstOrDefaultAsync();
                     if (userData == null)
                     {
                         context.MovieHistory.AddOrUpdate(new MovieHistory
@@ -369,15 +332,9 @@ namespace Popcorn.Services.History
                             MoviesFull = new List<Entity.Movie.MovieFull>()
                         });
 
-                        await context.SaveChangesAsync(ct.Token);
+                        await context.SaveChangesAsync();
                     }
                 }
-            }
-            catch (Exception exception) when (exception is TaskCanceledException || exception is OperationCanceledException)
-            {
-                watch.Stop();
-                Logger.Debug(
-                    "CreateMovieHistoryAsync cancelled.");
             }
             catch (Exception exception)
             {

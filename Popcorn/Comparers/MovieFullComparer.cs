@@ -1,5 +1,5 @@
 ﻿using System.Collections.Generic;
-using Popcorn.Models.Movie;
+using Popcorn.Models.Movie.Full;
 
 namespace Popcorn.Comparers
 {

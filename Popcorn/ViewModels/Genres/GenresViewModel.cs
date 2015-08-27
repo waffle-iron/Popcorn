@@ -8,7 +8,7 @@ using GalaSoft.MvvmLight.Threading;
 using NLog;
 using Popcorn.Helpers;
 using Popcorn.Messaging;
-using Popcorn.Models.Movie;
+using Popcorn.Models.Genre;
 using Popcorn.Services.Movie;
 using TMDbLib.Objects.General;
 

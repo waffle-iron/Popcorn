@@ -259,7 +259,7 @@
       <DependentUpon>201508192155425_Initial.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
-    <Compile Include="Models\Movie\MovieGenre.cs" />
+    <Compile Include="Models\Genre\MovieGenre.cs" />
     <Compile Include="Panels\ElasticWrapPanel.cs" />
     <Compile Include="Entity\Localization\Language.cs" />
     <Compile Include="Entity\Application\Settings.cs" />
@@ -279,12 +279,8 @@
     <Compile Include="Messaging\SearchMovieMessage.cs" />
     <Compile Include="Messaging\StopPlayingTrailerMessage.cs" />
     <Compile Include="Models\Account\Bearer.cs" />
-    <Compile Include="Models\Account\Json\BearerDeserialized.cs" />
-    <Compile Include="Models\Account\Json\UserDeserialized.cs" />
     <Compile Include="Models\Cast\Actor.cs" />
     <Compile Include="Models\Cast\Director.cs" />
-    <Compile Include="Models\Cast\Json\ActorDeserialized.cs" />
-    <Compile Include="Models\Cast\Json\DirectorDeserialized.cs" />
     <Compile Include="Models\Localization\CustomLanguage.cs" />
     <Compile Include="Models\Localization\EnglishLanguage.cs" />
     <Compile Include="Models\Localization\FrenchLanguage.cs" />
@@ -295,15 +291,13 @@
     <Compile Include="Entity\ApplicationDbContext.cs" />
     <Compile Include="Entity\Movie\MovieShort.cs" />
     <Compile Include="Models\Localization\Language.cs" />
-    <Compile Include="Models\Movie\MovieFull.cs" />
-    <Compile Include="Models\Movie\Json\DataMovieShortDeserialized.cs" />
-    <Compile Include="Models\Movie\Json\MetaDeserialized.cs" />
-    <Compile Include="Models\Movie\MovieShort.cs" />
-    <Compile Include="Models\Movie\Json\MovieFullDeserialized.cs" />
-    <Compile Include="Models\Movie\Json\MovieImagesDeserialized.cs" />
-    <Compile Include="Models\Movie\Json\MovieShortDeserialized.cs" />
-    <Compile Include="Models\Movie\Json\WrapperMovieFullDeserialized.cs" />
-    <Compile Include="Models\Movie\Json\WrapperMovieShortDeserialized.cs" />
+    <Compile Include="Models\Movie\Full\MovieFull.cs" />
+    <Compile Include="Models\Movie\Short\DataMovieShort.cs" />
+    <Compile Include="Models\Movie\Meta.cs" />
+    <Compile Include="Models\Movie\Short\MovieShort.cs" />
+    <Compile Include="Models\Images\MovieImages.cs" />
+    <Compile Include="Models\Movie\Full\WrapperMovieFull.cs" />
+    <Compile Include="Models\Movie\Short\WrapperMovieShort.cs" />
     <Compile Include="Models\Subtitle\Json\SubtitleDeserialized.cs" />
     <Compile Include="Models\Subtitle\Json\SubtitlesWrapperDeserialized.cs" />
     <Compile Include="Models\Subtitle\Subtitle.cs" />

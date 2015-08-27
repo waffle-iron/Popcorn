@@ -9,7 +9,6 @@ using System.Threading.Tasks;
 using NLog;
 using RestSharp;
 using Popcorn.Helpers;
-using Popcorn.Models.Movie;
 using TMDbLib.Client;
 using TMDbLib.Objects.Movies;
 using Popcorn.Models.Localization;
@@ -18,7 +17,9 @@ using System.Net;
 using System.Net.Sockets;
 using Popcorn.Messaging;
 using GalaSoft.MvvmLight.Messaging;
-using Popcorn.Models.Movie.Json;
+using Popcorn.Models.Genre;
+using Popcorn.Models.Movie.Full;
+using Popcorn.Models.Movie.Short;
 using Popcorn.Models.Subtitle;
 using Popcorn.Models.Subtitle.Json;
 using TMDbLib.Objects.General;
@@ -153,7 +154,7 @@ namespace Popcorn.Services.Movie
         {
             var watch = Stopwatch.StartNew();
 
-            var wrapper = new WrapperMovieShortDeserialized();
+            var wrapper = new WrapperMovieShort();
 
             if (limit < 1 || limit > 50)
             {
@@ -176,7 +177,7 @@ namespace Popcorn.Services.Movie
 
             try
             {
-                var response = await restClient.ExecuteGetTaskAsync<WrapperMovieShortDeserialized>(request, ct);
+                var response = await restClient.ExecuteGetTaskAsync<WrapperMovieShort>(request, ct);
                 if (response.ErrorException != null)
                 {
                     watch.Stop();
@@ -239,7 +240,7 @@ namespace Popcorn.Services.Movie
         {
             var watch = Stopwatch.StartNew();
 
-            var wrapper = new WrapperMovieShortDeserialized();
+            var wrapper = new WrapperMovieShort();
 
             if (limit < 1 || limit > 50)
             {
@@ -262,7 +263,7 @@ namespace Popcorn.Services.Movie
 
             try
             {
-                var response = await restClient.ExecuteGetTaskAsync<WrapperMovieShortDeserialized>(request, ct);
+                var response = await restClient.ExecuteGetTaskAsync<WrapperMovieShort>(request, ct);
                 if (response.ErrorException != null)
                 {
                     watch.Stop();
@@ -325,7 +326,7 @@ namespace Popcorn.Services.Movie
         {
             var watch = Stopwatch.StartNew();
 
-            var wrapper = new WrapperMovieShortDeserialized();
+            var wrapper = new WrapperMovieShort();
 
             if (limit < 1 || limit > 50)
             {
@@ -348,7 +349,7 @@ namespace Popcorn.Services.Movie
 
             try
             {
-                var response = await restClient.ExecuteGetTaskAsync<WrapperMovieShortDeserialized>(request, ct);
+                var response = await restClient.ExecuteGetTaskAsync<WrapperMovieShort>(request, ct);
                 if (response.ErrorException != null)
                 {
                     watch.Stop();
@@ -413,7 +414,7 @@ namespace Popcorn.Services.Movie
         {
             var watch = Stopwatch.StartNew();
 
-            var wrapper = new WrapperMovieShortDeserialized();
+            var wrapper = new WrapperMovieShort();
 
             if (limit < 1 || limit > 50)
             {
@@ -436,7 +437,7 @@ namespace Popcorn.Services.Movie
 
             try
             {
-                var response = await restClient.ExecuteGetTaskAsync<WrapperMovieShortDeserialized>(request, ct);
+                var response = await restClient.ExecuteGetTaskAsync<WrapperMovieShort>(request, ct);
                 if (response.ErrorException != null)
                 {
                     watch.Stop();
@@ -503,7 +504,7 @@ namespace Popcorn.Services.Movie
 
             try
             {
-                var response = await restClient.ExecuteGetTaskAsync<WrapperMovieFullDeserialized>(request, ct);
+                var response = await restClient.ExecuteGetTaskAsync<WrapperMovieFull>(request, ct);
                 if (response.ErrorException != null)
                 {
                     watch.Stop();
@@ -690,7 +691,7 @@ namespace Popcorn.Services.Movie
         /// </summary>
         /// <param name="wrapper">Wrapped movies</param>
         /// <returns>List of movies</returns>
-        private static IEnumerable<MovieShort> GetMoviesListFromWrapper(WrapperMovieShortDeserialized wrapper)
+        private static IEnumerable<MovieShort> GetMoviesListFromWrapper(WrapperMovieShort wrapper)
         {
             return wrapper?.Data?.Movies?.Select(movie => new MovieShort
             {

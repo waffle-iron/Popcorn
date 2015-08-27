@@ -4,13 +4,11 @@ using GalaSoft.MvvmLight.Messaging;
 using System.Threading.Tasks;
 using Popcorn.Helpers;
 using Popcorn.Messaging;
-using System.Collections.Generic;
 using System.Diagnostics;
-using System.Threading;
 using GalaSoft.MvvmLight.CommandWpf;
 using GalaSoft.MvvmLight.Ioc;
 using NLog;
-using Popcorn.Models.Movie;
+using Popcorn.Models.Genre;
 using Popcorn.ViewModels.Main;
 
 namespace Popcorn.ViewModels.Tabs
@@ -26,15 +24,6 @@ namespace Popcorn.ViewModels.Tabs
         /// Logger of the class
         /// </summary>
         private static readonly Logger Logger = LogManager.GetCurrentClassLogger();
-
-        #endregion
-
-        #region Property -> LastPageFilterMapping
-
-        /// <summary>
-        /// Used to determine the last page of the searched criteria
-        /// </summary>
-        private Dictionary<string, int> LastPageFilterMapping { get; }
 
         #endregion
 
@@ -60,7 +49,6 @@ namespace Popcorn.ViewModels.Tabs
             RegisterMessages();
             RegisterCommands();
             TabName = LocalizationProviderHelper.GetLocalizedValue<string>("SearchTitleTab");
-            LastPageFilterMapping = new Dictionary<string, int>();
         }
 
         #endregion
@@ -137,49 +125,42 @@ namespace Popcorn.ViewModels.Tabs
 
                 var watch = Stopwatch.StartNew();
 
+                Page++;
+
                 Logger.Info(
                     $"Loading page {Page} with criteria: {searchFilter}");
 
                 SearchFilter = searchFilter;
-                Page++;
-                int lastPage;
-                if (!LastPageFilterMapping.ContainsKey(searchFilter) ||
-                    (LastPageFilterMapping.TryGetValue(searchFilter, out lastPage) && Page <= lastPage))
+
+                IsLoadingMovies = true;
+
+                var movieResults =
+                    await MovieService.SearchMoviesAsync(searchFilter,
+                        Page,
+                        MaxMoviesPerPage,
+                        Rating,
+                        CancellationLoadingMovies.Token,
+                        Genre);
+
+                var movies = movieResults.Item1.ToList();
+                MaxNumberOfMovies = movieResults.Item2;
+
+                foreach (var movie in movies)
                 {
-                    IsLoadingMovies = true;
-
-                    var movieResults =
-                        await MovieService.SearchMoviesAsync(searchFilter,
-                            Page,
-                            MaxMoviesPerPage,
-                            Rating,
-                            CancellationLoadingMovies.Token,
-                            Genre);
-
-                    var movies = movieResults.Item1.ToList();
-                    MaxNumberOfMovies = movieResults.Item2;
-
-                    foreach (var movie in movies)
-                    {
-                        Movies.Add(movie);
-                    }
-
-                    IsLoadingMovies = false;
-                    IsMovieFound = Movies.Any();
-                    CurrentNumberOfMovies = Movies.Count;
-
-                    await MovieHistoryService.ComputeMovieHistoryAsync(movies, CancellationLoadingMovies);
-                    await MovieService.DownloadCoverImageAsync(movies, CancellationLoadingMovies);
-                    if (!LastPageFilterMapping.ContainsKey(searchFilter) && !movies.Any() && MaxNumberOfMovies != 0)
-                    {
-                        LastPageFilterMapping.Add(searchFilter, Page);
-                    }
-
-                    watch.Stop();
-                    var elapsedMs = watch.ElapsedMilliseconds;
-                    Logger.Info(
-                        $"Loaded page {Page} with criteria {searchFilter} in {elapsedMs} milliseconds.");
+                    Movies.Add(movie);
                 }
+
+                IsLoadingMovies = false;
+                IsMovieFound = Movies.Any();
+                CurrentNumberOfMovies = Movies.Count;
+
+                await MovieHistoryService.ComputeMovieHistoryAsync(movies);
+                await MovieService.DownloadCoverImageAsync(movies, CancellationLoadingMovies);
+            
+                watch.Stop();
+                var elapsedMs = watch.ElapsedMilliseconds;
+                Logger.Info(
+                    $"Loaded page {Page} with criteria {searchFilter} in {elapsedMs} milliseconds.");
             }
             catch (Exception exception)
             {
@@ -192,8 +173,6 @@ namespace Popcorn.ViewModels.Tabs
                 IsLoadingMovies = false;
                 IsMovieFound = Movies.Any();
                 CurrentNumberOfMovies = Movies.Count;
-                if (!IsMovieFound)
-                    Page = 0;
             }
         }
 

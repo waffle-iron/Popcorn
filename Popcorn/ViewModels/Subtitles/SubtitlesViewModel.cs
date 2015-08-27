@@ -1,9 +1,9 @@
 ﻿using GalaSoft.MvvmLight;
 using GalaSoft.MvvmLight.Ioc;
-using Popcorn.Models.Movie;
 using System.Threading;
 using System.Threading.Tasks;
 using NLog;
+using Popcorn.Models.Movie.Full;
 using Popcorn.Services.Movie;
 
 namespace Popcorn.ViewModels.Subtitles

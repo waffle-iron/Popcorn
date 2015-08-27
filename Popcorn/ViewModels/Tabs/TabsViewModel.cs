@@ -5,12 +5,13 @@ using System.Threading;
 using System.Threading.Tasks;
 using GalaSoft.MvvmLight;
 using GalaSoft.MvvmLight.Messaging;
-using Popcorn.Models.Movie;
 using GalaSoft.MvvmLight.CommandWpf;
 using Popcorn.Helpers;
 using Popcorn.Messaging;
 using GalaSoft.MvvmLight.Ioc;
 using NLog;
+using Popcorn.Models.Genre;
+using Popcorn.Models.Movie.Short;
 using Popcorn.Services.History;
 using Popcorn.Services.Movie;
 
@@ -116,15 +117,6 @@ namespace Popcorn.ViewModels.Tabs
         /// Current page number of loaded movies
         /// </summary>
         protected int Page { get; set; }
-
-        #endregion
-
-        #region Property -> LastPage
-
-        /// <summary>
-        /// Last page number of loaded movies
-        /// </summary>
-        protected int LastPage { get; set; } = int.MaxValue;
 
         #endregion
 
@@ -297,7 +289,7 @@ namespace Popcorn.ViewModels.Tabs
                 this,
                 async message =>
                 {
-                    await MovieHistoryService.ComputeMovieHistoryAsync(Movies, CancellationLoadingMovies);
+                    await MovieHistoryService.ComputeMovieHistoryAsync(Movies);
                 });
         }
 

@@ -4,7 +4,6 @@ using GalaSoft.MvvmLight.Ioc;
 using GalaSoft.MvvmLight.Messaging;
 using Popcorn.Helpers;
 using Popcorn.Messaging;
-using Popcorn.Models.Movie;
 using Popcorn.ViewModels.MovieSettings;
 using Ragnar;
 using System;
@@ -13,6 +12,7 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using NLog;
+using Popcorn.Models.Movie.Full;
 using Popcorn.Services.Movie;
 using Popcorn.ViewModels.Settings;
 

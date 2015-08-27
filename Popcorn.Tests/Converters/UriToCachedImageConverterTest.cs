@@ -5,7 +5,6 @@ using Popcorn.Converters;
 namespace Popcorn.Tests.Converters
 {
     [TestFixture]
-    [Timeout(1000)]
     public class UriToCachedImageConverterTest
     {
         [Test]

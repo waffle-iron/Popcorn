@@ -74,7 +74,7 @@ namespace Popcorn.Services.Language
         {
             var watch = Stopwatch.StartNew();
 
-            ICollection<ILanguage> availableLanguages = null;
+            ICollection<ILanguage> availableLanguages;
 
             using (var context = new ApplicationDbContext())
             {

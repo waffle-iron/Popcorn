@@ -3,7 +3,6 @@ using GalaSoft.MvvmLight.Ioc;
 using GalaSoft.MvvmLight.Messaging;
 using Popcorn.Helpers;
 using Popcorn.Messaging;
-using Popcorn.Models.Movie;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -13,6 +12,7 @@ using System.Net.Sockets;
 using System.Threading;
 using System.Threading.Tasks;
 using NLog;
+using Popcorn.Models.Movie.Full;
 using Popcorn.Services.Movie;
 using Popcorn.ViewModels.Players.Trailer;
 using YoutubeExtractor;
@@ -145,43 +145,40 @@ namespace Popcorn.ViewModels.Trailer
 
             try
             {
-                await Task.Run(async () =>
+                var trailer = await MovieService.GetMovieTrailerAsync(movie, ct);
+
+                var video =
+                    await
+                        GetVideoInfoForStreamingAsync(
+                            Constants.YoutubePath + trailer.Results.FirstOrDefault()?.Key,
+                            Constants.YoutubeStreamingQuality.High);
+
+                if (video != null && video.RequiresDecryption)
                 {
-                    var trailer = await MovieService.GetMovieTrailerAsync(movie, ct);
+                    Logger.Info(
+                        $"Decrypting Youtube trailer url: {video.Title}");
+                    await Task.Run(() => DownloadUrlResolver.DecryptDownloadUrl(video), ct);
+                }
 
-                    var video =
-                        await
-                            GetVideoInfoForStreamingAsync(
-                                Constants.YoutubePath + trailer.Results.FirstOrDefault()?.Key,
-                                Constants.YoutubeStreamingQuality.High);
+                if (video == null)
+                {
+                    Logger.Error(
+                        $"Failed loading movie's trailer: {movie.Title}");
+                    Messenger.Default.Send(
+                        new ManageExceptionMessage(
+                            new Exception(
+                                LocalizationProviderHelper.GetLocalizedValue<string>("TrailerNotAvailable"))));
+                    Messenger.Default.Send(new StopPlayingTrailerMessage());
+                    return;
+                }
 
-                    if (video != null && video.RequiresDecryption)
-                    {
-                        Logger.Info(
-                            $"Decrypting Youtube trailer url: {video.Title}");
-                        await Task.Run(() => DownloadUrlResolver.DecryptDownloadUrl(video), ct);
-                    }
-
-                    if (video == null)
-                    {
-                        Logger.Error(
-                            $"Failed loading movie's trailer: {movie.Title}");
-                        Messenger.Default.Send(
-                            new ManageExceptionMessage(
-                                new Exception(
-                                    LocalizationProviderHelper.GetLocalizedValue<string>("TrailerNotAvailable"))));
-                        Messenger.Default.Send(new StopPlayingTrailerMessage());
-                        return;
-                    }
-
-                    if (!ct.IsCancellationRequested)
-                    {
-                        Logger.Debug(
-                            $"Movie's trailer loaded: {movie.Title}");
-                        TrailerPlayer =
-                            new TrailerPlayerViewModel(new Models.Trailer.Trailer(new Uri(video.DownloadUrl)));
-                    }
-                }, ct);
+                if (!ct.IsCancellationRequested)
+                {
+                    Logger.Debug(
+                        $"Movie's trailer loaded: {movie.Title}");
+                    TrailerPlayer =
+                        new TrailerPlayerViewModel(new Models.Trailer.Trailer(new Uri(video.DownloadUrl)));
+                }
             }
             catch (Exception exception) when (exception is TaskCanceledException)
             {
@@ -193,6 +190,7 @@ namespace Popcorn.ViewModels.Trailer
             }
             catch (Exception exception) when (exception is SocketException || exception is WebException)
             {
+                watch.Stop();
                 Logger.Error(
                     $"GetMovieTrailerAsync: {exception.Message}");
                 Messenger.Default.Send(new StopPlayingTrailerMessage());
@@ -201,6 +199,7 @@ namespace Popcorn.ViewModels.Trailer
             catch (Exception exception)
                 when (exception is VideoNotAvailableException || exception is YoutubeParseException)
             {
+                watch.Stop();
                 Logger.Error(
                     $"GetMovieTrailerAsync: {exception.Message}");
                 Messenger.Default.Send(

@@ -3,7 +3,7 @@ using GalaSoft.MvvmLight.CommandWpf;
 using GalaSoft.MvvmLight.Messaging;
 using NLog;
 using Popcorn.Messaging;
-using Popcorn.Models.Movie;
+using Popcorn.Models.Movie.Full;
 using Popcorn.ViewModels.Subtitles;
 
 namespace Popcorn.ViewModels.MovieSettings
