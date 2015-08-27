@@ -278,8 +278,18 @@ namespace Popcorn.ViewModels.Tabs
                 {
                     foreach (var movie in Movies.ToList())
                     {
-                        await Task.Delay(1000);
-                        await MovieService.TranslateMovieShortAsync(movie);
+                        try
+                        {
+                            await Task.Delay(1000, CancellationLoadingMovies.Token);
+                        }
+                        catch (TaskCanceledException)
+                        {
+                            Logger.Debug(
+                                $"Stopped translating movie : {movie.Title}");
+                            return;
+                        }
+
+                        await MovieService.TranslateMovieShortAsync(movie, CancellationLoadingMovies.Token);
                     }
                 });
 
@@ -342,7 +352,7 @@ namespace Popcorn.ViewModels.Tabs
             Logger.Info(
                 "Stop loading movies.");
 
-            CancellationLoadingMovies?.Cancel();
+            CancellationLoadingMovies?.Cancel(true);
             CancellationLoadingMovies = new CancellationTokenSource();
         }
 

@@ -1,20 +1,20 @@
 ﻿using GalaSoft.MvvmLight;
-using Newtonsoft.Json;
+using RestSharp.Deserializers;
 
 namespace Popcorn.Models.Cast.Json
 {
     public class ActorDeserialized : ObservableObject
     {
-        [JsonProperty("name")]
+        [DeserializeAs(Name = "name")]
         public string Name { get; set; }
 
-        [JsonProperty("character_name")]
+        [DeserializeAs(Name = "character_name")]
         public string CharacterName { get; set; }
 
-        [JsonProperty("small_image")]
+        [DeserializeAs(Name = "small_image")]
         public string SmallImage { get; set; }
 
-        [JsonProperty("medium_image")]
+        [DeserializeAs(Name = "medium_image")]
         public string MediumImage { get; set; }
     }
 }

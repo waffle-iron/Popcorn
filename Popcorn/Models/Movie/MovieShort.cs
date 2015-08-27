@@ -10,19 +10,6 @@ namespace Popcorn.Models.Movie
     {
         #region Properties
 
-        #region Property -> Title
-
-        /// <summary>
-        /// Movie's title
-        /// </summary>
-        public new string Title
-        {
-            get { return base.Title; }
-            set { Set(() => Title, ref base.Title, value); }
-        }
-
-        #endregion
-
         #region Property -> RatingValue
 
         private double _ratingValue;
@@ -36,19 +23,6 @@ namespace Popcorn.Models.Movie
             set { Set(() => RatingValue, ref _ratingValue, value); }
         }
         
-        #endregion
-
-        #region Property -> Genres
-
-        /// <summary>
-        /// Movie's genres
-        /// </summary>
-        public new IEnumerable<string> Genres
-        {
-            get { return base.Genres; }
-            set { Set(() => Genres, ref base.Genres, value); }
-        }
-
         #endregion
 
         #region Property -> CoverImagePath

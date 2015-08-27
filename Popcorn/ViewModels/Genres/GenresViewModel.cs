@@ -1,4 +1,5 @@
 ﻿using System.Collections.ObjectModel;
+using System.Threading;
 using System.Threading.Tasks;
 using GalaSoft.MvvmLight;
 using GalaSoft.MvvmLight.Ioc;
@@ -24,7 +25,21 @@ namespace Popcorn.ViewModels.Genres
 
         #endregion
 
+        /// <summary>
+        /// Used to interact with movies
+        /// </summary>
         private readonly MovieService _movieService;
+
+        #region Properties
+
+        #region Property -> CancellationLoadingGenres
+
+        /// <summary>
+        /// Used to cancel loading genres
+        /// </summary>
+        private CancellationTokenSource CancellationLoadingGenres { get; set; }
+
+        #endregion
 
         #region Property -> MovieGenres
 
@@ -41,9 +56,12 @@ namespace Popcorn.ViewModels.Genres
 
         #endregion
 
+        #endregion
+
         private GenresViewModel()
         {
             RegisterMessages();
+            CancellationLoadingGenres = new CancellationTokenSource();
             _movieService = SimpleIoc.Default.GetInstance<MovieService>();
         }
 
@@ -62,6 +80,7 @@ namespace Popcorn.ViewModels.Genres
                 {
                     DispatcherHelper.CheckBeginInvokeOnUI(async () =>
                     {
+                        StopLoadingGenres();
                         await LoadGenresAsync();
                     });
                 });
@@ -77,8 +96,9 @@ namespace Popcorn.ViewModels.Genres
         /// <returns>Instance of GenresViewModel</returns>
         private async Task<GenresViewModel> InitializeAsync()
         {
-            Logger.Info(
+            Logger.Debug(
                 "Initializing GenresViewModel");
+
             await LoadGenresAsync();
             return this;
         }
@@ -101,24 +121,59 @@ namespace Popcorn.ViewModels.Genres
 
         #region Method -> LoadGenresAsync
 
+        /// <summary>
+        /// Load genres asynchronously
+        /// </summary>
+        /// <returns></returns>
         private async Task LoadGenresAsync()
         {
             MovieGenres?.Clear();
             MovieGenres = null;
 
-            MovieGenres = new ObservableCollection<MovieGenre>(await _movieService.GetGenresAsync());
-            MovieGenres.Insert(0, new MovieGenre
+            MovieGenres =
+                new ObservableCollection<MovieGenre>(await _movieService.GetGenresAsync(CancellationLoadingGenres.Token));
+            if (CancellationLoadingGenres.IsCancellationRequested)
+                return;
+
+            MovieGenres?.Insert(0, new MovieGenre
             {
                 TmdbGenre = new Genre
                 {
-                  Id = int.MaxValue,
-                  Name = LocalizationProviderHelper.GetLocalizedValue<string>("AllLabel")
+                    Id = int.MaxValue,
+                    Name = LocalizationProviderHelper.GetLocalizedValue<string>("AllLabel")
                 },
                 EnglishName = string.Empty
             });
         }
 
         #endregion
+
+        #region Method -> StopLoadingGenres
+
+        /// <summary>
+        /// Cancel the loading of genres
+        /// </summary>
+        private void StopLoadingGenres()
+        {
+            Logger.Debug(
+                "Stop loading genres.");
+
+            CancellationLoadingGenres?.Cancel(true);
+            CancellationLoadingGenres = new CancellationTokenSource();
+        }
+
+        #endregion
+
+        public override void Cleanup()
+        {
+            Logger.Debug(
+                "Cleaning a GenresViewModel.");
+
+            StopLoadingGenres();
+            CancellationLoadingGenres?.Dispose();
+
+            base.Cleanup();
+        }
 
         #endregion
     }

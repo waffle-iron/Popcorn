@@ -37,8 +37,7 @@
             <RowDefinition Height="*"></RowDefinition>
             <RowDefinition Height="*"></RowDefinition>
         </Grid.RowDefinitions>
-        <controls:MetroProgressBar x:Name="LoadingProgressBar" 
-                                    Grid.Row="0"
+        <controls:MetroProgressBar Grid.Row="0"
                                     IsIndeterminate="True"
                                     EllipseDiameter="5"
                                     Minimum="0"
@@ -75,14 +74,12 @@
                 FontSize="18"
                 Visibility="{Binding Main.IsConnectionInError, Converter={StaticResource BoolToInverseVisibilityConverter}, Source={StaticResource Locator}}"
                 Command="{Binding ReloadMovies}"/>
-        <ScrollViewer x:Name="Scroll" 
-                      Grid.Row="1"
+        <ScrollViewer Grid.Row="1"
                       Grid.RowSpan="2"
                       VerticalScrollBarVisibility="Auto" 
                       ScrollChanged="ScrollViewerScrollChanged" 
                       Visibility="{Binding Main.IsConnectionInError, Converter={StaticResource BoolToVisibilityConverter}, Source={StaticResource Locator}}">
-            <ItemsControl x:Name="ItemsList" 
-                        VirtualizingStackPanel.IsVirtualizing="True"
+            <ItemsControl VirtualizingStackPanel.IsVirtualizing="True"
                         VirtualizingStackPanel.VirtualizationMode="Recycling"
                         ItemsSource="{Binding Movies}" 
                         VerticalAlignment="Top">

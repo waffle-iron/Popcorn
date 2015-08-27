@@ -1,19 +1,19 @@
-﻿using Newtonsoft.Json;
+﻿using RestSharp.Deserializers;
 
 namespace Popcorn.Models.Movie.Json
 {
     public class WrapperMovieShortDeserialized
     {
-        [JsonProperty("status")]
+        [DeserializeAs(Name = "status")]
         public string Status { get; set; }
 
-        [JsonProperty("status_message")]
+        [DeserializeAs(Name = "status_message")]
         public string StatusMessage { get; set; }
 
-        [JsonProperty("data")]
+        [DeserializeAs(Name = "data")]
         public DataMovieShortDeserialized Data { get; set; }
 
-        [JsonProperty("@meta")]
+        [DeserializeAs(Name = "@meta")]
         public MetaDeserialized Meta { get; set; }
     }
 }

@@ -1,11 +1,13 @@
 ﻿using System;
 using System.Diagnostics;
 using System.Net;
+using System.Net.Sockets;
 using System.Threading;
 using System.Threading.Tasks;
-using Newtonsoft.Json;
+using GalaSoft.MvvmLight.Messaging;
 using NLog;
 using Popcorn.Helpers;
+using Popcorn.Messaging;
 using Popcorn.Models.Account;
 using RestSharp;
 
@@ -44,6 +46,8 @@ namespace Popcorn.Services.User
         {
             var watch = Stopwatch.StartNew();
 
+            var user = new Models.Account.User();
+
             var restClient = new RestClient(Constants.PopcornApiEndpoint);
             var request = new RestRequest("/{segment}", Method.POST);
             request.AddUrlSegment("segment", "api/accounts/create");
@@ -54,14 +58,37 @@ namespace Popcorn.Services.User
             request.AddParameter("password", password);
             request.AddParameter("confirmpassword", password);
 
-            var response = await restClient.ExecutePostTaskAsync(request, ct);
-            if (response.ErrorException != null)
+            try
             {
-                throw new Exception();
-            }
+                var response = await restClient.ExecutePostTaskAsync<Models.Account.User>(request, ct);
+                if (response.ErrorException != null)
+                {
+                    watch.Stop();
+                    Logger.Error(
+                        $"CreateUser: {response.ErrorException.Message}");
+                    return user;
+                }
 
-            var user =
-                await Task.Run(() => JsonConvert.DeserializeObject<Models.Account.User>(response.Content), ct);
+                user = response.Data;
+            }
+            catch (Exception exception) when (exception is TaskCanceledException)
+            {
+                watch.Stop();
+                Logger.Debug(
+                    "CreateUser cancelled.");
+            }
+            catch (Exception exception) when (exception is SocketException || exception is WebException)
+            {
+                Logger.Error(
+                    $"CreateUser: {exception.Message}");
+                Messenger.Default.Send(new ManageExceptionMessage(exception));
+            }
+            catch (Exception exception)
+            {
+                watch.Stop();
+                Logger.Error(
+                    $"CreateUser: {exception.Message}");
+            }
 
             watch.Stop();
             var elapsedMs = watch.ElapsedMilliseconds;
@@ -85,6 +112,8 @@ namespace Popcorn.Services.User
         {
             var watch = Stopwatch.StartNew();
 
+            var bearer = new Bearer();
+
             var restClient = new RestClient(Constants.PopcornApiEndpoint);
             var request = new RestRequest("/{segment}", Method.POST);
             request.AddUrlSegment("segment", "oauth/token");
@@ -92,19 +121,37 @@ namespace Popcorn.Services.User
             request.AddParameter("password", user.Password);
             request.AddParameter("grant_type", "password");
 
-            var response = await restClient.ExecutePostTaskAsync(request, ct);
-            if (response.ErrorException != null)
+            try
             {
-                throw new Exception();
-            }
+                var response = await restClient.ExecutePostTaskAsync<Bearer>(request, ct);
+                if (response.ErrorException != null)
+                {
+                    watch.Stop();
+                    Logger.Error(
+                        $"Signin: {response.ErrorException.Message}");
+                    return bearer;
+                }
 
-            if (response.StatusCode == HttpStatusCode.BadRequest)
+                bearer = response.Data;
+            }
+            catch (Exception exception) when (exception is TaskCanceledException)
             {
-
+                watch.Stop();
+                Logger.Debug(
+                    "Signin cancelled.");
             }
-
-            var bearer =
-                await Task.Run(() => JsonConvert.DeserializeObject<Bearer>(response.Content), ct);
+            catch (Exception exception) when (exception is SocketException || exception is WebException)
+            {
+                Logger.Error(
+                    $"Signin: {exception.Message}");
+                Messenger.Default.Send(new ManageExceptionMessage(exception));
+            }
+            catch (Exception exception)
+            {
+                watch.Stop();
+                Logger.Error(
+                    $"Signin: {exception.Message}");
+            }
 
             watch.Stop();
             var elapsedMs = watch.ElapsedMilliseconds;

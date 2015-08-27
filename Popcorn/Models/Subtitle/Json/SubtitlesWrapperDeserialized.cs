@@ -1,20 +1,20 @@
 ﻿using System.Collections.Generic;
-using Newtonsoft.Json;
+using RestSharp.Deserializers;
 
 namespace Popcorn.Models.Subtitle.Json
 {
     public class SubtitlesWrapperDeserialized
     {
-        [JsonProperty("success")]
+        [DeserializeAs(Name = "success")]
         public bool Success { get; set; }
 
-        [JsonProperty("lastModified")]
+        [DeserializeAs(Name = "lastModified")]
         public int LastModified { get; set; }
 
-        [JsonProperty("subtitles")]
+        [DeserializeAs(Name = "subtitles")]
         public int SubtitlesCount { get; set; }
 
-        [JsonProperty("subs")]
+        [DeserializeAs(Name = "subs")]
         public Dictionary<string, Dictionary<string, List<SubtitleDeserialized>>> Subtitles{ get; set; }
     }
 }

@@ -1,6 +1,4 @@
-﻿using System;
-using System.Net;
-using System.Net.Sockets;
+﻿using System.Diagnostics;
 using GalaSoft.MvvmLight;
 using GalaSoft.MvvmLight.CommandWpf;
 using GalaSoft.MvvmLight.Ioc;
@@ -251,7 +249,7 @@ namespace Popcorn.ViewModels.Movie
                 {
                     if (!string.IsNullOrEmpty(Movie?.ImdbCode))
                     {
-                        await MovieService.TranslateMovieFullAsync(Movie);
+                        await MovieService.TranslateMovieFullAsync(Movie, CancellationLoadingToken.Token);
                     }
                 });
         }
@@ -277,7 +275,7 @@ namespace Popcorn.ViewModels.Movie
             {
                 IsPlayingTrailer = true;
                 IsTrailerLoading = true;
-                Trailer = await TrailerViewModel.CreateAsync(Movie, CancellationLoadingTrailerToken);
+                Trailer = await TrailerViewModel.CreateAsync(Movie, CancellationLoadingTrailerToken.Token);
                 IsTrailerLoading = false;
             });
 
@@ -294,28 +292,22 @@ namespace Popcorn.ViewModels.Movie
         /// <param name="movie">The movie to load</param>
         private async Task LoadMovieAsync(MovieShort movie)
         {
-            Logger.Info(
-                $"Loading movie: {movie.Title}");
+            var watch = Stopwatch.StartNew();
 
             Messenger.Default.Send(new LoadMovieMessage());
             IsMovieLoading = true;
-            try
-            {
-                Movie = await MovieService.GetMovieFullDetailsAsync(movie);
-                IsMovieLoading = false;
-                await MovieService.DownloadPosterImageAsync(Movie);
-                await MovieService.DownloadDirectorImageAsync(Movie);
-                await MovieService.DownloadActorImageAsync(Movie);
-                await MovieService.DownloadBackgroundImageAsync(Movie);
-                Logger.Info(
-                    $"Movie loaded: {movie.Title}");
-            }
-            catch (Exception ex) when (ex is SocketException || ex is WebException)
-            {
-                Logger.Info(
-                    $"Error while loading movie {movie.Title}: {ex.Message}");
-                Messenger.Default.Send(new ManageExceptionMessage(ex));
-            }
+
+            Movie = await MovieService.GetMovieFullDetailsAsync(movie, CancellationLoadingToken.Token);
+            IsMovieLoading = false;
+            await MovieService.DownloadPosterImageAsync(Movie, CancellationLoadingToken);
+            await MovieService.DownloadDirectorImageAsync(Movie, CancellationLoadingToken);
+            await MovieService.DownloadActorImageAsync(Movie, CancellationLoadingToken);
+            await MovieService.DownloadBackgroundImageAsync(Movie, CancellationLoadingToken);
+
+            watch.Stop();
+            var elapsedMs = watch.ElapsedMilliseconds;
+            Logger.Debug($"LoadMovieAsync ({movie.ImdbCode}) in {elapsedMs} milliseconds.");
+
         }
 
         #endregion
@@ -331,7 +323,7 @@ namespace Popcorn.ViewModels.Movie
                 "Stop loading movie");
 
             IsMovieLoading = false;
-            CancellationLoadingToken?.Cancel();
+            CancellationLoadingToken?.Cancel(true);
         }
 
         #endregion
@@ -347,7 +339,7 @@ namespace Popcorn.ViewModels.Movie
                 "Stop loading trailer");
 
             IsTrailerLoading = false;
-            CancellationLoadingTrailerToken?.Cancel();
+            CancellationLoadingTrailerToken?.Cancel(true);
             CancellationLoadingTrailerToken?.Dispose();
             CancellationLoadingTrailerToken = new CancellationTokenSource();
             StopPlayingTrailer();

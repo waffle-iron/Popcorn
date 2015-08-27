@@ -414,7 +414,9 @@ namespace Popcorn.ViewModels.Main
 
             GenresViewModel = await GenresViewModel.CreateAsync();
 
+#if !DEBUG
             await StartUpdateProcessAsync();
+#endif
         }
 
         #endregion
@@ -562,13 +564,13 @@ namespace Popcorn.ViewModels.Main
                 {
                     try
                     {
-                        Logger.Info(
+                        Logger.Debug(
                             $"Deleting file: {filePath}");
                         File.Delete(filePath);
                     }
                     catch (Exception ex)
                     {
-                        Logger.Error(ex.Message);
+                        Logger.Error($"Error while deleting file: {ex.Message}.");
                     }
                 }
             });

@@ -83,7 +83,7 @@ namespace Popcorn.ViewModels.Subtitles
         /// <returns>Instance of SubtitlesViewModel</returns>
         private async Task<SubtitlesViewModel> InitializeAsync()
         {
-            Logger.Info(
+            Logger.Debug(
                 "Initializing SubtitlesViewModel");
             await LoadSubtitlesAsync(Movie);
             return this;
@@ -115,7 +115,7 @@ namespace Popcorn.ViewModels.Subtitles
         /// <returns></returns>
         private async Task LoadSubtitlesAsync(MovieFull movie)
         {
-            Logger.Info(
+            Logger.Debug(
                 $"Load subtitles for movie: {movie.Title}");
             await MovieService.LoadSubtitlesAsync(movie, CancellationDownloadingSubtitlesToken.Token);
         }
@@ -129,9 +129,9 @@ namespace Popcorn.ViewModels.Subtitles
         /// </summary>
         private void StopDownloadingSubtitles()
         {
-            Logger.Info(
+            Logger.Debug(
                 "Stop downloading subtitles");
-            CancellationDownloadingSubtitlesToken?.Cancel();
+            CancellationDownloadingSubtitlesToken?.Cancel(true);
         }
 
         #endregion

@@ -1,73 +1,73 @@
 ﻿using System.Collections.Generic;
-using Newtonsoft.Json;
 using GalaSoft.MvvmLight;
 using Popcorn.Models.Torrent.Deserialized;
+using RestSharp.Deserializers;
 
 namespace Popcorn.Models.Movie.Json
 {
     public class MovieShortDeserialized : ObservableObject
     {
-        [JsonProperty("id")]
+        [DeserializeAs(Name = "id")]
         public int Id { get; set; }
 
-        [JsonProperty("url")]
+        [DeserializeAs(Name = "url")]
         public string Url { get; set; }
 
-        [JsonProperty("imdb_code")]
+        [DeserializeAs(Name = "imdb_code")]
         public string ImdbCode { get; set; }
 
-        [JsonProperty("title")]
-        public string Title;
+        [DeserializeAs(Name = "title")]
+        public string Title { get; set; }
 
-        [JsonProperty("title_long")]
+        [DeserializeAs(Name = "title_long")]
         public string TitleLong { get; set; }
 
-        [JsonProperty("year")]
+        [DeserializeAs(Name = "year")]
         public int Year { get; set; }
 
-        [JsonProperty("rating")]
+        [DeserializeAs(Name = "rating")]
         public double Rating { get; set; }
 
-        [JsonProperty("runtime")]
+        [DeserializeAs(Name = "runtime")]
         public int Runtime { get; set; }
 
-        [JsonProperty("genres")]
-        public IEnumerable<string> Genres;
+        [DeserializeAs(Name = "genres")]
+        public List<string> Genres { get; set; }
 
-        [JsonProperty("language")]
+        [DeserializeAs(Name = "language")]
         public string Language { get; set; }
 
-        [JsonProperty("mpa_rating")]
+        [DeserializeAs(Name = "mpa_rating")]
         public string MpaRating { get; set; }
 
-        [JsonProperty("small_cover_image")]
+        [DeserializeAs(Name = "small_cover_image")]
         public string SmallCoverImage { get; set; }
 
-        [JsonProperty("medium_cover_image")]
+        [DeserializeAs(Name = "medium_cover_image")]
         public string MediumCoverImage { get; set; }
 
-        [JsonProperty("state")]
+        [DeserializeAs(Name = "state")]
         public string State { get; set; }
 
-        [JsonProperty("torrents")]
-        public IEnumerable<TorrentDeserialized> Torrents { get; set; }
+        [DeserializeAs(Name = "torrents")]
+        public List<TorrentDeserialized> Torrents { get; set; }
 
-        [JsonProperty("date_uploaded")]
+        [DeserializeAs(Name = "date_uploaded")]
         public string DateUploaded { get; set; }
 
-        [JsonProperty("date_uploaded_unix")]
+        [DeserializeAs(Name = "date_uploaded_unix")]
         public int DateUploadedUnix { get; set; }
 
-        [JsonProperty("server_time")]
+        [DeserializeAs(Name = "server_time")]
         public int ServerTime { get; set; }
 
-        [JsonProperty("server_timezone")]
+        [DeserializeAs(Name = "server_timezone")]
         public string ServerTimezone { get; set; }
 
-        [JsonProperty("api_version")]
+        [DeserializeAs(Name = "api_version")]
         public int ApiVersion { get; set; }
 
-        [JsonProperty("execution_time")]
+        [DeserializeAs(Name = "execution_time")]
         public string ExecutionTime { get; set; }
     }
 }

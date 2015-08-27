@@ -1,37 +1,37 @@
-﻿using Newtonsoft.Json;
+﻿using RestSharp.Deserializers;
 
 namespace Popcorn.Models.Movie.Json
 {
     public class MovieImagesDeserialized
     {
-        [JsonProperty("background_image")]
+        [DeserializeAs(Name = "background_image")]
         public string BackgroundImage { get; set; }
 
-        [JsonProperty("small_cover_image")]
+        [DeserializeAs(Name = "small_cover_image")]
         public string SmallCoverImage { get; set; }
 
-        [JsonProperty("medium_cover_image")]
+        [DeserializeAs(Name = "medium_cover_image")]
         public string MediumCoverImage { get; set; }
 
-        [JsonProperty("large_cover_image")]
+        [DeserializeAs(Name = "large_cover_image")]
         public string LargeCoverImage { get; set; }
 
-        [JsonProperty("medium_screenshot_image1")]
+        [DeserializeAs(Name = "medium_screenshot_image1")]
         public string MediumScreenshotImage1 { get; set; }
 
-        [JsonProperty("medium_screenshot_image2")]
+        [DeserializeAs(Name = "medium_screenshot_image2")]
         public string MediumScreenshotImage2 { get; set; }
 
-        [JsonProperty("medium_screenshot_image3")]
+        [DeserializeAs(Name = "medium_screenshot_image3")]
         public string MediumScreenshotImage3 { get; set; }
 
-        [JsonProperty("large_screenshot_image1")]
+        [DeserializeAs(Name = "large_screenshot_image1")]
         public string LargeScreenshotImage1 { get; set; }
 
-        [JsonProperty("large_screenshot_image2")]
+        [DeserializeAs(Name = "large_screenshot_image2")]
         public string LargeScreenshotImage2 { get; set; }
 
-        [JsonProperty("large_screenshot_image3")]
+        [DeserializeAs(Name = "large_screenshot_image3")]
         public string LargeScreenshotImage3 { get; set; }
     }
 }

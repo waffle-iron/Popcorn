@@ -1,39 +1,39 @@
 ﻿using System;
 using System.Collections.Generic;
-using Newtonsoft.Json;
+using RestSharp.Deserializers;
 
 namespace Popcorn.Models.Account.Json
 {
     public class UserDeserialized
     {
-        [JsonProperty("url")]
+        [DeserializeAs(Name = "url")]
         public string Url { get; set; }
 
-        [JsonProperty("id")]
+        [DeserializeAs(Name = "id")]
         public string Id { get; set; }
 
-        [JsonProperty("fullName")]
+        [DeserializeAs(Name = "fullName")]
         public string Fullname { get; set; }
 
-        [JsonProperty("userName")]
+        [DeserializeAs(Name = "userName")]
         public string Username { get; set; }
 
-        [JsonProperty("email")]
+        [DeserializeAs(Name = "email")]
         public string Email { get; set; }
 
-        [JsonProperty("emailConfirmed")]
+        [DeserializeAs(Name = "emailConfirmed")]
         public bool EmailConfirmed { get; set; }
 
-        [JsonProperty("level")]
+        [DeserializeAs(Name = "level")]
         public int Level { get; set; }
 
-        [JsonProperty("joinDate")]
+        [DeserializeAs(Name = "joinDate")]
         public DateTime Joindate { get; set; }
 
-        [JsonProperty("roles")]
+        [DeserializeAs(Name = "roles")]
         public List<string> Roles { get; set; }
 
-        [JsonProperty("claims")]
+        [DeserializeAs(Name = "claims")]
         public List<string> Claims { get; set; }
     }
 }

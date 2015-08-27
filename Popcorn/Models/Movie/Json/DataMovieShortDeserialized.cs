@@ -1,20 +1,20 @@
-﻿using Newtonsoft.Json;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
+using RestSharp.Deserializers;
 
 namespace Popcorn.Models.Movie.Json
 {
     public class DataMovieShortDeserialized 
     {
-        [JsonProperty("movie_count")]
+        [DeserializeAs(Name = "movie_count")]
         public int MovieCount { get; set; }
 
-        [JsonProperty("limit")]
+        [DeserializeAs(Name = "limit")]
         public int Limit { get; set; }
 
-        [JsonProperty("page_nombre")]
+        [DeserializeAs(Name = "page_nombre")]
         public int PageNumber { get; set; }
 
-        [JsonProperty("movies")]
-        public IEnumerable<MovieShortDeserialized> Movies { get; set; }
+        [DeserializeAs(Name = "movies")]
+        public List<MovieShortDeserialized> Movies { get; set; }
     }
 }

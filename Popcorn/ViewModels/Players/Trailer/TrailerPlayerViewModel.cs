@@ -69,7 +69,7 @@ namespace Popcorn.ViewModels.Players.Trailer
         public override void Cleanup()
         {
             Logger.Debug(
-                $"Cleaning up MoviePlayerViewModel");
+                "Cleaning up TrailerPlayerViewModel");
 
             OnStoppedPlayingMedia(new EventArgs());
 

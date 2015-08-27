@@ -1,20 +1,20 @@
 ﻿using GalaSoft.MvvmLight;
-using Newtonsoft.Json;
+using RestSharp.Deserializers;
 
 namespace Popcorn.Models.Subtitle.Json
 {
     public class SubtitleDeserialized : ObservableObject
     {
-        [JsonProperty("id")]
+        [DeserializeAs(Name = "id")]
         public int Id { get; set; }
 
-        [JsonProperty("hi")]
+        [DeserializeAs(Name = "hi")]
         public int Hi { get; set; }
 
-        [JsonProperty("rating")]
+        [DeserializeAs(Name = "rating")]
         public int Rating { get; set; }
 
-        [JsonProperty("url")]
+        [DeserializeAs(Name = "url")]
         public string Url { get; set; }
     }
 }

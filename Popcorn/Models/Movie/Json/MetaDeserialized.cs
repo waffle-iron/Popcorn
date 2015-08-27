@@ -1,19 +1,19 @@
-﻿using Newtonsoft.Json;
+﻿using RestSharp.Deserializers;
 
 namespace Popcorn.Models.Movie.Json
 {
     public class MetaDeserialized
     {
-        [JsonProperty("server_time")]
+        [DeserializeAs(Name = "server_time")]
         public int ServerTime { get; set; }
 
-        [JsonProperty("server_timezone")]
+        [DeserializeAs(Name = "server_timezone")]
         public string ServerTimezone { get; set; }
 
-        [JsonProperty("api_version")]
+        [DeserializeAs(Name = "api_version")]
         public int ApiVersion { get; set; }
 
-        [JsonProperty("execution_time")]
+        [DeserializeAs(Name = "execution_time")]
         public string ExecutionTime { get; set; }
     }
 }

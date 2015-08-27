@@ -154,12 +154,12 @@ namespace Popcorn.ViewModels.Download
 
         #endregion
 
-        #region Property -> CancellationDownloadingMovieToken
+        #region Property -> CancellationDownloadingMovie
 
         /// <summary>
         /// Token to cancel the download
         /// </summary>
-        private CancellationTokenSource CancellationDownloadingMovieToken { get; set; }
+        private CancellationTokenSource CancellationDownloadingMovie { get; set; }
 
         #endregion
 
@@ -187,9 +187,10 @@ namespace Popcorn.ViewModels.Download
         public DownloadMovieViewModel(MovieFull movie)
         {
             Logger.Debug("Initializing a new instance of DownloadMovieViewModel");
+
             RegisterMessages();
             RegisterCommands();
-            CancellationDownloadingMovieToken = new CancellationTokenSource();
+            CancellationDownloadingMovie = new CancellationTokenSource();
             MovieService = SimpleIoc.Default.GetInstance<MovieService>();
             Movie = movie;
             MovieSettings = new MovieSettingsViewModel(movie);
@@ -217,11 +218,11 @@ namespace Popcorn.ViewModels.Download
                     IsDownloadingSubtitles = true;
                     await
                         MovieService.DownloadSubtitleAsync(message.Movie, reportDownloadSubtitles,
-                            CancellationDownloadingMovieToken);
+                            CancellationDownloadingMovie);
                     IsDownloadingSubtitles = false;
                     await
                         DownloadMovieAsync(message.Movie,
-                            reportDownloadProgress, reportDownloadRate, CancellationDownloadingMovieToken.Token);
+                            reportDownloadProgress, reportDownloadRate, CancellationDownloadingMovie.Token);
                 });
         }
 
@@ -361,7 +362,9 @@ namespace Popcorn.ViewModels.Download
                         }
                         catch (TaskCanceledException)
                         {
-                            break;
+                            Logger.Debug(
+                                $"Stopped downloading movie : {movie.Title}");
+                            return;
                         }
                     }
                 }
@@ -382,8 +385,8 @@ namespace Popcorn.ViewModels.Download
 
             IsDownloadingMovie = false;
             IsMovieBuffered = false;
-            CancellationDownloadingMovieToken?.Cancel();
-            CancellationDownloadingMovieToken = new CancellationTokenSource();
+            CancellationDownloadingMovie?.Cancel(true);
+            CancellationDownloadingMovie = new CancellationTokenSource();
         }
 
         #endregion
@@ -394,7 +397,7 @@ namespace Popcorn.ViewModels.Download
                 "Cleaning up TrailerViewModel");
 
             StopDownloadingMovie();
-            CancellationDownloadingMovieToken?.Dispose();
+            CancellationDownloadingMovie?.Dispose();
             MovieSettings?.Cleanup();
             base.Cleanup();
         }

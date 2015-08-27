@@ -203,8 +203,7 @@
                                                       DownloadRate="{Binding MovieDownloadRate}"
                                                       MovieTitle="{Binding Movie.Title}"/>
             </Label>
-            <controls:MetroProgressBar x:Name="BufferingMovieProgressBar"
-                                       Minimum="0.0"
+            <controls:MetroProgressBar Minimum="0.0"
                                        Maximum="2.0"
                                        Value="{Binding MovieDownloadProgress}"
                                        Foreground="{DynamicResource AccentColorBrush}"

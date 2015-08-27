@@ -6,8 +6,10 @@ using Popcorn.Messaging;
 using Popcorn.Models.Movie;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Net;
+using System.Net.Sockets;
 using System.Threading;
 using System.Threading.Tasks;
 using NLog;
@@ -106,7 +108,7 @@ namespace Popcorn.ViewModels.Trailer
         /// Load asynchronously the movie's trailer for the current instance of TrailerViewModel
         /// </summary>
         /// <returns>Instance of TrailerViewModel</returns>
-        private async Task<TrailerViewModel> InitializeAsync(CancellationTokenSource ct)
+        private async Task<TrailerViewModel> InitializeAsync(CancellationToken ct)
         {
             await LoadTrailerAsync(Movie, ct);
             return this;
@@ -122,7 +124,7 @@ namespace Popcorn.ViewModels.Trailer
         /// <param name="movie">The movie</param>
         /// <param name="ct">Cancellation token</param>
         /// <returns>Instance of TrailerViewModel</returns>
-        public static Task<TrailerViewModel> CreateAsync(MovieFull movie, CancellationTokenSource ct)
+        public static Task<TrailerViewModel> CreateAsync(MovieFull movie, CancellationToken ct)
         {
             var ret = new TrailerViewModel(movie);
             return ret.InitializeAsync(ct);
@@ -137,81 +139,84 @@ namespace Popcorn.ViewModels.Trailer
         /// </summary>
         /// <param name="movie">The movie</param>
         /// <param name="ct">Cancellation token</param>
-        private async Task LoadTrailerAsync(MovieFull movie, CancellationTokenSource ct)
+        private async Task LoadTrailerAsync(MovieFull movie, CancellationToken ct)
         {
-            await Task.Run(async () =>
-            {
-                Logger.Info(
-                    $"Loading movie's trailer: {movie.Title}");
-                // Inform subscribers we are loading movie trailer
-                try
-                {
-                    // Retrieve trailer from API
-                    var trailer = await MovieService.GetMovieTrailerAsync(movie);
-                    // No error has been encounter, we can create our VideoInfo
-                    VideoInfo video = null;
-                    try
-                    {
-                        // Retrieve Youtube Infos
-                        video =
-                            await
-                                GetVideoInfoForStreamingAsync(
-                                    Constants.YoutubePath + trailer.Results.FirstOrDefault()?.Key,
-                                    Constants.YoutubeStreamingQuality.High);
+            var watch = Stopwatch.StartNew();
 
-                        if (video != null && video.RequiresDecryption)
-                        {
-                            Logger.Info(
-                                $"Decrypting Youtube trailer url: {video.Title}");
-                            // Decrypt encoded Youtube video link 
-                            await Task.Run(() => DownloadUrlResolver.DecryptDownloadUrl(video));
-                        }
-                    }
-                    catch (Exception ex)
+            try
+            {
+                await Task.Run(async () =>
+                {
+                    var trailer = await MovieService.GetMovieTrailerAsync(movie, ct);
+
+                    var video =
+                        await
+                            GetVideoInfoForStreamingAsync(
+                                Constants.YoutubePath + trailer.Results.FirstOrDefault()?.Key,
+                                Constants.YoutubeStreamingQuality.High);
+
+                    if (video != null && video.RequiresDecryption)
                     {
-                        if (ex is WebException || ex is VideoNotAvailableException || ex is YoutubeParseException)
-                        {
-                            Logger.Info(
-                                $"Failed loading movie's trailer: {movie.Title}");
-                            if (ex is VideoNotAvailableException)
-                                Messenger.Default.Send(
-                                    new ManageExceptionMessage(
-                                        new Exception(
-                                            LocalizationProviderHelper.GetLocalizedValue<string>("TrailerNotAvailable"))));
-                            Messenger.Default.Send(new StopPlayingTrailerMessage());
-                            return;
-                        }
+                        Logger.Info(
+                            $"Decrypting Youtube trailer url: {video.Title}");
+                        await Task.Run(() => DownloadUrlResolver.DecryptDownloadUrl(video), ct);
                     }
 
                     if (video == null)
                     {
-                        Logger.Info(
+                        Logger.Error(
                             $"Failed loading movie's trailer: {movie.Title}");
                         Messenger.Default.Send(
                             new ManageExceptionMessage(
-                                new Exception(LocalizationProviderHelper.GetLocalizedValue<string>("TrailerNotAvailable"))));
+                                new Exception(
+                                    LocalizationProviderHelper.GetLocalizedValue<string>("TrailerNotAvailable"))));
                         Messenger.Default.Send(new StopPlayingTrailerMessage());
                         return;
                     }
 
                     if (!ct.IsCancellationRequested)
                     {
-                        Logger.Info(
+                        Logger.Debug(
                             $"Movie's trailer loaded: {movie.Title}");
                         TrailerPlayer =
                             new TrailerPlayerViewModel(new Models.Trailer.Trailer(new Uri(video.DownloadUrl)));
                     }
-                }
-                catch (WebException e)
-                {
-                    Messenger.Default.Send(new StopPlayingTrailerMessage());
-                    Messenger.Default.Send(new ManageExceptionMessage(e));
-                }
-                catch (Exception)
-                {
-                    Messenger.Default.Send(new StopPlayingTrailerMessage());
-                }
-            }, ct.Token);
+                }, ct);
+            }
+            catch (Exception exception) when (exception is TaskCanceledException)
+            {
+                watch.Stop();
+                Logger.Debug(
+                    "GetMovieTrailerAsync cancelled.");
+                Messenger.Default.Send(new StopPlayingTrailerMessage());
+
+            }
+            catch (Exception exception) when (exception is SocketException || exception is WebException)
+            {
+                Logger.Error(
+                    $"GetMovieTrailerAsync: {exception.Message}");
+                Messenger.Default.Send(new StopPlayingTrailerMessage());
+                Messenger.Default.Send(new ManageExceptionMessage(exception));
+            }
+            catch (Exception exception)
+                when (exception is VideoNotAvailableException || exception is YoutubeParseException)
+            {
+                Logger.Error(
+                    $"GetMovieTrailerAsync: {exception.Message}");
+                Messenger.Default.Send(
+                    new ManageExceptionMessage(
+                        new Exception(
+                            LocalizationProviderHelper.GetLocalizedValue<string>(
+                                "TrailerNotAvailable"))));
+                Messenger.Default.Send(new StopPlayingTrailerMessage());
+            }
+            catch (Exception exception)
+            {
+                watch.Stop();
+                Logger.Error(
+                    $"GetMovieTrailerAsync: {exception.Message}");
+                Messenger.Default.Send(new StopPlayingTrailerMessage());
+            }
         }
 
         #endregion
@@ -226,8 +231,13 @@ namespace Popcorn.ViewModels.Trailer
         private async Task<VideoInfo> GetVideoInfoForStreamingAsync(string youtubeLink,
             Constants.YoutubeStreamingQuality qualitySetting)
         {
+            IEnumerable<VideoInfo> videoInfos = new List<VideoInfo>();
+
             // Get video infos of the requested video
-            var videoInfos = await Task.Run(() => DownloadUrlResolver.GetDownloadUrls(youtubeLink, false));
+            await Task.Run(() =>
+            {
+                videoInfos = DownloadUrlResolver.GetDownloadUrls(youtubeLink, false);
+            });
 
             // We only want video matching criterias : only mp4 and no adaptive
             var filtered = videoInfos
@@ -278,7 +288,7 @@ namespace Popcorn.ViewModels.Trailer
         public override void Cleanup()
         {
             Logger.Debug(
-                $"Cleaning up TrailerViewModel");
+                "Cleaning up TrailerViewModel");
             TrailerPlayer?.Cleanup();
 
             base.Cleanup();

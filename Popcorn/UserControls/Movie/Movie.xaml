@@ -139,8 +139,7 @@
                 <RowDefinition Height="*"></RowDefinition>
                 <RowDefinition Height="3*"></RowDefinition>
             </Grid.RowDefinitions>
-            <Image x:Name="BackgroundImage" 
-                   Grid.Row="0"
+            <Image Grid.Row="0"
                    Grid.RowSpan="3"
                    Source="{Binding Path=Movie.BackgroundImagePath, Converter={StaticResource UriToCachedImageConverter}}" 
                    Stretch="UniformToFill" 
@@ -172,8 +171,7 @@
             <ContentControl Content="{Binding Trailer}"
                             Grid.Row="0"
                             Grid.RowSpan="3"/>
-            <Grid x:Name="Content" 
-                  Grid.Row="0"
+            <Grid Grid.Row="0"
                   Grid.RowSpan="3"
                   Style="{StaticResource AnimationContentOnMediaLoading}">
                 <Grid.RowDefinitions>
@@ -195,15 +193,14 @@
                         Grid.Row="1" 
                         Grid.Column="1">
                     <Grid>
-                        <Border x:Name="mask" 
+                        <Border x:Name="Mask" 
                                 Background="Black" 
                                 CornerRadius="40"/>
                         <StackPanel>
                             <StackPanel.OpacityMask>
-                                <VisualBrush Visual="{Binding ElementName=mask}"/>
+                                <VisualBrush Visual="{Binding ElementName=Mask}"/>
                             </StackPanel.OpacityMask>
-                            <Image x:Name="Poster"
-                                   Source="{Binding Path=Movie.PosterImagePath, Converter={StaticResource UriToCachedImageConverter}}"/>
+                            <Image Source="{Binding Path=Movie.PosterImagePath, Converter={StaticResource UriToCachedImageConverter}}"/>
                         </StackPanel>
                     </Grid>
                 </Border>

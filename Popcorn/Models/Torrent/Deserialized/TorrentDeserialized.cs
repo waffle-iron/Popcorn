@@ -1,40 +1,40 @@
-﻿using Newtonsoft.Json;
+﻿using RestSharp.Deserializers;
 
 namespace Popcorn.Models.Torrent.Deserialized
 {
     public class TorrentDeserialized
     {
-        [JsonProperty("url")]
+        [DeserializeAs(Name = "url")]
         public string Url { get; set; }
 
-        [JsonProperty("hash")]
+        [DeserializeAs(Name = "hash")]
         public string Hash { get; set; }
 
-        [JsonProperty("quality")]
+        [DeserializeAs(Name = "quality")]
         public string Quality { get; set; }
 
-        [JsonProperty("framerate")]
+        [DeserializeAs(Name = "framerate")]
         public string Framerate { get; set; }
 
-        [JsonProperty("resolution")]
+        [DeserializeAs(Name = "resolution")]
         public string Resolution { get; set; }
 
-        [JsonProperty("seeds")]
+        [DeserializeAs(Name = "seeds")]
         public int Seeds { get; set; }
 
-        [JsonProperty("peers")]
+        [DeserializeAs(Name = "peers")]
         public int Peers { get; set; }
 
-        [JsonProperty("size")]
+        [DeserializeAs(Name = "size")]
         public string Size { get; set; }
 
-        [JsonProperty("size_bytes")]
+        [DeserializeAs(Name = "size_bytes")]
         public long SizeBytes { get; set; }
 
-        [JsonProperty("date_uploaded")]
+        [DeserializeAs(Name = "date_uploaded")]
         public string DateUploaded { get; set; }
 
-        [JsonProperty("date_uploaded_unix")]
+        [DeserializeAs(Name = "date_uploaded_unix")]
         public int DateUploadedMix { get; set; }
     }
 }
