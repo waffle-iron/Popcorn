@@ -46,27 +46,24 @@ namespace Popcorn.Services.History
 
             try
             {
-                await Task.Run(async () =>
+                using (var context = new ApplicationDbContext())
                 {
-                    using (var context = new ApplicationDbContext())
+                    await context.MovieHistory.LoadAsync(ct.Token);
+                    var history = await context.MovieHistory.FirstOrDefaultAsync(ct.Token);
+                    if (history == null)
                     {
-                        await context.MovieHistory.LoadAsync(ct.Token);
-                        var history = await context.MovieHistory.FirstOrDefaultAsync(ct.Token);
-                        if (history == null)
-                        {
-                            await CreateMovieHistoryAsync(ct);
-                            history = await context.MovieHistory.FirstOrDefaultAsync(ct.Token);
-                        }
-
-                        foreach (var movie in movies.ToList())
-                        {
-                            var entityMovie = history.MoviesShort.FirstOrDefault(p => p.MovieId == movie.Id);
-                            if (entityMovie == null) continue;
-                            movie.IsFavorite = entityMovie.IsFavorite;
-                            movie.HasBeenSeen = entityMovie.HasBeenSeen;
-                        }
+                        await CreateMovieHistoryAsync(ct);
+                        history = await context.MovieHistory.FirstOrDefaultAsync(ct.Token);
                     }
-                }, ct.Token);
+
+                    foreach (var movie in movies.ToList())
+                    {
+                        var entityMovie = history.MoviesShort.FirstOrDefault(p => p.MovieId == movie.Id);
+                        if (entityMovie == null) continue;
+                        movie.IsFavorite = entityMovie.IsFavorite;
+                        movie.HasBeenSeen = entityMovie.HasBeenSeen;
+                    }
+                }
             }
             catch (Exception exception) when (exception is TaskCanceledException)
             {
@@ -107,28 +104,25 @@ namespace Popcorn.Services.History
 
             try
             {
-                await Task.Run(async () =>
+                using (var context = new ApplicationDbContext())
                 {
-                    using (var context = new ApplicationDbContext())
+                    await context.MovieHistory.LoadAsync(ct);
+                    var movieHistory = await context.MovieHistory.FirstOrDefaultAsync(ct);
+                    if (genre != null)
                     {
-                        await context.MovieHistory.LoadAsync(ct);
-                        var movieHistory = await context.MovieHistory.FirstOrDefaultAsync(ct);
-                        if (genre != null)
-                        {
-                            movies.AddRange(movieHistory.MoviesShort.Where(
-                                p =>
-                                    p.IsFavorite && p.Genres.Any(g => g.Name == genre.EnglishName) &&
-                                    p.Rating >= ratingFilter)
-                                .Select(MovieShortFromEntityToModel));
-                        }
-                        else
-                        {
-                            movies.AddRange(movieHistory.MoviesShort.Where(
-                                p => p.IsFavorite)
-                                .Select(MovieShortFromEntityToModel));
-                        }
+                        movies.AddRange(movieHistory.MoviesShort.Where(
+                            p =>
+                                p.IsFavorite && p.Genres.Any(g => g.Name == genre.EnglishName) &&
+                                p.Rating >= ratingFilter)
+                            .Select(MovieShortFromEntityToModel));
                     }
-                }, ct);
+                    else
+                    {
+                        movies.AddRange(movieHistory.MoviesShort.Where(
+                            p => p.IsFavorite)
+                            .Select(MovieShortFromEntityToModel));
+                    }
+                }
             }
             catch (Exception exception) when (exception is TaskCanceledException)
             {
@@ -170,28 +164,25 @@ namespace Popcorn.Services.History
 
             try
             {
-                await Task.Run(async () =>
+                using (var context = new ApplicationDbContext())
                 {
-                    using (var context = new ApplicationDbContext())
+                    await context.MovieHistory.LoadAsync(ct.Token);
+                    var movieHistory = await context.MovieHistory.FirstOrDefaultAsync(ct.Token);
+                    if (genre != null)
                     {
-                        await context.MovieHistory.LoadAsync(ct.Token);
-                        var movieHistory = await context.MovieHistory.FirstOrDefaultAsync(ct.Token);
-                        if (genre != null)
-                        {
-                            movies.AddRange(movieHistory.MoviesShort.Where(
-                                p =>
-                                    p.HasBeenSeen && p.Genres.Any(g => g.Name == genre.EnglishName) &&
-                                    p.Rating >= ratingFilter)
-                                .Select(MovieShortFromEntityToModel));
-                        }
-                        else
-                        {
-                            movies.AddRange(movieHistory.MoviesShort.Where(
-                                p => p.HasBeenSeen)
-                                .Select(MovieShortFromEntityToModel));
-                        }
+                        movies.AddRange(movieHistory.MoviesShort.Where(
+                            p =>
+                                p.HasBeenSeen && p.Genres.Any(g => g.Name == genre.EnglishName) &&
+                                p.Rating >= ratingFilter)
+                            .Select(MovieShortFromEntityToModel));
                     }
-                }, ct.Token);
+                    else
+                    {
+                        movies.AddRange(movieHistory.MoviesShort.Where(
+                            p => p.HasBeenSeen)
+                            .Select(MovieShortFromEntityToModel));
+                    }
+                }
             }
             catch (Exception exception) when (exception is TaskCanceledException)
             {
@@ -228,43 +219,40 @@ namespace Popcorn.Services.History
 
             try
             {
-                await Task.Run(async () =>
+                using (var context = new ApplicationDbContext())
                 {
-                    using (var context = new ApplicationDbContext())
+                    await context.MovieHistory.LoadAsync(ct.Token);
+                    var movieHistory = await context.MovieHistory.FirstOrDefaultAsync(ct.Token);
+                    if (movieHistory == null)
                     {
-                        await context.MovieHistory.LoadAsync(ct.Token);
-                        var movieHistory = await context.MovieHistory.FirstOrDefaultAsync(ct.Token);
-                        if (movieHistory == null)
-                        {
-                            await CreateMovieHistoryAsync(ct);
-                            movieHistory = await context.MovieHistory.FirstOrDefaultAsync(ct.Token);
-                        }
+                        await CreateMovieHistoryAsync(ct);
+                        movieHistory = await context.MovieHistory.FirstOrDefaultAsync(ct.Token);
+                    }
 
-                        if (movieHistory.MoviesShort == null)
+                    if (movieHistory.MoviesShort == null)
+                    {
+                        movieHistory.MoviesShort = new List<Entity.Movie.MovieShort>
                         {
-                            movieHistory.MoviesShort = new List<Entity.Movie.MovieShort>
-                            {
-                                MovieShortFromModelToEntity(movie)
-                            };
+                            MovieShortFromModelToEntity(movie)
+                        };
 
-                            context.MovieHistory.AddOrUpdate(movieHistory);
+                        context.MovieHistory.AddOrUpdate(movieHistory);
+                    }
+                    else
+                    {
+                        var movieShort = movieHistory.MoviesShort.FirstOrDefault(p => p.MovieId == movie.Id);
+                        if (movieShort == null)
+                        {
+                            movieHistory.MoviesShort.Add(MovieShortFromModelToEntity(movie));
                         }
                         else
                         {
-                            var movieShort = movieHistory.MoviesShort.FirstOrDefault(p => p.MovieId == movie.Id);
-                            if (movieShort == null)
-                            {
-                                movieHistory.MoviesShort.Add(MovieShortFromModelToEntity(movie));
-                            }
-                            else
-                            {
-                                movieShort.IsFavorite = movie.IsFavorite;
-                            }
+                            movieShort.IsFavorite = movie.IsFavorite;
                         }
-
-                        await context.SaveChangesAsync(ct.Token);
                     }
-                }, ct.Token);
+
+                    await context.SaveChangesAsync(ct.Token);
+                }
             }
             catch (Exception exception) when (exception is TaskCanceledException)
             {
@@ -300,43 +288,40 @@ namespace Popcorn.Services.History
 
             try
             {
-                await Task.Run(async () =>
+                using (var context = new ApplicationDbContext())
                 {
-                    using (var context = new ApplicationDbContext())
+                    await context.MovieHistory.LoadAsync(ct.Token);
+                    var movieHistory = await context.MovieHistory.FirstOrDefaultAsync(ct.Token);
+                    if (movieHistory == null)
                     {
-                        await context.MovieHistory.LoadAsync(ct.Token);
-                        var movieHistory = await context.MovieHistory.FirstOrDefaultAsync(ct.Token);
-                        if (movieHistory == null)
-                        {
-                            await CreateMovieHistoryAsync(ct);
-                            movieHistory = await context.MovieHistory.FirstOrDefaultAsync(ct.Token);
-                        }
+                        await CreateMovieHistoryAsync(ct);
+                        movieHistory = await context.MovieHistory.FirstOrDefaultAsync(ct.Token);
+                    }
 
-                        if (movieHistory.MoviesFull == null)
+                    if (movieHistory.MoviesFull == null)
+                    {
+                        movieHistory.MoviesFull = new List<Entity.Movie.MovieFull>
                         {
-                            movieHistory.MoviesFull = new List<Entity.Movie.MovieFull>
-                            {
-                                MovieFullFromModelToEntity(movie)
-                            };
+                            MovieFullFromModelToEntity(movie)
+                        };
 
-                            context.MovieHistory.AddOrUpdate(movieHistory);
+                        context.MovieHistory.AddOrUpdate(movieHistory);
+                    }
+                    else
+                    {
+                        var movieFull = movieHistory.MoviesFull.FirstOrDefault(p => p.MovieId == movie.Id);
+                        if (movieFull == null)
+                        {
+                            movieHistory.MoviesFull.Add(MovieFullFromModelToEntity(movie));
                         }
                         else
                         {
-                            var movieFull = movieHistory.MoviesFull.FirstOrDefault(p => p.MovieId == movie.Id);
-                            if (movieFull == null)
-                            {
-                                movieHistory.MoviesFull.Add(MovieFullFromModelToEntity(movie));
-                            }
-                            else
-                            {
-                                movieFull.HasBeenSeen = movie.HasBeenSeen;
-                            }
+                            movieFull.HasBeenSeen = movie.HasBeenSeen;
                         }
-
-                        await context.SaveChangesAsync(ct.Token);
                     }
-                }, ct.Token);
+
+                    await context.SaveChangesAsync(ct.Token);
+                }
             }
             catch (Exception exception) when (exception is TaskCanceledException)
             {

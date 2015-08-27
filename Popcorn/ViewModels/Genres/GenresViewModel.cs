@@ -158,7 +158,7 @@ namespace Popcorn.ViewModels.Genres
             Logger.Debug(
                 "Stop loading genres.");
 
-            CancellationLoadingGenres?.Cancel(true);
+            CancellationLoadingGenres?.Cancel();
             CancellationLoadingGenres = new CancellationTokenSource();
         }
 

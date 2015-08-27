@@ -72,44 +72,43 @@ namespace Popcorn.Services.Language
         /// <returns>All available languages</returns>
         public async Task<ICollection<ILanguage>> GetAvailableLanguagesAsync()
         {
-            ICollection<ILanguage> availableLanguages = null;
-            await Task.Run(async () =>
-            {
-                var watch = Stopwatch.StartNew();
-                using (var context = new ApplicationDbContext())
-                {
-                    await context.Settings.LoadAsync();
-                    var applicationSettings = await context.Settings.FirstOrDefaultAsync();
-                    if (applicationSettings == null)
-                    {
-                        await ApplicationService.CreateApplicationSettingsAsync();
-                        applicationSettings = await context.Settings.FirstOrDefaultAsync();
-                    }
+            var watch = Stopwatch.StartNew();
 
-                    var languages = applicationSettings.Languages;
-                    availableLanguages = new List<ILanguage>();
-                    foreach (var language in languages)
-                    {
-                        switch (language.Culture)
-                        {
-                            case "en":
-                                availableLanguages.Add(new EnglishLanguage());
-                                break;
-                            case "fr":
-                                availableLanguages.Add(new FrenchLanguage());
-                                break;
-                            default:
-                                availableLanguages.Add(new EnglishLanguage());
-                                break;
-                        }
-                    }
+            ICollection<ILanguage> availableLanguages = null;
+
+            using (var context = new ApplicationDbContext())
+            {
+                await context.Settings.LoadAsync();
+                var applicationSettings = await context.Settings.FirstOrDefaultAsync();
+                if (applicationSettings == null)
+                {
+                    await ApplicationService.CreateApplicationSettingsAsync();
+                    applicationSettings = await context.Settings.FirstOrDefaultAsync();
                 }
 
-                watch.Stop();
-                var elapsedMs = watch.ElapsedMilliseconds;
-                Logger.Debug(
-                    "GetAvailableLanguagesAsync in {0} milliseconds.", elapsedMs);
-            });
+                var languages = applicationSettings.Languages;
+                availableLanguages = new List<ILanguage>();
+                foreach (var language in languages)
+                {
+                    switch (language.Culture)
+                    {
+                        case "en":
+                            availableLanguages.Add(new EnglishLanguage());
+                            break;
+                        case "fr":
+                            availableLanguages.Add(new FrenchLanguage());
+                            break;
+                        default:
+                            availableLanguages.Add(new EnglishLanguage());
+                            break;
+                    }
+                }
+            }
+
+            watch.Stop();
+            var elapsedMs = watch.ElapsedMilliseconds;
+            Logger.Debug(
+                "GetAvailableLanguagesAsync in {0} milliseconds.", elapsedMs);
 
             return availableLanguages;
         }
@@ -125,42 +124,40 @@ namespace Popcorn.Services.Language
         public async Task<ILanguage> GetCurrentLanguageAsync()
         {
             ILanguage currentLanguage = null;
-            await Task.Run(async () =>
-            {
-                var watch = Stopwatch.StartNew();
-                using (var context = new ApplicationDbContext())
-                {
-                    await context.Settings.LoadAsync();
-                    var applicationSettings = await context.Settings.FirstOrDefaultAsync();
-                    if (applicationSettings == null)
-                    {
-                        await ApplicationService.CreateApplicationSettingsAsync();
-                        applicationSettings = await context.Settings.FirstOrDefaultAsync();
-                    }
 
-                    var language = applicationSettings.Languages.FirstOrDefault(a => a.IsCurrentLanguage);
-                    if (language != null)
-                    {
-                        switch (language.Culture)
-                        {
-                            case "en":
-                                currentLanguage = new EnglishLanguage();
-                                break;
-                            case "fr":
-                                currentLanguage = new FrenchLanguage();
-                                break;
-                            default:
-                                currentLanguage = new EnglishLanguage();
-                                break;
-                        }
-                    }
+            var watch = Stopwatch.StartNew();
+            using (var context = new ApplicationDbContext())
+            {
+                await context.Settings.LoadAsync();
+                var applicationSettings = await context.Settings.FirstOrDefaultAsync();
+                if (applicationSettings == null)
+                {
+                    await ApplicationService.CreateApplicationSettingsAsync();
+                    applicationSettings = await context.Settings.FirstOrDefaultAsync();
                 }
 
-                watch.Stop();
-                var elapsedMs = watch.ElapsedMilliseconds;
-                Logger.Debug(
-                    "GetCurrentLanguageAsync in {0} milliseconds.", elapsedMs);
-            });
+                var language = applicationSettings.Languages.FirstOrDefault(a => a.IsCurrentLanguage);
+                if (language != null)
+                {
+                    switch (language.Culture)
+                    {
+                        case "en":
+                            currentLanguage = new EnglishLanguage();
+                            break;
+                        case "fr":
+                            currentLanguage = new FrenchLanguage();
+                            break;
+                        default:
+                            currentLanguage = new EnglishLanguage();
+                            break;
+                    }
+                }
+            }
+
+            watch.Stop();
+            var elapsedMs = watch.ElapsedMilliseconds;
+            Logger.Debug(
+                "GetCurrentLanguageAsync in {0} milliseconds.", elapsedMs);
 
             return currentLanguage;
         }
@@ -175,37 +172,34 @@ namespace Popcorn.Services.Language
         /// <param name="language">Language to set</param>
         public async Task SetCurrentLanguageAsync(ILanguage language)
         {
-            await Task.Run(async () =>
+            var watch = Stopwatch.StartNew();
+
+            using (var context = new ApplicationDbContext())
             {
-                var watch = Stopwatch.StartNew();
-
-                using (var context = new ApplicationDbContext())
+                await context.Settings.LoadAsync();
+                var applicationSettings = await context.Settings.FirstOrDefaultAsync();
+                if (applicationSettings == null)
                 {
-                    await context.Settings.LoadAsync();
-                    var applicationSettings = await context.Settings.FirstOrDefaultAsync();
-                    if (applicationSettings == null)
-                    {
-                        await ApplicationService.CreateApplicationSettingsAsync();
-                        applicationSettings = await context.Settings.FirstOrDefaultAsync();
-                    }
-
-                    var currentLanguage = applicationSettings.Languages.First(a => a.Culture == language.Culture);
-                    currentLanguage.IsCurrentLanguage = true;
-                    foreach (var lang in applicationSettings.Languages.Where(a => a.Culture != language.Culture))
-                    {
-                        lang.IsCurrentLanguage = false;
-                    }
-
-                    context.Settings.AddOrUpdate(applicationSettings);
-                    await context.SaveChangesAsync();
-                    ChangeLanguage(language);
+                    await ApplicationService.CreateApplicationSettingsAsync();
+                    applicationSettings = await context.Settings.FirstOrDefaultAsync();
                 }
 
-                watch.Stop();
-                var elapsedMs = watch.ElapsedMilliseconds;
-                Logger.Debug(
-                    "SetCurrentLanguageAsync ({0}) in {1} milliseconds.", language.LocalizedName, elapsedMs);
-            });
+                var currentLanguage = applicationSettings.Languages.First(a => a.Culture == language.Culture);
+                currentLanguage.IsCurrentLanguage = true;
+                foreach (var lang in applicationSettings.Languages.Where(a => a.Culture != language.Culture))
+                {
+                    lang.IsCurrentLanguage = false;
+                }
+
+                context.Settings.AddOrUpdate(applicationSettings);
+                await context.SaveChangesAsync();
+                ChangeLanguage(language);
+            }
+
+            watch.Stop();
+            var elapsedMs = watch.ElapsedMilliseconds;
+            Logger.Debug(
+                "SetCurrentLanguageAsync ({0}) in {1} milliseconds.", language.LocalizedName, elapsedMs);
         }
 
         #endregion

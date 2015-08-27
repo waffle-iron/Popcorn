@@ -323,7 +323,7 @@ namespace Popcorn.ViewModels.Movie
                 "Stop loading movie");
 
             IsMovieLoading = false;
-            CancellationLoadingToken?.Cancel(true);
+            CancellationLoadingToken?.Cancel();
         }
 
         #endregion
@@ -339,7 +339,7 @@ namespace Popcorn.ViewModels.Movie
                 "Stop loading trailer");
 
             IsTrailerLoading = false;
-            CancellationLoadingTrailerToken?.Cancel(true);
+            CancellationLoadingTrailerToken?.Cancel();
             CancellationLoadingTrailerToken?.Dispose();
             CancellationLoadingTrailerToken = new CancellationTokenSource();
             StopPlayingTrailer();

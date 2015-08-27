@@ -131,7 +131,7 @@ namespace Popcorn.ViewModels.Subtitles
         {
             Logger.Debug(
                 "Stop downloading subtitles");
-            CancellationDownloadingSubtitlesToken?.Cancel(true);
+            CancellationDownloadingSubtitlesToken?.Cancel();
         }
 
         #endregion
