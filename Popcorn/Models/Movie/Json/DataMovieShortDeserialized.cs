@@ -11,7 +11,7 @@ namespace Popcorn.Models.Movie.Json
         [DeserializeAs(Name = "limit")]
         public int Limit { get; set; }
 
-        [DeserializeAs(Name = "page_nombre")]
+        [DeserializeAs(Name = "page_number")]
         public int PageNumber { get; set; }
 
         [DeserializeAs(Name = "movies")]

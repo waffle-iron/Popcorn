@@ -50,7 +50,7 @@ namespace Popcorn.ViewModels.Subtitles
         /// <summary>
         /// Token to cancel downloading subtitles
         /// </summary>
-        private CancellationTokenSource CancellationDownloadingSubtitlesToken { get; }
+        private CancellationTokenSource CancellationDownloadingSubtitlesToken { get; set; }
 
         #endregion
 
@@ -131,7 +131,8 @@ namespace Popcorn.ViewModels.Subtitles
         {
             Logger.Debug(
                 "Stop downloading subtitles");
-            CancellationDownloadingSubtitlesToken?.Cancel();
+            CancellationDownloadingSubtitlesToken.Cancel(true);
+            CancellationDownloadingSubtitlesToken = new CancellationTokenSource();
         }
 
         #endregion
@@ -142,7 +143,6 @@ namespace Popcorn.ViewModels.Subtitles
                 "Cleaning up SubtitlesViewModel");
 
             StopDownloadingSubtitles();
-            CancellationDownloadingSubtitlesToken?.Dispose();
             base.Cleanup();
         }
 

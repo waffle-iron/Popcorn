@@ -149,7 +149,7 @@ namespace Popcorn.ViewModels.Movie
         /// <summary>
         /// Token to cancel movie loading
         /// </summary>
-        private CancellationTokenSource CancellationLoadingToken { get; }
+        private CancellationTokenSource CancellationLoadingToken { get; set; }
 
         #endregion
 
@@ -323,7 +323,8 @@ namespace Popcorn.ViewModels.Movie
                 "Stop loading movie");
 
             IsMovieLoading = false;
-            CancellationLoadingToken?.Cancel();
+            CancellationLoadingToken.Cancel(true);
+            CancellationLoadingToken = new CancellationTokenSource();
         }
 
         #endregion
@@ -339,8 +340,7 @@ namespace Popcorn.ViewModels.Movie
                 "Stop loading trailer");
 
             IsTrailerLoading = false;
-            CancellationLoadingTrailerToken?.Cancel();
-            CancellationLoadingTrailerToken?.Dispose();
+            CancellationLoadingTrailerToken.Cancel(true);
             CancellationLoadingTrailerToken = new CancellationTokenSource();
             StopPlayingTrailer();
         }
@@ -387,10 +387,8 @@ namespace Popcorn.ViewModels.Movie
                 "Cleaning up MovieViewModel");
 
             StopLoadingMovie();
-            CancellationLoadingToken?.Dispose();
             StopPlayingMovie();
             StopLoadingTrailer();
-            CancellationLoadingTrailerToken?.Dispose();
             StopPlayingTrailer();
             base.Cleanup();
         }

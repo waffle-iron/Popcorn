@@ -385,7 +385,7 @@ namespace Popcorn.ViewModels.Download
 
             IsDownloadingMovie = false;
             IsMovieBuffered = false;
-            CancellationDownloadingMovie?.Cancel();
+            CancellationDownloadingMovie.Cancel(true);
             CancellationDownloadingMovie = new CancellationTokenSource();
         }
 
@@ -394,10 +394,9 @@ namespace Popcorn.ViewModels.Download
         public override void Cleanup()
         {
             Logger.Debug(
-                "Cleaning up TrailerViewModel");
+                "Cleaning up DownloadMovieViewModel");
 
             StopDownloadingMovie();
-            CancellationDownloadingMovie?.Dispose();
             MovieSettings?.Cleanup();
             base.Cleanup();
         }

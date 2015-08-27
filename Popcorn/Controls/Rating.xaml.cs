@@ -97,18 +97,23 @@ namespace Popcorn.Controls
                     return;
                 case "1":
                     RatingValue = 2;
+                    button.IsChecked = true;
                     break;
                 case "2":
                     RatingValue = 4;
+                    button.IsChecked = true;
                     break;
                 case "3":
                     RatingValue = 6;
+                    button.IsChecked = true;
                     break;
                 case "4":
                     RatingValue = 8;
+                    button.IsChecked = true;
                     break;
                 case "5":
                     RatingValue = 10;
+                    button.IsChecked = true;
                     break;
             }
         }

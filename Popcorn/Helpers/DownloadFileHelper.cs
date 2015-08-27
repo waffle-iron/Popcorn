@@ -82,15 +82,31 @@ namespace Popcorn.Helpers
 
                     try
                     {
-                        using (ct?.Token.Register(() => client.CancelAsync()))
                         using (new Timer(timerCallback, client, timeOut, Timeout.Infinite))
                         {
-                            await client.DownloadFileTaskAsync(remotePath, localPath);
+                            if (ct != null)
+                            {
+                                await client.DownloadFileTaskAsync(remotePath, localPath, ct.Token);
+                            }
+                            else
+                            {
+                                await client.DownloadFileTaskAsync(remotePath, localPath);
+                            }
                         }
+                    }
+                    catch (Exception exception) when (exception is TaskCanceledException)
+                    {
+                        watch.Stop();
+                        Logger.Debug(
+                            "DownloadFileTaskAsync cancelled.");
                     }
                     catch (ObjectDisposedException)
                     {
                         Logger.Info($"DownloadFileTaskAsync (can't cancel download, it has finished previously): {remotePath}");
+                    }
+                    catch (WebException exception)
+                    {
+                        Logger.Error($"DownloadFileTaskAsync: {exception.Message}");
                     }
 
                     watch.Stop();

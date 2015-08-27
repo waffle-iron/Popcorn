@@ -65,7 +65,7 @@ namespace Popcorn.Services.History
                     }
                 }
             }
-            catch (Exception exception) when (exception is TaskCanceledException)
+            catch (Exception exception) when (exception is TaskCanceledException || exception is OperationCanceledException)
             {
                 watch.Stop();
                 Logger.Debug(
@@ -124,7 +124,7 @@ namespace Popcorn.Services.History
                     }
                 }
             }
-            catch (Exception exception) when (exception is TaskCanceledException)
+            catch (Exception exception) when (exception is TaskCanceledException || exception is OperationCanceledException)
             {
                 watch.Stop();
                 Logger.Debug(
@@ -184,7 +184,7 @@ namespace Popcorn.Services.History
                     }
                 }
             }
-            catch (Exception exception) when (exception is TaskCanceledException)
+            catch (Exception exception) when (exception is TaskCanceledException || exception is OperationCanceledException)
             {
                 watch.Stop();
                 Logger.Debug(
@@ -254,7 +254,7 @@ namespace Popcorn.Services.History
                     await context.SaveChangesAsync(ct.Token);
                 }
             }
-            catch (Exception exception) when (exception is TaskCanceledException)
+            catch (Exception exception) when (exception is TaskCanceledException || exception is OperationCanceledException)
             {
                 watch.Stop();
                 Logger.Debug(
@@ -323,7 +323,7 @@ namespace Popcorn.Services.History
                     await context.SaveChangesAsync(ct.Token);
                 }
             }
-            catch (Exception exception) when (exception is TaskCanceledException)
+            catch (Exception exception) when (exception is TaskCanceledException || exception is OperationCanceledException)
             {
                 watch.Stop();
                 Logger.Debug(
@@ -373,7 +373,7 @@ namespace Popcorn.Services.History
                     }
                 }
             }
-            catch (Exception exception) when (exception is TaskCanceledException)
+            catch (Exception exception) when (exception is TaskCanceledException || exception is OperationCanceledException)
             {
                 watch.Stop();
                 Logger.Debug(

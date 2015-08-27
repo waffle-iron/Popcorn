@@ -253,10 +253,10 @@ namespace Popcorn.ViewModels.Tabs
 
             RegisterMessages();
             RegisterCommands();
-            CancellationLoadingMovies = new CancellationTokenSource();
             MovieService = SimpleIoc.Default.GetInstance<MovieService>();
             MovieHistoryService = SimpleIoc.Default.GetInstance<MovieHistoryService>();
             MaxMoviesPerPage = Constants.MaxMoviesPerPage;
+            CancellationLoadingMovies = new CancellationTokenSource();
         }
 
         #endregion
@@ -352,7 +352,7 @@ namespace Popcorn.ViewModels.Tabs
             Logger.Info(
                 "Stop loading movies.");
 
-            CancellationLoadingMovies?.Cancel();
+            CancellationLoadingMovies.Cancel(true);
             CancellationLoadingMovies = new CancellationTokenSource();
         }
 
@@ -364,7 +364,6 @@ namespace Popcorn.ViewModels.Tabs
                 "Cleaning a TabViewModel.");
 
             StopLoadingMovies();
-            CancellationLoadingMovies?.Dispose();
 
             base.Cleanup();
         }

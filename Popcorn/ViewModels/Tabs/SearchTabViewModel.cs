@@ -6,6 +6,7 @@ using Popcorn.Helpers;
 using Popcorn.Messaging;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Threading;
 using GalaSoft.MvvmLight.CommandWpf;
 using GalaSoft.MvvmLight.Ioc;
 using NLog;
@@ -154,6 +155,7 @@ namespace Popcorn.ViewModels.Tabs
                             Rating,
                             CancellationLoadingMovies.Token,
                             Genre);
+
                     var movies = movieResults.Item1.ToList();
                     MaxNumberOfMovies = movieResults.Item2;
 
@@ -168,7 +170,7 @@ namespace Popcorn.ViewModels.Tabs
 
                     await MovieHistoryService.ComputeMovieHistoryAsync(movies, CancellationLoadingMovies);
                     await MovieService.DownloadCoverImageAsync(movies, CancellationLoadingMovies);
-                    if (!LastPageFilterMapping.ContainsKey(searchFilter) && !movies.Any())
+                    if (!LastPageFilterMapping.ContainsKey(searchFilter) && !movies.Any() && MaxNumberOfMovies != 0)
                     {
                         LastPageFilterMapping.Add(searchFilter, Page);
                     }

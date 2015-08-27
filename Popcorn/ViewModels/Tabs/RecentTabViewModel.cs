@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Diagnostics;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using GalaSoft.MvvmLight.Messaging;
 using Popcorn.Helpers;
@@ -122,6 +123,7 @@ namespace Popcorn.ViewModels.Tabs
                         Rating,
                         CancellationLoadingMovies.Token,
                         Genre);
+
                 var movies = movieResults.Item1.ToList();
                 MaxNumberOfMovies = movieResults.Item2;
 
@@ -130,7 +132,7 @@ namespace Popcorn.ViewModels.Tabs
                     Movies.Add(movie);
                 }
 
-                if (!movies.Any())
+                if (!movies.Any() && MaxNumberOfMovies != 0)
                     LastPage = Page;
 
                 IsLoadingMovies = false;

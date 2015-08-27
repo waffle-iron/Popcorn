@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Diagnostics;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using GalaSoft.MvvmLight.CommandWpf;
 using GalaSoft.MvvmLight.Ioc;
@@ -122,6 +123,7 @@ namespace Popcorn.ViewModels.Tabs
                     await
                         MovieHistoryService.GetFavoritesMoviesAsync(Genre, Rating,
                             CancellationLoadingMovies.Token);
+
                 var movies = favoritesMovies.ToList();
                 Movies.Clear();
                 foreach (var movie in movies)
@@ -129,7 +131,7 @@ namespace Popcorn.ViewModels.Tabs
                     Movies.Add(movie);
                 }
 
-                if (!movies.Any())
+                if (!movies.Any() && MaxNumberOfMovies != 0)
                     LastPage = Page;
 
                 IsLoadingMovies = false;
