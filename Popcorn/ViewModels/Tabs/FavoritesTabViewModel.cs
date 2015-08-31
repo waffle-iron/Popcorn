@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
@@ -9,6 +10,7 @@ using NLog;
 using Popcorn.Helpers;
 using Popcorn.Messaging;
 using Popcorn.Models.Genre;
+using Popcorn.Models.Movie.Short;
 using Popcorn.ViewModels.Main;
 
 namespace Popcorn.ViewModels.Tabs
@@ -65,8 +67,6 @@ namespace Popcorn.ViewModels.Tabs
             {
                 if (e.PropertyName != GetPropertyName(() => Genre) && Genre.Equals(e.NewValue)) return;
                 StopLoadingMovies();
-                Page = 0;
-                Movies.Clear();
                 await LoadMoviesAsync();
             });
 
@@ -74,8 +74,6 @@ namespace Popcorn.ViewModels.Tabs
             {
                 if (e.PropertyName != GetPropertyName(() => Rating) && Rating.Equals(e.NewValue)) return;
                 StopLoadingMovies();
-                Page = 0;
-                Movies.Clear();
                 await LoadMoviesAsync();
             });
         }
@@ -116,17 +114,11 @@ namespace Popcorn.ViewModels.Tabs
             {
                 IsLoadingMovies = true;
 
-                var favoritesMovies =
+                var movies =
                     await
                         MovieHistoryService.GetFavoritesMoviesAsync(Genre, Rating);
 
-                var movies = favoritesMovies.ToList();
-                Movies.Clear();
-
-                foreach (var movie in movies)
-                {
-                    Movies.Add(movie);
-                }
+                Movies = new ObservableCollection<MovieShort>(movies);
 
                 IsLoadingMovies = false;
                 IsMovieFound = Movies.Any();
@@ -134,11 +126,6 @@ namespace Popcorn.ViewModels.Tabs
                 MaxNumberOfMovies = Movies.Count;
 
                 await MovieService.DownloadCoverImageAsync(Movies, CancellationLoadingMovies);
-
-                watch.Stop();
-                var elapsedMs = watch.ElapsedMilliseconds;
-                Logger.Info(
-                    $"Loaded movies in {elapsedMs} milliseconds.");
             }
             catch (Exception exception)
             {
@@ -148,6 +135,9 @@ namespace Popcorn.ViewModels.Tabs
             finally
             {
                 watch.Stop();
+                var elapsedMs = watch.ElapsedMilliseconds;
+                Logger.Info(
+                    $"Loaded movies in {elapsedMs} milliseconds.");
             }
         }
 

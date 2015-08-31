@@ -306,7 +306,7 @@ namespace Popcorn.ViewModels.Tabs
             SetFavoriteMovieCommand =
                 new RelayCommand<MovieShort>(async movie =>
                 {
-                    await MovieHistoryService.SetFavoriteMovieAsync(movie, CancellationLoadingMovies);
+                    await MovieHistoryService.SetFavoriteMovieAsync(movie);
                     Messenger.Default.Send(new ChangeFavoriteMovieMessage());
                 });
 

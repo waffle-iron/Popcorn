@@ -63,7 +63,6 @@ namespace Popcorn.Services.User
                 var response = await restClient.ExecutePostTaskAsync<Models.Account.User>(request, ct);
                 if (response.ErrorException != null)
                 {
-                    watch.Stop();
                     Logger.Error(
                         $"CreateUser: {response.ErrorException.Message}");
                     return user;
@@ -73,7 +72,6 @@ namespace Popcorn.Services.User
             }
             catch (Exception exception) when (exception is TaskCanceledException)
             {
-                watch.Stop();
                 Logger.Debug(
                     "CreateUser cancelled.");
             }
@@ -85,15 +83,16 @@ namespace Popcorn.Services.User
             }
             catch (Exception exception)
             {
-                watch.Stop();
                 Logger.Error(
                     $"CreateUser: {exception.Message}");
             }
-
-            watch.Stop();
-            var elapsedMs = watch.ElapsedMilliseconds;
-            Logger.Debug(
-                $"CreateUser ({username}, {firstname}, {lastname}, {password}, {email}) in {elapsedMs} milliseconds.");
+            finally
+            {
+                watch.Stop();
+                var elapsedMs = watch.ElapsedMilliseconds;
+                Logger.Debug(
+                    $"CreateUser ({username}, {firstname}, {lastname}, {password}, {email}) in {elapsedMs} milliseconds.");
+            }
 
             return user;
         }
@@ -126,7 +125,6 @@ namespace Popcorn.Services.User
                 var response = await restClient.ExecutePostTaskAsync<Bearer>(request, ct);
                 if (response.ErrorException != null)
                 {
-                    watch.Stop();
                     Logger.Error(
                         $"Signin: {response.ErrorException.Message}");
                     return bearer;
@@ -136,7 +134,6 @@ namespace Popcorn.Services.User
             }
             catch (Exception exception) when (exception is TaskCanceledException)
             {
-                watch.Stop();
                 Logger.Debug(
                     "Signin cancelled.");
             }
@@ -148,16 +145,17 @@ namespace Popcorn.Services.User
             }
             catch (Exception exception)
             {
-                watch.Stop();
                 Logger.Error(
                     $"Signin: {exception.Message}");
             }
-
-            watch.Stop();
-            var elapsedMs = watch.ElapsedMilliseconds;
-            Logger.Debug(
-                $"Signin ({user.Username}, {user.Fullname}, {user.Email}) in {elapsedMs} milliseconds.");
-
+            finally
+            {
+                watch.Stop();
+                var elapsedMs = watch.ElapsedMilliseconds;
+                Logger.Debug(
+                    $"Signin ({user.Username}, {user.Fullname}, {user.Email}) in {elapsedMs} milliseconds.");
+            }
+        
             return bearer;
         }
 

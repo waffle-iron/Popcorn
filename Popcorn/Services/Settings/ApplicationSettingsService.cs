@@ -52,7 +52,6 @@ namespace Popcorn.Services.Settings
 
             using (var context = new ApplicationDbContext())
             {
-                await context.Settings.LoadAsync();
                 var settings = await context.Settings.FirstOrDefaultAsync();
                 if (settings == null)
                 {

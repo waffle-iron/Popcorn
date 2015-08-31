@@ -4,7 +4,6 @@ using System.Data.Entity;
 using System.Data.Entity.Migrations;
 using System.Diagnostics;
 using System.Linq;
-using System.Threading;
 using System.Threading.Tasks;
 using NLog;
 using Popcorn.Entity;
@@ -47,7 +46,6 @@ namespace Popcorn.Services.History
             {
                 using (var context = new ApplicationDbContext())
                 {
-                    await context.MovieHistory.LoadAsync();
                     var history = await context.MovieHistory.FirstOrDefaultAsync();
                     if (history == null)
                     {
@@ -55,7 +53,7 @@ namespace Popcorn.Services.History
                         history = await context.MovieHistory.FirstOrDefaultAsync();
                     }
 
-                    foreach (var movie in movies.ToList())
+                    foreach (var movie in movies)
                     {
                         var entityMovie = history.MoviesShort.FirstOrDefault(p => p.MovieId == movie.Id);
                         if (entityMovie == null) continue;
@@ -66,15 +64,16 @@ namespace Popcorn.Services.History
             }
             catch (Exception exception)
             {
-                watch.Stop();
                 Logger.Error(
                     $"ComputeMovieHistoryAsync: {exception.Message}");
             }
-
-            watch.Stop();
-            var elapsedMs = watch.ElapsedMilliseconds;
-            Logger.Debug(
-                $"ComputeMovieHistoryAsync in {elapsedMs} milliseconds.");
+            finally
+            {
+                watch.Stop();
+                var elapsedMs = watch.ElapsedMilliseconds;
+                Logger.Debug(
+                    $"ComputeMovieHistoryAsync in {elapsedMs} milliseconds.");
+            }
         }
 
         #endregion
@@ -97,7 +96,6 @@ namespace Popcorn.Services.History
             {
                 using (var context = new ApplicationDbContext())
                 {
-                    await context.MovieHistory.LoadAsync();
                     var movieHistory = await context.MovieHistory.FirstOrDefaultAsync();
                     if (genre != null)
                     {
@@ -117,15 +115,17 @@ namespace Popcorn.Services.History
             }
             catch (Exception exception)
             {
-                watch.Stop();
                 Logger.Error(
                     $"GetFavoritesMoviesIdAsync: {exception.Message}");
             }
+            finally
+            {
+                watch.Stop();
+                var elapsedMs = watch.ElapsedMilliseconds;
+                Logger.Debug(
+                    $"GetFavoritesMoviesIdAsync in {elapsedMs} milliseconds.");
+            }
 
-            watch.Stop();
-            var elapsedMs = watch.ElapsedMilliseconds;
-            Logger.Debug(
-                $"GetFavoritesMoviesIdAsync in {elapsedMs} milliseconds.");
             return movies;
         }
 
@@ -149,7 +149,6 @@ namespace Popcorn.Services.History
             {
                 using (var context = new ApplicationDbContext())
                 {
-                    await context.MovieHistory.LoadAsync();
                     var movieHistory = await context.MovieHistory.FirstOrDefaultAsync();
                     if (genre != null)
                     {
@@ -169,15 +168,18 @@ namespace Popcorn.Services.History
             }
             catch (Exception exception)
             {
-                watch.Stop();
+
                 Logger.Error(
                     $"GetSeenMoviesIdAsync: {exception.Message}");
             }
+            finally
+            {
+                watch.Stop();
+                var elapsedMs = watch.ElapsedMilliseconds;
+                Logger.Debug(
+                    $"GetSeenMoviesIdAsync in {elapsedMs} milliseconds.");
+            }
 
-            watch.Stop();
-            var elapsedMs = watch.ElapsedMilliseconds;
-            Logger.Debug(
-                $"GetSeenMoviesIdAsync in {elapsedMs} milliseconds.");
             return movies;
         }
 
@@ -189,8 +191,7 @@ namespace Popcorn.Services.History
         /// Set the movie as favorite
         /// </summary>
         /// <param name="movie">Favorite movie</param>
-        /// <param name="ct">Used to cancel task</param>
-        public static async Task SetFavoriteMovieAsync(MovieShort movie, CancellationTokenSource ct)
+        public static async Task SetFavoriteMovieAsync(MovieShort movie)
         {
             var watch = Stopwatch.StartNew();
 
@@ -198,12 +199,11 @@ namespace Popcorn.Services.History
             {
                 using (var context = new ApplicationDbContext())
                 {
-                    await context.MovieHistory.LoadAsync(ct.Token);
-                    var movieHistory = await context.MovieHistory.FirstOrDefaultAsync(ct.Token);
+                    var movieHistory = await context.MovieHistory.FirstOrDefaultAsync();
                     if (movieHistory == null)
                     {
                         await CreateMovieHistoryAsync();
-                        movieHistory = await context.MovieHistory.FirstOrDefaultAsync(ct.Token);
+                        movieHistory = await context.MovieHistory.FirstOrDefaultAsync();
                     }
 
                     if (movieHistory.MoviesShort == null)
@@ -228,20 +228,21 @@ namespace Popcorn.Services.History
                         }
                     }
 
-                    await context.SaveChangesAsync(ct.Token);
+                    await context.SaveChangesAsync();
                 }
             }
             catch (Exception exception)
             {
-                watch.Stop();
                 Logger.Error(
                     $"SetFavoriteMovieAsync: {exception.Message}");
             }
-
-            watch.Stop();
-            var elapsedMs = watch.ElapsedMilliseconds;
-            Logger.Debug(
-                $"SetFavoriteMovieAsync ({movie.ImdbCode}) in {elapsedMs} milliseconds.");
+            finally
+            {
+                watch.Stop();
+                var elapsedMs = watch.ElapsedMilliseconds;
+                Logger.Debug(
+                    $"SetFavoriteMovieAsync ({movie.ImdbCode}) in {elapsedMs} milliseconds.");
+            }
         }
 
         #endregion
@@ -260,7 +261,6 @@ namespace Popcorn.Services.History
             {
                 using (var context = new ApplicationDbContext())
                 {
-                    await context.MovieHistory.LoadAsync();
                     var movieHistory = await context.MovieHistory.FirstOrDefaultAsync();
                     if (movieHistory == null)
                     {
@@ -295,15 +295,16 @@ namespace Popcorn.Services.History
             }
             catch (Exception exception)
             {
-                watch.Stop();
                 Logger.Error(
                     $"SetHasBeenSeenMovieAsync: {exception.Message}");
             }
-
-            watch.Stop();
-            var elapsedMs = watch.ElapsedMilliseconds;
-            Logger.Debug(
-                $"SetHasBeenSeenMovieAsync ({movie.ImdbCode}) in {elapsedMs} milliseconds.");
+            finally
+            {
+                watch.Stop();
+                var elapsedMs = watch.ElapsedMilliseconds;
+                Logger.Debug(
+                    $"SetHasBeenSeenMovieAsync ({movie.ImdbCode}) in {elapsedMs} milliseconds.");
+            }
         }
 
         #endregion
@@ -321,7 +322,6 @@ namespace Popcorn.Services.History
             {
                 using (var context = new ApplicationDbContext())
                 {
-                    await context.MovieHistory.LoadAsync();
                     var userData = await context.MovieHistory.FirstOrDefaultAsync();
                     if (userData == null)
                     {
@@ -338,15 +338,16 @@ namespace Popcorn.Services.History
             }
             catch (Exception exception)
             {
-                watch.Stop();
                 Logger.Error(
                     $"CreateMovieHistoryAsync: {exception.Message}");
             }
-
-            watch.Stop();
-            var elapsedMs = watch.ElapsedMilliseconds;
-            Logger.Debug(
-                $"CreateMovieHistoryAsync in {elapsedMs} milliseconds.");
+            finally
+            {
+                watch.Stop();
+                var elapsedMs = watch.ElapsedMilliseconds;
+                Logger.Debug(
+                    $"CreateMovieHistoryAsync in {elapsedMs} milliseconds.");
+            }
         }
 
         #endregion
@@ -373,7 +374,7 @@ namespace Popcorn.Services.History
                 Seeds = torrent.Seeds,
                 Size = torrent.Size,
                 SizeBytes = torrent.SizeBytes
-            }).ToList();
+            });
 
             return new MovieShort
             {
@@ -393,7 +394,7 @@ namespace Popcorn.Services.History
                 MpaRating = movie.MpaRating,
                 Title = movie.Title,
                 TitleLong = movie.TitleLong,
-                Torrents = torrents,
+                Torrents = torrents.ToList(),
                 MediumCoverImage = movie.MediumCoverImage,
                 Url = movie.Url,
                 State = movie.State,
@@ -428,12 +429,12 @@ namespace Popcorn.Services.History
                 Seeds = torrent.Seeds,
                 Size = torrent.Size,
                 SizeBytes = torrent.SizeBytes
-            }).ToList();
+            });
 
             var genres = movie.Genres.Select(genre => new Genre
             {
                 Name = genre
-            }).ToList();
+            });
 
             var movieShort = new Entity.Movie.MovieShort
             {
@@ -453,9 +454,9 @@ namespace Popcorn.Services.History
                 Runtime = movie.Runtime,
                 Url = movie.Url,
                 TitleLong = movie.TitleLong,
-                Torrents = torrents,
+                Torrents = torrents.ToList(),
                 MediumCoverImage = movie.MediumCoverImage,
-                Genres = genres,
+                Genres = genres.ToList(),
                 DateUploadedUnix = movie.DateUploadedUnix,
                 CoverImagePath = movie.CoverImagePath,
                 MpaRating = movie.MpaRating,
@@ -490,12 +491,12 @@ namespace Popcorn.Services.History
                 Seeds = torrent.Seeds,
                 Size = torrent.Size,
                 SizeBytes = torrent.SizeBytes
-            }).ToList();
+            });
 
             var genres = movie.Genres.Select(genre => new Genre
             {
                 Name = genre
-            }).ToList();
+            });
 
             var images = new Images
             {
@@ -540,8 +541,8 @@ namespace Popcorn.Services.History
                 Runtime = movie.Runtime,
                 Url = movie.Url,
                 TitleLong = movie.TitleLong,
-                Torrents = torrents,
-                Genres = genres,
+                Torrents = torrents.ToList(),
+                Genres = genres.ToList(),
                 DateUploadedUnix = movie.DateUploadedUnix,
                 MpaRating = movie.MpaRating,
                 Rating = movie.RatingValue,

@@ -4,6 +4,7 @@ using NLog;
 using System.Collections.Generic;
 using System.Data.Entity;
 using System.Data.Entity.Migrations;
+using System.Data.SqlServerCe;
 using System.Diagnostics;
 using System.Globalization;
 using System.Linq;
@@ -78,7 +79,6 @@ namespace Popcorn.Services.Language
 
             using (var context = new ApplicationDbContext())
             {
-                await context.Settings.LoadAsync();
                 var applicationSettings = await context.Settings.FirstOrDefaultAsync();
                 if (applicationSettings == null)
                 {
@@ -128,7 +128,6 @@ namespace Popcorn.Services.Language
             var watch = Stopwatch.StartNew();
             using (var context = new ApplicationDbContext())
             {
-                await context.Settings.LoadAsync();
                 var applicationSettings = await context.Settings.FirstOrDefaultAsync();
                 if (applicationSettings == null)
                 {
@@ -176,7 +175,6 @@ namespace Popcorn.Services.Language
 
             using (var context = new ApplicationDbContext())
             {
-                await context.Settings.LoadAsync();
                 var applicationSettings = await context.Settings.FirstOrDefaultAsync();
                 if (applicationSettings == null)
                 {
