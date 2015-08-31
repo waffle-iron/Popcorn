@@ -113,23 +113,23 @@ namespace Popcorn.ViewModels.Tabs
         /// <param name="searchFilter">The parameter of the search</param>
         public async Task SearchMoviesAsync(string searchFilter)
         {
+            if (SearchFilter != searchFilter)
+            {
+                // We start an other search
+                StopLoadingMovies();
+                Movies.Clear();
+                Page = 0;
+            }
+
+            var watch = Stopwatch.StartNew();
+
+            Page++;
+
+            Logger.Info(
+                $"Loading page {Page} with criteria: {searchFilter}");
+
             try
             {
-                if (SearchFilter != searchFilter)
-                {
-                    // We start an other search
-                    StopLoadingMovies();
-                    Movies.Clear();
-                    Page = 0;
-                }
-
-                var watch = Stopwatch.StartNew();
-
-                Page++;
-
-                Logger.Info(
-                    $"Loading page {Page} with criteria: {searchFilter}");
-
                 SearchFilter = searchFilter;
 
                 IsLoadingMovies = true;
@@ -138,12 +138,11 @@ namespace Popcorn.ViewModels.Tabs
                     await MovieService.SearchMoviesAsync(searchFilter,
                         Page,
                         MaxMoviesPerPage,
+                        Genre,
                         Rating,
-                        CancellationLoadingMovies.Token,
-                        Genre);
+                        CancellationLoadingMovies.Token);
 
                 var movies = movieResults.Item1.ToList();
-                MaxNumberOfMovies = movieResults.Item2;
 
                 foreach (var movie in movies)
                 {
@@ -153,6 +152,7 @@ namespace Popcorn.ViewModels.Tabs
                 IsLoadingMovies = false;
                 IsMovieFound = Movies.Any();
                 CurrentNumberOfMovies = Movies.Count;
+                MaxNumberOfMovies = movieResults.Item2;
 
                 await MovieHistoryService.ComputeMovieHistoryAsync(movies);
                 await MovieService.DownloadCoverImageAsync(movies, CancellationLoadingMovies);
@@ -165,14 +165,12 @@ namespace Popcorn.ViewModels.Tabs
             catch (Exception exception)
             {
                 Page--;
-                Logger.Info(
+                Logger.Error(
                     $"Error while loading page {Page} with criteria {searchFilter}: {exception.Message}");
             }
             finally
             {
-                IsLoadingMovies = false;
-                IsMovieFound = Movies.Any();
-                CurrentNumberOfMovies = Movies.Count;
+                watch.Stop();
             }
         }
 

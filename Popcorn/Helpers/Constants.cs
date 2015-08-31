@@ -88,11 +88,6 @@ namespace Popcorn.Helpers
         public const string YoutubePath = "http://www.youtube.com/watch?v=";
 
         /// <summary>
-        /// We want at least 5 rows to be able to scroll inside the main window
-        /// </summary>
-        public const int NumberOfRowsPerPage = 5;
-
-        /// <summary>
         /// In percentage, the minimum of buffering before we can actually start playing the movie
         /// </summary>
         public const double MinimumBufferingBeforeMoviePlaying = 2.0;

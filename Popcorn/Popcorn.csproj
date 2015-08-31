@@ -263,7 +263,6 @@
     <Compile Include="Panels\ElasticWrapPanel.cs" />
     <Compile Include="Entity\Localization\Language.cs" />
     <Compile Include="Entity\Application\Settings.cs" />
-    <Compile Include="Events\NumberOfColumnsChangedEventArgs.cs" />
     <Compile Include="Events\WindowStateChangedEventArgs.cs" />
     <Compile Include="Helpers\Constants.cs" />
     <Compile Include="Helpers\DownloadFileHelper.cs" />

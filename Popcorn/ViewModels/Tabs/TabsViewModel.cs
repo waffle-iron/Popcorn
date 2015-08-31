@@ -276,7 +276,7 @@ namespace Popcorn.ViewModels.Tabs
                         }
                         catch (TaskCanceledException)
                         {
-                            Logger.Debug(
+                            Logger.Info(
                                 $"Stopped translating movie : {movie.Title}");
                             return;
                         }

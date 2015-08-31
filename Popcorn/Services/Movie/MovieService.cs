@@ -107,28 +107,27 @@ namespace Popcorn.Services.Movie
             }
             catch (Exception exception) when (exception is TaskCanceledException)
             {
-                watch.Stop();
                 Logger.Debug(
                     "GetGenresAsync cancelled.");
             }
             catch (Exception exception) when (exception is SocketException || exception is WebException)
             {
-                watch.Stop();
                 Logger.Error(
                     $"GetGenresAsync: {exception.Message}");
                 Messenger.Default.Send(new ManageExceptionMessage(exception));
             }
             catch (Exception exception)
             {
-                watch.Stop();
                 Logger.Error(
                     $"GetGenresAsync: {exception.Message}");
             }
-
-            watch.Stop();
-            var elapsedMs = watch.ElapsedMilliseconds;
-            Logger.Debug(
-                $"GetGenresAsync in {elapsedMs} milliseconds.");
+            finally
+            {
+                watch.Stop();
+                var elapsedMs = watch.ElapsedMilliseconds;
+                Logger.Debug(
+                    $"GetGenresAsync in {elapsedMs} milliseconds.");
+            }
 
             return genres;
         }
@@ -180,7 +179,6 @@ namespace Popcorn.Services.Movie
                 var response = await restClient.ExecuteGetTaskAsync<WrapperMovieShort>(request, ct);
                 if (response.ErrorException != null)
                 {
-                    watch.Stop();
                     Logger.Error(
                         $"GetPopularMoviesAsync: {response.ErrorException.Message}");
                     return new Tuple<IEnumerable<MovieShort>, int>(new List<MovieShort>(), 0);
@@ -190,31 +188,30 @@ namespace Popcorn.Services.Movie
             }
             catch (Exception exception) when (exception is TaskCanceledException)
             {
-                watch.Stop();
                 Logger.Debug(
                     "GetPopularMoviesAsync cancelled.");
             }
             catch (Exception exception) when (exception is SocketException || exception is WebException)
             {
-                watch.Stop();
                 Logger.Error(
                     $"GetPopularMoviesAsync: {exception.Message}");
                 Messenger.Default.Send(new ManageExceptionMessage(exception));
             }
             catch (Exception exception)
             {
-                watch.Stop();
                 Logger.Error(
                     $"GetPopularMoviesAsync: {exception.Message}");
+            }
+            finally
+            {
+                watch.Stop();
+                var elapsedMs = watch.ElapsedMilliseconds;
+                Logger.Debug(
+                    $"GetPopularMoviesAsync ({page}, {limit}) in {elapsedMs} milliseconds.");
             }
 
             var movies = GetMoviesListFromWrapper(wrapper) ?? new List<MovieShort>();
             var nbMovies = wrapper?.Data?.MovieCount ?? 0;
-
-            watch.Stop();
-            var elapsedMs = watch.ElapsedMilliseconds;
-            Logger.Debug(
-                $"GetPopularMoviesAsync ({page}, {limit}) in {elapsedMs} milliseconds.");
 
             return new Tuple<IEnumerable<MovieShort>, int>(movies, nbMovies);
         }
@@ -266,7 +263,6 @@ namespace Popcorn.Services.Movie
                 var response = await restClient.ExecuteGetTaskAsync<WrapperMovieShort>(request, ct);
                 if (response.ErrorException != null)
                 {
-                    watch.Stop();
                     Logger.Error(
                         $"GetGreatestMoviesAsync: {response.ErrorException.Message}");
                     return new Tuple<IEnumerable<MovieShort>, int>(new List<MovieShort>(), 0);
@@ -276,31 +272,30 @@ namespace Popcorn.Services.Movie
             }
             catch (Exception exception) when (exception is TaskCanceledException)
             {
-                watch.Stop();
                 Logger.Debug(
                     "GetGreatestMoviesAsync cancelled.");
             }
             catch (Exception exception) when (exception is SocketException || exception is WebException)
             {
-                watch.Stop();
                 Logger.Error(
                     $"GetGreatestMoviesAsync: {exception.Message}");
                 Messenger.Default.Send(new ManageExceptionMessage(exception));
             }
             catch (Exception exception)
             {
-                watch.Stop();
                 Logger.Error(
                     $"GetGreatestMoviesAsync: {exception.Message}");
             }
+            finally
+            {
+                watch.Stop();
+                var elapsedMs = watch.ElapsedMilliseconds;
+                Logger.Debug(
+                    $"GetGreatestMoviesAsync ({page}, {limit}) in {elapsedMs} milliseconds.");
+            }
 
             var movies = GetMoviesListFromWrapper(wrapper) ?? new List<MovieShort>();
-            var nbMovies = wrapper?.Data?.MovieCount ?? 0;
-
-            watch.Stop();
-            var elapsedMs = watch.ElapsedMilliseconds;
-            Logger.Debug(
-                $"GetGreatestMoviesAsync ({page}, {limit}) in {elapsedMs} milliseconds.");
+            var nbMovies = wrapper?.Data?.MovieCount ?? 0; 
 
             return new Tuple<IEnumerable<MovieShort>, int>(movies, nbMovies);
         }
@@ -352,7 +347,6 @@ namespace Popcorn.Services.Movie
                 var response = await restClient.ExecuteGetTaskAsync<WrapperMovieShort>(request, ct);
                 if (response.ErrorException != null)
                 {
-                    watch.Stop();
                     Logger.Error(
                         $"GetRecentMoviesAsync: {response.ErrorException.Message}");
                     return new Tuple<IEnumerable<MovieShort>, int>(new List<MovieShort>(), 0);
@@ -362,31 +356,30 @@ namespace Popcorn.Services.Movie
             }
             catch (Exception exception) when (exception is TaskCanceledException)
             {
-                watch.Stop();
                 Logger.Debug(
                     "GetRecentMoviesAsync cancelled.");
             }
             catch (Exception exception) when (exception is SocketException || exception is WebException)
             {
-                watch.Stop();
                 Logger.Error(
                     $"GetRecentMoviesAsync: {exception.Message}");
                 Messenger.Default.Send(new ManageExceptionMessage(exception));
             }
             catch (Exception exception)
             {
-                watch.Stop();
                 Logger.Error(
                     $"GetRecentMoviesAsync: {exception.Message}");
+            }
+            finally
+            {
+                watch.Stop();
+                var elapsedMs = watch.ElapsedMilliseconds;
+                Logger.Debug(
+                    $"GetRecentMoviesAsync ({page}, {limit}) in {elapsedMs} milliseconds.");
             }
 
             var movies = GetMoviesListFromWrapper(wrapper) ?? new List<MovieShort>();
             var nbMovies = wrapper?.Data?.MovieCount ?? 0;
-
-            watch.Stop();
-            var elapsedMs = watch.ElapsedMilliseconds;
-            Logger.Debug(
-                $"GetRecentMoviesAsync ({page}, {limit}) in {elapsedMs} milliseconds.");
 
             return new Tuple<IEnumerable<MovieShort>, int>(movies, nbMovies);
         }
@@ -401,16 +394,16 @@ namespace Popcorn.Services.Movie
         /// <param name="criteria">Criteria used for search</param>
         /// <param name="page">Page to return</param>
         /// <param name="limit">The maximum number of movies to return</param>
-        /// <param name="ct">Cancellation token</param>
         /// <param name="genre">The genre to filter</param>
         /// <param name="ratingFilter">Used to filter by rating</param>
+        /// <param name="ct">Cancellation token</param>
         /// <returns>Searched movies and the number of movies found</returns>
         public async Task<Tuple<IEnumerable<MovieShort>, int>> SearchMoviesAsync(string criteria,
             int page,
             int limit,
+            MovieGenre genre,
             double ratingFilter,
-            CancellationToken ct,
-            MovieGenre genre)
+            CancellationToken ct)
         {
             var watch = Stopwatch.StartNew();
 
@@ -440,7 +433,6 @@ namespace Popcorn.Services.Movie
                 var response = await restClient.ExecuteGetTaskAsync<WrapperMovieShort>(request, ct);
                 if (response.ErrorException != null)
                 {
-                    watch.Stop();
                     Logger.Error(
                         $"SearchMoviesAsync: {response.ErrorException.Message}");
                     return new Tuple<IEnumerable<MovieShort>, int>(new List<MovieShort>(), 0);
@@ -450,31 +442,30 @@ namespace Popcorn.Services.Movie
             }
             catch (Exception exception) when (exception is TaskCanceledException)
             {
-                watch.Stop();
                 Logger.Debug(
                     "SearchMoviesAsync cancelled.");
             }
             catch (Exception exception) when (exception is SocketException || exception is WebException)
             {
-                watch.Stop();
                 Logger.Error(
                     $"SearchMoviesAsync: {exception.Message}");
                 Messenger.Default.Send(new ManageExceptionMessage(exception));
             }
             catch (Exception exception)
             {
-                watch.Stop();
                 Logger.Error(
                     $"SearchMoviesAsync: {exception.Message}");
+            }
+            finally
+            {
+                watch.Stop();
+                var elapsedMs = watch.ElapsedMilliseconds;
+                Logger.Debug(
+                    $"SearchMoviesAsync ({criteria}, {page}, {limit}) in {elapsedMs} milliseconds.");
             }
 
             var movies = GetMoviesListFromWrapper(wrapper) ?? new List<MovieShort>();
             var nbMovies = wrapper?.Data?.MovieCount ?? 0;
-
-            watch.Stop();
-            var elapsedMs = watch.ElapsedMilliseconds;
-            Logger.Debug(
-                $"SearchMoviesAsync ({criteria}, {page}, {limit}) in {elapsedMs} milliseconds.");
 
             return new Tuple<IEnumerable<MovieShort>, int>(movies, nbMovies);
         }
@@ -507,7 +498,6 @@ namespace Popcorn.Services.Movie
                 var response = await restClient.ExecuteGetTaskAsync<WrapperMovieFull>(request, ct);
                 if (response.ErrorException != null)
                 {
-                    watch.Stop();
                     Logger.Error(
                         $"GetMovieFullDetailsAsync: {response.ErrorException.Message}");
                     return movie;
@@ -555,28 +545,27 @@ namespace Popcorn.Services.Movie
             }
             catch (Exception exception) when (exception is TaskCanceledException)
             {
-                watch.Stop();
                 Logger.Debug(
                     "GetMovieFullDetailsAsync cancelled.");
             }
             catch (Exception exception) when (exception is SocketException || exception is WebException)
             {
-                watch.Stop();
                 Logger.Error(
                     $"GetMovieFullDetailsAsync: {exception.Message}");
                 Messenger.Default.Send(new ManageExceptionMessage(exception));
             }
             catch (Exception exception)
             {
-                watch.Stop();
                 Logger.Error(
                     $"GetMovieFullDetailsAsync: {exception.Message}");
             }
-
-            watch.Stop();
-            var elapsedMs = watch.ElapsedMilliseconds;
-            Logger.Debug(
-                $"GetMovieFullDetailsAsync ({movie.ImdbCode}) in {elapsedMs} milliseconds.");
+            finally
+            {
+                watch.Stop();
+                var elapsedMs = watch.ElapsedMilliseconds;
+                Logger.Debug(
+                    $"GetMovieFullDetailsAsync ({movie.ImdbCode}) in {elapsedMs} milliseconds.");
+            }
 
             return movie;
         }
@@ -607,28 +596,27 @@ namespace Popcorn.Services.Movie
             }
             catch (Exception exception) when (exception is TaskCanceledException)
             {
-                watch.Stop();
                 Logger.Debug(
                     "TranslateMovieShortAsync cancelled.");
             }
             catch (Exception exception) when (exception is SocketException || exception is WebException)
             {
-                watch.Stop();
                 Logger.Error(
                     $"TranslateMovieShortAsync: {exception.Message}");
                 Messenger.Default.Send(new ManageExceptionMessage(exception));
             }
             catch (Exception exception)
             {
-                watch.Stop();
                 Logger.Error(
                     $"TranslateMovieShortAsync: {exception.Message}");
             }
-
-            watch.Stop();
-            var elapsedMs = watch.ElapsedMilliseconds;
-            Logger.Debug(
-                $"TranslateMovieShortAsync ({movieToTranslate.ImdbCode}) in {elapsedMs} milliseconds.");
+            finally
+            {
+                watch.Stop();
+                var elapsedMs = watch.ElapsedMilliseconds;
+                Logger.Debug(
+                    $"TranslateMovieShortAsync ({movieToTranslate.ImdbCode}) in {elapsedMs} milliseconds.");
+            }
         }
 
         #endregion
@@ -658,28 +646,27 @@ namespace Popcorn.Services.Movie
             }
             catch (Exception exception) when (exception is TaskCanceledException)
             {
-                watch.Stop();
                 Logger.Debug(
                     "TranslateMovieFull cancelled.");
             }
             catch (Exception exception) when (exception is SocketException || exception is WebException)
             {
-                watch.Stop();
                 Logger.Error(
                     $"TranslateMovieFull: {exception.Message}");
                 Messenger.Default.Send(new ManageExceptionMessage(exception));
             }
             catch (Exception exception)
             {
-                watch.Stop();
                 Logger.Error(
                     $"TranslateMovieFull: {exception.Message}");
             }
-
-            watch.Stop();
-            var elapsedMs = watch.ElapsedMilliseconds;
-            Logger.Debug(
-                $"TranslateMovieFull ({movieToTranslate.ImdbCode}) in {elapsedMs} milliseconds.");
+            finally
+            {
+                watch.Stop();
+                var elapsedMs = watch.ElapsedMilliseconds;
+                Logger.Debug(
+                    $"TranslateMovieFull ({movieToTranslate.ImdbCode}) in {elapsedMs} milliseconds.");
+            }
         }
 
         #endregion
@@ -746,28 +733,27 @@ namespace Popcorn.Services.Movie
             }
             catch (Exception exception) when (exception is TaskCanceledException)
             {
-                watch.Stop();
                 Logger.Debug(
                     "GetMovieTrailerAsync cancelled.");
             }
             catch (Exception exception) when (exception is SocketException || exception is WebException)
             {
-                watch.Stop();
                 Logger.Error(
                     $"GetMovieTrailerAsync: {exception.Message}");
                 Messenger.Default.Send(new ManageExceptionMessage(exception));
             }
             catch (Exception exception)
             {
-                watch.Stop();
                 Logger.Error(
                     $"GetMovieTrailerAsync: {exception.Message}");
             }
-
-            watch.Stop();
-            var elapsedMs = watch.ElapsedMilliseconds;
-            Logger.Debug(
-                $"GetMovieTrailerAsync ({movie.ImdbCode}) in {elapsedMs} milliseconds.");
+            finally
+            {
+                watch.Stop();
+                var elapsedMs = watch.ElapsedMilliseconds;
+                Logger.Debug(
+                    $"GetMovieTrailerAsync ({movie.ImdbCode}) in {elapsedMs} milliseconds.");
+            }
 
             return trailers;
         }
@@ -796,64 +782,62 @@ namespace Popcorn.Services.Movie
                 var response = await restClient.ExecuteGetTaskAsync<SubtitlesWrapperDeserialized>(request, ct);
                 if (response.ErrorException != null)
                 {
-                    watch.Stop();
                     Logger.Error(
                         $"LoadSubtitlesAsync: {response.ErrorException.Message}");
                     return;
                 }
 
                 wrapper = response.Data;
+
+                var subtitles = new ObservableCollection<Subtitle>();
+                Dictionary<string, List<SubtitleDeserialized>> movieSubtitles;
+                if (wrapper.Subtitles.TryGetValue(movie.ImdbCode, out movieSubtitles))
+                {
+                    foreach (var subtitle in movieSubtitles)
+                    {
+                        var sub = subtitle.Value.Aggregate((sub1, sub2) => sub1.Rating > sub2.Rating ? sub1 : sub2);
+                        subtitles.Add(new Subtitle
+                        {
+                            Id = sub.Id,
+                            Language = new CustomLanguage
+                            {
+                                Culture = string.Empty,
+                                EnglishName = subtitle.Key,
+                                LocalizedName = string.Empty
+                            },
+                            Hi = sub.Hi,
+                            Rating = sub.Rating,
+                            Url = sub.Url
+                        });
+                    }
+                }
+
+                subtitles.Sort();
+                movie.AvailableSubtitles = subtitles;
             }
             catch (Exception exception) when (exception is TaskCanceledException)
             {
-                watch.Stop();
                 Logger.Debug(
                     "LoadSubtitlesAsync cancelled.");
             }
             catch (Exception exception) when (exception is SocketException || exception is WebException)
             {
-                watch.Stop();
                 Logger.Error(
                     $"LoadSubtitlesAsync: {exception.Message}");
                 Messenger.Default.Send(new ManageExceptionMessage(exception));
             }
             catch (Exception exception)
             {
-                watch.Stop();
                 Logger.Error(
                     $"LoadSubtitlesAsync: {exception.Message}");
             }
-
-            var subtitles = new ObservableCollection<Subtitle>();
-            Dictionary<string, List<SubtitleDeserialized>> movieSubtitles;
-            if (wrapper.Subtitles.TryGetValue(movie.ImdbCode, out movieSubtitles))
+            finally
             {
-                foreach (var subtitle in movieSubtitles)
-                {
-                    var sub = subtitle.Value.Aggregate((sub1, sub2) => sub1.Rating > sub2.Rating ? sub1 : sub2);
-                    subtitles.Add(new Subtitle
-                    {
-                        Id = sub.Id,
-                        Language = new CustomLanguage
-                        {
-                            Culture = string.Empty,
-                            EnglishName = subtitle.Key,
-                            LocalizedName = string.Empty
-                        },
-                        Hi = sub.Hi,
-                        Rating = sub.Rating,
-                        Url = sub.Url
-                    });
-                }
+                watch.Stop();
+                var elapsedMs = watch.ElapsedMilliseconds;
+                Logger.Debug(
+                    $"LoadSubtitlesAsync ({movie.ImdbCode}) in {elapsedMs} milliseconds.");
             }
-
-            subtitles.Sort();
-            movie.AvailableSubtitles = subtitles;
-
-            watch.Stop();
-            var elapsedMs = watch.ElapsedMilliseconds;
-            Logger.Debug(
-                $"LoadSubtitlesAsync ({movie.ImdbCode}) in {elapsedMs} milliseconds.");
         }
 
         #endregion
@@ -904,28 +888,27 @@ namespace Popcorn.Services.Movie
             }
             catch (Exception exception) when (exception is TaskCanceledException)
             {
-                watch.Stop();
                 Logger.Debug(
                     "DownloadSubtitleAsync cancelled.");
             }
             catch (Exception exception) when (exception is SocketException || exception is WebException)
             {
-                watch.Stop();
                 Logger.Error(
                     $"DownloadSubtitleAsync: {exception.Message}");
                 Messenger.Default.Send(new ManageExceptionMessage(exception));
             }
             catch (Exception exception)
             {
-                watch.Stop();
                 Logger.Error(
                     $"DownloadSubtitleAsync: {exception.Message}");
             }
-
-            watch.Stop();
-            var elapsedMs = watch.ElapsedMilliseconds;
-            Logger.Debug(
-                $"DownloadSubtitleAsync ({movie.ImdbCode}) in {elapsedMs} milliseconds.");
+            finally
+            {
+                watch.Stop();
+                var elapsedMs = watch.ElapsedMilliseconds;
+                Logger.Debug(
+                    $"DownloadSubtitleAsync ({movie.ImdbCode}) in {elapsedMs} milliseconds.");
+            }
         }
 
         #endregion
@@ -970,28 +953,27 @@ namespace Popcorn.Services.Movie
             }
             catch (Exception exception) when (exception is TaskCanceledException)
             {
-                watch.Stop();
                 Logger.Debug(
                     "DownloadBackgroundImageAsync cancelled.");
             }
             catch (Exception exception) when (exception is SocketException || exception is WebException)
             {
-                watch.Stop();
                 Logger.Error(
                     $"DownloadBackgroundImageAsync: {exception.Message}");
                 Messenger.Default.Send(new ManageExceptionMessage(exception));
             }
             catch (Exception exception)
             {
-                watch.Stop();
                 Logger.Error(
                     $"DownloadBackgroundImageAsync: {exception.Message}");
             }
-
-            watch.Stop();
-            var elapsedMs = watch.ElapsedMilliseconds;
-            Logger.Debug(
-                $"DownloadBackgroundImageAsync ({movie.ImdbCode}) in {elapsedMs} milliseconds.");
+            finally
+            {
+                watch.Stop();
+                var elapsedMs = watch.ElapsedMilliseconds;
+                Logger.Debug(
+                    $"DownloadBackgroundImageAsync ({movie.ImdbCode}) in {elapsedMs} milliseconds.");
+            }
         }
 
         #endregion
@@ -1025,28 +1007,27 @@ namespace Popcorn.Services.Movie
             }
             catch (Exception exception) when (exception is TaskCanceledException)
             {
-                watch.Stop();
                 Logger.Debug(
                     "DownloadCoverImageAsync cancelled.");
             }
             catch (Exception exception) when (exception is SocketException || exception is WebException)
             {
-                watch.Stop();
                 Logger.Error(
                     $"DownloadCoverImageAsync: {exception.Message}");
                 Messenger.Default.Send(new ManageExceptionMessage(exception));
             }
             catch (Exception exception)
             {
-                watch.Stop();
                 Logger.Error(
                     $"DownloadCoverImageAsync: {exception.Message}");
             }
-
-            watch.Stop();
-            var elapsedMs = watch.ElapsedMilliseconds;
-            Logger.Debug(
-                $"DownloadCoverImageAsync ({string.Join(";", moviesToProcess.Select(movie => movie.ImdbCode))}) in {elapsedMs} milliseconds.");
+            finally
+            {
+                watch.Stop();
+                var elapsedMs = watch.ElapsedMilliseconds;
+                Logger.Debug(
+                    $"DownloadCoverImageAsync ({string.Join(";", moviesToProcess.Select(movie => movie.ImdbCode))}) in {elapsedMs} milliseconds.");
+            }
         }
 
         #endregion
@@ -1087,28 +1068,27 @@ namespace Popcorn.Services.Movie
             }
             catch (Exception exception) when (exception is TaskCanceledException)
             {
-                watch.Stop();
                 Logger.Debug(
                     "DownloadPosterImageAsync cancelled.");
             }
             catch (Exception exception) when (exception is SocketException || exception is WebException)
             {
-                watch.Stop();
                 Logger.Error(
                     $"DownloadPosterImageAsync: {exception.Message}");
                 Messenger.Default.Send(new ManageExceptionMessage(exception));
             }
             catch (Exception exception)
             {
-                watch.Stop();
                 Logger.Error(
                     $"DownloadPosterImageAsync: {exception.Message}");
             }
-
-            watch.Stop();
-            var elapsedMs = watch.ElapsedMilliseconds;
-            Logger.Debug(
-                $"DownloadPosterImageAsync ({movie.ImdbCode}) in {elapsedMs} milliseconds.");
+            finally
+            {
+                watch.Stop();
+                var elapsedMs = watch.ElapsedMilliseconds;
+                Logger.Debug(
+                    $"DownloadPosterImageAsync ({movie.ImdbCode}) in {elapsedMs} milliseconds.");
+            }
         }
 
         #endregion
@@ -1144,28 +1124,27 @@ namespace Popcorn.Services.Movie
             }
             catch (Exception exception) when (exception is TaskCanceledException)
             {
-                watch.Stop();
                 Logger.Debug(
                     "DownloadDirectorImageAsync cancelled.");
             }
             catch (Exception exception) when (exception is SocketException || exception is WebException)
             {
-                watch.Stop();
                 Logger.Error(
                     $"DownloadDirectorImageAsync: {exception.Message}");
                 Messenger.Default.Send(new ManageExceptionMessage(exception));
             }
             catch (Exception exception)
             {
-                watch.Stop();
                 Logger.Error(
                     $"DownloadDirectorImageAsync: {exception.Message}");
             }
-
-            watch.Stop();
-            var elapsedMs = watch.ElapsedMilliseconds;
-            Logger.Debug(
-                $"DownloadDirectorImageAsync ({movie.ImdbCode}) in {elapsedMs} milliseconds.");
+            finally
+            {
+                watch.Stop();
+                var elapsedMs = watch.ElapsedMilliseconds;
+                Logger.Debug(
+                    $"DownloadDirectorImageAsync ({movie.ImdbCode}) in {elapsedMs} milliseconds.");
+            }
         }
 
         #endregion
@@ -1201,28 +1180,27 @@ namespace Popcorn.Services.Movie
             }
             catch (Exception exception) when (exception is TaskCanceledException)
             {
-                watch.Stop();
                 Logger.Debug(
                     "DownloadActorImageAsync cancelled.");
             }
             catch (Exception exception) when (exception is SocketException || exception is WebException)
             {
-                watch.Stop();
                 Logger.Error(
                     $"DownloadActorImageAsync: {exception.Message}");
                 Messenger.Default.Send(new ManageExceptionMessage(exception));
             }
             catch (Exception exception)
             {
-                watch.Stop();
                 Logger.Error(
                     $"DownloadActorImageAsync: {exception.Message}");
             }
-
-            watch.Stop();
-            var elapsedMs = watch.ElapsedMilliseconds;
-            Logger.Debug(
-                $"DownloadActorImageAsync ({movie.ImdbCode}) in {elapsedMs} milliseconds.");
+            finally
+            {
+                watch.Stop();
+                var elapsedMs = watch.ElapsedMilliseconds;
+                Logger.Debug(
+                    $"DownloadActorImageAsync ({movie.ImdbCode}) in {elapsedMs} milliseconds.");
+            }
         }
 
         #endregion

@@ -103,15 +103,15 @@ namespace Popcorn.ViewModels.Tabs
         /// </summary>
         public override async Task LoadMoviesAsync()
         {
+            var watch = Stopwatch.StartNew();
+
+            Page++;
+
+            Logger.Info(
+                $"Loading page {Page}...");
+
             try
             {
-                var watch = Stopwatch.StartNew();
-
-                Page++;
-
-                Logger.Info(
-                    $"Loading page {Page}...");
-
                 IsLoadingMovies = true;
 
                 var movieResults =
@@ -122,7 +122,6 @@ namespace Popcorn.ViewModels.Tabs
                         Genre);
 
                 var movies = movieResults.Item1.ToList();
-                MaxNumberOfMovies = movieResults.Item2;
 
                 foreach (var movie in movies)
                 {
@@ -132,6 +131,7 @@ namespace Popcorn.ViewModels.Tabs
                 IsLoadingMovies = false;
                 IsMovieFound = Movies.Any();
                 CurrentNumberOfMovies = Movies.Count;
+                MaxNumberOfMovies = movieResults.Item2;
 
                 await MovieHistoryService.ComputeMovieHistoryAsync(movies);
                 await MovieService.DownloadCoverImageAsync(movies, CancellationLoadingMovies);
@@ -144,14 +144,12 @@ namespace Popcorn.ViewModels.Tabs
             catch (Exception exception)
             {
                 Page--;
-                Logger.Info(
+                Logger.Error(
                     $"Error while loading page {Page}: {exception.Message}");
             }
             finally
             {
-                IsLoadingMovies = false;
-                IsMovieFound = Movies.Any();
-                CurrentNumberOfMovies = Movies.Count;
+                watch.Stop();
             }
         }
 

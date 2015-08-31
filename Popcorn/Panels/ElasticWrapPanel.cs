@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Windows;
 using System.Windows.Controls;
-using Popcorn.Events;
 
 namespace Popcorn.Panels
 {
@@ -41,7 +40,6 @@ namespace Popcorn.Panels
             {
                 if (_columns == value) return;
                 _columns = value;
-                OnNumberOfColumnsChanged(new NumberOfColumnChangedEventArgs(value));
             }
         }
 
@@ -166,29 +164,6 @@ namespace Popcorn.Panels
             panel.InvalidateMeasure();
             panel.InvalidateArrange();
         }
-
-        #endregion
-
-        #region Events
-
-        #region Event -> NumberOfColumnsChanged
-
-        /// <summary>
-        /// NumberOfColumnsChanged event
-        /// </summary>
-        public event EventHandler<NumberOfColumnChangedEventArgs> NumberOfColumnsChanged;
-
-        /// <summary>
-        /// Inform when the current number of columns changed in the ElasticWrapPanel
-        /// </summary>
-        ///<param name="e">e</param>
-        private void OnNumberOfColumnsChanged(NumberOfColumnChangedEventArgs e)
-        {
-            var handler = NumberOfColumnsChanged;
-            handler?.Invoke(this, e);
-        }
-
-        #endregion
 
         #endregion
 
