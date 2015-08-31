@@ -10,9 +10,9 @@ using Popcorn.Entity;
 using Popcorn.Entity.Cast;
 using Popcorn.Entity.Movie;
 using Popcorn.Models.Genre;
-using Popcorn.Models.Torrent.Deserialized;
 using MovieFull = Popcorn.Models.Movie.Full.MovieFull;
 using MovieShort = Popcorn.Models.Movie.Short.MovieShort;
+using Torrent = Popcorn.Models.Torrent.Torrent;
 
 namespace Popcorn.Services.History
 {
@@ -361,12 +361,12 @@ namespace Popcorn.Services.History
         /// <returns>Short movie model</returns>
         private static MovieShort MovieShortFromEntityToModel(Entity.Movie.MovieShort movie)
         {
-            var torrents = movie.Torrents.Select(torrent => new TorrentDeserialized
+            var torrents = movie.Torrents.Select(torrent => new Torrent
             {
                 DateUploaded = torrent.DateUploaded,
                 Url = torrent.Url,
                 Quality = torrent.Quality,
-                DateUploadedMix = torrent.DateUploadedMix,
+                DateUploadedUnix = torrent.DateUploadedMix,
                 Framerate = torrent.Framerate,
                 Hash = torrent.Hash,
                 Peers = torrent.Peers,
@@ -416,12 +416,12 @@ namespace Popcorn.Services.History
         /// <returns>Short movie entity</returns>
         private static Entity.Movie.MovieShort MovieShortFromModelToEntity(MovieShort movie)
         {
-            var torrents = movie.Torrents.Select(torrent => new Torrent
+            var torrents = movie.Torrents.Select(torrent => new Entity.Movie.Torrent
             {
                 DateUploaded = torrent.DateUploaded,
                 Url = torrent.Url,
                 Quality = torrent.Quality,
-                DateUploadedMix = torrent.DateUploadedMix,
+                DateUploadedMix = torrent.DateUploadedUnix,
                 Framerate = torrent.Framerate,
                 Hash = torrent.Hash,
                 Peers = torrent.Peers,
@@ -478,12 +478,12 @@ namespace Popcorn.Services.History
         /// <returns>Full movie entity</returns>
         private static Entity.Movie.MovieFull MovieFullFromModelToEntity(MovieFull movie)
         {
-            var torrents = movie.Torrents.Select(torrent => new Torrent
+            var torrents = movie.Torrents.Select(torrent => new Entity.Movie.Torrent
             {
                 DateUploaded = torrent.DateUploaded,
                 Url = torrent.Url,
                 Quality = torrent.Quality,
-                DateUploadedMix = torrent.DateUploadedMix,
+                DateUploadedMix = torrent.DateUploadedUnix,
                 Framerate = torrent.Framerate,
                 Hash = torrent.Hash,
                 Peers = torrent.Peers,

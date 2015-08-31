@@ -41,12 +41,7 @@ namespace Popcorn.Converters
             System.Globalization.CultureInfo culture)
         {
             var windowState = (WindowState) value;
-            if (windowState == WindowState.Minimized || windowState == WindowState.Normal)
-            {
-                return false;
-            }
-
-            return true;
+            return windowState != WindowState.Minimized && windowState != WindowState.Normal;
         }
 
         #endregion

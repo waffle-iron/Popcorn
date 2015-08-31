@@ -9,6 +9,8 @@ namespace Popcorn.Panels
     /// </summary>
     public class ElasticWrapPanel : Panel
     {
+        private int _columns;
+
         #region DependencyProperties
 
         #region DependencyProperty -> DesiredColumnWidthProperty
@@ -25,25 +27,6 @@ namespace Popcorn.Panels
         #endregion
 
         #region Properties
-
-        #region Property -> Columns
-
-        /// <summary>
-        /// Columns
-        /// </summary>
-        private int _columns;
-
-        private int Columns
-        {
-            get { return _columns; }
-            set
-            {
-                if (_columns == value) return;
-                _columns = value;
-            }
-        }
-
-        #endregion
 
         #region Property -> DesiredColumnWidth
 
@@ -76,7 +59,7 @@ namespace Popcorn.Panels
                 availableSize.Height = MaxHeight;
             }
 
-            Columns = (int) (availableSize.Width/DesiredColumnWidth);
+            _columns = (int) (availableSize.Width/DesiredColumnWidth);
 
             foreach (UIElement child in Children)
             {
@@ -97,8 +80,8 @@ namespace Popcorn.Panels
         /// <returns>Computed arranged size</returns>
         protected override Size ArrangeOverride(Size finalSize)
         {
-            if (Columns == 0) return base.ArrangeOverride(finalSize);
-            var columnWidth = Math.Floor(finalSize.Width/Columns);
+            if (_columns == 0) return base.ArrangeOverride(finalSize);
+            var columnWidth = Math.Floor(finalSize.Width/_columns);
             var totalHeight = 0.0;
             var top = 0.0;
             var rowHeight = 0.0;
@@ -112,13 +95,13 @@ namespace Popcorn.Panels
                 // Compute the tile size and position
                 child.Arrange(new Rect(columnWidth*column, top, columnWidth, child.DesiredSize.Height));
                 column++;
-                rowHeight = Children.Count >= Columns
+                rowHeight = Children.Count >= _columns
                     ? Math.Max(rowHeight, child.DesiredSize.Height)
                     : Math.Min(rowHeight, child.DesiredSize.Height);
                 index++;
 
                 // Check if the current element is at the end of a row and add an height overflow to get enough space for the next elements of the second row
-                if (column == Columns && Children.Count != index && (Children.Count - index + 1) <= Columns &&
+                if (column == _columns && Children.Count != index && (Children.Count - index + 1) <= _columns &&
                     !overflowAlreadyCount)
                 {
                     overflow = rowHeight;
@@ -133,15 +116,15 @@ namespace Popcorn.Panels
                     }
                 }
 
-                if (column != Columns) continue;
+                if (column != _columns) continue;
                 column = 0;
                 top += rowHeight;
                 rowHeight = 0;
             }
 
-            if (Children.Count >= Columns)
+            if (Children.Count >= _columns)
             {
-                totalHeight = totalHeight/Columns + overflow;
+                totalHeight = totalHeight/_columns + overflow;
             }
 
             Height = totalHeight;

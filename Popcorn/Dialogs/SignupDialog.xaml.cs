@@ -38,8 +38,6 @@ namespace Popcorn.Dialogs
 
         public string Message { get; }
 
-        public string SignupButtonText { get; }
-
         public string UsernameWatermark { get; }
 
         public string FirstNameWatermark { get; }

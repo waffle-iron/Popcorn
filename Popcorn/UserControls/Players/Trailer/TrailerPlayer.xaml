@@ -47,20 +47,32 @@
                            Grid.Column="0"
                            Background="#FF2F2F2F"
                            Visibility="Collapsed">
-                <Button Command="MediaCommands.Pause" Style="{StaticResource {x:Static ToolBar.ButtonStyleKey}}">
-                    <Image Width="20"
-                           Height="20"
-                           Source="../../../Resources/Images/Pause.png" />
+                <Button Margin="5,0,5,0"
+                        Command="MediaCommands.Pause"
+                        Style="{DynamicResource ChromelessButtonStyle}">
+                    <Canvas Width="15" Height="15">
+                        <Path Width="15"
+                              Height="15"
+                              Data="F1 M 26.9167,23.75L 33.25,23.75L 33.25,52.25L 26.9167,52.25L 26.9167,23.75 Z M 42.75,23.75L 49.0833,23.75L 49.0833,52.25L 42.75,52.25L 42.75,23.75 Z "
+                              Fill="White"
+                              Stretch="Fill" />
+                    </Canvas>
                 </Button>
             </StatusBarItem>
             <StatusBarItem x:Name="MediaPlayerStatusBarItemPlay"
                            Grid.Column="0"
                            Background="#FF2F2F2F"
                            Visibility="Collapsed">
-                <Button Command="MediaCommands.Play" Style="{StaticResource {x:Static ToolBar.ButtonStyleKey}}">
-                    <Image Width="20"
-                           Height="20"
-                           Source="../../../Resources/Images/Play.png" />
+                <Button Margin="5,0,5,0"
+                        Command="MediaCommands.Play"
+                        Style="{DynamicResource ChromelessButtonStyle}">
+                    <Canvas Width="15" Height="15">
+                        <Path Width="15"
+                              Height="15"
+                              Data="F1 M 30.0833,22.1667L 50.6665,37.6043L 50.6665,38.7918L 30.0833,53.8333L 30.0833,22.1667 Z "
+                              Fill="White"
+                              Stretch="Fill" />
+                    </Canvas>
                 </Button>
             </StatusBarItem>
             <StatusBarItem Grid.Column="1" Background="#FF2F2F2F">
@@ -78,8 +90,7 @@
                         ValueChanged="MediaSliderProgressValueChanged" />
             </StatusBarItem>
             <StatusBarItem Grid.Column="3" Background="#FF2F2F2F">
-                <Slider x:Name="MoviePlayerVolume"
-                        Width="100"
+                <Slider Width="100"
                         Height="10"
                         LargeChange="10"
                         Maximum="200"
@@ -90,15 +101,11 @@
                                         RelativeSource={RelativeSource AncestorType={x:Type UserControl}}}" />
             </StatusBarItem>
             <StatusBarItem Grid.Column="4" Background="#FF2F2F2F">
-                <ToggleButton x:Name="ToggleFullScreenButton"
-                              Width="39"
+                <ToggleButton Width="39"
                               Height="39"
                               IsChecked="{Binding Main.IsFullScreen}"
                               Style="{DynamicResource MetroCircleToggleButtonStyle}">
-                    <Canvas x:Name="appbar_arrow_expand"
-                            Width="15"
-                            Height="15"
-                            Clip="F1 M 0,0L 76,0L 76,76L 0,76L 0,0">
+                    <Canvas Width="15" Height="15">
                         <Path x:Name="CanvasFullScreen"
                               Width="15"
                               Height="15"
@@ -124,17 +131,12 @@
                 </ToggleButton>
             </StatusBarItem>
             <StatusBarItem Grid.Column="5" Background="#FF2F2F2F">
-                <ToggleButton x:Name="Close"
-                              Width="39"
+                <ToggleButton Width="39"
                               Height="39"
                               Command="{Binding StopPlayingMediaCommand}"
                               Style="{DynamicResource MetroCircleToggleButtonStyle}">
-                    <Canvas x:Name="appbar_close"
-                            Width="15"
-                            Height="15"
-                            Clip="F1 M 0,0L 76,0L 76,76L 0,76L 0,0">
-                        <Path x:Name="CanvasClose"
-                              Width="15"
+                    <Canvas Width="15" Height="15">
+                        <Path Width="15"
                               Height="15"
                               Data="F1 M 26.9166,22.1667L 37.9999,33.25L 49.0832,22.1668L 53.8332,26.9168L 42.7499,38L 53.8332,49.0834L 49.0833,53.8334L 37.9999,42.75L 26.9166,53.8334L 22.1666,49.0833L 33.25,38L 22.1667,26.9167L 26.9166,22.1667 Z "
                               Fill="White"

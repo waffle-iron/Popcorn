@@ -1,6 +1,5 @@
 ﻿using System.Collections.Generic;
 using GalaSoft.MvvmLight;
-using Popcorn.Models.Torrent.Deserialized;
 using RestSharp.Deserializers;
 
 namespace Popcorn.Models.Movie.Short
@@ -132,10 +131,10 @@ namespace Popcorn.Models.Movie.Short
         [DeserializeAs(Name = "state")]
         public string State { get; set; }
 
-        private List<TorrentDeserialized> _torrents;
+        private List<Torrent.Torrent> _torrents;
 
         [DeserializeAs(Name = "torrents")]
-        public List<TorrentDeserialized> Torrents
+        public List<Torrent.Torrent> Torrents
         {
             get { return _torrents; }
             set { Set(() => Torrents, ref _torrents, value); }

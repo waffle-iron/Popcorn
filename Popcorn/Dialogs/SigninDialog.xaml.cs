@@ -30,10 +30,6 @@ namespace Popcorn.Dialogs
 
         public string Message { get; }
 
-        public string SigninButtonText { get; }
-
-        public string SignupButtonText { get; }
-
         public string UsernameWatermark { get; }
 
         public string PasswordWatermark { get; }

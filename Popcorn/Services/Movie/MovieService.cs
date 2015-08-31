@@ -21,7 +21,6 @@ using Popcorn.Models.Genre;
 using Popcorn.Models.Movie.Full;
 using Popcorn.Models.Movie.Short;
 using Popcorn.Models.Subtitle;
-using Popcorn.Models.Subtitle.Json;
 using TMDbLib.Objects.General;
 
 namespace Popcorn.Services.Movie
@@ -778,7 +777,7 @@ namespace Popcorn.Services.Movie
 
             try
             {
-                var response = await restClient.ExecuteGetTaskAsync<SubtitlesWrapperDeserialized>(request, ct);
+                var response = await restClient.ExecuteGetTaskAsync<SubtitlesWrapper>(request, ct);
                 if (response.ErrorException != null)
                 {
                     Logger.Error(
@@ -789,7 +788,7 @@ namespace Popcorn.Services.Movie
                 var wrapper = response.Data;
 
                 var subtitles = new ObservableCollection<Subtitle>();
-                Dictionary<string, List<SubtitleDeserialized>> movieSubtitles;
+                Dictionary<string, List<Subtitle>> movieSubtitles;
                 if (wrapper.Subtitles.TryGetValue(movie.ImdbCode, out movieSubtitles))
                 {
                     foreach (var subtitle in movieSubtitles)

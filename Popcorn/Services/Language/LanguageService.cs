@@ -4,7 +4,6 @@ using NLog;
 using System.Collections.Generic;
 using System.Data.Entity;
 using System.Data.Entity.Migrations;
-using System.Data.SqlServerCe;
 using System.Diagnostics;
 using System.Globalization;
 using System.Linq;

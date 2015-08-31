@@ -4,7 +4,6 @@ using System.Collections.Generic;
 using GalaSoft.MvvmLight;
 using Popcorn.Models.Cast;
 using Popcorn.Models.Images;
-using Popcorn.Models.Torrent.Deserialized;
 using RestSharp.Deserializers;
 
 namespace Popcorn.Models.Movie.Full
@@ -223,10 +222,10 @@ namespace Popcorn.Models.Movie.Full
             set { Set(() => Actors, ref _actors, value); }
         }
 
-        private List<TorrentDeserialized> _torrents;
+        private List<Torrent.Torrent> _torrents;
 
         [DeserializeAs(Name = "torrents")]
-        public List<TorrentDeserialized> Torrents
+        public List<Torrent.Torrent> Torrents
         {
             get { return _torrents; }
             set { Set(() => Torrents, ref _torrents, value); }

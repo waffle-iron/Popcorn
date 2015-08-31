@@ -101,7 +101,7 @@ namespace Popcorn.Controls
         {
             InitializeComponent();
             DisplayText.Text =
-                $"{LocalizationProviderHelper.GetLocalizedValue<string>("BufferingLabel")} : {Math.Round(DownloadProgress*50, 0)} % ({DownloadRate} kB/s)";
+                $"{LocalizationProviderHelper.GetLocalizedValue<string>("BufferingLabel")} : {Math.Round(DownloadProgress*50.0, 0)} % ({DownloadRate} kB/s)";
         }
 
         #endregion
@@ -135,9 +135,9 @@ namespace Popcorn.Controls
             }
             else
             {
-                DisplayText.Text = DownloadRate >= 1000
-                    ? $"{LocalizationProviderHelper.GetLocalizedValue<string>("BufferingLabel")} : {Math.Round(DownloadProgress*50, 0)} % ({DownloadRate/1000} MB/s)"
-                    : $"{LocalizationProviderHelper.GetLocalizedValue<string>("BufferingLabel")} : {Math.Round(DownloadProgress*50, 0)} % ({DownloadRate} kB/s)";
+                DisplayText.Text = DownloadRate >= 1000.0
+                    ? $"{LocalizationProviderHelper.GetLocalizedValue<string>("BufferingLabel")} : {Math.Round(DownloadProgress*50.0, 0)} % ({DownloadRate/1000.0} MB/s)"
+                    : $"{LocalizationProviderHelper.GetLocalizedValue<string>("BufferingLabel")} : {Math.Round(DownloadProgress*50.0, 0)} % ({DownloadRate} kB/s)";
             }
         }
 

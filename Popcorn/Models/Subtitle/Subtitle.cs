@@ -1,13 +1,50 @@
 ﻿using System;
+using GalaSoft.MvvmLight;
 using Popcorn.Models.Localization;
-using Popcorn.Models.Subtitle.Json;
 using Popcorn.Helpers;
+using RestSharp.Deserializers;
 
 namespace Popcorn.Models.Subtitle
 {
-    public class Subtitle : SubtitleDeserialized, IComparable<Subtitle>
+    public class Subtitle : ObservableObject, IComparable<Subtitle>
     {
         #region Properties
+
+        private int _id;
+
+        [DeserializeAs(Name = "id")]
+        public int Id
+        {
+            get { return _id; }
+            set { Set(() => Id, ref _id, value); }
+        }
+
+        private int _hi;
+
+        [DeserializeAs(Name = "hi")]
+        public int Hi
+        {
+            get { return _hi; }
+            set { Set(() => Hi, ref _hi, value); }
+        }
+
+        private int _rating;
+
+        [DeserializeAs(Name = "rating")]
+        public int Rating
+        {
+            get { return _rating; }
+            set { Set(() => Rating, ref _rating, value); }
+        }
+
+        private string _url;
+
+        [DeserializeAs(Name = "url")]
+        public string Url
+        {
+            get { return _url; }
+            set { Set(() => Url, ref _url, value); }
+        }
 
         #region Property -> Language
 

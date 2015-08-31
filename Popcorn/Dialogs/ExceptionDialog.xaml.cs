@@ -30,7 +30,7 @@ namespace Popcorn.Dialogs
 
         internal Task WaitForButtonPressAsync()
         {
-            TaskCompletionSource<object> tcs = new TaskCompletionSource<object>();
+            var tcs = new TaskCompletionSource<object>();
 
             RoutedEventHandler okHandler = null;
             KeyEventHandler okKeyHandler = null;
