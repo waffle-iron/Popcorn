@@ -1,78 +1,81 @@
 ﻿<UserControl x:Class="Popcorn.UserControls.MovieSettings.MovieSettings"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
-             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:controls="http://metro.mahapps.com/winfx/xaml/controls"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:lex="http://wpflocalizeextension.codeplex.com"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:movieSettings="clr-namespace:Popcorn.ViewModels.MovieSettings"
              xmlns:subtitlesUserControl="clr-namespace:Popcorn.UserControls.Subtitles"
              xmlns:subtitlesViewModel="clr-namespace:Popcorn.ViewModels.Subtitles"
-             xmlns:lex="http://wpflocalizeextension.codeplex.com"
-             xmlns:movieSettings="clr-namespace:Popcorn.ViewModels.MovieSettings"
+             d:DataContext="{d:DesignInstance movieSettings:MovieSettingsViewModel}"
+             d:DesignHeight="300"
+             d:DesignWidth="300"
              lex:LocalizeDictionary.DesignCulture="en"
              lex:ResxLocalizationProvider.DefaultAssembly="Popcorn"
              lex:ResxLocalizationProvider.DefaultDictionary="Resources"
-             mc:Ignorable="d" 
-             d:DesignHeight="300" d:DesignWidth="300"
-             d:DataContext="{d:DesignInstance movieSettings:MovieSettingsViewModel}">
+             mc:Ignorable="d">
     <UserControl.Resources>
         <ResourceDictionary>
             <DataTemplate DataType="{x:Type subtitlesViewModel:SubtitlesViewModel}">
-                <subtitlesUserControl:Subtitles></subtitlesUserControl:Subtitles>
+                <subtitlesUserControl:Subtitles />
             </DataTemplate>
         </ResourceDictionary>
     </UserControl.Resources>
 
     <Grid Margin="50">
         <Grid.RowDefinitions>
-            <RowDefinition Height="Auto"></RowDefinition>
-            <RowDefinition Height="*"></RowDefinition>
-            <RowDefinition Height="Auto"></RowDefinition>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+            <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
         <Grid.Resources>
             <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Controls.AnimatedSingleRowTabControl.xaml" />
         </Grid.Resources>
-        <TextBlock Grid.Row="0" 
-                   Text="{lex:LocText MovieSettingsLabel}" 
-                   FontSize="42" 
-                   Margin="15,0,0,10"></TextBlock>
-        <TabControl Grid.Row="1" 
-                    controls:TabControlHelper.IsUnderlined="True" 
+        <TextBlock Grid.Row="0"
+                   Margin="15,0,0,10"
+                   FontSize="42"
+                   Text="{lex:LocText MovieSettingsLabel}" />
+        <TabControl Grid.Row="1"
+                    controls:TabControlHelper.IsUnderlined="True"
                     controls:TabControlHelper.Transition="LeftReplace">
-            <TabItem Header="{lex:LocText SubtitlesLabel}" FontSize="14">
+            <TabItem FontSize="14" Header="{lex:LocText SubtitlesLabel}">
                 <Grid Margin="10">
                     <Grid.RowDefinitions>
-                        <RowDefinition Height="Auto"></RowDefinition>
-                        <RowDefinition Height="*"></RowDefinition>
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="*" />
                     </Grid.RowDefinitions>
-                    <controls:ToggleSwitch OnLabel="{lex:LocText OnLabel}"
-                                           OffLabel="{lex:LocText OffLabel}"
-                                           Grid.Row="0"
+                    <controls:ToggleSwitch Grid.Row="0"
                                            HorizontalAlignment="Left"
-                                           CheckChangedCommand="{Binding SetSubtitlesCommand}"/>
-                    <ContentControl Content="{Binding Subtitles}"
-                                    Grid.Row="1"
-                                    Margin="0,10,0,0"/>
+                                           CheckChangedCommand="{Binding SetSubtitlesCommand}"
+                                           OffLabel="{lex:LocText OffLabel}"
+                                           OnLabel="{lex:LocText OnLabel}" />
+                    <ContentControl Grid.Row="1"
+                                    Margin="0,10,0,0"
+                                    Content="{Binding Subtitles}" />
                 </Grid>
             </TabItem>
-            <TabItem Header="{lex:LocText MovieQualityLabel}" FontSize="14">
-                <controls:ToggleSwitch IsChecked="{Binding Movie.WatchInFullHdQuality}"
+            <TabItem FontSize="14" Header="{lex:LocText MovieQualityLabel}">
+                <controls:ToggleSwitch Margin="10"
+                                       HorizontalAlignment="Left"
+                                       IsChecked="{Binding Movie.WatchInFullHdQuality}"
                                        IsEnabled="{Binding Movie.FullHdAvailable}"
-                                       OnLabel="1080"
                                        OffLabel="720"
-                                       Margin="10"
-                                       HorizontalAlignment="Left"/>
+                                       OnLabel="1080" />
             </TabItem>
         </TabControl>
-        <StackPanel Grid.Row="2" Orientation="Horizontal" HorizontalAlignment="Center">
+        <StackPanel Grid.Row="2"
+                    HorizontalAlignment="Center"
+                    Orientation="Horizontal">
             <Button Width="100"
                     Height="30"
-                    Content="{lex:LocText CancelButton}"
-                    Command="{Binding CancelCommand}"/>
+                    Command="{Binding CancelCommand}"
+                    Content="{lex:LocText CancelButton}" />
             <Button Width="100"
                     Height="30"
                     Margin="10,0,0,0"
-                    Content="{lex:LocText PlayLabel}"
-                    Command="{Binding DownloadMovieCommand}" />
+                    Command="{Binding DownloadMovieCommand}"
+                    Content="{lex:LocText PlayLabel}" />
         </StackPanel>
     </Grid>
 </UserControl>

@@ -772,7 +772,6 @@ namespace Popcorn.Services.Movie
         {
             var watch = Stopwatch.StartNew();
 
-            var wrapper = new SubtitlesWrapperDeserialized();
             var restClient = new RestClient(Constants.YifySubtitlesApi);
             var request = new RestRequest("/{segment}", Method.GET);
             request.AddUrlSegment("segment", movie.ImdbCode);
@@ -787,7 +786,7 @@ namespace Popcorn.Services.Movie
                     return;
                 }
 
-                wrapper = response.Data;
+                var wrapper = response.Data;
 
                 var subtitles = new ObservableCollection<Subtitle>();
                 Dictionary<string, List<SubtitleDeserialized>> movieSubtitles;
