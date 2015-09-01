@@ -18,8 +18,8 @@ At this time, only Windows 7+ is supported (Windows 7, 8, 8.1, 10 | 32/64 Bits).
 ## Can I help you?
 Of course yes! Any pull-request will be considered.
 
-## Visual Studio .sln
+## Visual Studio
 The solution is built using Visual Studio 2015.
 
-## Updates
-Automatic incremental updates are checked and installed on startup if any. Releases are stored on Azure Storage and updates are managed using Squirrel.Windows. 
+## Installer
+Download full installer [here](https://github.com/bbougot/Popcorn/releases/download/1.0.7/Setup.exe)
