@@ -56,8 +56,11 @@ namespace Popcorn.Services.Language
         /// </summary>
         public LanguageService()
         {
-            ApplicationService = SimpleIoc.Default.GetInstance<ApplicationSettingsService>();
-            MovieService = SimpleIoc.Default.GetInstance<MovieService>();
+            if (SimpleIoc.Default.IsRegistered<ApplicationSettingsService>())
+                ApplicationService = SimpleIoc.Default.GetInstance<ApplicationSettingsService>();
+
+            if (SimpleIoc.Default.IsRegistered<MovieService>())
+                MovieService = SimpleIoc.Default.GetInstance<MovieService>();
         }
 
         #endregion

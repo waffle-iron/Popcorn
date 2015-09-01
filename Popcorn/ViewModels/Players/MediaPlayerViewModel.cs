@@ -50,9 +50,8 @@ namespace Popcorn.ViewModels.Players
         /// </summary>
         protected MediaPlayerViewModel()
         {
-            Logger.Debug("Initializing a new instance of MediaPlayerViewModel");
-
-            Main = SimpleIoc.Default.GetInstance<MainViewModel>();
+            if (SimpleIoc.Default.IsRegistered<MainViewModel>())
+                Main = SimpleIoc.Default.GetInstance<MainViewModel>();
         }
 
         #endregion

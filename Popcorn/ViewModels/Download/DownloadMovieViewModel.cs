@@ -191,7 +191,9 @@ namespace Popcorn.ViewModels.Download
             RegisterMessages();
             RegisterCommands();
             CancellationDownloadingMovie = new CancellationTokenSource();
-            MovieService = SimpleIoc.Default.GetInstance<MovieService>();
+            if (SimpleIoc.Default.IsRegistered<MovieService>())
+                MovieService = SimpleIoc.Default.GetInstance<MovieService>();
+
             Movie = movie;
             MovieSettings = new MovieSettingsViewModel(movie);
         }
@@ -317,8 +319,14 @@ namespace Popcorn.ViewModels.Download
                     {
                         SavePath = Constants.MovieDownloads,
                         Url = torrentUrl,
-                        DownloadLimit = SimpleIoc.Default.GetInstance<SettingsViewModel>().DownloadLimit*1024,
-                        UploadLimit = SimpleIoc.Default.GetInstance<SettingsViewModel>().UploadLimit*1024
+                        DownloadLimit =
+                            SimpleIoc.Default.IsRegistered<SettingsViewModel>()
+                                ? SimpleIoc.Default.GetInstance<SettingsViewModel>().DownloadLimit*1024
+                                : 0,
+                        UploadLimit =
+                            SimpleIoc.Default.IsRegistered<SettingsViewModel>()
+                                ? SimpleIoc.Default.GetInstance<SettingsViewModel>().UploadLimit*1024
+                                : 0
                     };
 
                     var handle = session.AddTorrent(addParams);

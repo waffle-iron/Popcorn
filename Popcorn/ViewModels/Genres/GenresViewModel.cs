@@ -62,7 +62,8 @@ namespace Popcorn.ViewModels.Genres
         {
             RegisterMessages();
             CancellationLoadingGenres = new CancellationTokenSource();
-            _movieService = SimpleIoc.Default.GetInstance<MovieService>();
+            if(SimpleIoc.Default.IsRegistered<MovieService>())
+               _movieService = SimpleIoc.Default.GetInstance<MovieService>();
         }
 
         #region Methods

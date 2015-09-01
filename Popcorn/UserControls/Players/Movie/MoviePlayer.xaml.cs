@@ -7,8 +7,6 @@ using System.Windows.Input;
 using System.Windows.Media.Animation;
 using System.Windows.Threading;
 using GalaSoft.MvvmLight.Threading;
-using NLog;
-using xZune.Vlc.Interop.Media;
 using Popcorn.ViewModels.Players.Movie;
 
 namespace Popcorn.UserControls.Players.Movie
@@ -18,14 +16,7 @@ namespace Popcorn.UserControls.Players.Movie
     /// </summary>
     public partial class MoviePlayer : IDisposable
     {
-        #region Logger
-
-        /// <summary>
-        /// Logger of the class
-        /// </summary>
-        private static readonly Logger Logger = LogManager.GetCurrentClassLogger();
-
-        #endregion
+        private bool _isMouseActivityCaptured;
 
         #region Property -> Volume
 
@@ -58,13 +49,9 @@ namespace Popcorn.UserControls.Players.Movie
         /// </summary>
         public MoviePlayer()
         {
-            Logger.Debug(
-                "Initializing a new instance of MoviePlayer.");
-
             InitializeComponent();
 
             Loaded += OnLoaded;
-            Unloaded += OnUnloaded;
         }
 
         #endregion
@@ -78,65 +65,41 @@ namespace Popcorn.UserControls.Players.Movie
         /// <param name="e">EventArgs</param>
         private void OnLoaded(object sender, EventArgs e)
         {
-            if (Player.State == MediaState.Paused)
+            var window = Window.GetWindow(this);
+            if (window != null)
             {
+                window.Closing += (s1, e1) => Dispose();
+            }
+
+            var vm = DataContext as MoviePlayerViewModel;
+            if (vm != null)
+            {
+                if (vm.Movie.FilePath == null)
+                    return;
+
+                // start the timer used to report time on MediaPlayerSliderProgress
+                MediaPlayerTimer = new DispatcherTimer {Interval = TimeSpan.FromSeconds(1)};
+                MediaPlayerTimer.Tick += MediaPlayerTimerTick;
+                MediaPlayerTimer.Start();
+
+                // start the activity timer used to manage visibility of the PlayerStatusBar
+                ActivityTimer = new DispatcherTimer {Interval = TimeSpan.FromSeconds(4)};
+                ActivityTimer.Tick += OnInactivity;
+                ActivityTimer.Start();
+
+                InputManager.Current.PreProcessInput += OnActivity;
+
+                vm.StoppedPlayingMedia += OnStoppedPlayingMedia;
+                Player.VlcMediaPlayer.EndReached += MediaPlayerEndReached;
+
+                if (!string.IsNullOrEmpty(vm.Movie.SelectedSubtitle?.FilePath))
+                {
+                    Player.AddOption("--sub-file = " + vm.Movie.SelectedSubtitle.FilePath);
+                }
+
+                Player.LoadMedia(vm.Movie.FilePath);
                 PlayMedia();
             }
-            else
-            {
-                var window = Window.GetWindow(this);
-                if (window != null)
-                {
-                    window.Closing += (s1, e1) => Dispose();
-                }
-
-                var vm = DataContext as MoviePlayerViewModel;
-                if (vm != null)
-                {
-                    if (vm.Movie.FilePath == null)
-                        return;
-
-                    // start the timer used to report time on MediaPlayerSliderProgress
-                    MediaPlayerTimer = new DispatcherTimer {Interval = TimeSpan.FromSeconds(1)};
-                    MediaPlayerTimer.Tick += MediaPlayerTimerTick;
-                    MediaPlayerTimer.Start();
-
-                    // start the activity timer used to manage visibility of the PlayerStatusBar
-                    ActivityTimer = new DispatcherTimer {Interval = TimeSpan.FromSeconds(3)};
-                    ActivityTimer.Tick += OnInactivity;
-                    ActivityTimer.Start();
-
-                    InputManager.Current.PreProcessInput += OnActivity;
-
-                    vm.StoppedPlayingMedia += OnStoppedPlayingMedia;
-                    Player.VlcMediaPlayer.EndReached += MediaPlayerEndReached;
-
-                    Player.LoadMedia(vm.Movie.FilePath);
-                    if (!string.IsNullOrEmpty(vm.Movie.SelectedSubtitle?.FilePath))
-                    {
-                        Player.AddOption("--sub-file = " + vm.Movie.SelectedSubtitle.FilePath);
-                    }
-
-                    PlayMedia();
-                }
-            }
-        }
-
-        #endregion
-
-        #region Method -> OnUnloaded
-
-        /// <summary>
-        /// Pause media when control has been unloaded
-        /// </summary>
-        /// <param name="sender">Sender object</param>
-        /// <param name="e">EventArgs</param>
-        private void OnUnloaded(object sender, EventArgs e)
-        {
-            Logger.Debug(
-                "MoviePlayer unloaded.");
-
-            PauseMedia();
         }
 
         #endregion
@@ -199,9 +162,6 @@ namespace Popcorn.UserControls.Players.Movie
         /// <param name="e">EventArgs</param>
         private void MediaPlayerEndReached(object sender, EventArgs e)
         {
-            Logger.Info(
-                "Movie's end reached.");
-
             DispatcherHelper.CheckBeginInvokeOnUI(async () =>
             {
                 var vm = DataContext as MoviePlayerViewModel;
@@ -221,9 +181,6 @@ namespace Popcorn.UserControls.Players.Movie
         /// </summary>
         private void PlayMedia()
         {
-            Logger.Debug(
-                "Playing movie.");
-
             Player.Play();
             MediaPlayerIsPlaying = true;
 
@@ -240,9 +197,6 @@ namespace Popcorn.UserControls.Players.Movie
         /// </summary>
         private void PauseMedia()
         {
-            Logger.Debug(
-                "Pausing movie.");
-
             Player.PauseOrResume();
             MediaPlayerIsPlaying = false;
 
@@ -261,9 +215,6 @@ namespace Popcorn.UserControls.Players.Movie
         /// <param name="e">EventArgs</param>
         private void OnStoppedPlayingMedia(object sender, EventArgs e)
         {
-            Logger.Debug(
-                "Stop playing the movie.");
-
             Dispose();
         }
 
@@ -378,8 +329,6 @@ namespace Popcorn.UserControls.Players.Movie
         /// <param name="e">ExecutedRoutedEventArgs</param>
         private void MediaPlayerPlayExecuted(object sender, ExecutedRoutedEventArgs e)
         {
-            Logger.Debug(
-                "Play the movie.");
             PlayMedia();
         }
 
@@ -394,9 +343,6 @@ namespace Popcorn.UserControls.Players.Movie
         /// <param name="e">CanExecuteRoutedEventArgs</param>
         private void MediaPlayerPauseExecuted(object sender, ExecutedRoutedEventArgs e)
         {
-            Logger.Debug(
-                "Pause the movie.");
-
             PauseMedia();
         }
 
@@ -411,18 +357,13 @@ namespace Popcorn.UserControls.Players.Movie
         /// <param name="e">EventArgs</param>
         private void OnInactivity(object sender, EventArgs e)
         {
-            // remember mouse position
             InactiveMousePosition = Mouse.GetPosition(Container);
-
-            if (!PlayerStatusBar.Opacity.Equals(1.0))
-                return;
 
             var opacityAnimation = new DoubleAnimationUsingKeyFrames
             {
                 Duration = new Duration(TimeSpan.FromSeconds(0.5)),
                 KeyFrames = new DoubleKeyFrameCollection
                 {
-                    new EasingDoubleKeyFrame(1.0, KeyTime.FromPercent(0)),
                     new EasingDoubleKeyFrame(0.0, KeyTime.FromPercent(1.0), new PowerEase
                     {
                         EasingMode = EasingMode.EaseInOut
@@ -431,11 +372,6 @@ namespace Popcorn.UserControls.Players.Movie
             };
 
             PlayerStatusBar.BeginAnimation(OpacityProperty, opacityAnimation);
-            DispatcherHelper.CheckBeginInvokeOnUI(async () =>
-            {
-                await Task.Delay(500);
-                PlayerStatusBar.Visibility = Visibility.Hidden;
-            });
         }
 
         #endregion
@@ -447,30 +383,38 @@ namespace Popcorn.UserControls.Players.Movie
         /// </summary>
         /// <param name="sender">Sender object</param>
         /// <param name="e">EventArgs</param>
-        private void OnActivity(object sender, PreProcessInputEventArgs e)
+        private async void OnActivity(object sender, PreProcessInputEventArgs e)
         {
+            if (_isMouseActivityCaptured)
+                return;
+
+            _isMouseActivityCaptured = true;
+
             var inputEventArgs = e.StagingItem.Input;
-            if (!(inputEventArgs is MouseEventArgs) && !(inputEventArgs is KeyboardEventArgs)) return;
-            var input = e.StagingItem.Input as MouseEventArgs;
+            if (!(inputEventArgs is MouseEventArgs) && !(inputEventArgs is KeyboardEventArgs))
+            {
+                _isMouseActivityCaptured = false;
+                return;
+            }
+            var mouseEventArgs = e.StagingItem.Input as MouseEventArgs;
 
             // no button is pressed and the position is still the same as the application became inactive
-            if (input?.LeftButton == MouseButtonState.Released &&
-                input.RightButton == MouseButtonState.Released &&
-                input.MiddleButton == MouseButtonState.Released &&
-                input.XButton1 == MouseButtonState.Released &&
-                input.XButton2 == MouseButtonState.Released &&
-                InactiveMousePosition == input.GetPosition(Container))
+            if (mouseEventArgs?.LeftButton == MouseButtonState.Released &&
+                mouseEventArgs.RightButton == MouseButtonState.Released &&
+                mouseEventArgs.MiddleButton == MouseButtonState.Released &&
+                mouseEventArgs.XButton1 == MouseButtonState.Released &&
+                mouseEventArgs.XButton2 == MouseButtonState.Released &&
+                InactiveMousePosition == mouseEventArgs.GetPosition(Container))
+            {
+                _isMouseActivityCaptured = false;
                 return;
-
-            if (!PlayerStatusBar.Opacity.Equals(0.0))
-                return;
+            }
 
             var opacityAnimation = new DoubleAnimationUsingKeyFrames
             {
                 Duration = new Duration(TimeSpan.FromSeconds(0.1)),
                 KeyFrames = new DoubleKeyFrameCollection
                 {
-                    new EasingDoubleKeyFrame(0.0, KeyTime.FromPercent(0)),
                     new EasingDoubleKeyFrame(1.0, KeyTime.FromPercent(1.0), new PowerEase
                     {
                         EasingMode = EasingMode.EaseInOut
@@ -479,7 +423,9 @@ namespace Popcorn.UserControls.Players.Movie
             };
 
             PlayerStatusBar.BeginAnimation(OpacityProperty, opacityAnimation);
-            PlayerStatusBar.Visibility = Visibility.Visible;
+
+            await Task.Delay(TimeSpan.FromSeconds(1));
+            _isMouseActivityCaptured = false;
         }
 
         #endregion
@@ -499,11 +445,7 @@ namespace Popcorn.UserControls.Players.Movie
             if (Disposed)
                 return;
 
-            Logger.Debug(
-                "Disposing MoviePlayer.");
-
             Loaded -= OnLoaded;
-            Unloaded -= OnUnloaded;
 
             MediaPlayerTimer.Tick -= MediaPlayerTimerTick;
             MediaPlayerTimer.Stop();
@@ -518,19 +460,8 @@ namespace Popcorn.UserControls.Players.Movie
 
             DispatcherHelper.CheckBeginInvokeOnUI(async () =>
             {
-                Logger.Debug(
-                    "Stoping the MoviePlayer VLC player.");
-
                 await Player.StopAsync();
-
-                Logger.Debug(
-                    "MoviePlayer VLC player stopped.");
-
                 Player.Dispose();
-
-
-                Logger.Debug(
-                    "MoviePlayer VLC player disposed.");
 
                 var vm = DataContext as MoviePlayerViewModel;
                 if (vm != null)
@@ -539,9 +470,6 @@ namespace Popcorn.UserControls.Players.Movie
                 }
 
                 Disposed = true;
-
-                Logger.Debug(
-                    "MoviePlayer disposed.");
 
                 if (disposing)
                 {

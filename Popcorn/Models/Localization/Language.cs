@@ -81,7 +81,8 @@ namespace Popcorn.Models.Localization
         /// </summary>
         private Language()
         {
-            LanguageService = SimpleIoc.Default.GetInstance<LanguageService>();
+            if (SimpleIoc.Default.IsRegistered<LanguageService>())
+                LanguageService = SimpleIoc.Default.GetInstance<LanguageService>();
         }
 
         #endregion

@@ -245,8 +245,12 @@ namespace Popcorn.ViewModels.Tabs
 
             RegisterMessages();
             RegisterCommands();
-            MovieService = SimpleIoc.Default.GetInstance<MovieService>();
-            MovieHistoryService = SimpleIoc.Default.GetInstance<MovieHistoryService>();
+            if (SimpleIoc.Default.IsRegistered<MovieService>())
+                MovieService = SimpleIoc.Default.GetInstance<MovieService>();
+
+            if (SimpleIoc.Default.IsRegistered<MovieHistoryService>())
+                MovieHistoryService = SimpleIoc.Default.GetInstance<MovieHistoryService>();
+
             MaxMoviesPerPage = Constants.MaxMoviesPerPage;
             CancellationLoadingMovies = new CancellationTokenSource();
         }

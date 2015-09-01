@@ -94,9 +94,9 @@ namespace Popcorn.ViewModels.Trailer
         /// <param name="movie">Movie's trailer</param>
         private TrailerViewModel(MovieFull movie)
         {
-            Logger.Debug("Initializing a new instance of TrailerViewModel");
+            if (SimpleIoc.Default.IsRegistered<MovieService>())
+                MovieService = SimpleIoc.Default.GetInstance<MovieService>();
 
-            MovieService = SimpleIoc.Default.GetInstance<MovieService>();
             Movie = movie;
         }
 

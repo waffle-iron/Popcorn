@@ -375,9 +375,8 @@ namespace Popcorn.ViewModels.Main
         /// </summary>
         private MainViewModel(IDialogCoordinator dialogCoordinator)
         {
-            Logger.Debug("Initializing a new instance of MainViewModel");
-
-            UserService = SimpleIoc.Default.GetInstance<UserService>();
+            if(SimpleIoc.Default.IsRegistered<UserService>())
+                UserService = SimpleIoc.Default.GetInstance<UserService>();
             RegisterMessages();
             RegisterCommands();
             DialogCoordinator = dialogCoordinator;

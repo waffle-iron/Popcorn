@@ -519,7 +519,7 @@ namespace Popcorn.Services.History
                 Name = actor.Name,
                 SmallImage = actor.SmallImage,
                 SmallImagePath = actor.SmallImagePath
-            }).ToList();
+            });
 
             var directors = movie.Directors.Select(actor => new Director
             {
@@ -527,7 +527,7 @@ namespace Popcorn.Services.History
                 Name = actor.Name,
                 SmallImage = actor.SmallImage,
                 SmallImagePath = actor.SmallImagePath
-            }).ToList();
+            });
 
             var movieFull = new Entity.Movie.MovieFull
             {
@@ -548,8 +548,8 @@ namespace Popcorn.Services.History
                 Rating = movie.RatingValue,
                 Images = images,
                 DescriptionFull = movie.DescriptionFull,
-                Actors = actors,
-                Directors = directors,
+                Actors = actors.ToList(),
+                Directors = directors.ToList(),
                 DescriptionIntro = movie.DescriptionIntro,
                 DownloadCount = movie.DownloadCount,
                 LikeCount = movie.LikeCount,
@@ -561,6 +561,7 @@ namespace Popcorn.Services.History
                 HasBeenSeen = movie.HasBeenSeen,
                 IsFavorite = movie.IsFavorite
             };
+
             return movieFull;
         }
 

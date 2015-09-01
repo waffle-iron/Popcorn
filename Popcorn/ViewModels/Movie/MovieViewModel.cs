@@ -216,13 +216,12 @@ namespace Popcorn.ViewModels.Movie
         /// </summary>
         public MovieViewModel()
         {
-            Logger.Debug("Initializing a new instance of MovieViewModel");
-
             RegisterMessages();
             RegisterCommands();
             CancellationLoadingToken = new CancellationTokenSource();
             CancellationLoadingTrailerToken = new CancellationTokenSource();
-            MovieService = SimpleIoc.Default.GetInstance<MovieService>();
+            if (SimpleIoc.Default.IsRegistered<MovieService>())
+                MovieService = SimpleIoc.Default.GetInstance<MovieService>();
         }
 
         #endregion

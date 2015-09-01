@@ -90,8 +90,12 @@ namespace Popcorn.ViewModels.Tabs
         {
             ReloadMovies = new RelayCommand(async () =>
             {
-                var mainViewModel = SimpleIoc.Default.GetInstance<MainViewModel>();
-                mainViewModel.IsConnectionInError = false;
+                if (SimpleIoc.Default.IsRegistered<MainViewModel>())
+                {
+                    var mainViewModel = SimpleIoc.Default.GetInstance<MainViewModel>();
+                    mainViewModel.IsConnectionInError = false;
+                }
+
                 StopLoadingMovies();
                 await LoadMoviesAsync();
             });

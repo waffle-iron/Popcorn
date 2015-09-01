@@ -64,10 +64,10 @@ namespace Popcorn.ViewModels.Subtitles
         /// <param name="movie">The movie</param>
         private SubtitlesViewModel(MovieFull movie)
         {
-            Logger.Debug("Initializing a new instance of SubtitlesViewModel");
-
             CancellationDownloadingSubtitlesToken = new CancellationTokenSource();
-            MovieService = SimpleIoc.Default.GetInstance<MovieService>();
+            if (SimpleIoc.Default.IsRegistered<MovieService>())
+                MovieService = SimpleIoc.Default.GetInstance<MovieService>();
+
             Movie = movie;
         }
 
@@ -83,8 +83,6 @@ namespace Popcorn.ViewModels.Subtitles
         /// <returns>Instance of SubtitlesViewModel</returns>
         private async Task<SubtitlesViewModel> InitializeAsync()
         {
-            Logger.Debug(
-                "Initializing SubtitlesViewModel");
             await LoadSubtitlesAsync(Movie);
             return this;
         }
