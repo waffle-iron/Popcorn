@@ -22,4 +22,4 @@ Of course yes! Any pull-request will be considered.
 The solution is built using Visual Studio 2015.
 
 ## Installer
-Download full installer [here](https://github.com/bbougot/Popcorn/releases/download/1.0.7/Setup.exe)
+Download full installer [here](https://github.com/bbougot/Popcorn/releases/download/1.0.8/Setup.exe)
