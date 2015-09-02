@@ -243,15 +243,6 @@
   <data name="PasswordWatermark" xml:space="preserve">
     <value>Password...</value>
   </data>
-  <data name="SigninLabel" xml:space="preserve">
-    <value>Signin</value>
-  </data>
-  <data name="SigninMessage" xml:space="preserve">
-    <value>Connect with your account to access social functionalities of Popcorn.</value>
-  </data>
-  <data name="SignupLabel" xml:space="preserve">
-    <value>Signup</value>
-  </data>
   <data name="UsernameWatermark" xml:space="preserve">
     <value>Username...</value>
   </data>

@@ -4,7 +4,6 @@ using Popcorn.Services.History;
 using Popcorn.Services.Language;
 using Popcorn.Services.Movie;
 using Popcorn.Services.Settings;
-using Popcorn.Services.User;
 using Popcorn.ViewModels.Main;
 using Popcorn.ViewModels.Movie;
 using Popcorn.ViewModels.Search;
@@ -23,7 +22,6 @@ namespace Popcorn.ViewModels
             ServiceLocator.SetLocatorProvider(() => SimpleIoc.Default);
             SimpleIoc.Default.Register(() => new ApplicationSettingsService());
             SimpleIoc.Default.Register(() => new LanguageService());
-            SimpleIoc.Default.Register(() => new UserService());
             SimpleIoc.Default.Register(() => new MovieHistoryService());
             SimpleIoc.Default.Register(() => new MovieService());
             SimpleIoc.Default.Register(() => new MainViewModel());
@@ -82,11 +80,6 @@ namespace Popcorn.ViewModels
             if (SimpleIoc.Default.IsRegistered<ApplicationSettingsService>())
             {
                 SimpleIoc.Default.Unregister<ApplicationSettingsService>();
-            }
-
-            if (SimpleIoc.Default.IsRegistered<UserService>())
-            {
-                SimpleIoc.Default.Unregister<UserService>();
             }
 
             if (SimpleIoc.Default.IsRegistered<LanguageService>())

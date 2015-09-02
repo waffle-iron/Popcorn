@@ -475,33 +475,6 @@ namespace Popcorn.Properties {
         }
         
         /// <summary>
-        ///   Recherche une chaîne localisée semblable à Signin.
-        /// </summary>
-        public static string SigninLabel {
-            get {
-                return ResourceManager.GetString("SigninLabel", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Recherche une chaîne localisée semblable à Connect with your account to access social functionalities of Popcorn..
-        /// </summary>
-        public static string SigninMessage {
-            get {
-                return ResourceManager.GetString("SigninMessage", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Recherche une chaîne localisée semblable à Signup.
-        /// </summary>
-        public static string SignupLabel {
-            get {
-                return ResourceManager.GetString("SignupLabel", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Recherche une chaîne localisée semblable à Subtitles.
         /// </summary>
         public static string SubtitlesLabel {

@@ -146,9 +146,6 @@
 
     <controls:MetroWindow.RightWindowCommands>
         <controls:WindowCommands>
-            <Button Command="{Binding ShowLoginDialogCommand}"
-                    Content="{lex:LocText LoginLabel}"
-                    ToolTip="{lex:LocText LoginLabel}" />
             <Button Command="{Binding OpenSettingsCommand}"
                     Content="{lex:LocText SettingsMenuTitle}"
                     ToolTip="{lex:LocText SettingsMenuTitle}" />

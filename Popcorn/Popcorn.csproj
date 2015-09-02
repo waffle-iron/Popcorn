@@ -239,12 +239,6 @@
     <Compile Include="Dialogs\ExceptionDialog.xaml.cs">
       <DependentUpon>ExceptionDialog.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Dialogs\SigninDialog.xaml.cs">
-      <DependentUpon>SigninDialog.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Dialogs\SignupDialog.xaml.cs">
-      <DependentUpon>SignupDialog.xaml</DependentUpon>
-    </Compile>
     <Compile Include="Dialogs\UpdateDialog.xaml.cs">
       <DependentUpon>UpdateDialog.xaml</DependentUpon>
     </Compile>
@@ -280,7 +274,6 @@
     <Compile Include="Messaging\LoadMovieMessage.cs" />
     <Compile Include="Messaging\SearchMovieMessage.cs" />
     <Compile Include="Messaging\StopPlayingTrailerMessage.cs" />
-    <Compile Include="Models\Account\Bearer.cs" />
     <Compile Include="Models\Cast\Actor.cs" />
     <Compile Include="Models\Cast\Director.cs" />
     <Compile Include="Models\Localization\CustomLanguage.cs" />
@@ -303,7 +296,6 @@
     <Compile Include="Models\Subtitle\SubtitlesWrapper.cs" />
     <Compile Include="Models\Subtitle\Subtitle.cs" />
     <Compile Include="Models\Trailer\Trailer.cs" />
-    <Compile Include="Models\Account\User.cs" />
     <Compile Include="Services\History\MovieHistoryService.cs" />
     <Compile Include="Services\Movie\MovieService.cs" />
     <Compile Include="Models\Torrent\Torrent.cs" />
@@ -333,7 +325,6 @@
     </Compile>
     <Compile Include="Services\Language\LanguageService.cs" />
     <Compile Include="Services\Settings\ApplicationSettingsService.cs" />
-    <Compile Include="Services\User\UserService.cs" />
     <Compile Include="UserControls\Download\DownloadMovie.xaml.cs">
       <DependentUpon>DownloadMovie.xaml</DependentUpon>
     </Compile>
@@ -421,14 +412,6 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Dialogs\ExceptionDialog.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Dialogs\SigninDialog.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Dialogs\SignupDialog.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -2283,7 +2266,6 @@
     </PropertyGroup>
     <Error Condition="!Exists('$(SolutionDir)\.nuget\NuGet.targets')" Text="$([System.String]::Format('$(ErrorText)', '$(SolutionDir)\.nuget\NuGet.targets'))" />
   </Target>
-  <Import Project="$(XamlSpyInstallPath)MSBuild\FirstFloor.XamlSpy.WPF.targets" Condition="'$(XamlSpyInstallPath)' != '' and '$(Configuration)' == 'DEBUG'" />
   <PropertyGroup>
     <PostBuildEvent>
     if not exist "$(TargetDir)x86" md "$(TargetDir)x86"

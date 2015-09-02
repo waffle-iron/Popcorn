@@ -8,9 +8,7 @@ using System.Diagnostics;
 using System.IO;
 using System.Net;
 using System.Net.Sockets;
-using System.Threading;
 using System.Threading.Tasks;
-using GalaSoft.MvvmLight.Ioc;
 using GalaSoft.MvvmLight.Threading;
 using MahApps.Metro.Controls.Dialogs;
 using NLog;
@@ -18,7 +16,6 @@ using Popcorn.Dialogs;
 using Popcorn.Messaging;
 using Popcorn.Events;
 using Popcorn.Helpers;
-using Popcorn.Services.User;
 using Popcorn.ViewModels.Genres;
 using Popcorn.ViewModels.Tabs;
 using Popcorn.ViewModels.Players.Movie;
@@ -48,15 +45,6 @@ namespace Popcorn.ViewModels.Main
         /// Used to update application
         /// </summary>
         private UpdateManager UpdateManager { get; set; }
-
-        #endregion
-
-        #region Property -> UserService
-
-        /// <summary>
-        /// Used to interacts with user
-        /// </summary>
-        private UserService UserService { get; }
 
         #endregion
 
@@ -336,26 +324,6 @@ namespace Popcorn.ViewModels.Main
 
         #endregion
 
-        #region Command -> ShowLoginDialogCommand
-
-        private RelayCommand _showLoginDialogCommand;
-
-        /// <summary>
-        /// Show login dialog
-        /// </summary>
-        public RelayCommand ShowLoginDialogCommand
-        {
-            get
-            {
-                return _showLoginDialogCommand ?? (_showLoginDialogCommand = new RelayCommand(async () =>
-                {
-                    await OpenSigninModal();
-                }));
-            }
-        }
-
-        #endregion
-
         #endregion
 
         #region Constructors
@@ -375,8 +343,6 @@ namespace Popcorn.ViewModels.Main
         /// </summary>
         private MainViewModel(IDialogCoordinator dialogCoordinator)
         {
-            if(SimpleIoc.Default.IsRegistered<UserService>())
-                UserService = SimpleIoc.Default.GetInstance<UserService>();
             RegisterMessages();
             RegisterCommands();
             DialogCoordinator = dialogCoordinator;
@@ -577,78 +543,6 @@ namespace Popcorn.ViewModels.Main
             OpenSettingsCommand = new RelayCommand(() => { IsSettingsFlyoutOpen = true; });
 
             InitializeAsyncCommand = new RelayCommand(async () => await InitializeAsync());
-        }
-
-        #endregion
-
-        #region Method -> OpenSigninModal
-
-        /// <summary>
-        /// Open signin modal
-        /// </summary>
-        /// <returns>Task</returns>
-        private async Task OpenSigninModal()
-        {
-            var signinDialog = new SigninDialog(new SigninDialogSettings());
-            await DialogCoordinator.ShowMetroDialogAsync(this, signinDialog);
-            var signinDialogResult = await signinDialog.WaitForButtonPressAsync();
-            await DialogCoordinator.HideMetroDialogAsync(this, signinDialog);
-            if (signinDialogResult == null)
-                return;
-
-            if (signinDialogResult.ShouldSignup)
-            {
-                var user = await OpenSignupModal();
-                if (user == null)
-                    return;
-                await Signin(user);
-            }
-            else
-            {
-                var user = new Models.Account.User
-                {
-                    Username = signinDialogResult.Username,
-                    Password = signinDialogResult.Password
-                };
-
-                await Signin(user);
-            }
-        }
-
-        #endregion
-
-        #region Method -> OpenSignupModal
-
-        /// <summary>
-        /// Open signup modal
-        /// </summary>
-        /// <returns>User</returns>
-        private async Task<Models.Account.User> OpenSignupModal()
-        {
-            var signupDialog = new SignupDialog(new SignupDialogSettings());
-            await DialogCoordinator.ShowMetroDialogAsync(this, signupDialog);
-            var signupDialogResult = await signupDialog.WaitForButtonPressAsync();
-            await DialogCoordinator.HideMetroDialogAsync(this, signupDialog);
-            if (signupDialogResult == null)
-                return null;
-            return await
-                UserService.CreateUser(signupDialogResult.Username, signupDialogResult.FirstName,
-                    signupDialogResult.LastName, signupDialogResult.Password, signupDialogResult.Email,
-                    new CancellationToken());
-        }
-
-        #endregion
-
-        #region Method -> Signin
-
-        /// <summary>
-        /// Signin user
-        /// </summary>
-        /// <param name="user">The user to signin</param>
-        /// <returns>Task</returns>
-        private async Task Signin(Models.Account.User user)
-        {
-            await UserService.Signin(user, new CancellationToken());
         }
 
         #endregion
