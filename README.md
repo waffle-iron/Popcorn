@@ -3,7 +3,7 @@ An application which aims to provide a simple interface to watch any movie.
 
 [![Build status](https://ci.appveyor.com/api/projects/status/2tijq4sm43r87lmf?svg=true)](https://ci.appveyor.com/project/bbougot/popcorn)
 
-![Screenshot1](https://cloud.githubusercontent.com/assets/8962802/9498276/37d79dac-4c19-11e5-95be-e9f762b774bd.jpg)
+![Screenshot1](https://cloud.githubusercontent.com/assets/8962802/9643432/2d85a3a4-51c2-11e5-87bf-55ee81d5cc7a.jpg)
 
 ![Screenshot2](https://cloud.githubusercontent.com/assets/8962802/9288484/e6f0a25e-4348-11e5-9317-f8c0dee12729.jpg)
 
