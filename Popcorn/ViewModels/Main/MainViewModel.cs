@@ -57,21 +57,6 @@ namespace Popcorn.ViewModels.Main
 
         #endregion
 
-        #region Property -> IsUserSignin
-
-        private bool _isUserSignin;
-
-        /// <summary>
-        /// Indicates if the user is signed in
-        /// </summary>
-        public bool IsUserSignin
-        {
-            get { return _isUserSignin; }
-            set { Set(() => IsUserSignin, ref _isUserSignin, value); }
-        }
-
-        #endregion
-
         #region Property -> IsMoviePlaying
 
         private bool _isMoviePlaying;
