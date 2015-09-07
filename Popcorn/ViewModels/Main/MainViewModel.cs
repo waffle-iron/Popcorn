@@ -43,17 +43,6 @@ namespace Popcorn.ViewModels.Main
         /// </summary>
         private IDialogCoordinator DialogCoordinator { get; }
 
-        private bool _isUserSignin;
-
-        /// <summary>
-        /// Indicates if the user is signed in
-        /// </summary>
-        public bool IsUserSignin
-        {
-            get { return _isUserSignin; }
-            set { Set(() => IsUserSignin, ref _isUserSignin, value); }
-        }
-
         private bool _isMoviePlaying;
 
         /// <summary>

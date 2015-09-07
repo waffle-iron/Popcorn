@@ -102,28 +102,6 @@
                     </Setter.Value>
                 </Setter>
             </Style>
-
-            <Style x:Key="AnimationUserBar" TargetType="{x:Type Grid}">
-                <Style.Triggers>
-                    <DataTrigger Binding="{Binding IsUserSignin}" Value="True">
-                        <DataTrigger.EnterActions>
-                            <BeginStoryboard>
-                                <Storyboard>
-                                    <DoubleAnimation Duration="0:0:1"
-                                                     From="0"
-                                                     Storyboard.TargetProperty="Width"
-                                                     To="220">
-                                        <DoubleAnimation.EasingFunction>
-                                            <ExponentialEase EasingMode="EaseOut" Exponent="3" />
-                                        </DoubleAnimation.EasingFunction>
-                                    </DoubleAnimation>
-                                </Storyboard>
-                            </BeginStoryboard>
-                        </DataTrigger.EnterActions>
-                    </DataTrigger>
-                </Style.Triggers>
-            </Style>
-
             <Style TargetType="{x:Type controls:WindowButtonCommands}">
                 <Style.Triggers>
                     <DataTrigger Binding="{Binding ShowTitleBar, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type controls:MetroWindow}}}" Value="False">
@@ -183,7 +161,6 @@
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="Auto" MinWidth="220" />
             <ColumnDefinition Width="*" />
-            <ColumnDefinition Width="Auto" />
         </Grid.ColumnDefinitions>
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" MinHeight="80" />
@@ -214,10 +191,6 @@
                 </Label>
             </StackPanel>
         </Grid>
-        <Grid Grid.Row="0"
-              Grid.Column="2"
-              Background="White"
-              Style="{StaticResource AnimationUserBar}" />
         <Grid x:Name="MenuBar"
               Grid.Row="1"
               Grid.RowSpan="3"
@@ -488,14 +461,5 @@
                 </Style>
             </controls:MetroAnimatedSingleRowTabControl.ItemContainerStyle>
         </controls:MetroAnimatedSingleRowTabControl>
-        <Grid Grid.Row="1"
-              Grid.RowSpan="2"
-              Grid.Column="2"
-              Background="#ecedef"
-              Style="{StaticResource AnimationUserBar}" />
-        <Grid Grid.Row="3"
-              Grid.Column="2"
-              Background="#c4ccd8"
-              Style="{StaticResource AnimationUserBar}" />
     </Grid>
 </controls:MetroWindow>
