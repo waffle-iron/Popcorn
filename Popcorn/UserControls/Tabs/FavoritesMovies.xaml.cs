@@ -5,8 +5,6 @@
     /// </summary>
     public partial class FavoritesMovies
     {
-        #region Constructor
-
         /// <summary>
         /// Initializes a new instance of the FavoritesMovies class.
         /// </summary>
@@ -14,7 +12,5 @@
         {
             InitializeComponent();
         }
-
-        #endregion
     }
 }

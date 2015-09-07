@@ -14,18 +14,10 @@ namespace Popcorn.Services.Settings
     /// </summary>
     public class ApplicationSettingsService
     {
-        #region Logger
-
         /// <summary>
         /// Logger of the class
         /// </summary>
         private static readonly Logger Logger = LogManager.GetCurrentClassLogger();
-
-        #endregion
-
-        #region Methods
-
-        #region Method -> CreateApplicationSettingsAsync
 
         /// <summary>
         /// Scaffold Settings table on database if empty
@@ -82,9 +74,5 @@ namespace Popcorn.Services.Settings
             Logger.Debug(
                 "CreateApplicationSettings in {0} milliseconds.", elapsedMs);
         }
-
-        #endregion
-
-        #endregion
     }
 }

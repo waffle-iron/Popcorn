@@ -3,6 +3,9 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Popcorn.Entity.Movie
 {
+    /// <summary>
+    /// Represents a movie genre
+    /// </summary>
     public class Genre
     {
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]

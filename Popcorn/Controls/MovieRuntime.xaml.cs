@@ -9,25 +9,13 @@ namespace Popcorn.Controls
     /// </summary>
     public partial class MovieRuntime
     {
-        #region DependencyProperties
-
-        #region DependencyPropertiy -> RuntimeProperty
-
         /// <summary>
-        /// RuntimeProperty
+        /// Runtime property
         /// </summary>
         public static readonly DependencyProperty RuntimeProperty =
             DependencyProperty.Register("Runtime",
                 typeof (double), typeof (MovieRuntime),
                 new PropertyMetadata(0.0, OnRuntimeChanged));
-
-        #endregion
-
-        #endregion
-
-        #region Properties
-
-        #region Property -> Runtime
 
         /// <summary>
         /// The movie runtime
@@ -38,12 +26,6 @@ namespace Popcorn.Controls
             set { SetValue(RuntimeProperty, value); }
         }
 
-        #endregion
-
-        #endregion
-
-        #region Constructor
-
         /// <summary>
         /// Initialize a new instance of MovieRuntime
         /// </summary>
@@ -51,10 +33,6 @@ namespace Popcorn.Controls
         {
             InitializeComponent();
         }
-
-        #endregion
-
-        #region Method -> OnRuntimeChanged
 
         /// <summary>
         /// On movie runtime changed
@@ -66,10 +44,6 @@ namespace Popcorn.Controls
             var movieRuntime = d as MovieRuntime;
             movieRuntime?.DisplayMovieRuntime();
         }
-
-        #endregion
-
-        #region Method -> DisplayMovieRuntime
 
         /// <summary>
         /// Display movie runtime
@@ -83,7 +57,5 @@ namespace Popcorn.Controls
 
             DisplayText.Text = minutes < 10.0 ? $"{Math.Floor(hours)}h0{minutes}" : $"{Math.Floor(hours)}h{minutes}";
         }
-
-        #endregion
     }
 }

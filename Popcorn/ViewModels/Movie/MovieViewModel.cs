@@ -20,27 +20,15 @@ namespace Popcorn.ViewModels.Movie
     /// </summary>
     public sealed class MovieViewModel : ViewModelBase
     {
-        #region Logger
-
         /// <summary>
         /// Logger of the class
         /// </summary>
         private static readonly Logger Logger = LogManager.GetCurrentClassLogger();
 
-        #endregion
-
-        #region Properties
-
-        #region Property -> MovieService
-
         /// <summary>
         /// The service used to interact with movies
         /// </summary>
         private MovieService MovieService { get; }
-
-        #endregion
-
-        #region Property -> Movie
 
         private MovieFull _movie = new MovieFull();
 
@@ -53,10 +41,6 @@ namespace Popcorn.ViewModels.Movie
             set { Set(() => Movie, ref _movie, value); }
         }
 
-        #endregion
-
-        #region Property -> IsMovieLoading
-
         private bool _isMovieLoading;
 
         /// <summary>
@@ -67,10 +51,6 @@ namespace Popcorn.ViewModels.Movie
             get { return _isMovieLoading; }
             set { Set(() => IsMovieLoading, ref _isMovieLoading, value); }
         }
-
-        #endregion
-
-        #region Property -> DownloadMovie
 
         private DownloadMovieViewModel _downloadMovie;
 
@@ -83,10 +63,6 @@ namespace Popcorn.ViewModels.Movie
             set { Set(() => DownloadMovie, ref _downloadMovie, value); }
         }
 
-        #endregion
-
-        #region Property -> Trailer
-
         /// <summary>
         /// View model which takes care of the movie's trailer
         /// </summary>
@@ -97,10 +73,6 @@ namespace Popcorn.ViewModels.Movie
             get { return _trailer; }
             set { Set(() => Trailer, ref _trailer, value); }
         }
-
-        #endregion
-
-        #region Property -> IsTrailerLoading
 
         private bool _isTrailerLoading;
 
@@ -113,10 +85,6 @@ namespace Popcorn.ViewModels.Movie
             set { Set(() => IsTrailerLoading, ref _isTrailerLoading, value); }
         }
 
-        #endregion
-
-        #region Property -> IsPlayingTrailer
-
         private bool _isPlayingTrailer;
 
         /// <summary>
@@ -127,10 +95,6 @@ namespace Popcorn.ViewModels.Movie
             get { return _isPlayingTrailer; }
             set { Set(() => IsPlayingTrailer, ref _isPlayingTrailer, value); }
         }
-
-        #endregion
-
-        #region Property -> IsDownloadingMovie
 
         private bool _isDownloadingMovie;
 
@@ -143,73 +107,35 @@ namespace Popcorn.ViewModels.Movie
             set { Set(() => IsDownloadingMovie, ref _isDownloadingMovie, value); }
         }
 
-        #endregion
-
-        #region Property -> CancellationLoadingToken
-
         /// <summary>
         /// Token to cancel movie loading
         /// </summary>
         private CancellationTokenSource CancellationLoadingToken { get; set; }
-
-        #endregion
-
-        #region Property -> CancellationLoadingTrailerToken
 
         /// <summary>
         /// Token to cancel trailer loading
         /// </summary>
         private CancellationTokenSource CancellationLoadingTrailerToken { get; set; }
 
-        #endregion
-
-        #endregion
-
-        #region Commands
-
-        #region Command -> LoadMovieCommand
-
         /// <summary>
         /// Command used to load the movie
         /// </summary>
         public RelayCommand<MovieShort> LoadMovieCommand { get; private set; }
-
-        #endregion
-
-        #region Commands
-
-        #region Command -> StopLoadingTrailerCommand
 
         /// <summary>
         /// Stop loading the trailer
         /// </summary>
         public RelayCommand StopLoadingTrailerCommand { get; private set; }
 
-        #endregion
-
-        #endregion
-
-        #region Command -> PlayMovieCommand
-
         /// <summary>
         /// Command used to play the movie
         /// </summary>
         public RelayCommand PlayMovieCommand { get; private set; }
 
-        #endregion
-
-        #region Command -> PlayTrailerCommand
-
         /// <summary>
         /// Command used to play the trailer
         /// </summary>
         public RelayCommand PlayTrailerCommand { get; private set; }
-
-        #endregion
-
-        #endregion
-
-        #region Constructor
 
         /// <summary>
         /// Initializes a new instance of the MovieViewModel class.
@@ -223,12 +149,6 @@ namespace Popcorn.ViewModels.Movie
             if (SimpleIoc.Default.IsRegistered<MovieService>())
                 MovieService = SimpleIoc.Default.GetInstance<MovieService>();
         }
-
-        #endregion
-
-        #region Methods
-
-        #region Method -> RegisterMessages
 
         /// <summary>
         /// Register messages
@@ -254,10 +174,6 @@ namespace Popcorn.ViewModels.Movie
                 });
         }
 
-        #endregion
-
-        #region Method -> RegisterCommands
-
         /// <summary>
         /// Register commands
         /// </summary>
@@ -281,10 +197,6 @@ namespace Popcorn.ViewModels.Movie
 
             StopLoadingTrailerCommand = new RelayCommand(StopLoadingTrailer);
         }
-
-        #endregion
-
-        #region Method -> LoadMovieAsync
 
         /// <summary>
         /// Get the requested movie
@@ -310,10 +222,6 @@ namespace Popcorn.ViewModels.Movie
 
         }
 
-        #endregion
-
-        #region Method -> StopLoadingMovie
-
         /// <summary>
         /// Stop loading the movie
         /// </summary>
@@ -326,10 +234,6 @@ namespace Popcorn.ViewModels.Movie
             CancellationLoadingToken.Cancel(true);
             CancellationLoadingToken = new CancellationTokenSource();
         }
-
-        #endregion
-
-        #region Method -> StopPlayingTrailer
 
         /// <summary>
         /// Stop playing a trailer
@@ -345,10 +249,6 @@ namespace Popcorn.ViewModels.Movie
             StopPlayingTrailer();
         }
 
-        #endregion
-
-        #region Method -> StopPlayingTrailer
-
         /// <summary>
         /// Stop playing a trailer
         /// </summary>
@@ -361,10 +261,6 @@ namespace Popcorn.ViewModels.Movie
             Trailer?.Cleanup();
             Trailer = null;
         }
-
-        #endregion
-
-        #region Method -> StopPlayingMovie
 
         /// <summary>
         /// Stop playing a movie
@@ -379,8 +275,9 @@ namespace Popcorn.ViewModels.Movie
             DownloadMovie = null;
         }
 
-        #endregion
-
+        /// <summary>
+        /// Cleanup resources
+        /// </summary>
         public override void Cleanup()
         {
             Logger.Debug(
@@ -392,7 +289,5 @@ namespace Popcorn.ViewModels.Movie
             StopPlayingTrailer();
             base.Cleanup();
         }
-
-        #endregion
     }
 }

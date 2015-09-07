@@ -9,8 +9,6 @@ namespace Popcorn.Converters
     [ValueConversion(typeof (bool), typeof (bool))]
     public class BoolToInverseBoolConverter : IValueConverter
     {
-        #region IValueConverter Members
-
         /// <summary>
         /// Convert a boolean to its inverse
         /// </summary>
@@ -37,7 +35,5 @@ namespace Popcorn.Converters
         {
             throw new NotSupportedException();
         }
-
-        #endregion
     }
 }

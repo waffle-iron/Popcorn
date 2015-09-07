@@ -5,8 +5,6 @@ namespace Popcorn.Models.Trailer
 {
     public class Trailer : ObservableObject
     {
-        #region Property -> Uri
-
         private Uri _uri;
 
         /// <summary>
@@ -18,18 +16,13 @@ namespace Popcorn.Models.Trailer
             private set { Set(() => Uri, ref _uri, value); }
         }
 
-        #endregion
-
-        #region
         /// <summary>
-        /// Constructor
+        /// Initialize a new instance of Trailer class
         /// </summary>
-        /// <param name="uri"></param>
+        /// <param name="uri">Trailer's uri</param>
         public Trailer(Uri uri)
         {
             Uri = uri;
         }
-
-        #endregion
     }
 }

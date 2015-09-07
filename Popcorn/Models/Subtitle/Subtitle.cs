@@ -8,8 +8,6 @@ namespace Popcorn.Models.Subtitle
 {
     public class Subtitle : ObservableObject, IComparable<Subtitle>
     {
-        #region Properties
-
         private int _id;
 
         [DeserializeAs(Name = "id")]
@@ -46,8 +44,6 @@ namespace Popcorn.Models.Subtitle
             set { Set(() => Url, ref _url, value); }
         }
 
-        #region Property -> Language
-
         private ILanguage _language;
 
         /// <summary>
@@ -63,10 +59,6 @@ namespace Popcorn.Models.Subtitle
             }
         }
 
-        #endregion
-
-        #region Property -> FlagImagePath
-
         private string _flagImagePath;
 
         /// <summary>
@@ -78,10 +70,6 @@ namespace Popcorn.Models.Subtitle
             set { Set(() => FlagImagePath, ref _flagImagePath, value); }
         }
 
-        #endregion
-
-        #region Property -> FilePath
-
         private string _filePath;
 
         /// <summary>
@@ -92,12 +80,6 @@ namespace Popcorn.Models.Subtitle
             get { return _filePath; }
             set { Set(() => FilePath, ref _filePath, value); }
         }
-
-        #endregion
-
-        #endregion
-
-        #region Method -> SetFlagImagePath
 
         /// <summary>
         /// Set file path of flag image depending on its language
@@ -206,8 +188,6 @@ namespace Popcorn.Models.Subtitle
                     FlagImagePath = Constants.FlagImagesDirectory + "in.png";
                     break;
             }
-
-            #endregion
         }
 
         /// <summary>

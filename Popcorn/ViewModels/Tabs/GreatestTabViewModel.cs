@@ -21,35 +21,20 @@ namespace Popcorn.ViewModels.Tabs
     /// </summary>
     public sealed class GreatestTabViewModel : TabsViewModel
     {
-        #region Logger
-
         /// <summary>
         /// Logger of the class
         /// </summary>
         private static readonly Logger Logger = LogManager.GetCurrentClassLogger();
-
-        #endregion
-
-        #region Constructor
 
         /// <summary>
         /// Initializes a new instance of the GreatestTabViewModel class.
         /// </summary>
         public GreatestTabViewModel()
         {
-            Logger.Debug(
-                "Initializing a new instance of GreatestTitleTab");
-
             RegisterMessages();
             RegisterCommands();
             TabName = LocalizationProviderHelper.GetLocalizedValue<string>("GreatestTitleTab");
         }
-
-        #endregion
-
-        #region Methods
-
-        #region Method -> RegisterMessages
 
         /// <summary>
         /// Register messages
@@ -79,10 +64,6 @@ namespace Popcorn.ViewModels.Tabs
             });
         }
 
-        #endregion
-
-        #region Method -> RegisterCommands
-
         /// <summary>
         /// Register commands
         /// </summary>
@@ -100,10 +81,6 @@ namespace Popcorn.ViewModels.Tabs
                 await LoadMoviesAsync();
             });
         }
-
-        #endregion
-
-        #region Method -> LoadMoviesAsync
 
         /// <summary>
         /// Load next page with an optional search parameter
@@ -152,9 +129,5 @@ namespace Popcorn.ViewModels.Tabs
                     $"Loaded page {Page} in {elapsedMs} milliseconds.");
             }
         }
-
-        #endregion
-
-        #endregion
     }
 }

@@ -8,40 +8,22 @@ namespace Popcorn.Controls
     /// </summary>
     public partial class CapitalizeText
     {
-        #region DependencyProperties
-
-        #region DependencyPropertiy -> RuntimeProperty
-
         /// <summary>
-        /// TextProperty
+        /// Text property
         /// </summary>
         public static readonly DependencyProperty TextProperty =
             DependencyProperty.Register("Text",
-                typeof(string), typeof(CapitalizeText),
+                typeof (string), typeof (CapitalizeText),
                 new PropertyMetadata(string.Empty, OnTextChanged));
 
-        #endregion
-
-        #endregion
-
-        #region Properties
-
-        #region Property -> Text
-
         /// <summary>
-        /// The text
+        /// The text to capitalize
         /// </summary>
         public string Text
         {
-            private get { return (string)GetValue(TextProperty); }
+            private get { return (string) GetValue(TextProperty); }
             set { SetValue(TextProperty, value); }
         }
-
-        #endregion
-
-        #endregion
-
-        #region Constructor
 
         /// <summary>
         /// Initialize a new instance of CapitalizeText
@@ -51,12 +33,8 @@ namespace Popcorn.Controls
             InitializeComponent();
         }
 
-        #endregion
-
-        #region Method -> OnRuntimeChanged
-
         /// <summary>
-        /// On movie runtime changed
+        /// On text changed
         /// </summary>
         /// <param name="d">Dependency object</param>
         /// <param name="e">Event args</param>
@@ -65,10 +43,6 @@ namespace Popcorn.Controls
             var capitalizeText = d as CapitalizeText;
             capitalizeText?.DisplayCapitalizedText();
         }
-
-        #endregion
-
-        #region Method -> DisplayCapitalizedText
 
         /// <summary>
         /// Display capitalized text
@@ -80,7 +54,5 @@ namespace Popcorn.Controls
 
             DisplayText.Text = textInfo.ToTitleCase(Text);
         }
-
-        #endregion
     }
 }

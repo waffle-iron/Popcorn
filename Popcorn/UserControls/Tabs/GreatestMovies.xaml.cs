@@ -8,8 +8,6 @@ namespace Popcorn.UserControls.Tabs
     /// </summary>
     public partial class GreatestMovies
     {
-        #region Constructor
-
         /// <summary>
         /// Initializes a new instance of the GreatestMovies class.
         /// </summary>
@@ -17,12 +15,6 @@ namespace Popcorn.UserControls.Tabs
         {
             InitializeComponent();
         }
-
-        #endregion
-
-        #region Methods
-
-        #region Method -> ScrollViewerScrollChanged
 
         /// <summary>
         /// Decide if we have to load next page regarding to the scroll position
@@ -39,9 +31,5 @@ namespace Popcorn.UserControls.Tabs
                 await vm.LoadMoviesAsync();
             }
         }
-
-        #endregion
-
-        #endregion
     }
 }

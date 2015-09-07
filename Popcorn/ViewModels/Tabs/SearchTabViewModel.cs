@@ -21,44 +21,25 @@ namespace Popcorn.ViewModels.Tabs
     /// </summary>
     public sealed class SearchTabViewModel : TabsViewModel
     {
-        #region Logger
-
         /// <summary>
         /// Logger of the class
         /// </summary>
         private static readonly Logger Logger = LogManager.GetCurrentClassLogger();
 
-        #endregion
-
-        #region Property -> SearchFilter
-
         /// <summary>
         /// The search filter
         /// </summary>
         public string SearchFilter { get; private set; }
-
-        #endregion
-
-        #region Constructor
-
+        
         /// <summary>
         /// Initializes a new instance of the SearchTabViewModel class.
         /// </summary>
         public SearchTabViewModel()
         {
-            Logger.Debug(
-                "Initializing a new instance of SearchTabViewModel");
-
             RegisterMessages();
             RegisterCommands();
             TabName = LocalizationProviderHelper.GetLocalizedValue<string>("SearchTitleTab");
         }
-
-        #endregion
-
-        #region Methods
-
-        #region Method -> RegisterMessages
 
         /// <summary>
         /// Register messages
@@ -88,10 +69,6 @@ namespace Popcorn.ViewModels.Tabs
             });
         }
 
-        #endregion
-
-        #region Method -> RegisterCommands
-
         /// <summary>
         /// Register commands
         /// </summary>
@@ -109,10 +86,6 @@ namespace Popcorn.ViewModels.Tabs
                 await SearchMoviesAsync(SearchFilter);
             });
         }
-
-        #endregion
-
-        #region Method -> SearchMoviesAsync
 
         /// <summary>
         /// Search movies
@@ -173,9 +146,5 @@ namespace Popcorn.ViewModels.Tabs
                     $"Loaded page {Page} with criteria {searchFilter} in {elapsedMs} milliseconds.");
             }
         }
-
-        #endregion
-
-        #endregion
     }
 }

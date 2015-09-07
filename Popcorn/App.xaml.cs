@@ -11,16 +11,10 @@ namespace Popcorn
     /// </summary>
     public partial class App
     {
-        #region Logger
-
         /// <summary>
         /// Logger of the class
         /// </summary>
         private static readonly Logger Logger = LogManager.GetCurrentClassLogger();
-
-        #endregion
-
-        #region Constructor
 
         /// <summary>
         /// Initializes a new instance of the App class.
@@ -42,7 +36,5 @@ namespace Popcorn
             Logger.Info(
                 $"Popcorn started in {elapsedStartMs} milliseconds.");
         }
-
-        #endregion
     }
 }

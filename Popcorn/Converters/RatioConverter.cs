@@ -13,8 +13,6 @@ namespace Popcorn.Converters
     {
         private RatioConverter _instance;
 
-        #region IValueConverter Members
-
         /// <summary>
         /// Modify value with a ratio parameter
         /// </summary>
@@ -46,8 +44,6 @@ namespace Popcorn.Converters
         {
             throw new NotSupportedException();
         }
-
-        #endregion
 
         public override object ProvideValue(IServiceProvider serviceProvider)
         {

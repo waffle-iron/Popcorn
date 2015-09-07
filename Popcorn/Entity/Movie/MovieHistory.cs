@@ -5,6 +5,9 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Popcorn.Entity.Movie
 {
+    /// <summary>
+    /// Represents movie history
+    /// </summary>
     public class MovieHistory
     {
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]

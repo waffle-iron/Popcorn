@@ -7,37 +7,21 @@ namespace Popcorn.Controls
     /// </summary>
     public partial class MoviesNumberSummary
     {
-        #region DependencyProperties
-
-        #region DependencyPropertiy -> MaxNumberOfMoviesProperty
-
         /// <summary>
-        /// MaxNumberOfMoviesProperty
+        /// Max number property
         /// </summary>
         public static readonly DependencyProperty MaxNumberOfMoviesProperty =
             DependencyProperty.Register("MaxNumberOfMovies",
                 typeof (double), typeof (MoviesNumberSummary),
                 new PropertyMetadata(0.0, OnNumberOfMoviesChanged));
 
-        #endregion
-
-        #region DependencyPropertiy -> MaxNumberOfMoviesProperty
-
         /// <summary>
-        /// CurrentNumberOfMoviesProperty
+        /// Current number property
         /// </summary>
         public static readonly DependencyProperty CurrentNumberOfMoviesProperty =
             DependencyProperty.Register("CurrentNumberOfMovies",
                 typeof (double), typeof (MoviesNumberSummary),
                 new PropertyMetadata(0.0, OnNumberOfMoviesChanged));
-
-        #endregion
-
-        #endregion
-
-        #region Properties
-
-        #region Property -> MaxNumberOfMovies
 
         /// <summary>
         /// The maximum number of movies
@@ -48,24 +32,14 @@ namespace Popcorn.Controls
             set { SetValue(MaxNumberOfMoviesProperty, value); }
         }
 
-        #endregion
-
-        #region Property -> MaxNumberOfMovies
-
         /// <summary>
-        /// The maximum number of movies
+        /// The current number of movies
         /// </summary>
         public double CurrentNumberOfMovies
         {
             private get { return (double) GetValue(CurrentNumberOfMoviesProperty); }
             set { SetValue(CurrentNumberOfMoviesProperty, value); }
         }
-
-        #endregion
-
-        #endregion
-
-        #region Constructor
 
         /// <summary>
         /// Initialize a new instance of MoviesNumberSummary
@@ -74,10 +48,6 @@ namespace Popcorn.Controls
         {
             InitializeComponent();
         }
-
-        #endregion
-
-        #region Method -> OnNumberOfMoviesChanged
 
         /// <summary>
         /// On number of movies changed
@@ -89,10 +59,6 @@ namespace Popcorn.Controls
             var moviesNumberSummary = d as MoviesNumberSummary;
             moviesNumberSummary?.DisplayMoviesNumberSummary();
         }
-
-        #endregion
-
-        #region Method -> DisplayMoviesNumberSummary
 
         /// <summary>
         /// Display movies summary
@@ -118,7 +84,5 @@ namespace Popcorn.Controls
                     $"{MaxNumberOfMovies}";
             }
         }
-
-        #endregion
     }
 }

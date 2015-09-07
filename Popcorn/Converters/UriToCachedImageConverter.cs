@@ -10,8 +10,6 @@ namespace Popcorn.Converters
     /// </summary>
     public class UriToCachedImageConverter : IValueConverter
     {
-        #region IValueConverter Members
-
         /// <summary>
         /// Convert value string to UnsetValue if empty or null
         /// </summary>
@@ -44,7 +42,5 @@ namespace Popcorn.Converters
         {
             throw new NotSupportedException();
         }
-
-        #endregion
     }
 }

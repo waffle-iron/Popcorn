@@ -10,14 +10,10 @@ namespace Popcorn.Helpers
 {
     public static class DownloadFileHelper
     {
-        #region Logger
-
         /// <summary>
         /// Logger of the class
         /// </summary>
         private static readonly Logger Logger = LogManager.GetCurrentClassLogger();
-
-        #endregion
 
         /// <summary>
         /// Downloads a file from a specified Internet address.
@@ -96,18 +92,21 @@ namespace Popcorn.Helpers
                     }
                     catch (Exception exception) when (exception is TaskCanceledException)
                     {
+                        watch.Stop();
                         Logger.Debug(
                             "DownloadFileTaskAsync cancelled.");
                         return new Tuple<string, string, Exception>(remotePath, null, exception);
                     }
                     catch (ObjectDisposedException exception)
                     {
+                        watch.Stop();
                         Logger.Info(
                             $"DownloadFileTaskAsync (can't cancel download, it has finished previously): {remotePath}");
                         return new Tuple<string, string, Exception>(remotePath, null, exception);
                     }
                     catch (WebException exception)
                     {
+                        watch.Stop();
                         Logger.Error($"DownloadFileTaskAsync: {exception.Message}");
                         return new Tuple<string, string, Exception>(remotePath, null, exception);
                     }
@@ -115,6 +114,7 @@ namespace Popcorn.Helpers
             }
             catch (Exception ex)
             {
+                watch.Stop();
                 Logger.Error(
                     $"DownloadFileTaskAsync (download failed): {remotePath} Additional informations : {ex.Message}");
                 return new Tuple<string, string, Exception>(remotePath, null, ex);

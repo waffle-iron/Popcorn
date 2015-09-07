@@ -21,18 +21,10 @@ namespace Popcorn.Services.History
     /// </summary>
     public class MovieHistoryService
     {
-        #region Logger
-
         /// <summary>
         /// Logger of the class
         /// </summary>
         private static readonly Logger Logger = LogManager.GetCurrentClassLogger();
-
-        #endregion
-
-        #region Methods
-
-        #region Method -> ComputeMovieHistoryAsync
 
         /// <summary>
         /// Retrieve from database and set the IsFavorite and HasBeenSeen properties of each movie in params, 
@@ -75,10 +67,6 @@ namespace Popcorn.Services.History
                     $"ComputeMovieHistoryAsync in {elapsedMs} milliseconds.");
             }
         }
-
-        #endregion
-
-        #region Method -> GetFavoritesMoviesAsync
 
         /// <summary>
         /// Get the favorites movies
@@ -129,10 +117,6 @@ namespace Popcorn.Services.History
             return movies;
         }
 
-        #endregion
-
-        #region Method -> GetSeenMoviesAsync
-
         /// <summary>
         /// Get the seen movies
         /// </summary>
@@ -182,10 +166,6 @@ namespace Popcorn.Services.History
 
             return movies;
         }
-
-        #endregion
-
-        #region Method -> SetFavoriteMovieAsync
 
         /// <summary>
         /// Set the movie as favorite
@@ -245,10 +225,6 @@ namespace Popcorn.Services.History
             }
         }
 
-        #endregion
-
-        #region Method -> SetHasBeenSeenMovieAsync
-
         /// <summary>
         /// Set a movie as seen
         /// </summary>
@@ -307,10 +283,6 @@ namespace Popcorn.Services.History
             }
         }
 
-        #endregion
-
-        #region Method -> CreateMovieHistoryAsync
-
         /// <summary>
         /// Scaffold UserData Table on database if empty
         /// </summary>
@@ -349,10 +321,6 @@ namespace Popcorn.Services.History
                     $"CreateMovieHistoryAsync in {elapsedMs} milliseconds.");
             }
         }
-
-        #endregion
-
-        #region Method -> MovieShortFromEntityToModel
 
         /// <summary>
         /// Convert a short movie entity to a short movie model
@@ -404,10 +372,6 @@ namespace Popcorn.Services.History
                 Year = movie.Year
             };
         }
-
-        #endregion
-
-        #region Method -> MovieShortFromModelToEntity
 
         /// <summary>
         /// Convert a short movie model to a short movie entity
@@ -464,12 +428,9 @@ namespace Popcorn.Services.History
                 ExecutionTime = movie.ExecutionTime,
                 ApiVersion = movie.ApiVersion
             };
+
             return movieShort;
         }
-
-        #endregion
-
-        #region Method -> MovieFullFromModelToEntity
 
         /// <summary>
         /// Convert a full movie model to a full movie entity
@@ -564,9 +525,5 @@ namespace Popcorn.Services.History
 
             return movieFull;
         }
-
-        #endregion
-
-        #endregion
     }
 }

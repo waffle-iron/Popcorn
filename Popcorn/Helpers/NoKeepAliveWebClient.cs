@@ -8,9 +8,6 @@ namespace Popcorn.Helpers
     /// </summary>
     public class NoKeepAliveWebClient : WebClient
     {
-        #region Methods
-
-        #region Method -> GetWebRequest
         /// <summary>
         /// Get a web request without the KeepAlive option
         /// </summary>
@@ -28,8 +25,5 @@ namespace Popcorn.Helpers
 
             return request;
         }
-        #endregion
-
-        #endregion
     }
 }

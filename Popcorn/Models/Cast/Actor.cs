@@ -5,8 +5,6 @@ namespace Popcorn.Models.Cast
 {
     public class Actor : ObservableObject
     {
-        #region Properties
-
         private string _name;
         [DeserializeAs(Name = "name")]
         public string Name
@@ -39,8 +37,6 @@ namespace Popcorn.Models.Cast
             set { Set(() => MediumImage, ref _mediumImage, value); }
         }
 
-        #region Property -> SmallImagePath
-
         private string _smallImagePath = string.Empty;
 
         /// <summary>
@@ -51,9 +47,5 @@ namespace Popcorn.Models.Cast
             get { return _smallImagePath; }
             set { Set(() => SmallImagePath, ref _smallImagePath, value); }
         }
-
-        #endregion
-
-        #endregion
     }
 }

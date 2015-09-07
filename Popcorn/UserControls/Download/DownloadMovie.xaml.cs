@@ -5,7 +5,6 @@
     /// </summary>
     public partial class DownloadMovie
     {
-        #region Constructor
         /// <summary>
         /// Initializes a new instance of the DownloadMovie class.
         /// </summary>
@@ -13,6 +12,5 @@
         {
             InitializeComponent();
         }
-        #endregion
     }
 }

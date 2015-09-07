@@ -13,8 +13,6 @@ namespace Popcorn.Models.Movie.Full
     /// </summary>
     public class MovieFull : ObservableObject
     {
-        #region Properties
-
         private int _id;
 
         [DeserializeAs(Name = "id")]
@@ -249,8 +247,6 @@ namespace Popcorn.Models.Movie.Full
             set { Set(() => DateUploadedUnix, ref _dateUploadedUnix, value); }
         }
 
-        #region Property -> RatingValue
-
         private double _ratingValue;
 
         /// <summary>
@@ -262,10 +258,6 @@ namespace Popcorn.Models.Movie.Full
             set { Set(() => RatingValue, ref _ratingValue, value); }
         }
 
-        #endregion
-
-        #region Property -> FilePath
-
         private Uri _filePath;
 
         /// <summary>
@@ -276,11 +268,7 @@ namespace Popcorn.Models.Movie.Full
             get { return _filePath; }
             set { Set(() => FilePath, ref _filePath, value); }
         }
-
-        #endregion
-
-        #region Property -> BackgroundImagePath
-
+        
         private string _backgroundImagePath = string.Empty;
 
         /// <summary>
@@ -291,10 +279,6 @@ namespace Popcorn.Models.Movie.Full
             get { return _backgroundImagePath; }
             set { Set(() => BackgroundImagePath, ref _backgroundImagePath, value); }
         }
-
-        #endregion
-
-        #region Property -> PosterImagePath
 
         private string _posterImagePath = string.Empty;
 
@@ -307,11 +291,6 @@ namespace Popcorn.Models.Movie.Full
             set { Set(() => PosterImagePath, ref _posterImagePath, value); }
         }
 
-        #endregion
-
-        #region Property -> WatchInFullHdQuality
-
-
         private bool _watchInFullHdQuality;
 
         /// <summary>
@@ -323,10 +302,6 @@ namespace Popcorn.Models.Movie.Full
             set { Set(() => WatchInFullHdQuality, ref _watchInFullHdQuality, value); }
         }
 
-        #endregion
-
-        #region Property -> FullHdAvailable
-
         private bool _fullHdAvailable;
 
         /// <summary>
@@ -337,10 +312,6 @@ namespace Popcorn.Models.Movie.Full
             get { return _fullHdAvailable; }
             set { Set(() => FullHdAvailable, ref _fullHdAvailable, value); }
         }
-
-        #endregion
-
-        #region Property -> AvailableSubtitles
 
         private ObservableCollection<Subtitle.Subtitle> _availableSubtitles =
             new ObservableCollection<Subtitle.Subtitle>();
@@ -354,10 +325,6 @@ namespace Popcorn.Models.Movie.Full
             set { Set(() => AvailableSubtitles, ref _availableSubtitles, value); }
         }
 
-        #endregion
-
-        #region Property -> SelectedSubtitle
-
         private Subtitle.Subtitle _selectedSubtitle;
 
         /// <summary>
@@ -368,10 +335,6 @@ namespace Popcorn.Models.Movie.Full
             get { return _selectedSubtitle; }
             set { Set(() => SelectedSubtitle, ref _selectedSubtitle, value); }
         }
-
-        #endregion
-
-        #region Property -> IsFavorite
 
         private bool _isFavorite;
 
@@ -384,10 +347,6 @@ namespace Popcorn.Models.Movie.Full
             set { Set(() => IsFavorite, ref _isFavorite, value); }
         }
 
-        #endregion
-
-        #region Property -> HasBeenSeen
-
         private bool _hasBeenSeen;
 
         /// <summary>
@@ -398,9 +357,5 @@ namespace Popcorn.Models.Movie.Full
             get { return _hasBeenSeen; }
             set { Set(() => HasBeenSeen, ref _hasBeenSeen, value); }
         }
-
-        #endregion
-
-        #endregion
     }
 }

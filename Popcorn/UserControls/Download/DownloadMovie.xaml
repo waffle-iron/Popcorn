@@ -147,16 +147,14 @@
                 <RowDefinition Height="114*" />
                 <RowDefinition Height="128*" />
             </Grid.RowDefinitions>
-            <TextBlock x:Name="LoadingSubtitlesText"
-                       Grid.Row="2"
+            <TextBlock Grid.Row="2"
                        Grid.Column="1"
                        Grid.ColumnSpan="3"
                        HorizontalAlignment="Center"
                        VerticalAlignment="Center"
                        FontSize="18"
                        Text="{lex:LocText DownloadingSubtitlesLabel}" />
-            <controls:MetroProgressBar x:Name="DownloadingSubtitlesProgressBar"
-                                       Grid.Row="3"
+            <controls:MetroProgressBar Grid.Row="3"
                                        Grid.Column="1"
                                        Grid.ColumnSpan="3"
                                        Height="7"
@@ -196,8 +194,7 @@
                 <RowDefinition Height="114*" />
                 <RowDefinition Height="128*" />
             </Grid.RowDefinitions>
-            <Label x:Name="LoadingMovieText"
-                   Grid.Row="2"
+            <Label Grid.Row="2"
                    Grid.Column="1"
                    Grid.ColumnSpan="3"
                    HorizontalAlignment="Center"

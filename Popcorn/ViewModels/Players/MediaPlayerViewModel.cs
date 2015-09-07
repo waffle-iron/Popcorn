@@ -12,38 +12,20 @@ namespace Popcorn.ViewModels.Players
     /// </summary>
     public class MediaPlayerViewModel : TabsViewModel
     {
-        #region Logger
-
         /// <summary>
         /// Logger of the class
         /// </summary>
         private static readonly Logger Logger = LogManager.GetCurrentClassLogger();
-
-        #endregion
-
-        #region Property -> Main
 
         /// <summary>
         /// The main view model
         /// </summary>
         public MainViewModel Main { get; }
 
-        #endregion
-
-        #region Commands
-
-        #region Command -> StopPlayingMediaCommand
-
         /// <summary>
         /// Command used to stop playing the media
         /// </summary>
         public RelayCommand StopPlayingMediaCommand { get; set; }
-
-        #endregion
-
-        #endregion
-
-        #region Constructor
 
         /// <summary>
         /// Initializes a new instance of the MediaPlayerViewModel class.
@@ -53,10 +35,6 @@ namespace Popcorn.ViewModels.Players
             if (SimpleIoc.Default.IsRegistered<MainViewModel>())
                 Main = SimpleIoc.Default.GetInstance<MainViewModel>();
         }
-
-        #endregion
-
-        #region Event -> OnStoppedPlayingMedia
 
         /// <summary>
         /// Event fired on stopped playing the media
@@ -75,7 +53,5 @@ namespace Popcorn.ViewModels.Players
             var handler = StoppedPlayingMedia;
             handler?.Invoke(this, e);
         }
-
-        #endregion
     }
 }

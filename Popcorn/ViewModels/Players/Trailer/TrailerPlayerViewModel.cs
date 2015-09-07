@@ -11,16 +11,10 @@ namespace Popcorn.ViewModels.Players.Trailer
     /// </summary>
     public sealed class TrailerPlayerViewModel : MediaPlayerViewModel
     {
-        #region Logger
-
         /// <summary>
         /// Logger of the class
         /// </summary>
         private static readonly Logger Logger = LogManager.GetCurrentClassLogger();
-
-        #endregion
-
-        #region Property -> Trailer
 
         private Models.Trailer.Trailer _trailer;
 
@@ -33,10 +27,6 @@ namespace Popcorn.ViewModels.Players.Trailer
             private set { Set(() => Trailer, ref _trailer, value); }
         }
 
-        #endregion
-
-        #region Constructor
-
         /// <summary>
         /// Initializes a new instance of the TrailerPlayerViewModel class.
         /// </summary>
@@ -46,12 +36,6 @@ namespace Popcorn.ViewModels.Players.Trailer
             RegisterCommands();
             Trailer = trailer;
         }
-
-        #endregion
-
-        #region Methods
-
-        #region Method -> RegisterCommands
 
         /// <summary>
         /// Register commands
@@ -64,8 +48,9 @@ namespace Popcorn.ViewModels.Players.Trailer
             });
         }
 
-        #endregion
-
+        /// <summary>
+        /// Cleanup resources
+        /// </summary>
         public override void Cleanup()
         {
             Logger.Debug(
@@ -75,7 +60,5 @@ namespace Popcorn.ViewModels.Players.Trailer
 
             base.Cleanup();
         }
-
-        #endregion
     }
 }

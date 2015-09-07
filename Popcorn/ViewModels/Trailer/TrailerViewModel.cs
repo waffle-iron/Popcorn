@@ -5,7 +5,6 @@ using Popcorn.Helpers;
 using Popcorn.Messaging;
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Linq;
 using System.Net;
 using System.Net.Sockets;
@@ -24,36 +23,20 @@ namespace Popcorn.ViewModels.Trailer
     /// </summary>
     public sealed class TrailerViewModel : ViewModelBase
     {
-        #region Logger
-
         /// <summary>
         /// Logger of the class
         /// </summary>
         private static readonly Logger Logger = LogManager.GetCurrentClassLogger();
-
-        #endregion
-
-        #region Properties
-
-        #region Property -> MovieService
 
         /// <summary>
         /// The service used to interact with movies
         /// </summary>
         private MovieService MovieService { get; }
 
-        #endregion
-
-        #region Property -> Movie
-
         /// <summary>
         /// Represent the subtitle's movie
         /// </summary>
         private MovieFull Movie { get; }
-
-        #endregion
-
-        #region Property -> StreamingQualityMap
 
         /// <summary>
         /// Map for defining youtube video quality
@@ -67,10 +50,6 @@ namespace Popcorn.ViewModels.Trailer
                     {Constants.YoutubeStreamingQuality.Low, new HashSet<int> {360, 240}}
                 };
 
-        #endregion
-
-        #region Property -> TrailerPlayer
-
         private TrailerPlayerViewModel _trailerPlayer;
 
         /// <summary>
@@ -81,12 +60,6 @@ namespace Popcorn.ViewModels.Trailer
             get { return _trailerPlayer; }
             set { Set(() => TrailerPlayer, ref _trailerPlayer, value); }
         }
-
-        #endregion
-
-        #endregion
-
-        #region Constructor
 
         /// <summary>
         /// Initializes a new instance of the TrailerViewModel class.
@@ -100,10 +73,6 @@ namespace Popcorn.ViewModels.Trailer
             Movie = movie;
         }
 
-        #endregion
-
-        #region Method -> InitializeAsync
-
         /// <summary>
         /// Load asynchronously the movie's trailer for the current instance of TrailerViewModel
         /// </summary>
@@ -113,10 +82,6 @@ namespace Popcorn.ViewModels.Trailer
             await LoadTrailerAsync(Movie, ct);
             return this;
         }
-
-        #endregion
-
-        #region Method -> CreateAsync
 
         /// <summary>
         /// Initialize asynchronously an instance of the TrailerViewModel class
@@ -130,10 +95,6 @@ namespace Popcorn.ViewModels.Trailer
             return ret.InitializeAsync(ct);
         }
 
-        #endregion
-
-        #region Method -> LoadTrailerAsync
-
         /// <summary>
         /// Get trailer of a movie
         /// </summary>
@@ -141,8 +102,6 @@ namespace Popcorn.ViewModels.Trailer
         /// <param name="ct">Cancellation token</param>
         private async Task LoadTrailerAsync(MovieFull movie, CancellationToken ct)
         {
-            var watch = Stopwatch.StartNew();
-
             try
             {
                 var trailer = await MovieService.GetMovieTrailerAsync(movie, ct);
@@ -182,7 +141,6 @@ namespace Popcorn.ViewModels.Trailer
             }
             catch (Exception exception) when (exception is TaskCanceledException)
             {
-                watch.Stop();
                 Logger.Debug(
                     "GetMovieTrailerAsync cancelled.");
                 Messenger.Default.Send(new StopPlayingTrailerMessage());
@@ -190,7 +148,6 @@ namespace Popcorn.ViewModels.Trailer
             }
             catch (Exception exception) when (exception is SocketException || exception is WebException)
             {
-                watch.Stop();
                 Logger.Error(
                     $"GetMovieTrailerAsync: {exception.Message}");
                 Messenger.Default.Send(new StopPlayingTrailerMessage());
@@ -199,7 +156,6 @@ namespace Popcorn.ViewModels.Trailer
             catch (Exception exception)
                 when (exception is VideoNotAvailableException || exception is YoutubeParseException)
             {
-                watch.Stop();
                 Logger.Error(
                     $"GetMovieTrailerAsync: {exception.Message}");
                 Messenger.Default.Send(
@@ -211,16 +167,11 @@ namespace Popcorn.ViewModels.Trailer
             }
             catch (Exception exception)
             {
-                watch.Stop();
                 Logger.Error(
                     $"GetMovieTrailerAsync: {exception.Message}");
                 Messenger.Default.Send(new StopPlayingTrailerMessage());
             }
         }
-
-        #endregion
-
-        #region Method -> GetVideoInfoForStreamingAsync
 
         /// <summary>
         /// Get VideoInfo of a youtube video
@@ -244,10 +195,6 @@ namespace Popcorn.ViewModels.Trailer
 
             return GetVideoByStreamingQuality(filtered, qualitySetting);
         }
-
-        #endregion
-
-        #region Method -> GetVideoByStreamingQuality
 
         /// <summary>
         /// Get youtube video depending of choosen quality settings
@@ -282,8 +229,9 @@ namespace Popcorn.ViewModels.Trailer
             }
         }
 
-        #endregion
-
+        /// <summary>
+        /// Cleanup resources
+        /// </summary>
         public override void Cleanup()
         {
             Logger.Debug(

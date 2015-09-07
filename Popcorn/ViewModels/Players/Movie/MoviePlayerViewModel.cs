@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Threading;
 using System.Threading.Tasks;
 using GalaSoft.MvvmLight.CommandWpf;
 using GalaSoft.MvvmLight.Messaging;
@@ -14,29 +13,15 @@ namespace Popcorn.ViewModels.Players.Movie
     /// </summary>
     public sealed class MoviePlayerViewModel : MediaPlayerViewModel
     {
-        #region Logger
-
         /// <summary>
         /// Logger of the class
         /// </summary>
         private static readonly Logger Logger = LogManager.GetCurrentClassLogger();
 
-        #endregion
-
-        #region Property -> Movie
-
         /// <summary>
         /// Movie
         /// </summary>
         public readonly MovieFull Movie;
-
-        #endregion
-
-        #region Commands
-
-        #endregion
-
-        #region Constructor
 
         /// <summary>
         /// Initializes a new instance of the MoviePlayerViewModel class.
@@ -50,12 +35,6 @@ namespace Popcorn.ViewModels.Players.Movie
             TabName = !string.IsNullOrEmpty(Movie.Title) ? Movie.Title : Properties.Resources.PlayingTitleTab;
         }
 
-        #endregion
-
-        #region Methods
-
-        #region -> Method
-
         /// <summary>
         /// When a movie has been seen, save this information in user data
         /// </summary>
@@ -66,10 +45,6 @@ namespace Popcorn.ViewModels.Players.Movie
             Messenger.Default.Send(new StopPlayingMovieMessage());
         }
 
-        #endregion
-
-        #region Method -> RegisterMessages
-
         /// <summary>
         /// Register messages
         /// </summary>
@@ -79,10 +54,6 @@ namespace Popcorn.ViewModels.Players.Movie
                 this,
                 language => { TabName = Movie.Title; });
         }
-
-        #endregion
-
-        #region Method -> RegisterCommands
 
         /// <summary>
         /// Register commands
@@ -95,8 +66,9 @@ namespace Popcorn.ViewModels.Players.Movie
             });
         }
 
-        #endregion
-
+        /// <summary>
+        /// Cleanup resources
+        /// </summary>
         public override void Cleanup()
         {
             Logger.Debug(
@@ -106,7 +78,5 @@ namespace Popcorn.ViewModels.Players.Movie
 
             base.Cleanup();
         }
-
-        #endregion
     }
 }

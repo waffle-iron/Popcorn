@@ -13,8 +13,6 @@ namespace Popcorn.Converters
     {
         private WindowStateToBooleanConverter _instance;
 
-        #region IValueConverter Members
-
         /// <summary>
         /// Convert boolean to a window state
         /// </summary>
@@ -43,8 +41,6 @@ namespace Popcorn.Converters
             var windowState = (WindowState) value;
             return windowState != WindowState.Minimized && windowState != WindowState.Normal;
         }
-
-        #endregion
 
         public override object ProvideValue(IServiceProvider serviceProvider)
         {

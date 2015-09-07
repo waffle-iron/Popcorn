@@ -9,11 +9,10 @@ namespace Popcorn.Panels
     /// </summary>
     public class ElasticWrapPanel : Panel
     {
+        /// <summary>
+        /// The panel's number of columns
+        /// </summary>
         private int _columns;
-
-        #region DependencyProperties
-
-        #region DependencyProperty -> DesiredColumnWidthProperty
 
         /// <summary>
         /// Identifies the <see cref="DesiredColumnWidth"/> dependency property. 
@@ -21,14 +20,6 @@ namespace Popcorn.Panels
         internal static readonly DependencyProperty DesiredColumnWidthProperty =
             DependencyProperty.Register("DesiredColumnWidth", typeof (double), typeof (ElasticWrapPanel),
                 new PropertyMetadata(230d, OnDesiredColumnWidthChanged));
-
-        #endregion
-
-        #endregion
-
-        #region Properties
-
-        #region Property -> DesiredColumnWidth
 
         /// <summary>
         /// DesiredColumnWidth 
@@ -38,14 +29,6 @@ namespace Popcorn.Panels
             private get { return (double) GetValue(DesiredColumnWidthProperty); }
             set { SetValue(DesiredColumnWidthProperty, value); }
         }
-
-        #endregion
-
-        #endregion
-
-        #region Methods
-
-        #region Method -> MeasureOverride
 
         /// <summary>
         /// Calculate the available space for each column
@@ -68,10 +51,6 @@ namespace Popcorn.Panels
 
             return base.MeasureOverride(availableSize);
         }
-
-        #endregion
-
-        #region Method -> ArrangeOverride
 
         /// <summary>
         /// Calculate the size of each column to organize their location
@@ -132,10 +111,6 @@ namespace Popcorn.Panels
             return base.ArrangeOverride(finalSize);
         }
 
-        #endregion
-
-        #region Method -> OnDesiredColumnWidthChanged
-
         /// <summary>
         /// Inform when DesiredColumnWidthProperty has changed
         /// </summary>
@@ -147,9 +122,5 @@ namespace Popcorn.Panels
             panel.InvalidateMeasure();
             panel.InvalidateArrange();
         }
-
-        #endregion
-
-        #endregion
     }
 }

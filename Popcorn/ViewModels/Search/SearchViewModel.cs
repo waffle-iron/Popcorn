@@ -11,18 +11,10 @@ namespace Popcorn.ViewModels.Search
     /// </summary>
     public sealed class SearchViewModel : ViewModelBase
     {
-        #region Logger
-
         /// <summary>
         /// Logger of the class
         /// </summary>
         private static readonly Logger Logger = LogManager.GetCurrentClassLogger();
-
-        #endregion
-
-        #region Properties
-
-        #region Property -> SearchFilter
 
         private string _searchFilter;
 
@@ -35,41 +27,19 @@ namespace Popcorn.ViewModels.Search
             set { Set(() => SearchFilter, ref _searchFilter, value, true); }
         }
 
-        #endregion
-
-        #endregion
-
-        #region Commands
-
-        #region Command -> SearchMovieCommand
-
         /// <summary>
         /// Command used to search movies
         /// </summary>
         public RelayCommand SearchMovieCommand { get; private set; }
-
-        #endregion
-
-        #endregion
-
-        #region Constructor
 
         /// <summary>
         /// Initializes a new instance of the SearchViewModel class.
         /// </summary>
         public SearchViewModel()
         {
-            Logger.Debug("Initializing a new instance of SearchViewModel");
-
             RegisterMessages();
             RegisterCommands();
         }
-
-        #endregion
-
-        #region Methods
-
-        #region Method -> RegisterMessages
 
         /// <summary>
         /// Register messages
@@ -85,10 +55,6 @@ namespace Popcorn.ViewModels.Search
             });
         }
 
-        #endregion
-
-        #region Method -> RegisterCommands
-
         /// <summary>
         /// Register commands
         /// </summary>
@@ -102,9 +68,5 @@ namespace Popcorn.ViewModels.Search
                     Messenger.Default.Send(new SearchMovieMessage(SearchFilter));
                 });
         }
-
-        #endregion
-
-        #endregion
     }
 }

@@ -11,8 +11,6 @@ namespace Popcorn.Windows
     /// </summary>
     public partial class MainWindow
     {
-        #region Constructor
-
         /// <summary>
         /// Initializes a new instance of the MainWindow class.
         /// </summary>
@@ -26,12 +24,6 @@ namespace Popcorn.Windows
 
             vm.WindowStageChanged += OnWindowStateChanged;
         }
-
-        #endregion
-
-        #region Methods
-
-        #region Method -> OnWindowStateChanged
 
         /// <summary>
         /// When window got maximized while a movie is playing : collapse menu bar, header tab and let tabcontrol takes up all the place available. 
@@ -64,9 +56,5 @@ namespace Popcorn.Windows
                 headerPanelScroll.Visibility = Visibility.Visible;
             }
         }
-
-        #endregion
-
-        #endregion
     }
 }

@@ -5,7 +5,6 @@
     /// </summary>
     public partial class Search
     {
-        #region Constructor
         /// <summary>
         /// Initializes a new instance of the Search class.
         /// </summary>
@@ -13,6 +12,5 @@
         {
             InitializeComponent();
         }
-        #endregion
     }
 }

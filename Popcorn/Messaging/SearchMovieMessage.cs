@@ -7,30 +7,18 @@ namespace Popcorn.Messaging
     /// </summary>
     public class SearchMovieMessage : MessageBase
     {
-        #region Properties
-
-        #region Property -> Filter
-
         /// <summary>
         /// Movie
         /// </summary>
         public readonly string Filter;
 
-        #endregion
-
-        #endregion
-
-        #region Constructor
-
         /// <summary>
-        /// Constructor
+        /// Initialize a new instance of SearchMovieMessage class
         /// </summary>
         /// <param name="filter">Filter use as criteria for search</param>
         public SearchMovieMessage(string filter)
         {
             Filter = filter;
         }
-
-        #endregion
     }
 }

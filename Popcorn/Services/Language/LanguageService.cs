@@ -22,37 +22,23 @@ namespace Popcorn.Services.Language
     /// </summary>
     public class LanguageService
     {
-        #region Logger
-
         /// <summary>
         /// Logger of the class
         /// </summary>
         private static readonly Logger Logger = LogManager.GetCurrentClassLogger();
-
-        #endregion
-
-        #region Property -> ApplicationService
 
         /// <summary>
         /// Services used to interacts with application settings
         /// </summary>
         private ApplicationSettingsService ApplicationService { get; }
 
-        #endregion
-
-        #region Property -> MovieService
-
         /// <summary>
         /// Services used to interact with movies
         /// </summary>
         private MovieService MovieService { get; }
 
-        #endregion
-
-        #region Constructor
-
         /// <summary>
-        /// Constructor
+        /// Initialize a new instance of LanguageService class
         /// </summary>
         public LanguageService()
         {
@@ -62,12 +48,6 @@ namespace Popcorn.Services.Language
             if (SimpleIoc.Default.IsRegistered<MovieService>())
                 MovieService = SimpleIoc.Default.GetInstance<MovieService>();
         }
-
-        #endregion
-
-        #region Methods
-
-        #region Method -> GetAvailableLanguagesAsync
 
         /// <summary>
         /// Get all available languages from the database
@@ -115,10 +95,6 @@ namespace Popcorn.Services.Language
             return availableLanguages;
         }
 
-        #endregion
-
-        #region Method -> GetCurrentLanguageAsync
-
         /// <summary>
         /// Get the current language of the application
         /// </summary>
@@ -163,10 +139,6 @@ namespace Popcorn.Services.Language
             return currentLanguage;
         }
 
-        #endregion
-
-        #region Method -> SetCurrentLanguageAsync
-
         /// <summary>
         /// Get the current language of the application
         /// </summary>
@@ -202,10 +174,6 @@ namespace Popcorn.Services.Language
                 "SetCurrentLanguageAsync ({0}) in {1} milliseconds.", language.LocalizedName, elapsedMs);
         }
 
-        #endregion
-
-        #region Method -> ChangeLanguage
-
         /// <summary>
         /// Change language 
         /// </summary>
@@ -216,9 +184,5 @@ namespace Popcorn.Services.Language
             LocalizeDictionary.Instance.Culture = new CultureInfo(language.Culture);
             Messenger.Default.Send(new ChangeLanguageMessage());
         }
-
-        #endregion
-
-        #endregion
     }
 }

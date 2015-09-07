@@ -18,8 +18,6 @@ namespace Popcorn.UserControls.Players.Trailer
     {
         private bool _isMouseActivityCaptured;
 
-        #region Property -> Volume
-
         /// <summary>
         /// Get or set the media volume 
         /// </summary>
@@ -30,19 +28,11 @@ namespace Popcorn.UserControls.Players.Trailer
             set { SetValue(VolumeProperty, value); }
         }
 
-        #endregion
-
-        #region DependencyProperty -> VolumeProperty
-
         /// <summary>
         /// Identifies the <see cref="Volume"/> dependency property. 
         /// </summary>
         internal static readonly DependencyProperty VolumeProperty = DependencyProperty.Register("Volume", typeof (int),
             typeof (TrailerPlayer), new PropertyMetadata(100, OnVolumeChanged));
-
-        #endregion
-
-        #region Constructor
 
         /// <summary>
         /// Initializes a new instance of the MoviePlayer class.
@@ -53,10 +43,6 @@ namespace Popcorn.UserControls.Players.Trailer
 
             Loaded += OnLoaded;
         }
-
-        #endregion
-
-        #region Method -> Onloaded
 
         /// <summary>
         /// Subscribe to events and play the movie when control has been loaded
@@ -97,10 +83,6 @@ namespace Popcorn.UserControls.Players.Trailer
             }
         }
 
-        #endregion
-
-        #region Method -> OnVolumeChanged
-
         /// <summary>
         /// When media's volume changed, update volume
         /// </summary>
@@ -116,10 +98,6 @@ namespace Popcorn.UserControls.Players.Trailer
             moviePlayer.ChangeMediaVolume(newVolume);
         }
 
-        #endregion
-
-        #region Method -> ChangeMediaVolume
-
         /// <summary>
         /// Change the media's volume
         /// </summary>
@@ -128,10 +106,6 @@ namespace Popcorn.UserControls.Players.Trailer
         {
             Player.Volume = newValue;
         }
-
-        #endregion
-
-        #region Method -> MouseWheelMediaPlayer
 
         /// <summary>
         /// When user uses the mousewheel, update the volume
@@ -145,10 +119,6 @@ namespace Popcorn.UserControls.Players.Trailer
                 Volume += (e.Delta > 0) ? 10 : -10;
             }
         }
-
-        #endregion
-
-        #region Method -> MediaPlayerEndReached
 
         /// <summary>
         /// When a movie has been fully played, save seen property into database and send a StopPlayingMovieMessage message
@@ -167,10 +137,6 @@ namespace Popcorn.UserControls.Players.Trailer
             });
         }
 
-        #endregion
-
-        #region Method -> PlayMedia
-
         /// <summary>
         /// Play the movie
         /// </summary>
@@ -182,10 +148,6 @@ namespace Popcorn.UserControls.Players.Trailer
             MediaPlayerStatusBarItemPlay.Visibility = Visibility.Collapsed;
             MediaPlayerStatusBarItemPause.Visibility = Visibility.Visible;
         }
-
-        #endregion
-
-        #region Method -> PauseMedia
 
         /// <summary>
         /// Pause the movie
@@ -199,10 +161,6 @@ namespace Popcorn.UserControls.Players.Trailer
             MediaPlayerStatusBarItemPause.Visibility = Visibility.Collapsed;
         }
 
-        #endregion
-
-        #region Method -> OnStoppedPlayingMedia
-
         /// <summary>
         /// When media has finished playing, stop player and dispose control
         /// </summary>
@@ -212,10 +170,6 @@ namespace Popcorn.UserControls.Players.Trailer
         {
             Dispose();
         }
-
-        #endregion
-
-        #region Method -> MediaPlayerTimerTick
 
         /// <summary>
         /// Report the playing progress on the timeline
@@ -229,10 +183,6 @@ namespace Popcorn.UserControls.Players.Trailer
             MediaPlayerSliderProgress.Maximum = Player.Length.TotalSeconds;
             MediaPlayerSliderProgress.Value = Player.Time.TotalSeconds;
         }
-
-        #endregion
-
-        #region Method -> MediaPlayerPlayCanExecute
 
         /// <summary>
         /// Each time the CanExecute play command change, update the visibility of Play/Pause buttons in the player
@@ -255,10 +205,6 @@ namespace Popcorn.UserControls.Players.Trailer
             }
         }
 
-        #endregion
-
-        #region Method -> MediaPlayerPauseCanExecute
-
         /// <summary>
         /// Each time the CanExecute play command change, update the visibility of Play/Pause buttons in the media player
         /// </summary>
@@ -280,10 +226,6 @@ namespace Popcorn.UserControls.Players.Trailer
             }
         }
 
-        #endregion
-
-        #region Method -> MediaSliderProgressDragCompleted
-
         /// <summary>
         /// Report when user has finished dragging the media player progress
         /// </summary>
@@ -294,10 +236,6 @@ namespace Popcorn.UserControls.Players.Trailer
             UserIsDraggingMediaPlayerSlider = false;
             Player.Time = TimeSpan.FromSeconds(MediaPlayerSliderProgress.Value);
         }
-
-        #endregion
-
-        #region Method -> MovieSliderProgress_ValueChanged
 
         /// <summary>
         /// Report runtime when movie player progress changed
@@ -313,10 +251,6 @@ namespace Popcorn.UserControls.Players.Trailer
                     .ToString(@"hh\:mm\:ss", CultureInfo.CurrentCulture);
         }
 
-        #endregion
-
-        #region Method -> MediaPlayerPlayExecuted
-
         /// <summary>
         /// Play media
         /// </summary>
@@ -327,10 +261,6 @@ namespace Popcorn.UserControls.Players.Trailer
             PlayMedia();
         }
 
-        #endregion
-
-        #region Method -> MediaPlayerPauseExecuted
-
         /// <summary>
         /// Pause media
         /// </summary>
@@ -340,10 +270,6 @@ namespace Popcorn.UserControls.Players.Trailer
         {
             PauseMedia();
         }
-
-        #endregion
-
-        #region Method -> OnInactivity
 
         /// <summary>
         /// Hide the PlayerStatusBar on mouse inactivity 
@@ -368,10 +294,6 @@ namespace Popcorn.UserControls.Players.Trailer
 
             PlayerStatusBar.BeginAnimation(OpacityProperty, opacityAnimation);
         }
-
-        #endregion
-
-        #region Method -> OnActivity
 
         /// <summary>
         /// Show the PlayerStatusBar on mouse activity 
@@ -423,10 +345,6 @@ namespace Popcorn.UserControls.Players.Trailer
             _isMouseActivityCaptured = false;
         }
 
-        #endregion
-
-        #region Dispose
-
         /// <summary>
         /// Free resources
         /// </summary>
@@ -472,7 +390,5 @@ namespace Popcorn.UserControls.Players.Trailer
                 }
             });
         }
-
-        #endregion
     }
 }

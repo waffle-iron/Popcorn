@@ -23,27 +23,15 @@ namespace Popcorn.ViewModels.Download
     /// </summary>
     public sealed class DownloadMovieViewModel : ViewModelBase
     {
-        #region Logger
-
         /// <summary>
         /// Logger of the class
         /// </summary>
         private static readonly Logger Logger = LogManager.GetCurrentClassLogger();
 
-        #endregion
-
-        #region Properties
-
-        #region Property -> MovieService
-
         /// <summary>
         /// The service used to interact with movies
         /// </summary>
         private MovieService MovieService { get; }
-
-        #endregion
-
-        #region Property -> MovieSettingsViewModel
 
         private MovieSettingsViewModel _movieSettings;
 
@@ -56,10 +44,6 @@ namespace Popcorn.ViewModels.Download
             set { Set(() => MovieSettings, ref _movieSettings, value); }
         }
 
-        #endregion
-
-        #region Property -> IsDownloadingMovie
-
         private bool _isDownloadingMovie;
 
         /// <summary>
@@ -70,10 +54,6 @@ namespace Popcorn.ViewModels.Download
             get { return _isDownloadingMovie; }
             set { Set(() => IsDownloadingMovie, ref _isDownloadingMovie, value); }
         }
-
-        #endregion
-
-        #region Property -> IsDownloadingSubtitles
 
         private bool _isDownloadingSubtitles;
 
@@ -86,15 +66,7 @@ namespace Popcorn.ViewModels.Download
             set { Set(() => IsDownloadingSubtitles, ref _isDownloadingSubtitles, value); }
         }
 
-        #endregion
-
-        #region Property -> IsMovieBuffered
-
         private bool IsMovieBuffered { get; set; }
-
-        #endregion
-
-        #region Property -> MovieDownloadProgress
 
         private double _movieDownloadProgress;
 
@@ -107,10 +79,6 @@ namespace Popcorn.ViewModels.Download
             set { Set(() => MovieDownloadProgress, ref _movieDownloadProgress, value); }
         }
 
-        #endregion
-
-        #region Property -> MovieDownloadRate
-
         private double _movieDownloadRate;
 
         /// <summary>
@@ -121,10 +89,6 @@ namespace Popcorn.ViewModels.Download
             get { return _movieDownloadRate; }
             set { Set(() => MovieDownloadRate, ref _movieDownloadRate, value); }
         }
-
-        #endregion
-
-        #region Property -> SubtitlesDownloadProgress
 
         private long _subtitlesDownloadProgress;
 
@@ -137,10 +101,6 @@ namespace Popcorn.ViewModels.Download
             set { Set(() => SubtitlesDownloadProgress, ref _subtitlesDownloadProgress, value); }
         }
 
-        #endregion
-
-        #region Property -> Movie
-
         private MovieFull _movie;
 
         /// <summary>
@@ -152,33 +112,15 @@ namespace Popcorn.ViewModels.Download
             set { Set(() => Movie, ref _movie, value); }
         }
 
-        #endregion
-
-        #region Property -> CancellationDownloadingMovie
-
         /// <summary>
         /// Token to cancel the download
         /// </summary>
         private CancellationTokenSource CancellationDownloadingMovie { get; set; }
 
-        #endregion
-
-        #endregion
-
-        #region Commands
-
-        #region Command -> StopDownloadingMovieCommand
-
         /// <summary>
         /// The command used to stop the download of a movie
         /// </summary>
         public RelayCommand StopDownloadingMovieCommand { get; private set; }
-
-        #endregion
-
-        #endregion
-
-        #region Constructor
 
         /// <summary>
         /// Initializes a new instance of the DownloadMovieViewModel class.
@@ -186,8 +128,6 @@ namespace Popcorn.ViewModels.Download
         /// <param name="movie">The movie to download</param>
         public DownloadMovieViewModel(MovieFull movie)
         {
-            Logger.Debug("Initializing a new instance of DownloadMovieViewModel");
-
             RegisterMessages();
             RegisterCommands();
             CancellationDownloadingMovie = new CancellationTokenSource();
@@ -197,12 +137,6 @@ namespace Popcorn.ViewModels.Download
             Movie = movie;
             MovieSettings = new MovieSettingsViewModel(movie);
         }
-
-        #endregion
-
-        #region Methods
-
-        #region Method -> RegisterMessages
 
         /// <summary>
         /// Register messages
@@ -228,10 +162,6 @@ namespace Popcorn.ViewModels.Download
                 });
         }
 
-        #endregion
-
-        #region Method -> RegisterCommands
-
         /// <summary>
         /// Register commands
         /// </summary>
@@ -239,10 +169,6 @@ namespace Popcorn.ViewModels.Download
         {
             StopDownloadingMovieCommand = new RelayCommand(StopDownloadingMovie);
         }
-
-        #endregion
-
-        #region Method -> ReportMovieDownloadRate
 
         /// <summary>
         /// Report the download progress
@@ -253,10 +179,6 @@ namespace Popcorn.ViewModels.Download
             MovieDownloadRate = value;
         }
 
-        #endregion
-
-        #region Method -> ReportSubtitlesDownloadProgress
-
         /// <summary>
         /// Report the download progress of the subtitles
         /// </summary>
@@ -265,10 +187,6 @@ namespace Popcorn.ViewModels.Download
         {
             SubtitlesDownloadProgress = value;
         }
-
-        #endregion
-
-        #region Method -> ReportMovieDownloadProgress
 
         /// <summary>
         /// Report the download progress
@@ -285,10 +203,6 @@ namespace Popcorn.ViewModels.Download
                 IsMovieBuffered = true;
             }
         }
-
-        #endregion
-
-        #region Method -> DownloadMovieAsync
 
         /// <summary>
         /// Download a movie
@@ -379,10 +293,6 @@ namespace Popcorn.ViewModels.Download
             }, ct);
         }
 
-        #endregion
-
-        #region Method -> StopDownloadingMovie
-
         /// <summary>
         /// Stop downloading a movie
         /// </summary>
@@ -397,8 +307,9 @@ namespace Popcorn.ViewModels.Download
             CancellationDownloadingMovie = new CancellationTokenSource();
         }
 
-        #endregion
-
+        /// <summary>
+        /// Cleanup resources
+        /// </summary>
         public override void Cleanup()
         {
             Logger.Debug(
@@ -408,7 +319,5 @@ namespace Popcorn.ViewModels.Download
             MovieSettings?.Cleanup();
             base.Cleanup();
         }
-
-        #endregion
     }
 }

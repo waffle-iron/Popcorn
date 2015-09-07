@@ -28,36 +28,20 @@ namespace Popcorn.ViewModels.Main
     /// </summary>
     public class MainViewModel : ViewModelBase
     {
-        #region Logger
-
         /// <summary>
         /// Logger of the class
         /// </summary>
         private static readonly Logger Logger = LogManager.GetCurrentClassLogger();
-
-        #endregion
-
-        #region Properties
-
-        #region Property -> UpdateManager
 
         /// <summary>
         /// Used to update application
         /// </summary>
         private UpdateManager UpdateManager { get; set; }
 
-        #endregion
-
-        #region Property -> IDialogCoordinator
-
         /// <summary>
         /// Used to define the dialog context
         /// </summary>
         private IDialogCoordinator DialogCoordinator { get; }
-
-        #endregion
-
-        #region Property -> IsUserSignin
 
         private bool _isUserSignin;
 
@@ -69,10 +53,6 @@ namespace Popcorn.ViewModels.Main
             get { return _isUserSignin; }
             set { Set(() => IsUserSignin, ref _isUserSignin, value); }
         }
-
-        #endregion
-
-        #region Property -> IsMoviePlaying
 
         private bool _isMoviePlaying;
 
@@ -89,10 +69,6 @@ namespace Popcorn.ViewModels.Main
             }
         }
 
-        #endregion
-
-        #region Property -> IsManagingException
-
         private bool _isManagingException;
 
         /// <summary>
@@ -103,10 +79,6 @@ namespace Popcorn.ViewModels.Main
             get { return _isManagingException; }
             set { Set(() => IsManagingException, ref _isManagingException, value); }
         }
-
-        #endregion
-
-        #region Property -> IsFullScreen
 
         private bool _isFullScreen;
 
@@ -123,10 +95,6 @@ namespace Popcorn.ViewModels.Main
             }
         }
 
-        #endregion
-
-        #region Property -> Tabs
-
         private ObservableCollection<TabsViewModel> _tabs = new ObservableCollection<TabsViewModel>();
 
         /// <summary>
@@ -137,10 +105,6 @@ namespace Popcorn.ViewModels.Main
             get { return _tabs; }
             set { Set(() => Tabs, ref _tabs, value); }
         }
-
-        #endregion
-
-        #region Property -> SelectedTab
 
         private TabsViewModel _selectedTab;
 
@@ -153,10 +117,6 @@ namespace Popcorn.ViewModels.Main
             set { Set(() => SelectedTab, ref _selectedTab, value); }
         }
 
-        #endregion
-
-        #region Property -> IsMovieSearchActive
-
         private bool _isMovieSearchActive;
 
         /// <summary>
@@ -167,10 +127,6 @@ namespace Popcorn.ViewModels.Main
             get { return _isMovieSearchActive; }
             private set { Set(() => IsMovieSearchActive, ref _isMovieSearchActive, value); }
         }
-
-        #endregion
-
-        #region Property -> IsConnectionInError
 
         private bool _isConnectionInError;
 
@@ -183,10 +139,6 @@ namespace Popcorn.ViewModels.Main
             set { Set(() => IsConnectionInError, ref _isConnectionInError, value); }
         }
 
-        #endregion
-
-        #region Property -> IsSettingsFlyoutOpen
-
         private bool _isSettingsFlyoutOpen;
 
         /// <summary>
@@ -197,10 +149,6 @@ namespace Popcorn.ViewModels.Main
             get { return _isSettingsFlyoutOpen; }
             set { Set(() => IsSettingsFlyoutOpen, ref _isSettingsFlyoutOpen, value); }
         }
-
-        #endregion
-
-        #region Property -> IsMovieFlyoutOpen
 
         private bool _isMovieFlyoutOpen;
 
@@ -213,10 +161,6 @@ namespace Popcorn.ViewModels.Main
             set { Set(() => IsMovieFlyoutOpen, ref _isMovieFlyoutOpen, value); }
         }
 
-        #endregion
-
-        #region Property -> GenresViewModel
-
         private GenresViewModel _genresViewModel;
 
         /// <summary>
@@ -228,107 +172,55 @@ namespace Popcorn.ViewModels.Main
             set { Set(() => GenresViewModel, ref _genresViewModel, value); }
         }
 
-        #endregion
-
-        #endregion
-
-        #region Commands
-
-        #region Command -> SelectGreatestTab
-
         /// <summary>
         /// Command used to select the greatest movies tab
         /// </summary>
         public RelayCommand SelectGreatestTab { get; private set; }
-
-        #endregion
-
-        #region Command -> SelectPopularTab
 
         /// <summary>
         /// Command used to select the popular movies tab
         /// </summary>
         public RelayCommand SelectPopularTab { get; private set; }
 
-        #endregion
-
-        #region Command -> SelectRecentTab
-
         /// <summary>
         /// Command used to select the recent movies tab
         /// </summary>
         public RelayCommand SelectRecentTab { get; private set; }
-
-        #endregion
-
-        #region Command -> SelectSearchTab
 
         /// <summary>
         /// Command used to select the search movies tab
         /// </summary>
         public RelayCommand SelectSearchTab { get; private set; }
 
-        #endregion
-
-        #region Command -> SelectFavoritesTab
-
         /// <summary>
         /// Command used to select the seen movies tab
         /// </summary>
         public RelayCommand SelectSeenTab { get; private set; }
-
-        #endregion
-
-        #region Command -> SelectFavoritesTab
 
         /// <summary>
         /// Command used to select the favorites movies tab
         /// </summary>
         public RelayCommand SelectFavoritesTab { get; private set; }
 
-        #endregion
-
-        #region Command -> CloseMoviePageCommand
-
         /// <summary>
         /// Command used to close movie page
         /// </summary>
         public RelayCommand CloseMoviePageCommand { get; private set; }
-
-        #endregion
-
-        #region Command -> MainWindowClosingCommand
 
         /// <summary>
         /// Command used to close the application
         /// </summary>
         public RelayCommand MainWindowClosingCommand { get; private set; }
 
-        #endregion
-
-        #region Command -> OpenSettingsCommand
-
         /// <summary>
         /// Command used to open application settings
         /// </summary>
         public RelayCommand OpenSettingsCommand { get; private set; }
 
-        #endregion
-
-        #region Command -> InitializeAsyncCommand
-
         /// <summary>
         /// Command used to load tabs
         /// </summary>
         public RelayCommand InitializeAsyncCommand { get; private set; }
-
-        #endregion
-
-        #endregion
-
-        #region Constructors
-
-        #region Constructor -> MainViewModel
 
         /// <summary>
         /// Initializes a new instance of the MainViewModel class.
@@ -348,14 +240,6 @@ namespace Popcorn.ViewModels.Main
             DialogCoordinator = dialogCoordinator;
             AppDomain.CurrentDomain.UnhandledException += OnUnhandledException;
         }
-
-        #endregion
-
-        #endregion
-
-        #region Methods 
-
-        #region Method -> InitializeAsync
 
         /// <summary>
         /// Load asynchronously an instance of MainViewModel
@@ -383,10 +267,6 @@ namespace Popcorn.ViewModels.Main
             await StartUpdateProcessAsync();
 #endif
         }
-
-        #endregion
-
-        #region Method -> RegisterMessages
 
         /// <summary>
         /// Register messages
@@ -421,6 +301,7 @@ namespace Popcorn.ViewModels.Main
                     {
                         moviePlayer = mediaViewModel;
                     }
+
                     if (moviePlayer != null)
                     {
                         Tabs.Remove(moviePlayer);
@@ -438,10 +319,6 @@ namespace Popcorn.ViewModels.Main
                     await SearchMovies(message.Filter);
                 });
         }
-
-        #endregion
-
-        #region Method -> RegisterCommands
 
         /// <summary>
         /// Register commands
@@ -545,10 +422,6 @@ namespace Popcorn.ViewModels.Main
             InitializeAsyncCommand = new RelayCommand(async () => await InitializeAsync());
         }
 
-        #endregion
-
-        #region Method -> OnUnhandledException
-
         /// <summary>
         /// Display a dialog on unhandled exception
         /// </summary>
@@ -562,10 +435,6 @@ namespace Popcorn.ViewModels.Main
                 ManageException(ex);
             }
         }
-
-        #endregion
-
-        #region Method -> ManageException
 
         /// <summary>
         /// Manage an exception
@@ -592,10 +461,6 @@ namespace Popcorn.ViewModels.Main
                 await DialogCoordinator.HideMetroDialogAsync(this, exceptionDialog);
             });
         }
-
-        #endregion
-
-        #region Method -> SearchMovies
 
         /// <summary>
         /// Search for movie with a criteria
@@ -645,10 +510,6 @@ namespace Popcorn.ViewModels.Main
                 }
             }
         }
-
-        #endregion
-
-        #region Method -> StartUpdateProcessAsync
 
         /// <summary>
         /// Look for update then download and apply if any
@@ -742,14 +603,6 @@ namespace Popcorn.ViewModels.Main
                 "Finished looking for updates.", elapsedStartMs);
         }
 
-        #endregion
-
-        #endregion
-
-        #region Events
-
-        #region Event -> OnWindowStateChanged
-
         public event EventHandler<WindowStateChangedEventArgs> WindowStageChanged;
 
         /// <summary>
@@ -764,9 +617,5 @@ namespace Popcorn.ViewModels.Main
             var handler = WindowStageChanged;
             handler?.Invoke(this, e);
         }
-
-        #endregion
-
-        #endregion
     }
 }

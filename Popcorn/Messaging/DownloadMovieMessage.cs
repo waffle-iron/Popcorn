@@ -8,20 +8,10 @@ namespace Popcorn.Messaging
     /// </summary>
     public class DownloadMovieMessage : MessageBase
     {
-        #region Properties
-
-        #region Property -> Movie
-
         /// <summary>
         /// Movie
         /// </summary>
         public readonly MovieFull Movie;
-
-        #endregion
-
-        #endregion
-
-        #region Constructor
 
         /// <summary>
         /// DownloadMovieMessage
@@ -31,7 +21,5 @@ namespace Popcorn.Messaging
         {
             Movie = movie;
         }
-
-        #endregion
     }
 }

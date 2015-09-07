@@ -5,6 +5,9 @@ using Popcorn.Entity.Cast;
 
 namespace Popcorn.Entity.Movie
 {
+    /// <summary>
+    /// Represents a movie with all its details
+    /// </summary>
     public class MovieFull
     {
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]

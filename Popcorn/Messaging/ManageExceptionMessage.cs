@@ -8,30 +8,18 @@ namespace Popcorn.Messaging
     /// </summary>
     public class ManageExceptionMessage : MessageBase
     {
-        #region Properties
-
-        #region Property -> Message
-
         /// <summary>
         /// The unhandled exception
         /// </summary>
         public readonly Exception UnHandledException;
 
-        #endregion
-
-        #endregion
-
-        #region Constructor
-
         /// <summary>
-        /// Constructor
+        /// Initialize a new instance of ManageExceptionMessage class
         /// </summary>
         /// <param name="unHandledException">The exception to broadcast</param>
         public ManageExceptionMessage(Exception unHandledException)
         {
             UnHandledException = unHandledException;
         }
-
-        #endregion
     }
 }

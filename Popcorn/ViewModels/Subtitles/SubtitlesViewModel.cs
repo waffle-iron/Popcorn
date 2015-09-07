@@ -10,27 +10,15 @@ namespace Popcorn.ViewModels.Subtitles
 {
     public sealed class SubtitlesViewModel : ViewModelBase
     {
-        #region Logger
-
         /// <summary>
         /// Logger of the class
         /// </summary>
         private static readonly Logger Logger = LogManager.GetCurrentClassLogger();
 
-        #endregion
-
-        #region Properties
-
-        #region Property -> MovieService
-
         /// <summary>
         /// The service used to interact with movies
         /// </summary>
         private MovieService MovieService { get; }
-
-        #endregion
-
-        #region Property -> Movie
 
         private MovieFull _movie;
 
@@ -43,20 +31,10 @@ namespace Popcorn.ViewModels.Subtitles
             set { Set(() => Movie, ref _movie, value); }
         }
 
-        #endregion
-
-        #region Property -> CancellationDownloadingSubtitlesToken
-
         /// <summary>
         /// Token to cancel downloading subtitles
         /// </summary>
         private CancellationTokenSource CancellationDownloadingSubtitlesToken { get; set; }
-
-        #endregion
-
-        #endregion
-
-        #region Constructor
 
         /// <summary>
         /// Initializes a new instance of the SubtitlesViewModel class.
@@ -71,12 +49,6 @@ namespace Popcorn.ViewModels.Subtitles
             Movie = movie;
         }
 
-        #endregion
-
-        #region Methods
-
-        #region Method -> InitializeAsync
-
         /// <summary>
         /// Load asynchronously the movie's subtitles for the current instance
         /// </summary>
@@ -86,10 +58,6 @@ namespace Popcorn.ViewModels.Subtitles
             await LoadSubtitlesAsync(Movie);
             return this;
         }
-
-        #endregion
-
-        #region Method -> CreateAsync
 
         /// <summary>
         /// Initialize asynchronously an instance of the SubtitlesViewModel class
@@ -101,10 +69,6 @@ namespace Popcorn.ViewModels.Subtitles
             var ret = new SubtitlesViewModel(movie);
             return ret.InitializeAsync();
         }
-
-        #endregion
-
-        #region Method -> LoadSubtitlesAsync
 
         /// <summary>
         /// Get the movie's subtitles
@@ -118,10 +82,6 @@ namespace Popcorn.ViewModels.Subtitles
             await MovieService.LoadSubtitlesAsync(movie, CancellationDownloadingSubtitlesToken.Token);
         }
 
-        #endregion
-
-        #region Method -> StopDownloadingSubtitles
-
         /// <summary>
         /// Stop downloading subtitles
         /// </summary>
@@ -133,8 +93,9 @@ namespace Popcorn.ViewModels.Subtitles
             CancellationDownloadingSubtitlesToken = new CancellationTokenSource();
         }
 
-        #endregion
-
+        /// <summary>
+        /// Cleanup resources
+        /// </summary>
         public override void Cleanup()
         {
             Logger.Debug(
@@ -143,7 +104,5 @@ namespace Popcorn.ViewModels.Subtitles
             StopDownloadingSubtitles();
             base.Cleanup();
         }
-
-        #endregion
     }
 }

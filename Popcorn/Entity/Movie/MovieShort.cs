@@ -5,7 +5,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 namespace Popcorn.Entity.Movie
 {
     /// <summary>
-    /// Represents movie as an entity in the database
+    /// Represents a movie with some details
     /// </summary>
     public class MovieShort
     {

@@ -21,35 +21,20 @@ namespace Popcorn.ViewModels.Tabs
     /// </summary>
     public sealed class PopularTabViewModel : TabsViewModel
     {
-        #region Logger
-
         /// <summary>
         /// Logger of the class
         /// </summary>
         private static readonly Logger Logger = LogManager.GetCurrentClassLogger();
-
-        #endregion
-
-        #region Constructor
 
         /// <summary>
         /// Initializes a new instance of the PopularTabViewModel class.
         /// </summary>
         public PopularTabViewModel()
         {
-            Logger.Debug(
-                "Initializing a new instance of PopularTabViewModel");
-
             RegisterMessages();
             RegisterCommands();
             TabName = LocalizationProviderHelper.GetLocalizedValue<string>("PopularTitleTab");
         }
-
-        #endregion
-
-        #region Methods
-
-        #region Method -> RegisterMessages
 
         /// <summary>
         /// Register messages
@@ -79,10 +64,6 @@ namespace Popcorn.ViewModels.Tabs
             });
         }
 
-        #endregion
-
-        #region Method -> RegisterCommands
-
         /// <summary>
         /// Register commands
         /// </summary>
@@ -100,11 +81,7 @@ namespace Popcorn.ViewModels.Tabs
                 await LoadMoviesAsync();
             });
         }
-
-        #endregion
-
-        #region Method -> LoadMoviesAsync
-
+        
         /// <summary>
         /// Load next page
         /// </summary>
@@ -152,9 +129,5 @@ namespace Popcorn.ViewModels.Tabs
                     $"Loaded page {Page} in {elapsedMs} milliseconds.");
             }
         }
-
-        #endregion
-
-        #endregion
     }
 }

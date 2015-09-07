@@ -7,29 +7,116 @@ using Popcorn.Helpers;
 
 namespace Popcorn.Dialogs
 {
+    /// <summary>
+    /// Manage update settings
+    /// </summary>
     public class UpdateDialogSettings : MetroDialogSettings
     {
+        /// <summary>
+        /// Dialog title
+        /// </summary>
+        public string Title { get; }
+
+        /// <summary>
+        /// Dialog message
+        /// </summary>
+        public string Message { get; }
+
+        /// <summary>
+        /// Releases notes to display
+        /// </summary>
+        public string ReleaseNotes { get; }
+
+        /// <summary>
+        /// Initialize a new instance of UpdateDialogSettings
+        /// </summary>
+        /// <param name="title">The dialog title</param>
+        /// <param name="message">The dialog message</param>
+        /// <param name="releaseNotes">The releases notes to display</param>
         public UpdateDialogSettings(string title, string message, string releaseNotes)
         {
             Title = title;
             Message = message;
             ReleaseNotes = releaseNotes;
         }
-
-        public string Title { get; }
-
-        public string Message { get; }
-
-        public string ReleaseNotes { get; }
     }
 
+    /// <summary>
+    /// Data to return on dialog closing
+    /// </summary>
     public class UpdateDialogData
     {
+        /// <summary>
+        /// Specify if application should be restar
+        /// </summary>
         public bool Restart { get; set; }
     }
 
+    /// <summary>
+    /// Manage update dialkog
+    /// </summary>
     public partial class UpdateDialog
     {
+        /// <summary>
+        /// Dialog message
+        /// </summary>
+        public string Message
+        {
+            get { return (string)GetValue(MessageProperty); }
+            set { SetValue(MessageProperty, value); }
+        }
+
+        /// <summary>
+        /// Releases notes to display
+        /// </summary>
+        public string ReleaseNotes
+        {
+            get { return (string)GetValue(ReleaseNotesProperty); }
+            set { SetValue(ReleaseNotesProperty, value); }
+        }
+
+        /// <summary>
+        /// Restart button text
+        /// </summary>
+        public string RestartButtonText
+        {
+            get { return (string)GetValue(RestartButtonTextProperty); }
+            set { SetValue(RestartButtonTextProperty, value); }
+        }
+
+        /// <summary>
+        /// Later buttont text
+        /// </summary>
+        public string LaterButtonText
+        {
+            get { return (string)GetValue(LaterButtonTextProperty); }
+            set { SetValue(LaterButtonTextProperty, value); }
+        }
+
+        /// <summary>
+        /// Message property
+        /// </summary>
+        public static readonly DependencyProperty MessageProperty = DependencyProperty.Register("Message", typeof(string), typeof(UpdateDialog), new PropertyMetadata(default(string)));
+
+        /// <summary>
+        /// Releases notes property
+        /// </summary>
+        public static readonly DependencyProperty ReleaseNotesProperty = DependencyProperty.Register("ReleaseNotes", typeof(string), typeof(UpdateDialog), new PropertyMetadata(default(string)));
+
+        /// <summary>
+        /// Restart button text property
+        /// </summary>
+        public static readonly DependencyProperty RestartButtonTextProperty = DependencyProperty.Register("RestartButtonText", typeof(string), typeof(UpdateDialog), new PropertyMetadata(LocalizationProviderHelper.GetLocalizedValue<string>("NowLabel")));
+
+        /// <summary>
+        /// Later button text property
+        /// </summary>
+        public static readonly DependencyProperty LaterButtonTextProperty = DependencyProperty.Register("LaterButtonText", typeof(string), typeof(UpdateDialog), new PropertyMetadata(LocalizationProviderHelper.GetLocalizedValue<string>("LaterLabel")));
+
+        /// <summary>
+        /// Initialize a new instance of UpdateDialog
+        /// </summary>
+        /// <param name="settings">The dialog settings</param>
         internal UpdateDialog(UpdateDialogSettings settings)
         {
             InitializeComponent();
@@ -38,6 +125,10 @@ namespace Popcorn.Dialogs
             ReleaseNotes = settings.ReleaseNotes;
         }
 
+        /// <summary>
+        /// Asynchronous task, waiting for button press event to complete
+        /// </summary>
+        /// <returns></returns>
         internal Task<UpdateDialogData> WaitForButtonPressAsync()
         {
             TaskCompletionSource<UpdateDialogData> tcs = new TaskCompletionSource<UpdateDialogData>();
@@ -139,6 +230,9 @@ namespace Popcorn.Dialogs
             return tcs.Task;
         }
 
+        /// <summary>
+        /// Set the color scheme on load
+        /// </summary>
         protected override void OnLoaded()
         {
             switch (DialogSettings.ColorScheme)
@@ -148,35 +242,6 @@ namespace Popcorn.Dialogs
                     PART_LaterButton.Style = FindResource("AccentedDialogHighlightedSquareButton") as Style;
                     break;
             }
-        }
-
-        public static readonly DependencyProperty MessageProperty = DependencyProperty.Register("Message", typeof(string), typeof(UpdateDialog), new PropertyMetadata(default(string)));
-        public static readonly DependencyProperty ReleaseNotesProperty = DependencyProperty.Register("ReleaseNotes", typeof(string), typeof(UpdateDialog), new PropertyMetadata(default(string)));
-        public static readonly DependencyProperty RestartButtonTextProperty = DependencyProperty.Register("RestartButtonText", typeof(string), typeof(UpdateDialog), new PropertyMetadata(LocalizationProviderHelper.GetLocalizedValue<string>("NowLabel")));
-        public static readonly DependencyProperty LaterButtonTextProperty = DependencyProperty.Register("LaterButtonText", typeof(string), typeof(UpdateDialog), new PropertyMetadata(LocalizationProviderHelper.GetLocalizedValue<string>("LaterLabel")));
-
-        public string Message
-        {
-            get { return (string)GetValue(MessageProperty); }
-            set { SetValue(MessageProperty, value); }
-        }
-
-        public string ReleaseNotes
-        {
-            get { return (string)GetValue(ReleaseNotesProperty); }
-            set { SetValue(ReleaseNotesProperty, value); }
-        }
-
-        public string RestartButtonText
-        {
-            get { return (string)GetValue(RestartButtonTextProperty); }
-            set { SetValue(RestartButtonTextProperty, value); }
-        }
-
-        public string LaterButtonText
-        {
-            get { return (string)GetValue(LaterButtonTextProperty); }
-            set { SetValue(LaterButtonTextProperty, value); }
         }
     }
 }

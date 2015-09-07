@@ -13,16 +13,10 @@ namespace Popcorn.ViewModels.MovieSettings
     /// </summary>
     public sealed class MovieSettingsViewModel : ViewModelBase
     {
-        #region Logger
-
         /// <summary>
         /// Logger of the class
         /// </summary>
         private static readonly Logger Logger = LogManager.GetCurrentClassLogger();
-
-        #endregion
-
-        #region Property -> Movie
 
         private MovieFull _movie;
 
@@ -35,10 +29,6 @@ namespace Popcorn.ViewModels.MovieSettings
             set { Set(() => Movie, ref _movie, value); }
         }
 
-        #endregion
-
-        #region Property -> Subtitles
-
         private SubtitlesViewModel _subtitles;
 
         /// <summary>
@@ -49,11 +39,6 @@ namespace Popcorn.ViewModels.MovieSettings
             get { return _subtitles; }
             set { Set(() => Subtitles, ref _subtitles, value); }
         }
-
-        #endregion
-
-        #region Command -> SetSubtitlesCommand
-
 
         private RelayCommand _setSubtitlesCommand;
 
@@ -85,10 +70,6 @@ namespace Popcorn.ViewModels.MovieSettings
             }
         }
 
-        #endregion
-
-        #region Command -> DownloadMovieCommand
-
         private RelayCommand _downloadMovieCommand;
 
         /// <summary>
@@ -104,10 +85,6 @@ namespace Popcorn.ViewModels.MovieSettings
                 }));
             }
         }
-
-        #endregion
-
-        #region Command -> CancelCommand
 
         private RelayCommand _cancelCommand;
 
@@ -125,25 +102,18 @@ namespace Popcorn.ViewModels.MovieSettings
             }
         }
 
-        #endregion
-
-        #region Constructor
-
         /// <summary>
         /// Initializes a new instance of the MovieSettingsViewModel class.
         /// </summary>
         /// <param name="movie">The movie</param>
         public MovieSettingsViewModel(MovieFull movie)
         {
-            Logger.Debug("Initializing a new instance of MovieSettingsViewModel");
-
             Movie = movie;
         }
 
-        #endregion
-
-        #region Methods
-
+        /// <summary>
+        /// Cleanup resources
+        /// </summary>
         public override void Cleanup()
         {
             Logger.Debug(
@@ -152,7 +122,5 @@ namespace Popcorn.ViewModels.MovieSettings
             Subtitles?.Cleanup();
             base.Cleanup();
         }
-
-        #endregion
     }
 }

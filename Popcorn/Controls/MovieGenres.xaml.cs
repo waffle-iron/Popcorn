@@ -9,40 +9,22 @@ namespace Popcorn.Controls
     /// </summary>
     public partial class MovieGenres
     {
-        #region DependencyProperties
-
-        #region DependencyPropertiy -> GenresProperty
-
         /// <summary>
-        /// RuntimeProperty
+        /// Genres property
         /// </summary>
         public static readonly DependencyProperty GenresProperty =
             DependencyProperty.Register("Genres",
-                typeof(IEnumerable<string>), typeof(MovieGenres),
+                typeof (IEnumerable<string>), typeof (MovieGenres),
                 new PropertyMetadata(null, OnGenresChanged));
-
-        #endregion
-
-        #endregion
-
-        #region Properties
-
-        #region Property -> Genres
 
         /// <summary>
         /// The movie runtime
         /// </summary>
         public IEnumerable<string> Genres
         {
-            private get { return (IEnumerable<string>)GetValue(GenresProperty); }
+            private get { return (IEnumerable<string>) GetValue(GenresProperty); }
             set { SetValue(GenresProperty, value); }
         }
-
-        #endregion
-
-        #endregion
-
-        #region Constructor
 
         /// <summary>
         /// Initialize a new instance of MovieGenres
@@ -52,12 +34,8 @@ namespace Popcorn.Controls
             InitializeComponent();
         }
 
-        #endregion
-
-        #region Method -> OnRuntimeChanged
-
         /// <summary>
-        /// On movie runtime changed
+        /// On genres changed
         /// </summary>
         /// <param name="d">Dependency object</param>
         /// <param name="e">Event args</param>
@@ -66,10 +44,6 @@ namespace Popcorn.Controls
             var movieGenres = d as MovieGenres;
             movieGenres?.DisplayMovieGenres();
         }
-
-        #endregion
-
-        #region Method -> DisplayMovieGenres
 
         /// <summary>
         /// Display movie genres
@@ -92,7 +66,5 @@ namespace Popcorn.Controls
                 }
             }
         }
-
-        #endregion
     }
 }

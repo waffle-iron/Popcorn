@@ -4,8 +4,6 @@ namespace Popcorn.Models.Genre
 {
     public class MovieGenre : ObservableObject
     {
-        #region Property -> EnglishName
-
         private string _englishName;
 
         /// <summary>
@@ -17,10 +15,6 @@ namespace Popcorn.Models.Genre
             set { Set(() => EnglishName, ref _englishName, value); }
         }
 
-        #endregion
-
-        #region Property -> TmdbGenre
-
         private TMDbLib.Objects.General.Genre _tmdbGenre;
 
         /// <summary>
@@ -31,7 +25,5 @@ namespace Popcorn.Models.Genre
             get { return _tmdbGenre; }
             set { Set(() => TmdbGenre, ref _tmdbGenre, value); }
         }
-
-        #endregion
     }
 }

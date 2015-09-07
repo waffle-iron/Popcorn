@@ -3,6 +3,9 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Popcorn.Entity.Movie
 {
+    /// <summary>
+    /// Represents movie images
+    /// </summary>
     public class Images
     {
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]

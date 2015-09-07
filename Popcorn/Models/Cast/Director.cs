@@ -29,10 +29,6 @@ namespace Popcorn.Models.Cast
             set { Set(() => MediumImage, ref _mediumImage, value); }
         }
 
-        #region Properties
-
-        #region Property -> SmallImagePath
-
         private string _smallImagePath = string.Empty;
 
         /// <summary>
@@ -43,9 +39,5 @@ namespace Popcorn.Models.Cast
             get { return _smallImagePath; }
             set { Set(() => SmallImagePath, ref _smallImagePath, value); }
         }
-
-        #endregion
-
-        #endregion
     }
 }

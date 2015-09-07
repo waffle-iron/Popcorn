@@ -9,8 +9,6 @@ namespace Popcorn.Converters
     [ValueConversion(typeof(object), typeof(bool))]
     public class NullAsTrueConverter : IValueConverter
     {
-        #region IValueConverter Members
-
         /// <summary>
         /// Convert a boolean to null if true
         /// </summary>
@@ -37,7 +35,5 @@ namespace Popcorn.Converters
         {
             throw new NotSupportedException();
         }
-
-        #endregion
     }
 }

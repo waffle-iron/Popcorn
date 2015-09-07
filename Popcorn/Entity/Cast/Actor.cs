@@ -3,6 +3,9 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Popcorn.Entity.Cast
 {
+    /// <summary>
+    /// Represents a movie actor
+    /// </summary>
     public class Actor
     {
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]

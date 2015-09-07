@@ -30,28 +30,18 @@ namespace Popcorn.Services.Movie
     /// </summary>
     public class MovieService
     {
-        #region Logger
-
         /// <summary>
         /// Logger of the class
         /// </summary>
         private static readonly Logger Logger = LogManager.GetCurrentClassLogger();
-
-        #endregion
-
-        #region TMDbClient
 
         /// <summary>
         ///TMDb client
         /// </summary>
         private TMDbClient TmdbClient { get; }
 
-        #endregion
-
-        #region Constructor
-
         /// <summary>
-        /// Constructor
+        /// Initialize a new instance of MovieService class
         /// </summary>
         public MovieService()
         {
@@ -62,12 +52,6 @@ namespace Popcorn.Services.Movie
             };
         }
 
-        #endregion
-
-        #region Methods
-
-        #region Method -> ChangeTmdbLanguage
-
         /// <summary>
         /// Change the culture of TMDb
         /// </summary>
@@ -76,10 +60,6 @@ namespace Popcorn.Services.Movie
         {
             TmdbClient.DefaultLanguage = language.Culture;
         }
-
-        #endregion
-
-        #region Method -> GetGenresAsync
 
         /// <summary>
         /// Get all movie's genres
@@ -131,10 +111,6 @@ namespace Popcorn.Services.Movie
             return genres;
         }
 
-        #endregion
-
-        #region Method -> GetPopularMoviesAsync
-
         /// <summary>
         /// Get popular movies by page
         /// </summary>
@@ -177,11 +153,7 @@ namespace Popcorn.Services.Movie
             {
                 var response = await restClient.ExecuteGetTaskAsync<WrapperMovieShort>(request, ct);
                 if (response.ErrorException != null)
-                {
-                    Logger.Error(
-                        $"GetPopularMoviesAsync: {response.ErrorException.Message}");
-                    return new Tuple<IEnumerable<MovieShort>, int>(new List<MovieShort>(), 0);
-                }
+                    throw response.ErrorException;
 
                 wrapper = response.Data;
             }
@@ -214,10 +186,6 @@ namespace Popcorn.Services.Movie
 
             return new Tuple<IEnumerable<MovieShort>, int>(movies, nbMovies);
         }
-
-        #endregion
-
-        #region Method -> GetGreatestMoviesAsync
 
         /// <summary>
         /// Get greatest movies by page
@@ -261,11 +229,7 @@ namespace Popcorn.Services.Movie
             {
                 var response = await restClient.ExecuteGetTaskAsync<WrapperMovieShort>(request, ct);
                 if (response.ErrorException != null)
-                {
-                    Logger.Error(
-                        $"GetGreatestMoviesAsync: {response.ErrorException.Message}");
-                    return new Tuple<IEnumerable<MovieShort>, int>(new List<MovieShort>(), 0);
-                }
+                    throw response.ErrorException;
 
                 wrapper = response.Data;
             }
@@ -294,14 +258,10 @@ namespace Popcorn.Services.Movie
             }
 
             var movies = GetMoviesListFromWrapper(wrapper) ?? new List<MovieShort>();
-            var nbMovies = wrapper?.Data?.MovieCount ?? 0; 
+            var nbMovies = wrapper?.Data?.MovieCount ?? 0;
 
             return new Tuple<IEnumerable<MovieShort>, int>(movies, nbMovies);
         }
-
-        #endregion
-
-        #region Method -> GetRecentMoviesAsync
 
         /// <summary>
         /// Get recent movies by page
@@ -345,11 +305,7 @@ namespace Popcorn.Services.Movie
             {
                 var response = await restClient.ExecuteGetTaskAsync<WrapperMovieShort>(request, ct);
                 if (response.ErrorException != null)
-                {
-                    Logger.Error(
-                        $"GetRecentMoviesAsync: {response.ErrorException.Message}");
-                    return new Tuple<IEnumerable<MovieShort>, int>(new List<MovieShort>(), 0);
-                }
+                    throw response.ErrorException;
 
                 wrapper = response.Data;
             }
@@ -382,10 +338,6 @@ namespace Popcorn.Services.Movie
 
             return new Tuple<IEnumerable<MovieShort>, int>(movies, nbMovies);
         }
-
-        #endregion
-
-        #region Method -> SearchMoviesAsync
 
         /// <summary>
         /// Search movies by criteria
@@ -431,11 +383,7 @@ namespace Popcorn.Services.Movie
             {
                 var response = await restClient.ExecuteGetTaskAsync<WrapperMovieShort>(request, ct);
                 if (response.ErrorException != null)
-                {
-                    Logger.Error(
-                        $"SearchMoviesAsync: {response.ErrorException.Message}");
-                    return new Tuple<IEnumerable<MovieShort>, int>(new List<MovieShort>(), 0);
-                }
+                    throw response.ErrorException;
 
                 wrapper = response.Data;
             }
@@ -469,10 +417,6 @@ namespace Popcorn.Services.Movie
             return new Tuple<IEnumerable<MovieShort>, int>(movies, nbMovies);
         }
 
-        #endregion
-
-        #region Method -> GetMovieFullDetailsAsync
-
         /// <summary>
         /// Get TMDb movie informations
         /// </summary>
@@ -496,11 +440,7 @@ namespace Popcorn.Services.Movie
             {
                 var response = await restClient.ExecuteGetTaskAsync<WrapperMovieFull>(request, ct);
                 if (response.ErrorException != null)
-                {
-                    Logger.Error(
-                        $"GetMovieFullDetailsAsync: {response.ErrorException.Message}");
-                    return movie;
-                }
+                    throw response.ErrorException;
 
                 await Task.Run(() =>
                 {
@@ -569,10 +509,6 @@ namespace Popcorn.Services.Movie
             return movie;
         }
 
-        #endregion
-
-        #region Method -> TranslateMovieShortAsync
-
         /// <summary>
         /// Translate movie informations (title, description, ...)
         /// </summary>
@@ -617,10 +553,6 @@ namespace Popcorn.Services.Movie
                     $"TranslateMovieShortAsync ({movieToTranslate.ImdbCode}) in {elapsedMs} milliseconds.");
             }
         }
-
-        #endregion
-
-        #region Method -> TranslateMovieFullAsync
 
         /// <summary>
         /// Translate movie informations (title, description, ...)
@@ -668,10 +600,6 @@ namespace Popcorn.Services.Movie
             }
         }
 
-        #endregion
-
-        #region Method -> GetMoviesListFromWrapper
-
         /// <summary>
         /// Get movies as a list from wrapped movies
         /// </summary>
@@ -705,12 +633,8 @@ namespace Popcorn.Services.Movie
                 Torrents = movie.Torrents,
                 Url = movie.Url,
                 Year = movie.Year
-            }).ToList();
+            });
         }
-
-        #endregion
-
-        #region Method -> GetMovieTrailerAsync
 
         /// <summary>
         /// Get the link to the youtube trailer of a movie
@@ -757,10 +681,6 @@ namespace Popcorn.Services.Movie
             return trailers;
         }
 
-        #endregion
-
-        #region Method -> LoadSubtitlesAsync
-
         /// <summary>
         /// Get the movie's subtitles according to a language
         /// </summary>
@@ -779,11 +699,7 @@ namespace Popcorn.Services.Movie
             {
                 var response = await restClient.ExecuteGetTaskAsync<SubtitlesWrapper>(request, ct);
                 if (response.ErrorException != null)
-                {
-                    Logger.Error(
-                        $"LoadSubtitlesAsync: {response.ErrorException.Message}");
-                    return;
-                }
+                    throw response.ErrorException;
 
                 var wrapper = response.Data;
 
@@ -837,10 +753,6 @@ namespace Popcorn.Services.Movie
                     $"LoadSubtitlesAsync ({movie.ImdbCode}) in {elapsedMs} milliseconds.");
             }
         }
-
-        #endregion
-
-        #region Method -> DownloadSubtitleAsync
 
         /// <summary>
         /// Download a subtitle
@@ -909,10 +821,6 @@ namespace Popcorn.Services.Movie
             }
         }
 
-        #endregion
-
-        #region Method -> DownloadBackgroundImageAsync
-
         /// <summary>
         /// Download the movie's background image
         /// </summary>
@@ -974,10 +882,6 @@ namespace Popcorn.Services.Movie
             }
         }
 
-        #endregion
-
-        #region Method -> DownloadCoverImageAsync
-
         /// <summary>
         /// Download cover image for each of the movies provided
         /// </summary>
@@ -1027,10 +931,6 @@ namespace Popcorn.Services.Movie
                     $"DownloadCoverImageAsync ({string.Join(";", moviesToProcess.Select(movie => movie.ImdbCode))}) in {elapsedMs} milliseconds.");
             }
         }
-
-        #endregion
-
-        #region Method -> DownloadPosterImageAsync
 
         /// <summary>
         /// Download the movie's poster image
@@ -1089,10 +989,6 @@ namespace Popcorn.Services.Movie
             }
         }
 
-        #endregion
-
-        #region Method -> DownloadDirectorImageAsync
-
         /// <summary>
         /// Download directors' image for a movie
         /// </summary>
@@ -1145,10 +1041,6 @@ namespace Popcorn.Services.Movie
             }
         }
 
-        #endregion
-
-        #region Method -> DownloadActorImageAsync
-
         /// <summary>
         /// Download actors' image for a movie
         /// </summary>
@@ -1200,9 +1092,5 @@ namespace Popcorn.Services.Movie
                     $"DownloadActorImageAsync ({movie.ImdbCode}) in {elapsedMs} milliseconds.");
             }
         }
-
-        #endregion
-
-        #endregion
     }
 }

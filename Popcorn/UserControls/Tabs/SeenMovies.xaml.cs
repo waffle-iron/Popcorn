@@ -5,16 +5,12 @@
     /// </summary>
     public partial class SeenMovies
     {
-        #region Constructor
-
         /// <summary>
-        /// Initializes a new instance of the FavoritesMovies class.
+        /// Initializes a new instance of the SeenMovies class.
         /// </summary>
         public SeenMovies()
         {
             InitializeComponent();
         }
-
-        #endregion
     }
 }

@@ -7,41 +7,23 @@ namespace Popcorn.Models.Localization
     /// </summary>
     public sealed class FrenchLanguage : ObservableObject, ILanguage
     {
-        #region Properties
-
-        #region Property -> LocalizedName
-
         /// <summary>
         /// Language's name
         /// </summary>
         public string LocalizedName { get; }
-
-        #endregion
-
-        #region Property -> EnglishName
 
         /// <summary>
         /// English language's name
         /// </summary>
         public string EnglishName { get; }
 
-        #endregion
-
-        #region Property -> Culture
-
         /// <summary>
         /// Language's culture
         /// </summary>
         public string Culture { get; }
 
-        #endregion
-
-        #endregion
-
-        #region Constructor
-
         /// <summary>
-        /// Constructor
+        /// Initialize a new instance of FrenchLanguage
         /// </summary>
         public FrenchLanguage()
         {
@@ -49,12 +31,6 @@ namespace Popcorn.Models.Localization
             EnglishName = "French";
             Culture = "fr";
         }
-
-        #endregion
-
-        #region Methods
-
-        #region Method -> Equals
 
         /// <summary>
         /// Check equality based on is localized name
@@ -65,17 +41,8 @@ namespace Popcorn.Models.Localization
         {
             var item = obj as FrenchLanguage;
 
-            if (item == null)
-            {
-                return false;
-            }
-
-            return LocalizedName.Equals(item.LocalizedName);
+            return item != null && LocalizedName.Equals(item.LocalizedName);
         }
-
-        #endregion
-
-        #region Method -> GetHashCode
 
         /// <summary>
         /// Get hash code based on it localized name
@@ -85,9 +52,5 @@ namespace Popcorn.Models.Localization
         {
             return LocalizedName.GetHashCode();
         }
-
-        #endregion
-
-        #endregion
     }
 }

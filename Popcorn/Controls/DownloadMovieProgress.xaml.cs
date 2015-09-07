@@ -9,49 +9,29 @@ namespace Popcorn.Controls
     /// </summary>
     public partial class DownloadMovieProgress
     {
-        #region DependencyProperties
-
-        #region DependencyPropertiy -> DownloadProgressProperty
-
         /// <summary>
-        /// DownloadProgressProperty
+        /// Download progress property
         /// </summary>
         public static readonly DependencyProperty DownloadProgressProperty =
             DependencyProperty.Register("DownloadProgress",
                 typeof (double), typeof (DownloadMovieProgress),
                 new PropertyMetadata(0.0, OnDownloadProgressChanged));
 
-        #endregion
-
-        #region DependencyPropertiy -> DownloadRateProperty
-
         /// <summary>
-        /// DownloadRateProperty
+        /// Download rate property
         /// </summary>
         public static readonly DependencyProperty DownloadRateProperty =
             DependencyProperty.Register("DownloadRate",
                 typeof (double), typeof (DownloadMovieProgress),
                 new PropertyMetadata(0.0));
 
-        #endregion
-
-        #region DependencyPropertiy -> MovieTitle
-
         /// <summary>
-        /// MovieTitleProperty
+        /// Movie title property
         /// </summary>
         public static readonly DependencyProperty MovieTitleProperty =
             DependencyProperty.Register("MovieTitle",
                 typeof (string), typeof (DownloadMovieProgress),
                 new PropertyMetadata(string.Empty));
-
-        #endregion
-
-        #endregion
-
-        #region Properties
-
-        #region Property -> DownloadProgress
 
         /// <summary>
         /// The movie download progress
@@ -62,10 +42,6 @@ namespace Popcorn.Controls
             set { SetValue(DownloadProgressProperty, value); }
         }
 
-        #endregion
-
-        #region Property -> DownloadRate
-
         /// <summary>
         /// The movie download rate
         /// </summary>
@@ -75,10 +51,6 @@ namespace Popcorn.Controls
             set { SetValue(DownloadRateProperty, value); }
         }
 
-        #endregion
-
-        #region Property -> MovieTitle
-
         /// <summary>
         /// The movie title
         /// </summary>
@@ -87,12 +59,6 @@ namespace Popcorn.Controls
             private get { return (string) GetValue(MovieTitleProperty); }
             set { SetValue(MovieTitleProperty, value); }
         }
-
-        #endregion
-
-        #endregion
-
-        #region Constructor
 
         /// <summary>
         /// Initialize a new instance of DownloadMovieProgress
@@ -104,10 +70,6 @@ namespace Popcorn.Controls
                 $"{LocalizationProviderHelper.GetLocalizedValue<string>("BufferingLabel")} : {Math.Round(DownloadProgress*50.0, 0)} % ({DownloadRate} kB/s)";
         }
 
-        #endregion
-
-        #region Method -> OnDownloadProgressChanged
-
         /// <summary>
         /// On download progress changed
         /// </summary>
@@ -118,10 +80,6 @@ namespace Popcorn.Controls
             var downloadMovieProgress = d as DownloadMovieProgress;
             downloadMovieProgress?.DisplayDownloadProgress();
         }
-
-        #endregion
-
-        #region Method -> DisplayDownloadProgress
 
         /// <summary>
         /// Display download progress
@@ -140,7 +98,5 @@ namespace Popcorn.Controls
                     : $"{LocalizationProviderHelper.GetLocalizedValue<string>("BufferingLabel")} : {Math.Round(DownloadProgress*50.0, 0)} % ({DownloadRate} kB/s)";
             }
         }
-
-        #endregion
     }
 }

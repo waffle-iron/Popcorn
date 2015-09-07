@@ -9,8 +9,6 @@ namespace Popcorn.Models.Movie.Short
     /// </summary>
     public class MovieShort : ObservableObject
     {
-        #region Properties
-
         private int _id;
 
         [DeserializeAs(Name = "id")]
@@ -194,8 +192,6 @@ namespace Popcorn.Models.Movie.Short
             set { Set(() => ExecutionTime, ref _executionTime, value); }
         }
 
-        #region Property -> RatingValue
-
         private double _ratingValue;
 
         /// <summary>
@@ -206,12 +202,8 @@ namespace Popcorn.Models.Movie.Short
             get { return _ratingValue; }
             set { Set(() => RatingValue, ref _ratingValue, value); }
         }
-        
-        #endregion
 
-        #region Property -> CoverImagePath
-
-        private string _coverImagePath = string.Empty;
+        private string _coverImagePath;
 
         /// <summary>
         /// Local path of the downloaded movie's cover image
@@ -221,12 +213,6 @@ namespace Popcorn.Models.Movie.Short
             get { return _coverImagePath; }
             set { Set(() => CoverImagePath, ref _coverImagePath, value); }
         }
-
-        #endregion
-
-        #endregion
-
-        #region Property -> IsFavorite
 
         private bool _isFavorite;
 
@@ -239,10 +225,6 @@ namespace Popcorn.Models.Movie.Short
             set { Set(() => IsFavorite, ref _isFavorite, value); }
         }
 
-        #endregion
-
-        #region Property -> HasBeenSeen
-
         private bool _hasBeenSeen;
 
         /// <summary>
@@ -253,7 +235,5 @@ namespace Popcorn.Models.Movie.Short
             get { return _hasBeenSeen; }
             set { Set(() => HasBeenSeen, ref _hasBeenSeen, value); }
         }
-
-        #endregion
     }
 }

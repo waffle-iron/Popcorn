@@ -37,8 +37,7 @@
             <RowDefinition Height="*" />
             <RowDefinition Height="*" />
         </Grid.RowDefinitions>
-        <controls:MetroProgressBar x:Name="LoadingProgressBar"
-                                   Grid.Row="0"
+        <controls:MetroProgressBar Grid.Row="0"
                                    Width="{Binding RelativeSource={RelativeSource FindAncestor,
                                                                                   AncestorType=Grid},
                                                    Path=ActualWidth,
@@ -73,15 +72,13 @@
                 </MultiBinding>
             </TextBlock.Visibility>
         </TextBlock>
-        <ScrollViewer x:Name="Scroll"
-                      Grid.Row="1"
+        <ScrollViewer Grid.Row="1"
                       Grid.RowSpan="2"
                       VerticalScrollBarVisibility="Auto"
                       Visibility="{Binding Main.IsConnectionInError,
                                            Converter={StaticResource BoolToVisibilityConverter},
                                            Source={StaticResource Locator}}">
-            <ItemsControl x:Name="ItemsList"
-                          VerticalAlignment="Top"
+            <ItemsControl VerticalAlignment="Top"
                           ItemsSource="{Binding Movies}"
                           VirtualizingStackPanel.IsVirtualizing="True"
                           VirtualizingStackPanel.VirtualizationMode="Recycling">

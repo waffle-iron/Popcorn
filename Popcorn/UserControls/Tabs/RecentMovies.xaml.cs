@@ -8,8 +8,6 @@ namespace Popcorn.UserControls.Tabs
     /// </summary>
     public partial class RecentMovies
     {
-        #region Constructor
-
         /// <summary>
         /// Initializes a new instance of the RecentMovies class.
         /// </summary>
@@ -17,12 +15,6 @@ namespace Popcorn.UserControls.Tabs
         {
             InitializeComponent();
         }
-
-        #endregion
-
-        #region Methods
-
-        #region Method -> ScrollViewerScrollChanged
 
         /// <summary>
         /// Decide if we have to load next page regarding to the scroll position
@@ -32,18 +24,12 @@ namespace Popcorn.UserControls.Tabs
         private async void ScrollViewerScrollChanged(object sender, ScrollChangedEventArgs e)
         {
             var totalHeight = e.VerticalOffset + e.ViewportHeight;
-            if (totalHeight.Equals(e.ExtentHeight))
+            if (!totalHeight.Equals(e.ExtentHeight)) return;
+            var vm = DataContext as RecentTabViewModel;
+            if (vm != null && !vm.IsLoadingMovies)
             {
-                var vm = DataContext as RecentTabViewModel;
-                if (vm != null && !vm.IsLoadingMovies)
-                {
-                    await vm.LoadMoviesAsync();
-                }
+                await vm.LoadMoviesAsync();
             }
         }
-
-        #endregion
-
-        #endregion
     }
 }

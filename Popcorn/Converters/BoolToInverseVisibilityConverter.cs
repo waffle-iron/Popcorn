@@ -9,8 +9,6 @@ namespace Popcorn.Converters
     /// </summary>
     public class BoolToInverseVisibilityConverter : IValueConverter
     {
-        #region IValueConverter Members
-
         /// <summary>
         /// Convert bool to Visibility
         /// </summary>
@@ -45,7 +43,5 @@ namespace Popcorn.Converters
         {
             throw new NotSupportedException();
         }
-
-        #endregion
     }
 }

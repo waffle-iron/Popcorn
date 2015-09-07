@@ -9,23 +9,38 @@ namespace Popcorn.Controls
     /// </summary>
     public partial class Rating
     {
+        /// <summary>
+        /// Rating property
+        /// </summary>
         public static readonly DependencyProperty RatingValueProperty = DependencyProperty.Register("RatingValue",
             typeof (int), typeof (Rating),
             new FrameworkPropertyMetadata(0, FrameworkPropertyMetadataOptions.BindsTwoWayByDefault, RatingChanged));
 
-        public static readonly DependencyProperty StartButtonsEnabledProperty =
+        /// <summary>
+        /// Star buttons property
+        /// </summary>
+        public static readonly DependencyProperty StarButtonsEnabledProperty =
             DependencyProperty.Register("StarButtonsEnabled",
                 typeof (bool), typeof (Rating),
                 new FrameworkPropertyMetadata(false));
 
+        /// <summary>
+        /// Max rating value
+        /// </summary>
         private const int Max = 10;
 
+        /// <summary>
+        /// Are stars clickable
+        /// </summary>
         public bool StarButtonsEnabled
         {
-            get { return (bool) GetValue(StartButtonsEnabledProperty); }
-            set { SetValue(StartButtonsEnabledProperty, value); }
+            get { return (bool) GetValue(StarButtonsEnabledProperty); }
+            set { SetValue(StarButtonsEnabledProperty, value); }
         }
 
+        /// <summary>
+        /// Rating property
+        /// </summary>
         public int RatingValue
         {
             set
@@ -45,6 +60,11 @@ namespace Popcorn.Controls
             }
         }
 
+        /// <summary>
+        /// Set IsChecked for each star on rating changed
+        /// </summary>
+        /// <param name="sender">Object sender</param>
+        /// <param name="e">Event args</param>
         private static void RatingChanged(DependencyObject sender, DependencyPropertyChangedEventArgs e)
         {
             var rating = sender as Rating;
@@ -75,13 +95,18 @@ namespace Popcorn.Controls
         }
 
         /// <summary>
-        /// Constructor
+        /// Initialize a new instance of Rating
         /// </summary>
         public Rating()
         {
             InitializeComponent();
         }
 
+        /// <summary>
+        /// Toggle star on click event
+        /// </summary>
+        /// <param name="sender">Object sender</param>
+        /// <param name="e">Event args</param>
         private void ToggleStar(object sender, RoutedEventArgs e)
         {
             var button = sender as ToggleButton;

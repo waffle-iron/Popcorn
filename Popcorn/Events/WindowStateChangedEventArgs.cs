@@ -7,30 +7,18 @@ namespace Popcorn.Events
     /// </summary>
     public class WindowStateChangedEventArgs : EventArgs
     {
-        #region Properties
-
-        #region Property -> IsMoviePlaying
-
         /// <summary>
-        /// Is in movie mode
+        /// Is movie playing
         /// </summary>
         public readonly bool IsMoviePlaying;
 
-        #endregion
-
-        #endregion
-
-        #region Constructor
-
         /// <summary>
-        /// Constructor
+        /// Initialize a new instance of WindowStateChangedEventArgs
         /// </summary>
         /// <param name="isMoviePlaying">Is movie playing</param>
         public WindowStateChangedEventArgs(bool isMoviePlaying)
         {
             IsMoviePlaying = isMoviePlaying;
         }
-
-        #endregion
     }
 }

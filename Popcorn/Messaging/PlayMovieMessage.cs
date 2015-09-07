@@ -8,30 +8,18 @@ namespace Popcorn.Messaging
     /// </summary>
     public class PlayMovieMessage : MessageBase
     {
-        #region Properties
-
-        #region Property -> Movie
-
         /// <summary>
         /// The buffered movie
         /// </summary>
         public readonly MovieFull Movie;
 
-        #endregion
-
-        #endregion
-
-        #region Constructor
-
         /// <summary>
-        /// Constructor
+        /// Initialize a new instance of PlayMovieMessage class
         /// </summary>
         /// <param name="movie">The movie</param>
         public PlayMovieMessage(MovieFull movie)
         {
             Movie = movie;
         }
-
-        #endregion
     }
 }
