@@ -18,15 +18,15 @@ namespace Popcorn.Tests.Converters
         [Test]
         public void Convert_True_ReturnsVisible()
         {
-            Assert.Equals(
+            Assert.AreEqual(
                 _converter.Convert(true, typeof (Visibility), null, null), Visibility.Visible);
         }
 
         [Test]
         public void Convert_False_ReturnsCollapsed()
         {
-            Assert.Equals(
-                _converter.Convert(false, typeof(Visibility), null, null), Equals(Visibility.Collapsed));
+            Assert.AreEqual(
+                _converter.Convert(false, typeof(Visibility), null, null), Visibility.Collapsed);
         }
     }
 }

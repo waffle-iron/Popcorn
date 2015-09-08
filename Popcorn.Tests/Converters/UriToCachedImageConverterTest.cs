@@ -24,7 +24,7 @@ namespace Popcorn.Tests.Converters
             Assert.That(result, Is.TypeOf<BitmapImage>());
 
             var image = (BitmapImage) result;
-            Assert.Equals(image.UriSource.ToString(), value);
+            Assert.AreEqual(image.UriSource.ToString(), value);
         }
     }
 }

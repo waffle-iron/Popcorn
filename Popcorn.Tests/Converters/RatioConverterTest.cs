@@ -25,7 +25,7 @@ namespace Popcorn.Tests.Converters
 
             var result = _converter.Convert(value, null, parameter, null);
 
-            Assert.Equals(result, value*parameter);
+            Assert.AreEqual(result, value*parameter);
             Assert.That(result, Is.TypeOf<double>());
         }
     }

@@ -17,14 +17,14 @@ namespace Popcorn.Tests.Converters
         [Test]
         public void Convert_Null_ReturnsTrue()
         {
-            Assert.Equals(
+            Assert.AreEqual(
                 _converter.Convert(null, null, null, null), true);
         }
 
         [Test]
         public void Convert_NotNull_ReturnsFalse()
         {
-            Assert.Equals(
+            Assert.AreEqual(
                 _converter.Convert(new object(), null, null, null), false);
         }
     }

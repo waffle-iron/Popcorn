@@ -21,8 +21,8 @@ namespace Popcorn.Tests.Comparers
         {
             var fixture = new Fixture();
 
-            var movie1 = fixture.Create<MovieFull>();
-            var movie2 = fixture.Create<MovieFull>();
+            var movie1 = new MovieFull();
+            var movie2 = new MovieFull();
 
             var id = fixture.Create<int>();
             var dateUploadedUnix = fixture.Create<int>();
@@ -32,10 +32,10 @@ namespace Popcorn.Tests.Comparers
             movie1.DateUploadedUnix = dateUploadedUnix;
             movie2.DateUploadedUnix = dateUploadedUnix;
 
-            Assert.Equals(
+            Assert.AreEqual(
                 _comparer.Equals(movie1, movie1), true);
 
-            Assert.Equals(
+            Assert.AreEqual(
                 _comparer.Equals(movie1, movie2), true);
         }
 
@@ -44,16 +44,31 @@ namespace Popcorn.Tests.Comparers
         {
             var fixture = new Fixture();
 
-            var movie1 = fixture.Create<MovieFull>();
-            var movie2 = fixture.Create<MovieFull>();
+            var id1 = fixture.Create<int>();
+            var dateUploadedUnix1 = fixture.Create<int>();
 
-            Assert.Equals(
+            var id2 = fixture.Create<int>();
+            var dateUploadedUnix2 = fixture.Create<int>();
+
+            var movie1 = new MovieFull
+            {
+                Id = id1,
+                DateUploadedUnix = dateUploadedUnix1
+            };
+
+            var movie2 = new MovieFull
+            {
+                Id = id2,
+                DateUploadedUnix = dateUploadedUnix2
+            };
+
+            Assert.AreEqual(
                 _comparer.Equals(movie1, movie2), false);
 
-            Assert.Equals(
+            Assert.AreEqual(
                 _comparer.Equals(movie1, null), false);
 
-            Assert.Equals(
+            Assert.AreEqual(
                 _comparer.Equals(movie2, null), false);
         }
 
@@ -62,8 +77,8 @@ namespace Popcorn.Tests.Comparers
         {
             var fixture = new Fixture();
 
-            var movie1 = fixture.Create<MovieFull>();
-            var movie2 = fixture.Create<MovieFull>();
+            var movie1 = new MovieFull();
+            var movie2 = new MovieFull();
 
             var id = fixture.Create<int>();
             var dateUploadedUnix = fixture.Create<int>();
@@ -73,10 +88,10 @@ namespace Popcorn.Tests.Comparers
             movie1.DateUploadedUnix = dateUploadedUnix;
             movie2.DateUploadedUnix = dateUploadedUnix;
 
-            Assert.Equals(
+            Assert.AreEqual(
                 _comparer.GetHashCode(movie1), _comparer.GetHashCode(movie1));
 
-            Assert.Equals(
+            Assert.AreEqual(
                 _comparer.GetHashCode(movie1), _comparer.GetHashCode(movie2));
         }
 
@@ -85,8 +100,23 @@ namespace Popcorn.Tests.Comparers
         {
             var fixture = new Fixture();
 
-            var movie1 = fixture.Create<MovieFull>();
-            var movie2 = fixture.Create<MovieFull>();
+            var id1 = fixture.Create<int>();
+            var dateUploadedUnix1 = fixture.Create<int>();
+
+            var id2 = fixture.Create<int>();
+            var dateUploadedUnix2 = fixture.Create<int>();
+
+            var movie1 = new MovieFull
+            {
+                Id = id1,
+                DateUploadedUnix = dateUploadedUnix1
+            };
+
+            var movie2 = new MovieFull
+            {
+                Id = id2,
+                DateUploadedUnix = dateUploadedUnix2
+            };
 
             Assert.AreNotEqual(
                 _comparer.GetHashCode(movie1), _comparer.GetHashCode(movie2));

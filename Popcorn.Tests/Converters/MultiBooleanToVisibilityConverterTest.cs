@@ -16,26 +16,26 @@ namespace Popcorn.Tests.Converters
         }
 
         [Test]
-        public void Convert_WithAllTrue_ReturnsVisible()
+        public void Convert_AllTrue_ReturnsVisible()
         {
             object[] trueBooleans = { true, true, true };
-            Assert.Equals(
+            Assert.AreEqual(
                 _converter.Convert(trueBooleans, null, null, null), Visibility.Visible);
         }
 
         [Test]
-        public void Convert_WithAllFalse_ReturnsCollapsed()
+        public void Convert_AllFalse_ReturnsCollapsed()
         {
             object[] falseBooleans = { false, false, false };
-            Assert.Equals(
+            Assert.AreEqual(
                 _converter.Convert(falseBooleans, null, null, null), Visibility.Collapsed);
         }
 
         [Test]
-        public void Convert_WithNotAllTrue_ReturnsCollapsed()
+        public void Convert_NotAllTrue_ReturnsCollapsed()
         {
             object[] notAllTrueBooleans = { true, false, true };
-            Assert.Equals(
+            Assert.AreEqual(
                 _converter.Convert(notAllTrueBooleans, null, null, null), Visibility.Collapsed);
         }
     }
