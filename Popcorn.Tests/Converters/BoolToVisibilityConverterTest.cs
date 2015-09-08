@@ -1,5 +1,4 @@
-﻿using System.Globalization;
-using System.Windows;
+﻿using System.Windows;
 using NUnit.Framework;
 using Popcorn.Converters;
 
@@ -8,16 +7,26 @@ namespace Popcorn.Tests.Converters
     [TestFixture]
     public class BoolToVisibilityConverterTest
     {
-        [Test]
-        public void BoolToVisibilityConvertTest()
+        private BoolToVisibilityConverter _converter;
+
+        [TestFixtureSetUp]
+        public void InitializeConverter()
         {
-            var converter = new BoolToVisibilityConverter();
-            Assert.That(
-                converter.Convert(false, typeof (Visibility), null, CultureInfo.CurrentUICulture)
-                    .Equals(Visibility.Visible));
-            Assert.That(
-                converter.Convert(true, typeof (Visibility), null, CultureInfo.CurrentUICulture)
-                    .Equals(Visibility.Collapsed));
+            _converter = new BoolToVisibilityConverter();
+        }
+
+        [Test]
+        public void Convert_False_ReturnsVisible()
+        {
+            Assert.Equals(
+                _converter.Convert(false, typeof (Visibility), null, null), Visibility.Visible);
+        }
+
+        [Test]
+        public void Convert_True_ReturnsCollapsed()
+        {
+            Assert.Equals(
+                _converter.Convert(true, typeof(Visibility), null, null), Visibility.Collapsed);
         }
     }
 }

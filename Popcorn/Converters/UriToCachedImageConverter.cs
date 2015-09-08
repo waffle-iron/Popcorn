@@ -11,13 +11,13 @@ namespace Popcorn.Converters
     public class UriToCachedImageConverter : IValueConverter
     {
         /// <summary>
-        /// Convert value string to UnsetValue if empty or null
+        /// Convert a path image to a bitmap-cached image
         /// </summary>
         /// <param name="value">The value produced by the binding source.</param>
         /// <param name="targetType">The type of the binding target property.</param>
         /// <param name="parameter">The converter parameter to use.</param>
         /// <param name="culture">The culture to use in the converter.</param>
-        /// <returns>CachedImage</returns>
+        /// <returns>Cached image</returns>
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
             if (string.IsNullOrEmpty(value?.ToString())) return null;
