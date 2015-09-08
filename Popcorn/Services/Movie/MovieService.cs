@@ -633,7 +633,7 @@ namespace Popcorn.Services.Movie
                 Torrents = movie.Torrents,
                 Url = movie.Url,
                 Year = movie.Year
-            });
+            }).ToList();
         }
 
         /// <summary>
