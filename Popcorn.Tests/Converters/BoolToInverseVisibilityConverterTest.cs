@@ -26,7 +26,7 @@ namespace Popcorn.Tests.Converters
         public void Convert_False_ReturnsCollapsed()
         {
             Assert.Equals(
-                _converter.Convert(false, typeof(Visibility), null, null), Equals(Visibility.Collapsed);
+                _converter.Convert(false, typeof(Visibility), null, null), Equals(Visibility.Collapsed));
         }
     }
 }
