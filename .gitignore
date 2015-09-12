@@ -88,3 +88,6 @@ Popcorn/Popcorn
 # Squirrel
 *.nupkg
 SquirrelTemp/
+
+# SDF files
+*.sdf
