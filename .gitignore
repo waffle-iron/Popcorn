@@ -43,8 +43,8 @@ Temporary Items
 .apdisk
 
 # Nuget Packages
-packages/AutoFixture.3.31.3
-packages/AutoFixture.NUnit2.3.31.0
+packages/AutoFixture.3.33.0
+packages/AutoFixture.NUnit2.3.33.0
 packages/CommonServiceLocator.1.3
 packages/DeltaCompressionDotNet.1.0.0
 packages/Microsoft.Web.Xdt.2.1.1
@@ -57,7 +57,7 @@ packages/NUnit.2.6.4
 packages/Ragnar.0.6.0
 packages/RestSharp.105.2.3
 packages/Splat.1.6.2
-packages/squirrel.windows.1.0.0
+packages/squirrel.windows.1.0.2
 packages/TMDbLib.0.8.3
 packages/YoutubeExtractor.0.10.6
 packages/EntityFramework.6.1.3

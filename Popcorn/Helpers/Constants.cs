@@ -38,6 +38,11 @@ namespace Popcorn.Helpers
         public static string MovieDownloads { get; } = Path.GetTempPath() + "Popcorn\\Downloads\\";
 
         /// <summary>
+        /// Directory of downloaded torrents
+        /// </summary>
+        public static string TorrentDownloads { get; } = Path.GetTempPath() + "Popcorn\\Torrents\\";
+
+        /// <summary>
         /// Subtitles directory
         /// </summary>
         public static string Subtitles { get; } = Path.GetTempPath() + "Popcorn\\Subtitles\\";

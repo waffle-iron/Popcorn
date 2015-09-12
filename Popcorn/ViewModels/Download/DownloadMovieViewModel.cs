@@ -5,7 +5,6 @@ using GalaSoft.MvvmLight.Messaging;
 using Popcorn.Helpers;
 using Popcorn.Messaging;
 using Popcorn.ViewModels.MovieSettings;
-using Ragnar;
 using System;
 using System.IO;
 using System.Linq;
@@ -15,6 +14,7 @@ using NLog;
 using Popcorn.Models.Movie.Full;
 using Popcorn.Services.Movie;
 using Popcorn.ViewModels.Settings;
+using lt;
 
 namespace Popcorn.ViewModels.Download
 {
@@ -158,7 +158,7 @@ namespace Popcorn.ViewModels.Download
                     IsDownloadingSubtitles = false;
                     await
                         DownloadMovieAsync(message.Movie,
-                            reportDownloadProgress, reportDownloadRate, CancellationDownloadingMovie.Token);
+                            reportDownloadProgress, reportDownloadRate, CancellationDownloadingMovie);
                 });
         }
 
@@ -213,54 +213,59 @@ namespace Popcorn.ViewModels.Download
         /// <param name="ct">Cancellation token</param>
         private async Task DownloadMovieAsync(MovieFull movie, IProgress<double> downloadProgress,
             IProgress<double> downloadRate,
-            CancellationToken ct)
+            CancellationTokenSource ct)
         {
             await Task.Run(async () =>
             {
-                using (var session = new Session())
+                using (var session = new session())
                 {
                     Logger.Debug(
                         $"Start downloading movie : {movie.Title}");
 
                     IsDownloadingMovie = true;
 
-                    session.ListenOn(6881, 6889);
+                    session.listen_on(6881, 6889);
                     var torrentUrl = movie.WatchInFullHdQuality
                         ? movie.Torrents?.FirstOrDefault(torrent => torrent.Quality == "1080p")?.Url
                         : movie.Torrents?.FirstOrDefault(torrent => torrent.Quality == "720p")?.Url;
 
-                    var addParams = new AddTorrentParams
+                    var result =
+                        await
+                            DownloadFileHelper.DownloadFileTaskAsync(torrentUrl,
+                                Constants.TorrentDownloads + movie.ImdbCode + ".torrent", ct: ct);
+                    var torrentPath = string.Empty;
+                    if (result.Item3 == null && !string.IsNullOrEmpty(result.Item2))
+                        torrentPath = result.Item2;
+                    
+                    var addParams = new add_torrent_params
                     {
-                        SavePath = Constants.MovieDownloads,
-                        Url = torrentUrl,
-                        DownloadLimit =
-                            SimpleIoc.Default.IsRegistered<SettingsViewModel>()
-                                ? SimpleIoc.Default.GetInstance<SettingsViewModel>().DownloadLimit*1024
-                                : 0,
-                        UploadLimit =
-                            SimpleIoc.Default.IsRegistered<SettingsViewModel>()
-                                ? SimpleIoc.Default.GetInstance<SettingsViewModel>().UploadLimit*1024
-                                : 0
+                        save_path = Constants.MovieDownloads,
+                        ti = new torrent_info(torrentPath)
                     };
 
-                    var handle = session.AddTorrent(addParams);
+                    var handle = session.add_torrent(addParams);
+                    handle.set_upload_limit(SimpleIoc.Default.IsRegistered<SettingsViewModel>()
+                        ? SimpleIoc.Default.GetInstance<SettingsViewModel>().DownloadLimit*1024
+                        : 0);
+                    handle.set_download_limit(SimpleIoc.Default.IsRegistered<SettingsViewModel>()
+                        ? SimpleIoc.Default.GetInstance<SettingsViewModel>().UploadLimit*1024
+                        : 0);
 
                     // We have to download sequentially, so that we're able to play the movie without waiting
-                    handle.SequentialDownload = true;
+                    handle.set_sequential_download(true);
                     var alreadyBuffered = false;
                     while (IsDownloadingMovie)
                     {
-                        var status = handle.QueryStatus();
-                        var progress = status.Progress*100.0;
+                        var status = handle.status();
+                        var progress = status.progress*100.0;
 
                         downloadProgress?.Report(progress);
-                        var test = Math.Round(status.DownloadRate/1024.0, 0);
-                        downloadRate?.Report(test);
+                        downloadRate?.Report(Math.Round(status.download_rate/1024.0, 0));
 
-                        handle.FlushCache();
-                        if (handle.NeedSaveResumeData())
+                        handle.flush_cache();
+                        if (handle.need_save_resume_data())
                         {
-                            handle.SaveResumeData();
+                            handle.save_resume_data(1);
                         }
 
                         if (progress >= Constants.MinimumBufferingBeforeMoviePlaying && !alreadyBuffered)
@@ -268,7 +273,7 @@ namespace Popcorn.ViewModels.Download
                             // Get movie file
                             foreach (
                                 var filePath in
-                                    Directory.GetFiles(status.SavePath + handle.TorrentFile.Name,
+                                    Directory.GetFiles(status.save_path + handle.torrent_file().name(),
                                         "*" + Constants.VideoFileExtension)
                                 )
                             {
@@ -280,7 +285,7 @@ namespace Popcorn.ViewModels.Download
 
                         try
                         {
-                            await Task.Delay(1000, ct);
+                            await Task.Delay(1000, ct.Token);
                         }
                         catch (TaskCanceledException)
                         {
@@ -290,7 +295,7 @@ namespace Popcorn.ViewModels.Download
                         }
                     }
                 }
-            }, ct);
+            }, ct.Token);
         }
 
         /// <summary>
