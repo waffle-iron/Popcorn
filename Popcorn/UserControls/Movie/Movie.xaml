@@ -6,7 +6,7 @@
              xmlns:customControls="clr-namespace:Popcorn.Controls"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:downloadUserControl="clr-namespace:Popcorn.UserControls.Download"
-             xmlns:downloadViewModel="clr-namespace:Popcorn.ViewModels.Download"
+             xmlns:downloadViewModel="clr-namespace:Popcorn.ViewModels.DownloadMovie"
              xmlns:lex="http://wpflocalizeextension.codeplex.com"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:trailerUserControl="clr-namespace:Popcorn.UserControls.Trailer"
@@ -156,10 +156,14 @@
                                             Converter={StaticResource BoolToInverseVisibilityConverter}}" />
             <ContentControl Grid.Row="0"
                             Grid.RowSpan="3"
-                            Content="{Binding DownloadMovie}" />
+                            Content="{Binding DownloadMovie}"
+                            Visibility="{Binding IsDownloadingMovie,
+                                                 Converter={StaticResource BoolToInverseVisibilityConverter}}" />
             <ContentControl Grid.Row="0"
                             Grid.RowSpan="3"
-                            Content="{Binding Trailer}" />
+                            Content="{Binding Trailer}"
+                            Visibility="{Binding IsPlayingTrailer,
+                                                 Converter={StaticResource BoolToInverseVisibilityConverter}}" />
             <Grid Grid.Row="0"
                   Grid.RowSpan="3"
                   Style="{StaticResource AnimationContentOnMediaLoading}">
@@ -272,14 +276,16 @@
                                         HorizontalAlignment="Left"
                                         VerticalAlignment="Center"
                                         Command="{Binding PlayTrailerCommand}"
-                                        Content="{lex:LocText TrailerButton}" />
+                                        Content="{lex:LocText TrailerButton}"
+                                        IsTabStop="False" />
                                 <Button Width="100"
                                         Height="30"
                                         Margin="0, 10, 0, 0"
                                         HorizontalAlignment="Right"
                                         VerticalAlignment="Center"
                                         Command="{Binding PlayMovieCommand}"
-                                        Content="{lex:LocText WatchButton}" />
+                                        Content="{lex:LocText WatchButton}"
+                                        IsTabStop="False" />
                             </StackPanel>
                         </DockPanel>
                     </DockPanel>

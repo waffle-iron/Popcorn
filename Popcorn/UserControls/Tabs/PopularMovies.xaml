@@ -49,10 +49,11 @@
                                    Maximum="100"
                                    Minimum="0">
             <controls:MetroProgressBar.Visibility>
-                <MultiBinding Converter="{StaticResource MultiBooleanToVisibilityConverter}">
+                <MultiBinding Converter="{StaticResource MultiBooleanToVisibilityConverter}" ConverterParameter="AND">
                     <Binding Converter="{StaticResource BoolToInverseBoolConverter}"
-                             Path="Main.IsConnectionInError"
+                             Path="Main.ApplicationState.IsConnectionInError"
                              Source="{StaticResource Locator}" />
+                    <Binding Converter="{StaticResource BoolToInverseBoolConverter}" Path="HasLoadingFailed" />
                     <Binding Path="IsLoadingMovies" />
                 </MultiBinding>
             </controls:MetroProgressBar.Visibility>
@@ -64,10 +65,11 @@
                    Foreground="#FF7D7D7D"
                    Text="{lex:LocText EmptySearchLabel}">
             <TextBlock.Visibility>
-                <MultiBinding Converter="{StaticResource MultiBooleanToVisibilityConverter}">
+                <MultiBinding Converter="{StaticResource MultiBooleanToVisibilityConverter}" ConverterParameter="AND">
                     <Binding Converter="{StaticResource BoolToInverseBoolConverter}"
-                             Path="Main.IsConnectionInError"
+                             Path="Main.ApplicationState.IsConnectionInError"
                              Source="{StaticResource Locator}" />
+                    <Binding Converter="{StaticResource BoolToInverseBoolConverter}" Path="HasLoadingFailed" />
                     <Binding Converter="{StaticResource BoolToInverseBoolConverter}" Path="IsMovieFound" />
                 </MultiBinding>
             </TextBlock.Visibility>
@@ -76,7 +78,7 @@
                       Grid.RowSpan="2"
                       ScrollChanged="ScrollViewerScrollChanged"
                       VerticalScrollBarVisibility="Auto"
-                      Visibility="{Binding Main.IsConnectionInError,
+                      Visibility="{Binding Main.ApplicationState.IsConnectionInError,
                                            Converter={StaticResource BoolToVisibilityConverter},
                                            Source={StaticResource Locator}}">
             <ItemsControl VerticalAlignment="Top"
@@ -333,9 +335,13 @@
                 VerticalAlignment="Top"
                 Command="{Binding ReloadMovies}"
                 Content="{lex:LocText ReloadLabel}"
-                FontSize="18"
-                Visibility="{Binding Main.IsConnectionInError,
-                                     Converter={StaticResource BoolToInverseVisibilityConverter},
-                                     Source={StaticResource Locator}}" />
+                FontSize="18">
+            <Button.Visibility>
+                <MultiBinding Converter="{StaticResource MultiBooleanToVisibilityConverter}" ConverterParameter="OR">
+                    <Binding Path="Main.ApplicationState.IsConnectionInError" Source="{StaticResource Locator}" />
+                    <Binding Path="HasLoadingFailed" />
+                </MultiBinding>
+            </Button.Visibility>
+        </Button>
     </Grid>
 </UserControl>

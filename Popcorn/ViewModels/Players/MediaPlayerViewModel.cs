@@ -1,8 +1,9 @@
 ﻿using System;
 using GalaSoft.MvvmLight.CommandWpf;
-using GalaSoft.MvvmLight.Ioc;
 using NLog;
-using Popcorn.ViewModels.Main;
+using Popcorn.Models.ApplicationState;
+using Popcorn.Services.History;
+using Popcorn.Services.Movie;
 using Popcorn.ViewModels.Tabs;
 
 namespace Popcorn.ViewModels.Players
@@ -18,28 +19,23 @@ namespace Popcorn.ViewModels.Players
         private static readonly Logger Logger = LogManager.GetCurrentClassLogger();
 
         /// <summary>
-        /// The main view model
-        /// </summary>
-        public MainViewModel Main { get; }
-
-        /// <summary>
-        /// Command used to stop playing the media
-        /// </summary>
-        public RelayCommand StopPlayingMediaCommand { get; set; }
-
-        /// <summary>
         /// Initializes a new instance of the MediaPlayerViewModel class.
         /// </summary>
-        protected MediaPlayerViewModel()
+        protected MediaPlayerViewModel(IApplicationState applicationState, IMovieService movieService,
+            IMovieHistoryService movieHistoryService)
+            : base(applicationState, movieService, movieHistoryService)
         {
-            if (SimpleIoc.Default.IsRegistered<MainViewModel>())
-                Main = SimpleIoc.Default.GetInstance<MainViewModel>();
         }
 
         /// <summary>
         /// Event fired on stopped playing the media
         /// </summary>
         public event EventHandler<EventArgs> StoppedPlayingMedia;
+
+        /// <summary>
+        /// Command used to stop playing the media
+        /// </summary>
+        public RelayCommand StopPlayingMediaCommand { get; set; }
 
         /// <summary>
         /// Fire StoppedPlayingMedia event

@@ -1,7 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
 using GalaSoft.MvvmLight;
-using GalaSoft.MvvmLight.Ioc;
 using System.Diagnostics;
 using NLog;
 using Popcorn.Services.Language;
@@ -21,7 +20,7 @@ namespace Popcorn.Models.Localization
         /// <summary>
         /// Services used to interacts with languages
         /// </summary>
-        private LanguageService LanguageService { get; }
+        private readonly ILanguageService _languageService;
 
         private ICollection<ILanguage> _languages;
 
@@ -46,7 +45,7 @@ namespace Popcorn.Models.Localization
             {
                 Task.Run(async () =>
                 {
-                    await LanguageService.SetCurrentLanguageAsync(value);
+                    await _languageService.SetCurrentLanguageAsync(value);
                 });
                 Set(() => CurrentLanguage, ref _currentLanguages, value);
             }
@@ -55,41 +54,20 @@ namespace Popcorn.Models.Localization
         /// <summary>
         /// Initialize a new instance of Language
         /// </summary>
-        private Language()
+        public Language(ILanguageService languageService)
         {
-            if (SimpleIoc.Default.IsRegistered<LanguageService>())
-                LanguageService = SimpleIoc.Default.GetInstance<LanguageService>();
-        }
-
-        /// <summary>
-        /// Load asynchronously the languages of the application and return an instance of Language
-        /// </summary>
-        /// <returns>Instance of Language</returns>
-        private async Task<Language> InitializeAsync()
-        {
-            await LoadLanguages();
-            return this;
-        }
-
-        /// <summary>
-        /// Initialize asynchronously an instance of the Language class
-        /// </summary>
-        /// <returns>Instance of Language</returns>
-        public static Task<Language> CreateAsync()
-        {
-            var ret = new Language();
-            return ret.InitializeAsync();
+            _languageService = languageService;
         }
 
         /// <summary>
         /// Load languages
         /// </summary>
-        private async Task LoadLanguages()
+        public async Task LoadLanguages()
         {
             var watchStart = Stopwatch.StartNew();
 
-            CurrentLanguage = await LanguageService.GetCurrentLanguageAsync();
-            Languages = await LanguageService.GetAvailableLanguagesAsync();
+            CurrentLanguage = await _languageService.GetCurrentLanguageAsync();
+            Languages = await _languageService.GetAvailableLanguagesAsync();
 
             watchStart.Stop();
             var elapsedLanguageMs = watchStart.ElapsedMilliseconds;

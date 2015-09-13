@@ -12,7 +12,7 @@ namespace Popcorn.Services.Settings
     /// <summary>
     /// Services used to interacts with application's settings
     /// </summary>
-    public class ApplicationSettingsService
+    public class SettingsService : ISettingsService
     {
         /// <summary>
         /// Logger of the class

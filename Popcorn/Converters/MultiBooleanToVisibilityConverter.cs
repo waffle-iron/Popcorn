@@ -20,7 +20,23 @@ namespace Popcorn.Converters
         public object Convert(object[] values, Type targetType, object parameter,
             System.Globalization.CultureInfo culture)
         {
-            var visible = values.OfType<bool>().Aggregate(true, (current, value) => current && value);
+            var param = parameter as string;
+            if(string.IsNullOrEmpty(param))
+                throw new ArgumentException();
+
+            bool visible;
+            switch (param)
+            {
+                case "OR":
+                    visible = values.OfType<bool>().Aggregate(false, (current, value) => current || value);
+                    break;
+                case "AND":
+                    visible = values.OfType<bool>().Aggregate(true, (current, value) => current && value);
+                    break;
+                default:
+                    visible = values.OfType<bool>().Aggregate(true, (current, value) => current && value);
+                    break;
+            }
 
             return visible ? System.Windows.Visibility.Visible : System.Windows.Visibility.Collapsed;
         }

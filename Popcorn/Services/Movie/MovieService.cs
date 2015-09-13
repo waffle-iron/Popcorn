@@ -13,10 +13,6 @@ using TMDbLib.Client;
 using TMDbLib.Objects.Movies;
 using Popcorn.Models.Localization;
 using System.Linq;
-using System.Net;
-using System.Net.Sockets;
-using Popcorn.Messaging;
-using GalaSoft.MvvmLight.Messaging;
 using Popcorn.Models.Genre;
 using Popcorn.Models.Movie.Full;
 using Popcorn.Models.Movie.Short;
@@ -28,7 +24,7 @@ namespace Popcorn.Services.Movie
     /// <summary>
     /// Services used to interact with movies
     /// </summary>
-    public class MovieService
+    public class MovieService : IMovieService
     {
         /// <summary>
         /// Logger of the class
@@ -89,16 +85,11 @@ namespace Popcorn.Services.Movie
                 Logger.Debug(
                     "GetGenresAsync cancelled.");
             }
-            catch (Exception exception) when (exception is SocketException || exception is WebException)
-            {
-                Logger.Error(
-                    $"GetGenresAsync: {exception.Message}");
-                Messenger.Default.Send(new ManageExceptionMessage(exception));
-            }
             catch (Exception exception)
             {
                 Logger.Error(
                     $"GetGenresAsync: {exception.Message}");
+                throw;
             }
             finally
             {
@@ -162,16 +153,11 @@ namespace Popcorn.Services.Movie
                 Logger.Debug(
                     "GetPopularMoviesAsync cancelled.");
             }
-            catch (Exception exception) when (exception is SocketException || exception is WebException)
-            {
-                Logger.Error(
-                    $"GetPopularMoviesAsync: {exception.Message}");
-                Messenger.Default.Send(new ManageExceptionMessage(exception));
-            }
             catch (Exception exception)
             {
                 Logger.Error(
                     $"GetPopularMoviesAsync: {exception.Message}");
+                throw;
             }
             finally
             {
@@ -238,16 +224,11 @@ namespace Popcorn.Services.Movie
                 Logger.Debug(
                     "GetGreatestMoviesAsync cancelled.");
             }
-            catch (Exception exception) when (exception is SocketException || exception is WebException)
-            {
-                Logger.Error(
-                    $"GetGreatestMoviesAsync: {exception.Message}");
-                Messenger.Default.Send(new ManageExceptionMessage(exception));
-            }
             catch (Exception exception)
             {
                 Logger.Error(
                     $"GetGreatestMoviesAsync: {exception.Message}");
+                throw;
             }
             finally
             {
@@ -314,16 +295,11 @@ namespace Popcorn.Services.Movie
                 Logger.Debug(
                     "GetRecentMoviesAsync cancelled.");
             }
-            catch (Exception exception) when (exception is SocketException || exception is WebException)
-            {
-                Logger.Error(
-                    $"GetRecentMoviesAsync: {exception.Message}");
-                Messenger.Default.Send(new ManageExceptionMessage(exception));
-            }
             catch (Exception exception)
             {
                 Logger.Error(
                     $"GetRecentMoviesAsync: {exception.Message}");
+                throw;
             }
             finally
             {
@@ -392,16 +368,11 @@ namespace Popcorn.Services.Movie
                 Logger.Debug(
                     "SearchMoviesAsync cancelled.");
             }
-            catch (Exception exception) when (exception is SocketException || exception is WebException)
-            {
-                Logger.Error(
-                    $"SearchMoviesAsync: {exception.Message}");
-                Messenger.Default.Send(new ManageExceptionMessage(exception));
-            }
             catch (Exception exception)
             {
                 Logger.Error(
                     $"SearchMoviesAsync: {exception.Message}");
+                throw;
             }
             finally
             {
@@ -487,16 +458,11 @@ namespace Popcorn.Services.Movie
                 Logger.Debug(
                     "GetMovieFullDetailsAsync cancelled.");
             }
-            catch (Exception exception) when (exception is SocketException || exception is WebException)
-            {
-                Logger.Error(
-                    $"GetMovieFullDetailsAsync: {exception.Message}");
-                Messenger.Default.Send(new ManageExceptionMessage(exception));
-            }
             catch (Exception exception)
             {
                 Logger.Error(
                     $"GetMovieFullDetailsAsync: {exception.Message}");
+                throw;
             }
             finally
             {
@@ -534,16 +500,11 @@ namespace Popcorn.Services.Movie
                 Logger.Debug(
                     "TranslateMovieShortAsync cancelled.");
             }
-            catch (Exception exception) when (exception is SocketException || exception is WebException)
-            {
-                Logger.Error(
-                    $"TranslateMovieShortAsync: {exception.Message}");
-                Messenger.Default.Send(new ManageExceptionMessage(exception));
-            }
             catch (Exception exception)
             {
                 Logger.Error(
                     $"TranslateMovieShortAsync: {exception.Message}");
+                throw;
             }
             finally
             {
@@ -580,16 +541,11 @@ namespace Popcorn.Services.Movie
                 Logger.Debug(
                     "TranslateMovieFull cancelled.");
             }
-            catch (Exception exception) when (exception is SocketException || exception is WebException)
-            {
-                Logger.Error(
-                    $"TranslateMovieFull: {exception.Message}");
-                Messenger.Default.Send(new ManageExceptionMessage(exception));
-            }
             catch (Exception exception)
             {
                 Logger.Error(
                     $"TranslateMovieFull: {exception.Message}");
+                throw;
             }
             finally
             {
@@ -659,16 +615,11 @@ namespace Popcorn.Services.Movie
                 Logger.Debug(
                     "GetMovieTrailerAsync cancelled.");
             }
-            catch (Exception exception) when (exception is SocketException || exception is WebException)
-            {
-                Logger.Error(
-                    $"GetMovieTrailerAsync: {exception.Message}");
-                Messenger.Default.Send(new ManageExceptionMessage(exception));
-            }
             catch (Exception exception)
             {
                 Logger.Error(
                     $"GetMovieTrailerAsync: {exception.Message}");
+                throw;
             }
             finally
             {
@@ -734,16 +685,11 @@ namespace Popcorn.Services.Movie
                 Logger.Debug(
                     "LoadSubtitlesAsync cancelled.");
             }
-            catch (Exception exception) when (exception is SocketException || exception is WebException)
-            {
-                Logger.Error(
-                    $"LoadSubtitlesAsync: {exception.Message}");
-                Messenger.Default.Send(new ManageExceptionMessage(exception));
-            }
             catch (Exception exception)
             {
                 Logger.Error(
                     $"LoadSubtitlesAsync: {exception.Message}");
+                throw;
             }
             finally
             {
@@ -801,16 +747,11 @@ namespace Popcorn.Services.Movie
                 Logger.Debug(
                     "DownloadSubtitleAsync cancelled.");
             }
-            catch (Exception exception) when (exception is SocketException || exception is WebException)
-            {
-                Logger.Error(
-                    $"DownloadSubtitleAsync: {exception.Message}");
-                Messenger.Default.Send(new ManageExceptionMessage(exception));
-            }
             catch (Exception exception)
             {
                 Logger.Error(
                     $"DownloadSubtitleAsync: {exception.Message}");
+                throw;
             }
             finally
             {
@@ -862,16 +803,11 @@ namespace Popcorn.Services.Movie
                 Logger.Debug(
                     "DownloadBackgroundImageAsync cancelled.");
             }
-            catch (Exception exception) when (exception is SocketException || exception is WebException)
-            {
-                Logger.Error(
-                    $"DownloadBackgroundImageAsync: {exception.Message}");
-                Messenger.Default.Send(new ManageExceptionMessage(exception));
-            }
             catch (Exception exception)
             {
                 Logger.Error(
                     $"DownloadBackgroundImageAsync: {exception.Message}");
+                throw;
             }
             finally
             {
@@ -912,16 +848,11 @@ namespace Popcorn.Services.Movie
                 Logger.Debug(
                     "DownloadCoverImageAsync cancelled.");
             }
-            catch (Exception exception) when (exception is SocketException || exception is WebException)
-            {
-                Logger.Error(
-                    $"DownloadCoverImageAsync: {exception.Message}");
-                Messenger.Default.Send(new ManageExceptionMessage(exception));
-            }
             catch (Exception exception)
             {
                 Logger.Error(
                     $"DownloadCoverImageAsync: {exception.Message}");
+                throw;
             }
             finally
             {
@@ -969,16 +900,11 @@ namespace Popcorn.Services.Movie
                 Logger.Debug(
                     "DownloadPosterImageAsync cancelled.");
             }
-            catch (Exception exception) when (exception is SocketException || exception is WebException)
-            {
-                Logger.Error(
-                    $"DownloadPosterImageAsync: {exception.Message}");
-                Messenger.Default.Send(new ManageExceptionMessage(exception));
-            }
             catch (Exception exception)
             {
                 Logger.Error(
                     $"DownloadPosterImageAsync: {exception.Message}");
+                throw;
             }
             finally
             {
@@ -1021,16 +947,11 @@ namespace Popcorn.Services.Movie
                 Logger.Debug(
                     "DownloadDirectorImageAsync cancelled.");
             }
-            catch (Exception exception) when (exception is SocketException || exception is WebException)
-            {
-                Logger.Error(
-                    $"DownloadDirectorImageAsync: {exception.Message}");
-                Messenger.Default.Send(new ManageExceptionMessage(exception));
-            }
             catch (Exception exception)
             {
                 Logger.Error(
                     $"DownloadDirectorImageAsync: {exception.Message}");
+                throw;
             }
             finally
             {
@@ -1073,16 +994,11 @@ namespace Popcorn.Services.Movie
                 Logger.Debug(
                     "DownloadActorImageAsync cancelled.");
             }
-            catch (Exception exception) when (exception is SocketException || exception is WebException)
-            {
-                Logger.Error(
-                    $"DownloadActorImageAsync: {exception.Message}");
-                Messenger.Default.Send(new ManageExceptionMessage(exception));
-            }
             catch (Exception exception)
             {
                 Logger.Error(
                     $"DownloadActorImageAsync: {exception.Message}");
+                throw;
             }
             finally
             {

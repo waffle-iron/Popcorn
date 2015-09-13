@@ -4,14 +4,15 @@ using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
 using GalaSoft.MvvmLight.CommandWpf;
-using GalaSoft.MvvmLight.Ioc;
 using GalaSoft.MvvmLight.Messaging;
 using NLog;
 using Popcorn.Helpers;
 using Popcorn.Messaging;
+using Popcorn.Models.ApplicationState;
 using Popcorn.Models.Genre;
 using Popcorn.Models.Movie.Short;
-using Popcorn.ViewModels.Main;
+using Popcorn.Services.History;
+using Popcorn.Services.Movie;
 
 namespace Popcorn.ViewModels.Tabs
 {
@@ -25,11 +26,59 @@ namespace Popcorn.ViewModels.Tabs
         /// <summary>
         /// Initializes a new instance of the SeenTabViewModel class.
         /// </summary>
-        public SeenTabViewModel()
+        /// <param name="applicationState">Application state</param>
+        /// <param name="movieService">Movie service</param>
+        /// <param name="movieHistoryService">Movie history service</param>
+        public SeenTabViewModel(IApplicationState applicationState, IMovieService movieService, IMovieHistoryService movieHistoryService)
+            : base(applicationState, movieService, movieHistoryService)
         {
             RegisterMessages();
             RegisterCommands();
             TabName = LocalizationProviderHelper.GetLocalizedValue<string>("SeenTitleTab");
+        }
+
+        /// <summary>
+        /// Load seen movies
+        /// </summary>
+        public override async Task LoadMoviesAsync()
+        {
+            var watch = Stopwatch.StartNew();
+
+            Logger.Info(
+                "Loading movies...");
+
+            HasLoadingFailed = false;
+
+            try
+            {
+                IsLoadingMovies = true;
+
+                var movies =
+                    await MovieHistoryService.GetSeenMoviesAsync(Genre, Rating);
+
+                Movies = new ObservableCollection<MovieShort>(movies);
+
+                IsLoadingMovies = false;
+                IsMovieFound = Movies.Any();
+                CurrentNumberOfMovies = Movies.Count;
+                MaxNumberOfMovies = Movies.Count;
+
+                await MovieService.DownloadCoverImageAsync(Movies, CancellationLoadingMovies);
+            }
+            catch (Exception exception)
+            {
+                Logger.Error(
+                    $"Error while loading page {Page}: {exception.Message}");
+                HasLoadingFailed = true;
+                Messenger.Default.Send(new ManageExceptionMessage(exception));
+            }
+            finally
+            {
+                watch.Stop();
+                var elapsedMs = watch.ElapsedMilliseconds;
+                Logger.Info(
+                    $"Loaded movies in {elapsedMs} milliseconds.");
+            }
         }
 
         /// <summary>
@@ -71,55 +120,10 @@ namespace Popcorn.ViewModels.Tabs
         {
             ReloadMovies = new RelayCommand(async () =>
             {
-                if (SimpleIoc.Default.IsRegistered<MainViewModel>())
-                {
-                    var mainViewModel = SimpleIoc.Default.GetInstance<MainViewModel>();
-                    mainViewModel.IsConnectionInError = false;
-                }
-
+                ApplicationState.IsConnectionInError = false;
                 StopLoadingMovies();
                 await LoadMoviesAsync();
             });
-        }
-
-        /// <summary>
-        /// Load seen movies
-        /// </summary>
-        public override async Task LoadMoviesAsync()
-        {
-            var watch = Stopwatch.StartNew();
-
-            Logger.Info(
-                "Loading movies...");
-
-            try
-            {
-                IsLoadingMovies = true;
-
-                var movies =
-                    await MovieHistoryService.GetSeenMoviesAsync(Genre, Rating);
-
-                Movies = new ObservableCollection<MovieShort>(movies);
-
-                IsLoadingMovies = false;
-                IsMovieFound = Movies.Any();
-                CurrentNumberOfMovies = Movies.Count;
-                MaxNumberOfMovies = Movies.Count;
-
-                await MovieService.DownloadCoverImageAsync(Movies, CancellationLoadingMovies);
-            }
-            catch (Exception exception)
-            {
-                Logger.Error(
-                    $"Error while loading page {Page}: {exception.Message}");
-            }
-            finally
-            {
-                watch.Stop();
-                var elapsedMs = watch.ElapsedMilliseconds;
-                Logger.Info(
-                    $"Loaded movies in {elapsedMs} milliseconds.");
-            }
         }
     }
 }

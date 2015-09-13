@@ -4,7 +4,10 @@ using GalaSoft.MvvmLight.CommandWpf;
 using GalaSoft.MvvmLight.Messaging;
 using NLog;
 using Popcorn.Messaging;
+using Popcorn.Models.ApplicationState;
 using Popcorn.Models.Movie.Full;
+using Popcorn.Services.History;
+using Popcorn.Services.Movie;
 
 namespace Popcorn.ViewModels.Players.Movie
 {
@@ -21,18 +24,42 @@ namespace Popcorn.ViewModels.Players.Movie
         /// <summary>
         /// Movie
         /// </summary>
-        public readonly MovieFull Movie;
+        public MovieFull Movie;
 
         /// <summary>
         /// Initializes a new instance of the MoviePlayerViewModel class.
         /// </summary>
-        /// <param name="movie">Movie to play</param>
-        public MoviePlayerViewModel(MovieFull movie)
+        /// <param name="applicationState">Main view model</param>
+        /// <param name="movieService">Movie service</param>
+        /// <param name="movieHistoryService">Movie history service</param>
+        public MoviePlayerViewModel(IApplicationState applicationState, IMovieService movieService, IMovieHistoryService movieHistoryService)
+            : base(applicationState, movieService, movieHistoryService)
         {
             RegisterMessages();
             RegisterCommands();
+        }
+
+        /// <summary>
+        /// Load a movie
+        /// </summary>
+        /// <param name="movie">Movie to load</param>
+        public void LoadMovie(MovieFull movie)
+        {
             Movie = movie;
             TabName = !string.IsNullOrEmpty(Movie.Title) ? Movie.Title : Properties.Resources.PlayingTitleTab;
+        }
+
+        /// <summary>
+        /// Cleanup resources
+        /// </summary>
+        public override void Cleanup()
+        {
+            Logger.Debug(
+                "Cleaning up MoviePlayerViewModel");
+
+            OnStoppedPlayingMedia(new EventArgs());
+
+            base.Cleanup();
         }
 
         /// <summary>
@@ -64,19 +91,6 @@ namespace Popcorn.ViewModels.Players.Movie
             {
                 Messenger.Default.Send(new StopPlayingMovieMessage());
             });
-        }
-
-        /// <summary>
-        /// Cleanup resources
-        /// </summary>
-        public override void Cleanup()
-        {
-            Logger.Debug(
-                "Cleaning up MoviePlayerViewModel");
-
-            OnStoppedPlayingMedia(new EventArgs());
-
-            base.Cleanup();
         }
     }
 }

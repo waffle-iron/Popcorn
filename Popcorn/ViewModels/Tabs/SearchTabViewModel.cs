@@ -7,12 +7,13 @@ using Popcorn.Helpers;
 using Popcorn.Messaging;
 using System.Diagnostics;
 using GalaSoft.MvvmLight.CommandWpf;
-using GalaSoft.MvvmLight.Ioc;
 using NLog;
 using Popcorn.Comparers;
+using Popcorn.Models.ApplicationState;
 using Popcorn.Models.Genre;
 using Popcorn.Models.Movie.Short;
-using Popcorn.ViewModels.Main;
+using Popcorn.Services.History;
+using Popcorn.Services.Movie;
 
 namespace Popcorn.ViewModels.Tabs
 {
@@ -30,15 +31,83 @@ namespace Popcorn.ViewModels.Tabs
         /// The search filter
         /// </summary>
         public string SearchFilter { get; private set; }
-        
+
         /// <summary>
         /// Initializes a new instance of the SearchTabViewModel class.
         /// </summary>
-        public SearchTabViewModel()
+        /// <param name="applicationState">Application state</param>
+        /// <param name="movieService">Movie service</param>
+        /// <param name="movieHistoryService">Movie history service</param>
+        public SearchTabViewModel(IApplicationState applicationState, IMovieService movieService, IMovieHistoryService movieHistoryService)
+            : base(applicationState, movieService, movieHistoryService)
         {
             RegisterMessages();
             RegisterCommands();
             TabName = LocalizationProviderHelper.GetLocalizedValue<string>("SearchTitleTab");
+        }
+
+        /// <summary>
+        /// Search movies
+        /// </summary>
+        /// <param name="searchFilter">The parameter of the search</param>
+        public async Task SearchMoviesAsync(string searchFilter)
+        {
+            if (SearchFilter != searchFilter)
+            {
+                // We start an other search
+                StopLoadingMovies();
+                Movies.Clear();
+                Page = 0;
+            }
+
+            var watch = Stopwatch.StartNew();
+
+            Page++;
+
+            Logger.Info(
+                $"Loading page {Page} with criteria: {searchFilter}");
+
+            HasLoadingFailed = false;
+
+            try
+            {
+                SearchFilter = searchFilter;
+
+                IsLoadingMovies = true;
+
+                var movies =
+                    await MovieService.SearchMoviesAsync(searchFilter,
+                        Page,
+                        MaxMoviesPerPage,
+                        Genre,
+                        Rating,
+                        CancellationLoadingMovies.Token);
+
+                Movies = new ObservableCollection<MovieShort>(Movies.Union(movies.Item1, new MovieShortComparer()));
+
+                IsLoadingMovies = false;
+                IsMovieFound = Movies.Any();
+                CurrentNumberOfMovies = Movies.Count;
+                MaxNumberOfMovies = movies.Item2;
+
+                await MovieHistoryService.ComputeMovieHistoryAsync(movies.Item1);
+                await MovieService.DownloadCoverImageAsync(movies.Item1, CancellationLoadingMovies);
+            }
+            catch (Exception exception)
+            {
+                Page--;
+                Logger.Error(
+                    $"Error while loading page {Page} with criteria {searchFilter}: {exception.Message}");
+                HasLoadingFailed = true;
+                Messenger.Default.Send(new ManageExceptionMessage(exception));
+            }
+            finally
+            {
+                watch.Stop();
+                var elapsedMs = watch.ElapsedMilliseconds;
+                Logger.Info(
+                    $"Loaded page {Page} with criteria {searchFilter} in {elapsedMs} milliseconds.");
+            }
         }
 
         /// <summary>
@@ -76,75 +145,10 @@ namespace Popcorn.ViewModels.Tabs
         {
             ReloadMovies = new RelayCommand(async () =>
             {
-                if (SimpleIoc.Default.IsRegistered<MainViewModel>())
-                {
-                    var mainViewModel = SimpleIoc.Default.GetInstance<MainViewModel>();
-                    mainViewModel.IsConnectionInError = false;
-                }
-
+                ApplicationState.IsConnectionInError = false;
                 StopLoadingMovies();
                 await SearchMoviesAsync(SearchFilter);
             });
-        }
-
-        /// <summary>
-        /// Search movies
-        /// </summary>
-        /// <param name="searchFilter">The parameter of the search</param>
-        public async Task SearchMoviesAsync(string searchFilter)
-        {
-            if (SearchFilter != searchFilter)
-            {
-                // We start an other search
-                StopLoadingMovies();
-                Movies.Clear();
-                Page = 0;
-            }
-
-            var watch = Stopwatch.StartNew();
-
-            Page++;
-
-            Logger.Info(
-                $"Loading page {Page} with criteria: {searchFilter}");
-
-            try
-            {
-                SearchFilter = searchFilter;
-
-                IsLoadingMovies = true;
-
-                var movies =
-                    await MovieService.SearchMoviesAsync(searchFilter,
-                        Page,
-                        MaxMoviesPerPage,
-                        Genre,
-                        Rating,
-                        CancellationLoadingMovies.Token);
-
-                Movies = new ObservableCollection<MovieShort>(Movies.Union(movies.Item1, new MovieShortComparer()));
-
-                IsLoadingMovies = false;
-                IsMovieFound = Movies.Any();
-                CurrentNumberOfMovies = Movies.Count;
-                MaxNumberOfMovies = movies.Item2;
-
-                await MovieHistoryService.ComputeMovieHistoryAsync(movies.Item1);
-                await MovieService.DownloadCoverImageAsync(movies.Item1, CancellationLoadingMovies);
-            }
-            catch (Exception exception)
-            {
-                Page--;
-                Logger.Error(
-                    $"Error while loading page {Page} with criteria {searchFilter}: {exception.Message}");
-            }
-            finally
-            {
-                watch.Stop();
-                var elapsedMs = watch.ElapsedMilliseconds;
-                Logger.Info(
-                    $"Loaded page {Page} with criteria {searchFilter} in {elapsedMs} milliseconds.");
-            }
         }
     }
 }

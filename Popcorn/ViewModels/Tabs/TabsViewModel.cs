@@ -8,8 +8,8 @@ using GalaSoft.MvvmLight.Messaging;
 using GalaSoft.MvvmLight.CommandWpf;
 using Popcorn.Helpers;
 using Popcorn.Messaging;
-using GalaSoft.MvvmLight.Ioc;
 using NLog;
+using Popcorn.Models.ApplicationState;
 using Popcorn.Models.Genre;
 using Popcorn.Models.Movie.Short;
 using Popcorn.Services.History;
@@ -30,14 +30,35 @@ namespace Popcorn.ViewModels.Tabs
         /// <summary>
         /// Services used to interact with movies
         /// </summary>
-        protected MovieService MovieService { get; }
+        protected readonly IMovieService MovieService;
 
         /// <summary>
-        /// Services used to interacts with movie history
+        /// Services used to interact with movie history
         /// </summary>
-        protected MovieHistoryService MovieHistoryService { get; }
+        protected readonly IMovieHistoryService MovieHistoryService;
 
         private ObservableCollection<MovieShort> _movies = new ObservableCollection<MovieShort>();
+
+        private static MovieGenre _genre;
+
+        private int _currentNumberOfMovies;
+
+        private int _maxNumberOfMovies;
+
+        private string _tabName;
+
+        private bool _isLoadingMovies;
+
+        private bool _isMoviesFound = true;
+
+        private static double _rating;
+
+        private bool _hasLoadingFailed;
+
+        /// <summary>
+        /// Services used to interact with movie history
+        /// </summary>
+        public IApplicationState ApplicationState { get; set; }
 
         /// <summary>
         /// Tab's movies
@@ -48,19 +69,6 @@ namespace Popcorn.ViewModels.Tabs
             set { Set(() => Movies, ref _movies, value); }
         }
 
-        private static MovieGenre _genre;
-
-        /// <summary>
-        /// The current movie genre
-        /// </summary>
-        protected MovieGenre Genre
-        {
-            get { return _genre; }
-            private set { Set(() => Genre, ref _genre, value, true); }
-        }
-
-        private int _currentNumberOfMovies;
-
         /// <summary>
         /// The current number of movies in the tab
         /// </summary>
@@ -69,8 +77,6 @@ namespace Popcorn.ViewModels.Tabs
             get { return _currentNumberOfMovies; }
             set { Set(() => CurrentNumberOfMovies, ref _currentNumberOfMovies, value); }
         }
-
-        private int _maxNumberOfMovies;
 
         /// <summary>
         /// The maximum number of movies found
@@ -82,23 +88,6 @@ namespace Popcorn.ViewModels.Tabs
         }
 
         /// <summary>
-        /// Current page number of loaded movies
-        /// </summary>
-        protected int Page { get; set; }
-
-        /// <summary>
-        /// Maximum movies number to load per page request
-        /// </summary>
-        protected int MaxMoviesPerPage { get; }
-
-        /// <summary>
-        /// Token to cancel movie loading
-        /// </summary>
-        protected CancellationTokenSource CancellationLoadingMovies { get; private set; }
-
-        private string _tabName;
-
-        /// <summary>
         /// The name of the tab shown in the interface
         /// </summary>
         public string TabName
@@ -106,8 +95,6 @@ namespace Popcorn.ViewModels.Tabs
             get { return _tabName; }
             set { Set(() => TabName, ref _tabName, value); }
         }
-
-        private bool _isLoadingMovies;
 
         /// <summary>
         /// Specify if movies are loading
@@ -118,8 +105,6 @@ namespace Popcorn.ViewModels.Tabs
             protected set { Set(() => IsLoadingMovies, ref _isLoadingMovies, value); }
         }
 
-        private bool _isMoviesFound = true;
-
         /// <summary>
         /// Indicates if there's any movie found
         /// </summary>
@@ -128,8 +113,6 @@ namespace Popcorn.ViewModels.Tabs
             get { return _isMoviesFound; }
             set { Set(() => IsMovieFound, ref _isMoviesFound, value); }
         }
-
-        private static double _rating;
 
         /// <summary>
         /// Movie rating filter
@@ -155,20 +138,78 @@ namespace Popcorn.ViewModels.Tabs
         /// </summary>
         public RelayCommand<MovieGenre> ChangeMovieGenreCommand { get; set; }
 
+        public bool HasLoadingFailed
+        {
+            get { return _hasLoadingFailed; }
+            set { Set(() => HasLoadingFailed, ref _hasLoadingFailed, value); }
+        }
+
+        /// <summary>
+        /// The current movie genre
+        /// </summary>
+        protected MovieGenre Genre
+        {
+            get { return _genre; }
+            private set { Set(() => Genre, ref _genre, value, true); }
+        }
+
+        /// <summary>
+        /// Current page number of loaded movies
+        /// </summary>
+        protected int Page { get; set; }
+
+        /// <summary>
+        /// Maximum movies number to load per page request
+        /// </summary>
+        protected int MaxMoviesPerPage { get; }
+
+        /// <summary>
+        /// Token to cancel movie loading
+        /// </summary>
+        protected CancellationTokenSource CancellationLoadingMovies { get; private set; }
+
         /// <summary>
         /// Initializes a new instance of the TabsViewModel class.
         /// </summary>
-        protected TabsViewModel()
+        protected TabsViewModel(IApplicationState applicationState, IMovieService movieService, IMovieHistoryService movieHistoryService)
         {
+            ApplicationState = applicationState;
+            MovieService = movieService;
+            MovieHistoryService = movieHistoryService;
+
             RegisterMessages();
             RegisterCommands();
-            if (SimpleIoc.Default.IsRegistered<MovieService>())
-                MovieService = SimpleIoc.Default.GetInstance<MovieService>();
-
-            if (SimpleIoc.Default.IsRegistered<MovieHistoryService>())
-                MovieHistoryService = SimpleIoc.Default.GetInstance<MovieHistoryService>();
 
             MaxMoviesPerPage = Constants.MaxMoviesPerPage;
+            CancellationLoadingMovies = new CancellationTokenSource();
+        }
+
+        /// <summary>
+        /// Load movies
+        /// </summary>
+        public virtual Task LoadMoviesAsync()
+        {
+            throw new NotImplementedException();
+        }
+
+        /// <summary>
+        /// Cleanup resources
+        /// </summary>
+        public override void Cleanup()
+        {
+            StopLoadingMovies();
+            base.Cleanup();
+        }
+
+        /// <summary>
+        /// Cancel the loading of the next page 
+        /// </summary>
+        protected void StopLoadingMovies()
+        {
+            Logger.Info(
+                "Stop loading movies.");
+
+            CancellationLoadingMovies.Cancel(true);
             CancellationLoadingMovies = new CancellationTokenSource();
         }
 
@@ -227,39 +268,6 @@ namespace Popcorn.ViewModels.Tabs
                         ? null
                         : genre;
                 });
-        }
-
-        /// <summary>
-        /// Load movies
-        /// </summary>
-        public virtual Task LoadMoviesAsync()
-        {
-            throw new NotImplementedException();
-        }
-
-        /// <summary>
-        /// Cancel the loading of the next page 
-        /// </summary>
-        protected void StopLoadingMovies()
-        {
-            Logger.Info(
-                "Stop loading movies.");
-
-            CancellationLoadingMovies.Cancel(true);
-            CancellationLoadingMovies = new CancellationTokenSource();
-        }
-
-        /// <summary>
-        /// Cleanup resources
-        /// </summary>
-        public override void Cleanup()
-        {
-            Logger.Debug(
-                "Cleaning a TabViewModel.");
-
-            StopLoadingMovies();
-
-            base.Cleanup();
         }
     }
 }

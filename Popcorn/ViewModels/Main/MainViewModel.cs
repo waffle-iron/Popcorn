@@ -16,6 +16,9 @@ using Popcorn.Dialogs;
 using Popcorn.Messaging;
 using Popcorn.Events;
 using Popcorn.Helpers;
+using Popcorn.Models.ApplicationState;
+using Popcorn.Services.History;
+using Popcorn.Services.Movie;
 using Popcorn.ViewModels.Genres;
 using Popcorn.ViewModels.Tabs;
 using Popcorn.ViewModels.Players.Movie;
@@ -34,57 +37,68 @@ namespace Popcorn.ViewModels.Main
         private static readonly Logger Logger = LogManager.GetCurrentClassLogger();
 
         /// <summary>
-        /// Used to update application
-        /// </summary>
-        private UpdateManager UpdateManager { get; set; }
-
-        /// <summary>
         /// Used to define the dialog context
         /// </summary>
-        private IDialogCoordinator DialogCoordinator { get; }
-
-        private bool _isMoviePlaying;
+        private readonly IDialogCoordinator _dialogCoordinator;
 
         /// <summary>
-        /// Indicates if a movie is playing
+        /// Used to interact with movies
         /// </summary>
-        private bool IsMoviePlaying
-        {
-            get { return _isMoviePlaying; }
-            set
-            {
-                Set(() => IsMoviePlaying, ref _isMoviePlaying, value);
-                OnWindowStateChanged(new WindowStateChangedEventArgs(value));
-            }
-        }
+        private readonly IMovieService _movieService;
+
+        /// <summary>
+        /// Used to interact with movie history
+        /// </summary>
+        private readonly IMovieHistoryService _movieHistoryService;
+
+        /// <summary>
+        /// Used to manage application state
+        /// </summary>
+        private IApplicationState _applicationState;
+
+        /// <summary>
+        /// Used to manage genres
+        /// </summary>
+        private IGenresViewModel _genresViewModel;
+
+        /// <summary>
+        /// Movie player view model
+        /// </summary>
+        private MoviePlayerViewModel _moviePlayerViewModel;
+
+        private bool _isMovieFlyoutOpen;
+
+        private ObservableCollection<TabsViewModel> _tabs = new ObservableCollection<TabsViewModel>();
+
+        private TabsViewModel _selectedTab;
+
+        private bool _isMovieSearchActive;
+
+        private bool _isSettingsFlyoutOpen;
 
         private bool _isManagingException;
 
         /// <summary>
-        /// Indicates if an exception is currently managed
+        /// Initializes a new instance of the MainViewModel class.
         /// </summary>
-        private bool IsManagingException
+        /// <param name="genresViewModel">Instance of GenresViewModel</param>
+        /// <param name="movieService">Instance of MovieService</param>
+        /// <param name="movieHistoryService">Instance of MovieHistoryService</param>
+        /// <param name="applicationState">Instance of ApplicationState</param>
+        public MainViewModel(IGenresViewModel genresViewModel, IMovieService movieService, IMovieHistoryService movieHistoryService, IApplicationState applicationState)
         {
-            get { return _isManagingException; }
-            set { Set(() => IsManagingException, ref _isManagingException, value); }
+            _dialogCoordinator = DialogCoordinator.Instance;
+            _movieService = movieService;
+            _movieHistoryService = movieHistoryService;
+            ApplicationState = applicationState;
+            GenresViewModel = genresViewModel;
+
+            RegisterMessages();
+            RegisterCommands();
+            AppDomain.CurrentDomain.UnhandledException += OnUnhandledException;
         }
 
-        private bool _isFullScreen;
-
-        /// <summary>
-        /// Indicates if application is fullscreen
-        /// </summary>
-        public bool IsFullScreen
-        {
-            get { return _isFullScreen; }
-            set
-            {
-                Set(() => IsFullScreen, ref _isFullScreen, value);
-                OnWindowStateChanged(new WindowStateChangedEventArgs(IsMoviePlaying));
-            }
-        }
-
-        private ObservableCollection<TabsViewModel> _tabs = new ObservableCollection<TabsViewModel>();
+        public event EventHandler<WindowStateChangedEventArgs> WindowStageChanged;
 
         /// <summary>
         /// Tabs shown into the interface via TabControl
@@ -95,8 +109,6 @@ namespace Popcorn.ViewModels.Main
             set { Set(() => Tabs, ref _tabs, value); }
         }
 
-        private TabsViewModel _selectedTab;
-
         /// <summary>
         /// The selected viewmodel tab via TabControl
         /// </summary>
@@ -105,8 +117,6 @@ namespace Popcorn.ViewModels.Main
             get { return _selectedTab; }
             set { Set(() => SelectedTab, ref _selectedTab, value); }
         }
-
-        private bool _isMovieSearchActive;
 
         /// <summary>
         /// Indicates if a movie search is active
@@ -117,19 +127,6 @@ namespace Popcorn.ViewModels.Main
             private set { Set(() => IsMovieSearchActive, ref _isMovieSearchActive, value); }
         }
 
-        private bool _isConnectionInError;
-
-        /// <summary>
-        /// Specify if a connection error has occured
-        /// </summary>
-        public bool IsConnectionInError
-        {
-            get { return _isConnectionInError; }
-            set { Set(() => IsConnectionInError, ref _isConnectionInError, value); }
-        }
-
-        private bool _isSettingsFlyoutOpen;
-
         /// <summary>
         /// Specify if settings flyout is open
         /// </summary>
@@ -138,8 +135,6 @@ namespace Popcorn.ViewModels.Main
             get { return _isSettingsFlyoutOpen; }
             set { Set(() => IsSettingsFlyoutOpen, ref _isSettingsFlyoutOpen, value); }
         }
-
-        private bool _isMovieFlyoutOpen;
 
         /// <summary>
         /// Specify if movie flyout is open
@@ -150,15 +145,22 @@ namespace Popcorn.ViewModels.Main
             set { Set(() => IsMovieFlyoutOpen, ref _isMovieFlyoutOpen, value); }
         }
 
-        private GenresViewModel _genresViewModel;
-
         /// <summary>
         /// Genres ViewModel
         /// </summary>
-        public GenresViewModel GenresViewModel
+        public IGenresViewModel GenresViewModel
         {
             get { return _genresViewModel; }
             set { Set(() => GenresViewModel, ref _genresViewModel, value); }
+        }
+
+        /// <summary>
+        /// Used to manage application state
+        /// </summary>
+        public IApplicationState ApplicationState
+        {
+            get { return _applicationState; }
+            set { Set(() => ApplicationState, ref _applicationState, value); }
         }
 
         /// <summary>
@@ -212,23 +214,27 @@ namespace Popcorn.ViewModels.Main
         public RelayCommand InitializeAsyncCommand { get; private set; }
 
         /// <summary>
-        /// Initializes a new instance of the MainViewModel class.
+        /// Indicates if an exception is currently managed
         /// </summary>
-        public MainViewModel() :
-            this(MahApps.Metro.Controls.Dialogs.DialogCoordinator.Instance)
+        private bool IsManagingException
         {
+            get { return _isManagingException; }
+            set { Set(() => IsManagingException, ref _isManagingException, value); }
         }
 
         /// <summary>
-        /// Initializes a new instance of the MainViewModel class.
+        /// Genres ViewModel
         /// </summary>
-        private MainViewModel(IDialogCoordinator dialogCoordinator)
+        private MoviePlayerViewModel MoviePlayerViewModel
         {
-            RegisterMessages();
-            RegisterCommands();
-            DialogCoordinator = dialogCoordinator;
-            AppDomain.CurrentDomain.UnhandledException += OnUnhandledException;
+            get { return _moviePlayerViewModel; }
+            set { Set(() => MoviePlayerViewModel, ref _moviePlayerViewModel, value); }
         }
+
+        /// <summary>
+        /// Used to update application
+        /// </summary>
+        private UpdateManager UpdateManager { get; set; }
 
         /// <summary>
         /// Load asynchronously an instance of MainViewModel
@@ -239,18 +245,18 @@ namespace Popcorn.ViewModels.Main
             AppDomain.CurrentDomain.ProcessExit += (sender, args) => UpdateManager.Dispose();
             UpdateManager = new UpdateManager(Constants.UpdateServerUrl, Constants.ApplicationName);
 
-            Tabs.Add(new PopularTabViewModel());
-            Tabs.Add(new GreatestTabViewModel());
-            Tabs.Add(new RecentTabViewModel());
-            Tabs.Add(new FavoritesTabViewModel());
-            Tabs.Add(new SeenTabViewModel());
+            Tabs.Add(new PopularTabViewModel(ApplicationState, _movieService, _movieHistoryService));
+            Tabs.Add(new GreatestTabViewModel(ApplicationState, _movieService, _movieHistoryService));
+            Tabs.Add(new RecentTabViewModel(ApplicationState, _movieService, _movieHistoryService));
+            Tabs.Add(new FavoritesTabViewModel(ApplicationState, _movieService, _movieHistoryService));
+            Tabs.Add(new SeenTabViewModel(ApplicationState, _movieService, _movieHistoryService));
             SelectedTab = Tabs.First();
             foreach (var tab in Tabs)
             {
                 await tab.LoadMoviesAsync();
             }
 
-            GenresViewModel = await GenresViewModel.CreateAsync();
+            await GenresViewModel.LoadGenresAsync();
 
 #if !DEBUG
             await StartUpdateProcessAsync();
@@ -267,16 +273,23 @@ namespace Popcorn.ViewModels.Main
                 ManageException(e.UnHandledException);
             });
 
+            Messenger.Default.Register<WindowStateChangeMessage>(this, e =>
+            {
+                OnWindowStateChanged(new WindowStateChangedEventArgs(e.IsMoviePlaying));
+            });
+
             Messenger.Default.Register<LoadMovieMessage>(this, e => { IsMovieFlyoutOpen = true; });
 
             Messenger.Default.Register<PlayMovieMessage>(this, message =>
             {
                 DispatcherHelper.CheckBeginInvokeOnUI(() =>
                 {
-                    Tabs.Add(new MoviePlayerViewModel(message.Movie));
+                    MoviePlayerViewModel = new MoviePlayerViewModel(ApplicationState, _movieService, _movieHistoryService);
+                    MoviePlayerViewModel.LoadMovie(message.Movie);
+                    Tabs.Add(MoviePlayerViewModel);
                     SelectedTab = Tabs.Last();
                     IsMovieFlyoutOpen = false;
-                    IsMoviePlaying = true;
+                    ApplicationState.IsMoviePlaying = true;
                 });
             });
 
@@ -299,7 +312,7 @@ namespace Popcorn.ViewModels.Main
                     }
 
                     IsMovieFlyoutOpen = true;
-                    IsMoviePlaying = false;
+                    ApplicationState.IsMoviePlaying = false;
                 });
 
             Messenger.Default.Register<SearchMovieMessage>(this,
@@ -435,8 +448,11 @@ namespace Popcorn.ViewModels.Main
                 return;
 
             IsManagingException = true;
+            IsMovieFlyoutOpen = false;
+            IsSettingsFlyoutOpen = false;
+
             if (exception is WebException || exception is SocketException)
-                IsConnectionInError = true;
+                ApplicationState.IsConnectionInError = true;
 
             DispatcherHelper.CheckBeginInvokeOnUI(async () =>
             {
@@ -444,10 +460,10 @@ namespace Popcorn.ViewModels.Main
                     new ExceptionDialog(
                         new ExceptionDialogSettings(
                             LocalizationProviderHelper.GetLocalizedValue<string>("EmbarrassingError"), exception.Message));
-                await DialogCoordinator.ShowMetroDialogAsync(this, exceptionDialog);
+                await _dialogCoordinator.ShowMetroDialogAsync(this, exceptionDialog);
                 await exceptionDialog.WaitForButtonPressAsync();
                 IsManagingException = false;
-                await DialogCoordinator.HideMetroDialogAsync(this, exceptionDialog);
+                await _dialogCoordinator.HideMetroDialogAsync(this, exceptionDialog);
             });
         }
 
@@ -490,7 +506,7 @@ namespace Popcorn.ViewModels.Main
                     return;
                 }
 
-                Tabs.Add(new SearchTabViewModel());
+                Tabs.Add(new SearchTabViewModel(ApplicationState, _movieService, _movieHistoryService));
                 SelectedTab = Tabs.Last();
                 var searchMovieTab = SelectedTab as SearchTabViewModel;
                 if (searchMovieTab != null)
@@ -563,9 +579,9 @@ namespace Popcorn.ViewModels.Main
                                 LocalizationProviderHelper.GetLocalizedValue<string>("NewUpdateLabel"),
                                 LocalizationProviderHelper.GetLocalizedValue<string>("NewUpdateDescriptionLabel"),
                                 releaseInfos));
-                    await DialogCoordinator.ShowMetroDialogAsync(this, updateDialog);
+                    await _dialogCoordinator.ShowMetroDialogAsync(this, updateDialog);
                     var updateDialogResult = await updateDialog.WaitForButtonPressAsync();
-                    await DialogCoordinator.HideMetroDialogAsync(this, updateDialog);
+                    await _dialogCoordinator.HideMetroDialogAsync(this, updateDialog);
 
                     if (!updateDialogResult.Restart) return;
 
@@ -591,8 +607,6 @@ namespace Popcorn.ViewModels.Main
             Logger.Info(
                 "Finished looking for updates.", elapsedStartMs);
         }
-
-        public event EventHandler<WindowStateChangedEventArgs> WindowStageChanged;
 
         /// <summary>
         /// Fire when window state has changed

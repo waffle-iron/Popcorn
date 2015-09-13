@@ -19,7 +19,7 @@ namespace Popcorn.Services.History
     /// <summary>
     /// Services used to interacts with movie history
     /// </summary>
-    public class MovieHistoryService
+    public class MovieHistoryService : IMovieHistoryService
     {
         /// <summary>
         /// Logger of the class
@@ -171,7 +171,7 @@ namespace Popcorn.Services.History
         /// Set the movie as favorite
         /// </summary>
         /// <param name="movie">Favorite movie</param>
-        public static async Task SetFavoriteMovieAsync(MovieShort movie)
+        public async Task SetFavoriteMovieAsync(MovieShort movie)
         {
             var watch = Stopwatch.StartNew();
 

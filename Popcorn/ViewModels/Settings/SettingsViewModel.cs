@@ -2,15 +2,34 @@
 using GalaSoft.MvvmLight;
 using Popcorn.Models.Localization;
 using GalaSoft.MvvmLight.CommandWpf;
+using Popcorn.Services.Language;
 
 namespace Popcorn.ViewModels.Settings
 {
     /// <summary>
     /// Application's settings
     /// </summary>
-    public sealed class SettingsViewModel : ViewModelBase
+    public sealed class SettingsViewModel : ViewModelBase, ISettingsViewModel
     {
+        /// <summary>
+        /// Services used to interacts with languages
+        /// </summary>
+        private readonly ILanguageService _languageService;
+
         private int _downloadLimit;
+
+        private int _uploadLimit;
+
+        private Language _language;
+
+        /// <summary>
+        /// Initializes a new instance of the SettingsViewModel class.
+        /// </summary>
+        public SettingsViewModel(ILanguageService languageService)
+        {
+            RegisterCommands();
+            _languageService = languageService;
+        }
 
         /// <summary>
         /// Download limit
@@ -21,8 +40,6 @@ namespace Popcorn.ViewModels.Settings
             set { Set(() => DownloadLimit, ref _downloadLimit, value); }
         }
 
-        private int _uploadLimit;
-
         /// <summary>
         /// Upload limit
         /// </summary>
@@ -32,15 +49,13 @@ namespace Popcorn.ViewModels.Settings
             set { Set(() => UploadLimit, ref _uploadLimit, value); }
         }
 
-        private Language _language;
-
         /// <summary>
         /// Language
         /// </summary>
         public Language Language
         {
             get { return _language; }
-            private set { Set(() => Language, ref _language, value); }
+            set { Set(() => Language, ref _language, value); }
         }
 
         /// <summary>
@@ -49,20 +64,13 @@ namespace Popcorn.ViewModels.Settings
         public RelayCommand InitializeAsyncCommand { get; private set; }
 
         /// <summary>
-        /// Initializes a new instance of the SettingsViewModel class.
-        /// </summary>
-        public SettingsViewModel()
-        {
-            RegisterCommands();
-        }
-
-        /// <summary>
         /// Load asynchronously the languages of the application for the current instance
         /// </summary>
         /// <returns>Instance of SettingsViewModel</returns>
         private async Task InitializeAsync()
         {
-            Language = await Language.CreateAsync();
+            Language = new Language(_languageService);
+            await Language.LoadLanguages();
         }
 
         /// <summary>

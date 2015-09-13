@@ -1,5 +1,4 @@
 ﻿using GalaSoft.MvvmLight;
-using GalaSoft.MvvmLight.Ioc;
 using System.Threading;
 using System.Threading.Tasks;
 using NLog;
@@ -8,7 +7,7 @@ using Popcorn.Services.Movie;
 
 namespace Popcorn.ViewModels.Subtitles
 {
-    public sealed class SubtitlesViewModel : ViewModelBase
+    public sealed class SubtitlesViewModel : ViewModelBase, ISubtitlesViewModel
     {
         /// <summary>
         /// Logger of the class
@@ -18,9 +17,20 @@ namespace Popcorn.ViewModels.Subtitles
         /// <summary>
         /// The service used to interact with movies
         /// </summary>
-        private MovieService MovieService { get; }
+        private readonly IMovieService _movieService;
 
         private MovieFull _movie;
+
+        /// <summary>
+        /// Initializes a new instance of the SubtitlesViewModel class.
+        /// </summary>
+        /// <param name="movieService">The movie service</param>
+        public SubtitlesViewModel(IMovieService movieService)
+        {
+            _movieService = movieService;
+
+            CancellationDownloadingSubtitlesToken = new CancellationTokenSource();
+        }
 
         /// <summary>
         /// The movie
@@ -37,49 +47,25 @@ namespace Popcorn.ViewModels.Subtitles
         private CancellationTokenSource CancellationDownloadingSubtitlesToken { get; set; }
 
         /// <summary>
-        /// Initializes a new instance of the SubtitlesViewModel class.
-        /// </summary>
-        /// <param name="movie">The movie</param>
-        private SubtitlesViewModel(MovieFull movie)
-        {
-            CancellationDownloadingSubtitlesToken = new CancellationTokenSource();
-            if (SimpleIoc.Default.IsRegistered<MovieService>())
-                MovieService = SimpleIoc.Default.GetInstance<MovieService>();
-
-            Movie = movie;
-        }
-
-        /// <summary>
-        /// Load asynchronously the movie's subtitles for the current instance
-        /// </summary>
-        /// <returns>Instance of SubtitlesViewModel</returns>
-        private async Task<SubtitlesViewModel> InitializeAsync()
-        {
-            await LoadSubtitlesAsync(Movie);
-            return this;
-        }
-
-        /// <summary>
-        /// Initialize asynchronously an instance of the SubtitlesViewModel class
-        /// </summary>
-        /// <param name="movie">The movie</param>
-        /// <returns>Instance of SubtitlesViewModel</returns>
-        public static Task<SubtitlesViewModel> CreateAsync(MovieFull movie)
-        {
-            var ret = new SubtitlesViewModel(movie);
-            return ret.InitializeAsync();
-        }
-
-        /// <summary>
         /// Get the movie's subtitles
         /// </summary>
         /// <param name="movie">The movie</param>
-        /// <returns></returns>
-        private async Task LoadSubtitlesAsync(MovieFull movie)
+        public async Task LoadSubtitlesAsync(MovieFull movie)
         {
             Logger.Debug(
                 $"Load subtitles for movie: {movie.Title}");
-            await MovieService.LoadSubtitlesAsync(movie, CancellationDownloadingSubtitlesToken.Token);
+            Movie = movie;
+            await _movieService.LoadSubtitlesAsync(movie, CancellationDownloadingSubtitlesToken.Token);
+        }
+
+        /// <summary>
+        /// Cleanup resources
+        /// </summary>
+        public override void Cleanup()
+        {
+            StopDownloadingSubtitles();
+            Movie = null;
+            base.Cleanup();
         }
 
         /// <summary>
@@ -91,18 +77,6 @@ namespace Popcorn.ViewModels.Subtitles
                 "Stop downloading subtitles");
             CancellationDownloadingSubtitlesToken.Cancel(true);
             CancellationDownloadingSubtitlesToken = new CancellationTokenSource();
-        }
-
-        /// <summary>
-        /// Cleanup resources
-        /// </summary>
-        public override void Cleanup()
-        {
-            Logger.Debug(
-                "Cleaning up SubtitlesViewModel");
-
-            StopDownloadingSubtitles();
-            base.Cleanup();
         }
     }
 }

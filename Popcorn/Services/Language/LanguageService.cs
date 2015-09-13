@@ -1,5 +1,4 @@
-﻿using GalaSoft.MvvmLight.Ioc;
-using GalaSoft.MvvmLight.Messaging;
+﻿using GalaSoft.MvvmLight.Messaging;
 using NLog;
 using System.Collections.Generic;
 using System.Data.Entity;
@@ -20,7 +19,7 @@ namespace Popcorn.Services.Language
     /// <summary>
     /// Services used to interacts with languages
     /// </summary>
-    public class LanguageService
+    public class LanguageService : ILanguageService
     {
         /// <summary>
         /// Logger of the class
@@ -30,23 +29,20 @@ namespace Popcorn.Services.Language
         /// <summary>
         /// Services used to interacts with application settings
         /// </summary>
-        private ApplicationSettingsService ApplicationService { get; }
+        private readonly ISettingsService _settingsService;
 
         /// <summary>
         /// Services used to interact with movies
         /// </summary>
-        private MovieService MovieService { get; }
+        private readonly IMovieService _movieService;
 
         /// <summary>
         /// Initialize a new instance of LanguageService class
         /// </summary>
-        public LanguageService()
+        public LanguageService(ISettingsService settingsService, IMovieService movieService)
         {
-            if (SimpleIoc.Default.IsRegistered<ApplicationSettingsService>())
-                ApplicationService = SimpleIoc.Default.GetInstance<ApplicationSettingsService>();
-
-            if (SimpleIoc.Default.IsRegistered<MovieService>())
-                MovieService = SimpleIoc.Default.GetInstance<MovieService>();
+            _settingsService = settingsService;
+            _movieService = movieService;
         }
 
         /// <summary>
@@ -64,7 +60,7 @@ namespace Popcorn.Services.Language
                 var applicationSettings = await context.Settings.FirstOrDefaultAsync();
                 if (applicationSettings == null)
                 {
-                    await ApplicationService.CreateApplicationSettingsAsync();
+                    await _settingsService.CreateApplicationSettingsAsync();
                     applicationSettings = await context.Settings.FirstOrDefaultAsync();
                 }
 
@@ -109,7 +105,7 @@ namespace Popcorn.Services.Language
                 var applicationSettings = await context.Settings.FirstOrDefaultAsync();
                 if (applicationSettings == null)
                 {
-                    await ApplicationService.CreateApplicationSettingsAsync();
+                    await _settingsService.CreateApplicationSettingsAsync();
                     applicationSettings = await context.Settings.FirstOrDefaultAsync();
                 }
 
@@ -152,7 +148,7 @@ namespace Popcorn.Services.Language
                 var applicationSettings = await context.Settings.FirstOrDefaultAsync();
                 if (applicationSettings == null)
                 {
-                    await ApplicationService.CreateApplicationSettingsAsync();
+                    await _settingsService.CreateApplicationSettingsAsync();
                     applicationSettings = await context.Settings.FirstOrDefaultAsync();
                 }
 
@@ -180,7 +176,7 @@ namespace Popcorn.Services.Language
         /// <param name="language"></param>
         private void ChangeLanguage(ILanguage language)
         {
-            MovieService.ChangeTmdbLanguage(language);
+            _movieService.ChangeTmdbLanguage(language);
             LocalizeDictionary.Instance.Culture = new CultureInfo(language.Culture);
             Messenger.Default.Send(new ChangeLanguageMessage());
         }

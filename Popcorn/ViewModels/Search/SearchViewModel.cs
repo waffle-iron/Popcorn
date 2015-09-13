@@ -19,6 +19,15 @@ namespace Popcorn.ViewModels.Search
         private string _searchFilter;
 
         /// <summary>
+        /// Initializes a new instance of the SearchViewModel class.
+        /// </summary>
+        public SearchViewModel()
+        {
+            RegisterMessages();
+            RegisterCommands();
+        }
+
+        /// <summary>
         /// The filter for searching movies
         /// </summary>
         public string SearchFilter
@@ -31,15 +40,6 @@ namespace Popcorn.ViewModels.Search
         /// Command used to search movies
         /// </summary>
         public RelayCommand SearchMovieCommand { get; private set; }
-
-        /// <summary>
-        /// Initializes a new instance of the SearchViewModel class.
-        /// </summary>
-        public SearchViewModel()
-        {
-            RegisterMessages();
-            RegisterCommands();
-        }
 
         /// <summary>
         /// Register messages

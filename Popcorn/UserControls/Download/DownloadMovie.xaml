@@ -5,12 +5,12 @@
              xmlns:converters="clr-namespace:Popcorn.Converters"
              xmlns:customControls="clr-namespace:Popcorn.Controls"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-             xmlns:download="clr-namespace:Popcorn.ViewModels.Download"
+             xmlns:downloadMovie="clr-namespace:Popcorn.ViewModels.DownloadMovie"
              xmlns:lex="http://wpflocalizeextension.codeplex.com"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:movieSettingsUserControl="clr-namespace:Popcorn.UserControls.MovieSettings"
              xmlns:movieSettingsViewModel="clr-namespace:Popcorn.ViewModels.MovieSettings"
-             d:DataContext="{d:DesignInstance download:DownloadMovieViewModel}"
+             d:DataContext="{d:DesignInstance downloadMovie:DownloadMovieViewModel}"
              d:DesignHeight="600"
              d:DesignWidth="900"
              lex:LocalizeDictionary.DesignCulture="en"
@@ -20,6 +20,7 @@
     <UserControl.Resources>
         <ResourceDictionary>
             <converters:MultiBooleanToBoolConverter x:Key="MultiBooleanToBoolConverter" />
+            <converters:BoolToVisibilityConverter x:Key="BoolToVisibilityConverter" />
 
             <DataTemplate DataType="{x:Type movieSettingsViewModel:MovieSettingsViewModel}">
                 <movieSettingsUserControl:MovieSettings />
@@ -126,7 +127,10 @@
         </ResourceDictionary>
     </UserControl.Resources>
     <Grid>
-        <ContentControl Content="{Binding MovieSettings}" Style="{StaticResource AnimationSettingsOnMovieDownloading}" />
+        <ContentControl Content="{Binding MovieSettings}"
+                        Style="{StaticResource AnimationSettingsOnMovieDownloading}"
+                        Visibility="{Binding IsDownloadingMovie,
+                                             Converter={StaticResource BoolToVisibilityConverter}}" />
         <Grid Opacity="0.0" Style="{StaticResource AnimationContentOnSubtitlesDownloading}">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="37*" />

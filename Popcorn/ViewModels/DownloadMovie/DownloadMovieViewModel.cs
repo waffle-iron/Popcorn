@@ -1,6 +1,5 @@
 ﻿using GalaSoft.MvvmLight;
 using GalaSoft.MvvmLight.CommandWpf;
-using GalaSoft.MvvmLight.Ioc;
 using GalaSoft.MvvmLight.Messaging;
 using Popcorn.Helpers;
 using Popcorn.Messaging;
@@ -16,35 +15,62 @@ using Popcorn.Services.Movie;
 using Popcorn.ViewModels.Settings;
 using lt;
 
-namespace Popcorn.ViewModels.Download
+namespace Popcorn.ViewModels.DownloadMovie
 {
     /// <summary>
     /// Manage the download of a movie
     /// </summary>
-    public sealed class DownloadMovieViewModel : ViewModelBase
+    public sealed class DownloadMovieViewModel : ViewModelBase, IDownloadMovieViewModel
     {
         /// <summary>
         /// Logger of the class
         /// </summary>
         private static readonly Logger Logger = LogManager.GetCurrentClassLogger();
 
-        /// <summary>
-        /// The service used to interact with movies
-        /// </summary>
-        private MovieService MovieService { get; }
+        private readonly IMovieService _movieService;
 
-        private MovieSettingsViewModel _movieSettings;
+        private readonly ISettingsViewModel _settingsViewModel;
+
+        private IMovieSettingsViewModel _movieSettings;
+
+        private bool _isDownloadingMovie;
+
+        private bool _isDownloadingSubtitles;
+
+        private double _movieDownloadProgress;
+
+        private double _movieDownloadRate;
+
+        private long _subtitlesDownloadProgress;
+
+        private MovieFull _movie;
+
+        /// <summary>
+        /// Initializes a new instance of the DownloadMovieViewModel class.
+        /// </summary>
+        /// <param name="movieService">Instance of MovieService</param>
+        /// <param name="settingsViewModel">Instance of SettingsViewModel</param>
+        /// <param name="movieSettingsViewModel">Instance of MovieSettingsViewModel</param>
+        public DownloadMovieViewModel(IMovieService movieService, ISettingsViewModel settingsViewModel,
+            IMovieSettingsViewModel movieSettingsViewModel)
+        {
+            _movieService = movieService;
+            _settingsViewModel = settingsViewModel;
+            MovieSettings = movieSettingsViewModel;
+
+            RegisterMessages();
+            RegisterCommands();
+            CancellationDownloadingMovie = new CancellationTokenSource();
+        }
 
         /// <summary>
         /// The view model used to manage movie's settings
         /// </summary>
-        public MovieSettingsViewModel MovieSettings
+        public IMovieSettingsViewModel MovieSettings
         {
             get { return _movieSettings; }
             set { Set(() => MovieSettings, ref _movieSettings, value); }
         }
-
-        private bool _isDownloadingMovie;
 
         /// <summary>
         /// Specify if a movie is downloading
@@ -55,8 +81,6 @@ namespace Popcorn.ViewModels.Download
             set { Set(() => IsDownloadingMovie, ref _isDownloadingMovie, value); }
         }
 
-        private bool _isDownloadingSubtitles;
-
         /// <summary>
         /// Specify if subtitles are downloading
         /// </summary>
@@ -65,10 +89,6 @@ namespace Popcorn.ViewModels.Download
             get { return _isDownloadingSubtitles; }
             set { Set(() => IsDownloadingSubtitles, ref _isDownloadingSubtitles, value); }
         }
-
-        private bool IsMovieBuffered { get; set; }
-
-        private double _movieDownloadProgress;
 
         /// <summary>
         /// Specify the movie download progress
@@ -79,8 +99,6 @@ namespace Popcorn.ViewModels.Download
             set { Set(() => MovieDownloadProgress, ref _movieDownloadProgress, value); }
         }
 
-        private double _movieDownloadRate;
-
         /// <summary>
         /// Specify the movie download rate
         /// </summary>
@@ -90,8 +108,6 @@ namespace Popcorn.ViewModels.Download
             set { Set(() => MovieDownloadRate, ref _movieDownloadRate, value); }
         }
 
-        private long _subtitlesDownloadProgress;
-
         /// <summary>
         /// Specify the subtitles' progress download
         /// </summary>
@@ -100,8 +116,6 @@ namespace Popcorn.ViewModels.Download
             get { return _subtitlesDownloadProgress; }
             set { Set(() => SubtitlesDownloadProgress, ref _subtitlesDownloadProgress, value); }
         }
-
-        private MovieFull _movie;
 
         /// <summary>
         /// The movie to download
@@ -113,29 +127,50 @@ namespace Popcorn.ViewModels.Download
         }
 
         /// <summary>
-        /// Token to cancel the download
-        /// </summary>
-        private CancellationTokenSource CancellationDownloadingMovie { get; set; }
-
-        /// <summary>
         /// The command used to stop the download of a movie
         /// </summary>
         public RelayCommand StopDownloadingMovieCommand { get; private set; }
 
         /// <summary>
-        /// Initializes a new instance of the DownloadMovieViewModel class.
+        /// Token to cancel the download
         /// </summary>
-        /// <param name="movie">The movie to download</param>
-        public DownloadMovieViewModel(MovieFull movie)
-        {
-            RegisterMessages();
-            RegisterCommands();
-            CancellationDownloadingMovie = new CancellationTokenSource();
-            if (SimpleIoc.Default.IsRegistered<MovieService>())
-                MovieService = SimpleIoc.Default.GetInstance<MovieService>();
+        private CancellationTokenSource CancellationDownloadingMovie { get; set; }
 
+        private bool IsMovieBuffered { get; set; }
+
+        /// <summary>
+        /// Load a movie
+        /// </summary>
+        /// <param name="movie">The movie to load</param>
+        public void LoadMovie(MovieFull movie)
+        {
             Movie = movie;
-            MovieSettings = new MovieSettingsViewModel(movie);
+            MovieSettings.LoadMovie(movie);
+        }
+
+        /// <summary>
+        /// Stop downloading a movie
+        /// </summary>
+        public void StopDownloadingMovie()
+        {
+            Logger.Info(
+                "Stop downloading a movie");
+
+            IsDownloadingMovie = false;
+            IsMovieBuffered = false;
+            CancellationDownloadingMovie.Cancel(true);
+            CancellationDownloadingMovie = new CancellationTokenSource();
+        }
+
+        /// <summary>
+        /// Cleanup resources
+        /// </summary>
+        public override void Cleanup()
+        {
+            StopDownloadingMovie();
+            MovieSettings?.Cleanup();
+
+            base.Cleanup();
         }
 
         /// <summary>
@@ -153,7 +188,7 @@ namespace Popcorn.ViewModels.Download
 
                     IsDownloadingSubtitles = true;
                     await
-                        MovieService.DownloadSubtitleAsync(message.Movie, reportDownloadSubtitles,
+                        _movieService.DownloadSubtitleAsync(message.Movie, reportDownloadSubtitles,
                             CancellationDownloadingMovie);
                     IsDownloadingSubtitles = false;
                     await
@@ -219,7 +254,7 @@ namespace Popcorn.ViewModels.Download
             {
                 using (var session = new session())
                 {
-                    Logger.Debug(
+                    Logger.Info(
                         $"Start downloading movie : {movie.Title}");
 
                     IsDownloadingMovie = true;
@@ -236,7 +271,7 @@ namespace Popcorn.ViewModels.Download
                     var torrentPath = string.Empty;
                     if (result.Item3 == null && !string.IsNullOrEmpty(result.Item2))
                         torrentPath = result.Item2;
-                    
+
                     var addParams = new add_torrent_params
                     {
                         save_path = Constants.MovieDownloads,
@@ -244,12 +279,8 @@ namespace Popcorn.ViewModels.Download
                     };
 
                     var handle = session.add_torrent(addParams);
-                    handle.set_upload_limit(SimpleIoc.Default.IsRegistered<SettingsViewModel>()
-                        ? SimpleIoc.Default.GetInstance<SettingsViewModel>().DownloadLimit*1024
-                        : 0);
-                    handle.set_download_limit(SimpleIoc.Default.IsRegistered<SettingsViewModel>()
-                        ? SimpleIoc.Default.GetInstance<SettingsViewModel>().UploadLimit*1024
-                        : 0);
+                    handle.set_upload_limit(_settingsViewModel.DownloadLimit*1024);
+                    handle.set_download_limit(_settingsViewModel.UploadLimit*1024);
 
                     // We have to download sequentially, so that we're able to play the movie without waiting
                     handle.set_sequential_download(true);
@@ -289,40 +320,11 @@ namespace Popcorn.ViewModels.Download
                         }
                         catch (TaskCanceledException)
                         {
-                            Logger.Debug(
-                                $"Stopped downloading movie : {movie.Title}");
                             return;
                         }
                     }
                 }
             }, ct.Token);
-        }
-
-        /// <summary>
-        /// Stop downloading a movie
-        /// </summary>
-        private void StopDownloadingMovie()
-        {
-            Logger.Debug(
-                "Stop downloading movie");
-
-            IsDownloadingMovie = false;
-            IsMovieBuffered = false;
-            CancellationDownloadingMovie.Cancel(true);
-            CancellationDownloadingMovie = new CancellationTokenSource();
-        }
-
-        /// <summary>
-        /// Cleanup resources
-        /// </summary>
-        public override void Cleanup()
-        {
-            Logger.Debug(
-                "Cleaning up DownloadMovieViewModel");
-
-            StopDownloadingMovie();
-            MovieSettings?.Cleanup();
-            base.Cleanup();
         }
     }
 }

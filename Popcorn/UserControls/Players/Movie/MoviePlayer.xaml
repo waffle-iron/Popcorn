@@ -103,7 +103,7 @@
             <StatusBarItem Grid.Column="4" Background="#FF2F2F2F">
                 <ToggleButton Width="39"
                               Height="39"
-                              IsChecked="{Binding Main.IsFullScreen}"
+                              IsChecked="{Binding ApplicationState.IsFullScreen}"
                               Style="{DynamicResource MetroCircleToggleButtonStyle}">
                     <Canvas Width="15" Height="15">
                         <Path x:Name="CanvasFullScreen"

@@ -11,7 +11,7 @@ namespace Popcorn.ViewModels.MovieSettings
     /// <summary>
     /// Manage the movie's playing settings
     /// </summary>
-    public sealed class MovieSettingsViewModel : ViewModelBase
+    public sealed class MovieSettingsViewModel : ViewModelBase, IMovieSettingsViewModel
     {
         /// <summary>
         /// Logger of the class
@@ -19,6 +19,25 @@ namespace Popcorn.ViewModels.MovieSettings
         private static readonly Logger Logger = LogManager.GetCurrentClassLogger();
 
         private MovieFull _movie;
+
+        private ISubtitlesViewModel _subtitles;
+
+        private RelayCommand _setSubtitlesCommand;
+
+        private RelayCommand _unSetSubtitlesCommand;
+
+        private RelayCommand _downloadMovieCommand;
+
+        private RelayCommand _cancelCommand;
+
+        /// <summary>
+        /// Initializes a new instance of the MovieSettingsViewModel class.
+        /// </summary>
+        /// <param name="subtitles">The subtitles view model</param>
+        public MovieSettingsViewModel(ISubtitlesViewModel subtitles)
+        {
+            Subtitles = subtitles;
+        }
 
         /// <summary>
         /// The movie
@@ -29,18 +48,14 @@ namespace Popcorn.ViewModels.MovieSettings
             set { Set(() => Movie, ref _movie, value); }
         }
 
-        private SubtitlesViewModel _subtitles;
-
         /// <summary>
         /// The view model used to manage subtitles
         /// </summary>
-        public SubtitlesViewModel Subtitles
+        public ISubtitlesViewModel Subtitles
         {
             get { return _subtitles; }
             set { Set(() => Subtitles, ref _subtitles, value); }
         }
-
-        private RelayCommand _setSubtitlesCommand;
 
         /// <summary>
         /// Used to enable or disable subtitles
@@ -55,22 +70,28 @@ namespace Popcorn.ViewModels.MovieSettings
                         $"Setting subtitles for movie: {Movie.Title}");
 
                     Movie.SelectedSubtitle = null;
-                    if (Subtitles == null)
-                    {
-                        Subtitles = await SubtitlesViewModel.CreateAsync(Movie);
-                    }
-                    else
-                    {
-                        Logger.Info(
-                            $"Disabling subtitles for movie: {Movie.Title}");
-                        Subtitles.Cleanup();
-                        Subtitles = null;
-                    }
+                    await Subtitles.LoadSubtitlesAsync(Movie);
                 }));
             }
         }
 
-        private RelayCommand _downloadMovieCommand;
+        /// <summary>
+        /// Used to enable or disable subtitles
+        /// </summary>
+        public RelayCommand UnSetSubtitlesCommand
+        {
+            get
+            {
+                return _unSetSubtitlesCommand ?? (_unSetSubtitlesCommand = new RelayCommand(() =>
+                {
+                    Logger.Info(
+                        $"Disabling subtitles for movie: {Movie.Title}");
+
+                    Movie.SelectedSubtitle = null;
+                    Subtitles.Cleanup();
+                }));
+            }
+        }
 
         /// <summary>
         /// Command used to download the movie
@@ -85,8 +106,6 @@ namespace Popcorn.ViewModels.MovieSettings
                 }));
             }
         }
-
-        private RelayCommand _cancelCommand;
 
         /// <summary>
         /// Command used to cancel the download of a movie
@@ -103,10 +122,10 @@ namespace Popcorn.ViewModels.MovieSettings
         }
 
         /// <summary>
-        /// Initializes a new instance of the MovieSettingsViewModel class.
+        /// Load a movie
         /// </summary>
-        /// <param name="movie">The movie</param>
-        public MovieSettingsViewModel(MovieFull movie)
+        /// <param name="movie"></param>
+        public void LoadMovie(MovieFull movie)
         {
             Movie = movie;
         }

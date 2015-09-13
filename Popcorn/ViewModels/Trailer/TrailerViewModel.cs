@@ -1,5 +1,4 @@
 ﻿using GalaSoft.MvvmLight;
-using GalaSoft.MvvmLight.Ioc;
 using GalaSoft.MvvmLight.Messaging;
 using Popcorn.Helpers;
 using Popcorn.Messaging;
@@ -11,7 +10,9 @@ using System.Net.Sockets;
 using System.Threading;
 using System.Threading.Tasks;
 using NLog;
+using Popcorn.Models.ApplicationState;
 using Popcorn.Models.Movie.Full;
+using Popcorn.Services.History;
 using Popcorn.Services.Movie;
 using Popcorn.ViewModels.Players.Trailer;
 using YoutubeExtractor;
@@ -21,22 +22,12 @@ namespace Popcorn.ViewModels.Trailer
     /// <summary>
     /// Manage trailer
     /// </summary>
-    public sealed class TrailerViewModel : ViewModelBase
+    public sealed class TrailerViewModel : ViewModelBase, ITrailerViewModel
     {
         /// <summary>
         /// Logger of the class
         /// </summary>
         private static readonly Logger Logger = LogManager.GetCurrentClassLogger();
-
-        /// <summary>
-        /// The service used to interact with movies
-        /// </summary>
-        private MovieService MovieService { get; }
-
-        /// <summary>
-        /// Represent the subtitle's movie
-        /// </summary>
-        private MovieFull Movie { get; }
 
         /// <summary>
         /// Map for defining youtube video quality
@@ -50,61 +41,49 @@ namespace Popcorn.ViewModels.Trailer
                     {Constants.YoutubeStreamingQuality.Low, new HashSet<int> {360, 240}}
                 };
 
-        private TrailerPlayerViewModel _trailerPlayer;
-
         /// <summary>
-        /// The trailer player
+        /// The service used to interact with movies
         /// </summary>
-        public TrailerPlayerViewModel TrailerPlayer
-        {
-            get { return _trailerPlayer; }
-            set { Set(() => TrailerPlayer, ref _trailerPlayer, value); }
-        }
+        private readonly IMovieService _movieService;
+
+        private readonly IApplicationState _applicationState;
+
+        private readonly IMovieHistoryService _movieHistoryService;
+
+        private ITrailerPlayerViewModel _trailerPlayer;
 
         /// <summary>
         /// Initializes a new instance of the TrailerViewModel class.
         /// </summary>
-        /// <param name="movie">Movie's trailer</param>
-        private TrailerViewModel(MovieFull movie)
+        /// <param name="movieService">Movie service</param>
+        /// <param name="applicationState">Application state</param>
+        /// <param name="movieHistoryService">Movie history service</param>
+        public TrailerViewModel(IMovieService movieService, IApplicationState applicationState, IMovieHistoryService movieHistoryService)
         {
-            if (SimpleIoc.Default.IsRegistered<MovieService>())
-                MovieService = SimpleIoc.Default.GetInstance<MovieService>();
-
-            Movie = movie;
+            _movieService = movieService;
+            _applicationState = applicationState;
+            _movieHistoryService = movieHistoryService;
         }
 
         /// <summary>
-        /// Load asynchronously the movie's trailer for the current instance of TrailerViewModel
+        /// The trailer player
         /// </summary>
-        /// <returns>Instance of TrailerViewModel</returns>
-        private async Task<TrailerViewModel> InitializeAsync(CancellationToken ct)
+        public ITrailerPlayerViewModel TrailerPlayer
         {
-            await LoadTrailerAsync(Movie, ct);
-            return this;
+            get { return _trailerPlayer; }
+            set { Set(() => TrailerPlayer, ref _trailerPlayer, value); }
         }
-
-        /// <summary>
-        /// Initialize asynchronously an instance of the TrailerViewModel class
-        /// </summary>
-        /// <param name="movie">The movie</param>
-        /// <param name="ct">Cancellation token</param>
-        /// <returns>Instance of TrailerViewModel</returns>
-        public static Task<TrailerViewModel> CreateAsync(MovieFull movie, CancellationToken ct)
-        {
-            var ret = new TrailerViewModel(movie);
-            return ret.InitializeAsync(ct);
-        }
-
+        
         /// <summary>
         /// Get trailer of a movie
         /// </summary>
         /// <param name="movie">The movie</param>
         /// <param name="ct">Cancellation token</param>
-        private async Task LoadTrailerAsync(MovieFull movie, CancellationToken ct)
+        public async Task LoadTrailerAsync(MovieFull movie, CancellationToken ct)
         {
             try
             {
-                var trailer = await MovieService.GetMovieTrailerAsync(movie, ct);
+                var trailer = await _movieService.GetMovieTrailerAsync(movie, ct);
 
                 var video =
                     await
@@ -135,8 +114,8 @@ namespace Popcorn.ViewModels.Trailer
                 {
                     Logger.Debug(
                         $"Movie's trailer loaded: {movie.Title}");
-                    TrailerPlayer =
-                        new TrailerPlayerViewModel(new Models.Trailer.Trailer(new Uri(video.DownloadUrl)));
+                    TrailerPlayer = new TrailerPlayerViewModel(_applicationState, _movieService, _movieHistoryService);
+                    TrailerPlayer.LoadTrailer(new Models.Trailer.Trailer(new Uri(video.DownloadUrl)));
                 }
             }
             catch (Exception exception) when (exception is TaskCanceledException)
@@ -171,6 +150,25 @@ namespace Popcorn.ViewModels.Trailer
                     $"GetMovieTrailerAsync: {exception.Message}");
                 Messenger.Default.Send(new StopPlayingTrailerMessage());
             }
+        }
+
+        /// <summary>
+        /// Unload the trailer
+        /// </summary>
+        public void UnLoadTrailer()
+        {
+            TrailerPlayer?.Cleanup();
+            TrailerPlayer = null;
+        }
+
+        /// <summary>
+        /// Cleanup resources
+        /// </summary>
+        public override void Cleanup()
+        {
+            TrailerPlayer?.Cleanup();
+            TrailerPlayer = null;
+            base.Cleanup();
         }
 
         /// <summary>
@@ -227,18 +225,6 @@ namespace Popcorn.ViewModels.Trailer
                 videosToProcess = videos;
                 quality = (Constants.YoutubeStreamingQuality) (((int) quality) - 1);
             }
-        }
-
-        /// <summary>
-        /// Cleanup resources
-        /// </summary>
-        public override void Cleanup()
-        {
-            Logger.Debug(
-                "Cleaning up TrailerViewModel");
-            TrailerPlayer?.Cleanup();
-
-            base.Cleanup();
         }
     }
 }

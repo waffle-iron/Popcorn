@@ -47,9 +47,10 @@
                     </Grid.RowDefinitions>
                     <controls:ToggleSwitch Grid.Row="0"
                                            HorizontalAlignment="Left"
-                                           CheckChangedCommand="{Binding SetSubtitlesCommand}"
+                                           CheckedCommand="{Binding SetSubtitlesCommand}"
                                            OffLabel="{lex:LocText OffLabel}"
-                                           OnLabel="{lex:LocText OnLabel}" />
+                                           OnLabel="{lex:LocText OnLabel}"
+                                           UnCheckedCommand="{Binding UnSetSubtitlesCommand}" />
                     <ContentControl Grid.Row="1"
                                     Margin="0,10,0,0"
                                     Content="{Binding Subtitles}" />

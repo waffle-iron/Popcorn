@@ -60,7 +60,7 @@ namespace Popcorn.UserControls.Players.Trailer
             var vm = DataContext as TrailerPlayerViewModel;
             if (vm != null)
             {
-                if (vm.Trailer.Uri == null)
+                if (vm.Trailer?.Uri == null)
                     return;
 
                 // start the timer used to report time on MediaPlayerSliderProgress

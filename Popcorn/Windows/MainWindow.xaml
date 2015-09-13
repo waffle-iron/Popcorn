@@ -39,7 +39,7 @@
                       IgnoreTaskbarOnMaximize="True"
                       ShowTitleBar="False"
                       WindowStartupLocation="CenterScreen"
-                      WindowState="{Binding IsFullScreen,
+                      WindowState="{Binding ApplicationState.IsFullScreen,
                                             Converter={converters:WindowStateToBooleanConverter},
                                             Mode=TwoWay}"
                       d:DataContext="{d:DesignInstance viewModel:MainViewModel}"
