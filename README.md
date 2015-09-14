@@ -14,6 +14,22 @@ An application which aims to provide a simple interface to watch any movie.
 ## What does it use?
 .NET Framework 4.6 and C# for the backend. WPF/XAML for the interface.
 
+## Dependencies
+* MVVM framework: [MVVM Light](https://mvvmlight.codeplex.com) 
+* UI framework: [MahApps](https://github.com/MahApps/MahApps.Metro)
+* .NET VLC wrapper: [xZune.Vlc](https://github.com/higankanshi/xZune.Vlc)
+* Libtorrent wrapper: [libtorrent-net](https://github.com/higankanshi/xZune.Vlc)
+* ORM: [Entity Framework](https://github.com/aspnet/EntityFramework)
+* Database storage: [SqlServer Compact](https://www.nuget.org/packages/Microsoft.SqlServer.Compact/)
+* Update management (updates stored on Azure Storage): [Squirrel.Windows](https://github.com/Squirrel/Squirrel.Windows)
+* JSON Deserialization: [Json.NET](https://github.com/JamesNK/Newtonsoft.Json)
+* REST management: [RestSharp](https://github.com/restsharp/RestSharp)
+* Logging: [NLog](https://github.com/NLog/NLog)
+* Unit testing: [NUnit](https://github.com/nunit/nunit) & [AutoFixture](https://github.com/AutoFixture/AutoFixture)
+* IMDb data: [TMDbLib](https://github.com/LordMike/TMDbLib/)
+* Downloadable Youtube videos: [YoutubeExtractor](https://github.com/flagbug/YoutubeExtractor)
+* Localization: [WpfLocalizeExtension](https://github.com/SeriousM/WPFLocalizationExtension)
+
 ## Supported platforms
 At this time, only Windows 7+ is supported (Windows 7, 8, 8.1, 10 | 32/64 Bits).
 
