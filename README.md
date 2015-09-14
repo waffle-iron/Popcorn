@@ -32,6 +32,15 @@ Drop in on the Gitter room - https://gitter.im/bbougot/Popcorn - if you want to 
 - [ ] VPN
 - [ ] DLNA broadcasting
 - [ ] User account with movie chatrooms (like Jabbr)
+- [x] List movies (Popular, Greatest, Recent)
+- [x] Search (Movie Title/IMDb Code, Actor Name/IMDb Code, Director Name/IMDb Code)
+- [x] Trailer support
+- [x] Streaming movies
+- [x] Quality selection (720p/1080p)
+- [x] Favorites/Seen movies history
+- [x] Player features : Play, Pause, Stop, Volume, Fullscreen
+- [x] Settings features : Language (English/French), Broadband limit
+- [x] Automatic incremental updating on startup (updates stored in Azure Storage)
 
 ## Visual Studio
 The solution is built using Visual Studio 2015.
