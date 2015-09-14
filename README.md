@@ -14,7 +14,7 @@ An application which aims to provide a simple interface to watch any movie.
 ## What does it use?
 .NET Framework 4.6 and C# for the backend. WPF/XAML for the interface.
 
-## Dependencies
+### Dependencies
 * MVVM framework: [MVVM Light](https://mvvmlight.codeplex.com) 
 * UI framework: [MahApps](https://github.com/MahApps/MahApps.Metro)
 * .NET VLC wrapper: [xZune.Vlc](https://github.com/higankanshi/xZune.Vlc)
@@ -30,6 +30,10 @@ An application which aims to provide a simple interface to watch any movie.
 * Downloadable Youtube videos: [YoutubeExtractor](https://github.com/flagbug/YoutubeExtractor)
 * Localization: [WpfLocalizeExtension](https://github.com/SeriousM/WPFLocalizationExtension)
 
+### API
+* Movies' torrent source from [YTS](http://yts.to)
+* Movies' data from [TMDb](http://tmdb.org)
+
 ## Supported platforms
 At this time, only Windows 7+ is supported (Windows 7, 8, 8.1, 10 | 32/64 Bits).
 
@@ -41,7 +45,7 @@ Drop in on the Gitter room - https://gitter.im/bbougot/Popcorn - if you want to 
 
 ## Tasks
 - [ ] Subtitles support
-- [ ] Seekable stream
+- [ ] Seekable movie stream
 - [ ] In-memory movie downloading
 - [ ] Add series/anime
 - [ ] Add cast page (actor, director,...)
