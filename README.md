@@ -20,6 +20,9 @@ At this time, only Windows 7+ is supported (Windows 7, 8, 8.1, 10 | 32/64 Bits).
 ## Can I help you?
 Of course yes! Any pull-request will be considered.
 
+## Chatroom
+Drop in on the Gitter room - https://gitter.im/bbougot/Popcorn - if you want to ask a question or discuss something.
+
 ## Tasks
 - [ ] Subtitles support
 - [ ] Seekable stream
