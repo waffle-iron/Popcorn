@@ -79,20 +79,25 @@ namespace Popcorn.ViewModels.Main
         private bool _isManagingException;
 
         /// <summary>
+        /// Used to update application
+        /// </summary>
+        private UpdateManager _updateManager;
+
+        /// <summary>
         /// Initializes a new instance of the MainViewModel class.
         /// </summary>
         /// <param name="genresViewModel">Instance of GenresViewModel</param>
         /// <param name="movieService">Instance of MovieService</param>
         /// <param name="movieHistoryService">Instance of MovieHistoryService</param>
         /// <param name="applicationState">Instance of ApplicationState</param>
-        public MainViewModel(IGenresViewModel genresViewModel, IMovieService movieService, IMovieHistoryService movieHistoryService, IApplicationState applicationState)
+        public MainViewModel(IGenresViewModel genresViewModel, IMovieService movieService,
+            IMovieHistoryService movieHistoryService, IApplicationState applicationState)
         {
             _dialogCoordinator = DialogCoordinator.Instance;
             _movieService = movieService;
             _movieHistoryService = movieHistoryService;
             ApplicationState = applicationState;
             GenresViewModel = genresViewModel;
-
             RegisterMessages();
             RegisterCommands();
             AppDomain.CurrentDomain.UnhandledException += OnUnhandledException;
@@ -214,36 +219,13 @@ namespace Popcorn.ViewModels.Main
         public RelayCommand InitializeAsyncCommand { get; private set; }
 
         /// <summary>
-        /// Indicates if an exception is currently managed
-        /// </summary>
-        private bool IsManagingException
-        {
-            get { return _isManagingException; }
-            set { Set(() => IsManagingException, ref _isManagingException, value); }
-        }
-
-        /// <summary>
-        /// Genres ViewModel
-        /// </summary>
-        private MoviePlayerViewModel MoviePlayerViewModel
-        {
-            get { return _moviePlayerViewModel; }
-            set { Set(() => MoviePlayerViewModel, ref _moviePlayerViewModel, value); }
-        }
-
-        /// <summary>
-        /// Used to update application
-        /// </summary>
-        private UpdateManager UpdateManager { get; set; }
-
-        /// <summary>
         /// Load asynchronously an instance of MainViewModel
         /// </summary>
         /// <returns>Instance of MainViewModel</returns>
         private async Task InitializeAsync()
         {
-            AppDomain.CurrentDomain.ProcessExit += (sender, args) => UpdateManager.Dispose();
-            UpdateManager = new UpdateManager(Constants.UpdateServerUrl, Constants.ApplicationName);
+            AppDomain.CurrentDomain.ProcessExit += (sender, args) => _updateManager.Dispose();
+            _updateManager = new UpdateManager(Constants.UpdateServerUrl, Constants.ApplicationName);
 
             Tabs.Add(new PopularTabViewModel(ApplicationState, _movieService, _movieHistoryService));
             Tabs.Add(new GreatestTabViewModel(ApplicationState, _movieService, _movieHistoryService));
@@ -284,9 +266,10 @@ namespace Popcorn.ViewModels.Main
             {
                 DispatcherHelper.CheckBeginInvokeOnUI(() =>
                 {
-                    MoviePlayerViewModel = new MoviePlayerViewModel(ApplicationState, _movieService, _movieHistoryService);
-                    MoviePlayerViewModel.LoadMovie(message.Movie);
-                    Tabs.Add(MoviePlayerViewModel);
+                    _moviePlayerViewModel = new MoviePlayerViewModel(ApplicationState, _movieService,
+                        _movieHistoryService);
+                    _moviePlayerViewModel.LoadMovie(message.Movie);
+                    Tabs.Add(_moviePlayerViewModel);
                     SelectedTab = Tabs.Last();
                     IsMovieFlyoutOpen = false;
                     ApplicationState.IsMoviePlaying = true;
@@ -444,10 +427,10 @@ namespace Popcorn.ViewModels.Main
         /// <param name="exception">The exception</param>
         private void ManageException(Exception exception)
         {
-            if (IsManagingException)
+            if (_isManagingException)
                 return;
 
-            IsManagingException = true;
+            _isManagingException = true;
             IsMovieFlyoutOpen = false;
             IsSettingsFlyoutOpen = false;
 
@@ -462,7 +445,7 @@ namespace Popcorn.ViewModels.Main
                             LocalizationProviderHelper.GetLocalizedValue<string>("EmbarrassingError"), exception.Message));
                 await _dialogCoordinator.ShowMetroDialogAsync(this, exceptionDialog);
                 await exceptionDialog.WaitForButtonPressAsync();
-                IsManagingException = false;
+                _isManagingException = false;
                 await _dialogCoordinator.HideMetroDialogAsync(this, exceptionDialog);
             });
         }
@@ -529,11 +512,11 @@ namespace Popcorn.ViewModels.Main
             try
             {
                 SquirrelAwareApp.HandleEvents(
-                    onInitialInstall: v => UpdateManager.CreateShortcutForThisExe(),
-                    onAppUpdate: v => UpdateManager.CreateShortcutForThisExe(),
-                    onAppUninstall: v => UpdateManager.RemoveShortcutForThisExe());
+                    onInitialInstall: v => _updateManager.CreateShortcutForThisExe(),
+                    onAppUpdate: v => _updateManager.CreateShortcutForThisExe(),
+                    onAppUninstall: v => _updateManager.RemoveShortcutForThisExe());
 
-                var updateInfo = await UpdateManager.CheckForUpdate();
+                var updateInfo = await _updateManager.CheckForUpdate();
                 if (updateInfo == null)
                 {
                     Logger.Error(
@@ -546,13 +529,13 @@ namespace Popcorn.ViewModels.Main
                     Logger.Info(
                         $"A new update has been found!\n Currently installed version: {updateInfo.CurrentlyInstalledVersion?.Version?.Major}.{updateInfo.CurrentlyInstalledVersion?.Version?.Minor}.{updateInfo.CurrentlyInstalledVersion?.Version?.Build} - New update: {updateInfo.FutureReleaseEntry?.Version?.Major}.{updateInfo.FutureReleaseEntry?.Version?.Minor}.{updateInfo.FutureReleaseEntry?.Version?.Build}");
 
-                    await UpdateManager.DownloadReleases(updateInfo.ReleasesToApply, x =>
+                    await _updateManager.DownloadReleases(updateInfo.ReleasesToApply, x =>
                     {
                         Logger.Info(
                             $"Downloading new update... {x}%");
                     });
 
-                    await UpdateManager.ApplyReleases(updateInfo, x =>
+                    await _updateManager.ApplyReleases(updateInfo, x =>
                     {
                         Logger.Info(
                             $"Applying... {x}%");

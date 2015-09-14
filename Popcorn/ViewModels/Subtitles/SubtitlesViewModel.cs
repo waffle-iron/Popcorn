@@ -22,14 +22,18 @@ namespace Popcorn.ViewModels.Subtitles
         private MovieFull _movie;
 
         /// <summary>
+        /// Token to cancel downloading subtitles
+        /// </summary>
+        private CancellationTokenSource _cancellationDownloadingSubtitlesToken;
+
+        /// <summary>
         /// Initializes a new instance of the SubtitlesViewModel class.
         /// </summary>
         /// <param name="movieService">The movie service</param>
         public SubtitlesViewModel(IMovieService movieService)
         {
             _movieService = movieService;
-
-            CancellationDownloadingSubtitlesToken = new CancellationTokenSource();
+            _cancellationDownloadingSubtitlesToken = new CancellationTokenSource();
         }
 
         /// <summary>
@@ -42,11 +46,6 @@ namespace Popcorn.ViewModels.Subtitles
         }
 
         /// <summary>
-        /// Token to cancel downloading subtitles
-        /// </summary>
-        private CancellationTokenSource CancellationDownloadingSubtitlesToken { get; set; }
-
-        /// <summary>
         /// Get the movie's subtitles
         /// </summary>
         /// <param name="movie">The movie</param>
@@ -55,7 +54,16 @@ namespace Popcorn.ViewModels.Subtitles
             Logger.Debug(
                 $"Load subtitles for movie: {movie.Title}");
             Movie = movie;
-            await _movieService.LoadSubtitlesAsync(movie, CancellationDownloadingSubtitlesToken.Token);
+            await _movieService.LoadSubtitlesAsync(movie, _cancellationDownloadingSubtitlesToken.Token);
+        }
+
+        /// <summary>
+        /// Stop downloading subtitles and clear movie
+        /// </summary>
+        public void ClearSubtitles()
+        {
+            StopDownloadingSubtitles();
+            Movie = null;
         }
 
         /// <summary>
@@ -63,8 +71,7 @@ namespace Popcorn.ViewModels.Subtitles
         /// </summary>
         public override void Cleanup()
         {
-            StopDownloadingSubtitles();
-            Movie = null;
+            ClearSubtitles();
             base.Cleanup();
         }
 
@@ -75,8 +82,8 @@ namespace Popcorn.ViewModels.Subtitles
         {
             Logger.Debug(
                 "Stop downloading subtitles");
-            CancellationDownloadingSubtitlesToken.Cancel(true);
-            CancellationDownloadingSubtitlesToken = new CancellationTokenSource();
+            _cancellationDownloadingSubtitlesToken.Cancel(true);
+            _cancellationDownloadingSubtitlesToken = new CancellationTokenSource();
         }
     }
 }

@@ -16,27 +16,52 @@ namespace Popcorn.Tests.Converters
         }
 
         [Test]
-        public void Convert_AllTrue_ReturnsVisible()
+        public void Convert_AndAllTrue_ReturnsVisible()
         {
             object[] trueBooleans = { true, true, true };
             Assert.AreEqual(
-                _converter.Convert(trueBooleans, null, null, null), Visibility.Visible);
+                _converter.Convert(trueBooleans, null, "AND", null), Visibility.Visible);
         }
 
         [Test]
-        public void Convert_AllFalse_ReturnsCollapsed()
+        public void Convert_AndAllFalse_ReturnsCollapsed()
         {
             object[] falseBooleans = { false, false, false };
             Assert.AreEqual(
-                _converter.Convert(falseBooleans, null, null, null), Visibility.Collapsed);
+                _converter.Convert(falseBooleans, null, "AND", null), Visibility.Collapsed);
         }
 
         [Test]
-        public void Convert_NotAllTrue_ReturnsCollapsed()
+        public void Convert_AndNotAllTrue_ReturnsCollapsed()
         {
             object[] notAllTrueBooleans = { true, false, true };
             Assert.AreEqual(
-                _converter.Convert(notAllTrueBooleans, null, null, null), Visibility.Collapsed);
+                _converter.Convert(notAllTrueBooleans, null, "AND", null), Visibility.Collapsed);
+        }
+
+
+        [Test]
+        public void Convert_OrAllTrue_ReturnsVisible()
+        {
+            object[] trueBooleans = { true, true, true };
+            Assert.AreEqual(
+                _converter.Convert(trueBooleans, null, "OR", null), Visibility.Visible);
+        }
+
+        [Test]
+        public void Convert_OrAllFalse_ReturnsCollapsed()
+        {
+            object[] falseBooleans = { false, false, false };
+            Assert.AreEqual(
+                _converter.Convert(falseBooleans, null, "OR", null), Visibility.Collapsed);
+        }
+
+        [Test]
+        public void Convert_OrNotAllTrue_ReturnsCollapsed()
+        {
+            object[] notAllTrueBooleans = { true, false, true };
+            Assert.AreEqual(
+                _converter.Convert(notAllTrueBooleans, null, "OR", null), Visibility.Visible);
         }
     }
 }

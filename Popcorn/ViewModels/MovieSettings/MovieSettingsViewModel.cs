@@ -88,7 +88,7 @@ namespace Popcorn.ViewModels.MovieSettings
                         $"Disabling subtitles for movie: {Movie.Title}");
 
                     Movie.SelectedSubtitle = null;
-                    Subtitles.Cleanup();
+                    Subtitles.ClearSubtitles();
                 }));
             }
         }
@@ -135,9 +135,6 @@ namespace Popcorn.ViewModels.MovieSettings
         /// </summary>
         public override void Cleanup()
         {
-            Logger.Debug(
-                "Cleaning up MovieSettingsViewModel");
-
             Subtitles?.Cleanup();
             base.Cleanup();
         }

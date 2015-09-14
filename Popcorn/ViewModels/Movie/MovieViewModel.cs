@@ -44,21 +44,31 @@ namespace Popcorn.ViewModels.Movie
         private bool _isDownloadingMovie;
 
         /// <summary>
+        /// Token to cancel trailer loading
+        /// </summary>
+        private CancellationTokenSource _cancellationLoadingTrailerToken;
+
+        /// <summary>
+        /// Token to cancel movie loading
+        /// </summary>
+        private CancellationTokenSource _cancellationLoadingToken;
+
+        /// <summary>
         /// Initializes a new instance of the MovieViewModel class.
         /// </summary>
         /// <param name="downloadMovieViewModel">ViewModel which manages the movie download</param>
         /// <param name="movieService">Service used to interact with movies</param>
         /// <param name="trailerViewModel">ViewModel which manages the trailer</param>
-        public MovieViewModel(IDownloadMovieViewModel downloadMovieViewModel, IMovieService movieService, ITrailerViewModel trailerViewModel)
+        public MovieViewModel(IDownloadMovieViewModel downloadMovieViewModel, IMovieService movieService,
+            ITrailerViewModel trailerViewModel)
         {
             _movieService = movieService;
+            _cancellationLoadingToken = new CancellationTokenSource();
+            _cancellationLoadingTrailerToken = new CancellationTokenSource();
             DownloadMovie = downloadMovieViewModel;
             Trailer = trailerViewModel;
-
             RegisterMessages();
             RegisterCommands();
-            CancellationLoadingToken = new CancellationTokenSource();
-            CancellationLoadingTrailerToken = new CancellationTokenSource();
         }
 
         /// <summary>
@@ -146,16 +156,6 @@ namespace Popcorn.ViewModels.Movie
         public RelayCommand PlayTrailerCommand { get; private set; }
 
         /// <summary>
-        /// Token to cancel movie loading
-        /// </summary>
-        private CancellationTokenSource CancellationLoadingToken { get; set; }
-
-        /// <summary>
-        /// Token to cancel trailer loading
-        /// </summary>
-        private CancellationTokenSource CancellationLoadingTrailerToken { get; set; }
-
-        /// <summary>
         /// Cleanup resources
         /// </summary>
         public override void Cleanup()
@@ -164,7 +164,6 @@ namespace Popcorn.ViewModels.Movie
             StopPlayingMovie();
             StopLoadingTrailer();
             StopPlayingTrailer();
-
             base.Cleanup();
         }
 
@@ -187,7 +186,7 @@ namespace Popcorn.ViewModels.Movie
                 {
                     if (!string.IsNullOrEmpty(Movie?.ImdbCode))
                     {
-                        await _movieService.TranslateMovieFullAsync(Movie, CancellationLoadingToken.Token);
+                        await _movieService.TranslateMovieFullAsync(Movie, _cancellationLoadingToken.Token);
                     }
                 });
         }
@@ -209,7 +208,7 @@ namespace Popcorn.ViewModels.Movie
             {
                 IsPlayingTrailer = true;
                 IsTrailerLoading = true;
-                await Trailer.LoadTrailerAsync(Movie, CancellationLoadingTrailerToken.Token);
+                await Trailer.LoadTrailerAsync(Movie, _cancellationLoadingTrailerToken.Token);
                 IsTrailerLoading = false;
             });
 
@@ -227,12 +226,12 @@ namespace Popcorn.ViewModels.Movie
             Messenger.Default.Send(new LoadMovieMessage());
             IsMovieLoading = true;
 
-            Movie = await _movieService.GetMovieFullDetailsAsync(movie, CancellationLoadingToken.Token);
+            Movie = await _movieService.GetMovieFullDetailsAsync(movie, _cancellationLoadingToken.Token);
             IsMovieLoading = false;
-            await _movieService.DownloadPosterImageAsync(Movie, CancellationLoadingToken);
-            await _movieService.DownloadDirectorImageAsync(Movie, CancellationLoadingToken);
-            await _movieService.DownloadActorImageAsync(Movie, CancellationLoadingToken);
-            await _movieService.DownloadBackgroundImageAsync(Movie, CancellationLoadingToken);
+            await _movieService.DownloadPosterImageAsync(Movie, _cancellationLoadingToken);
+            await _movieService.DownloadDirectorImageAsync(Movie, _cancellationLoadingToken);
+            await _movieService.DownloadActorImageAsync(Movie, _cancellationLoadingToken);
+            await _movieService.DownloadBackgroundImageAsync(Movie, _cancellationLoadingToken);
 
             watch.Stop();
             var elapsedMs = watch.ElapsedMilliseconds;
@@ -249,8 +248,8 @@ namespace Popcorn.ViewModels.Movie
                 $"Stop loading movie: {Movie.Title}.");
 
             IsMovieLoading = false;
-            CancellationLoadingToken.Cancel(true);
-            CancellationLoadingToken = new CancellationTokenSource();
+            _cancellationLoadingToken.Cancel(true);
+            _cancellationLoadingToken = new CancellationTokenSource();
         }
 
         /// <summary>
@@ -262,8 +261,8 @@ namespace Popcorn.ViewModels.Movie
                 $"Stop loading movie's trailer: {Movie.Title}.");
 
             IsTrailerLoading = false;
-            CancellationLoadingTrailerToken.Cancel(true);
-            CancellationLoadingTrailerToken = new CancellationTokenSource();
+            _cancellationLoadingTrailerToken.Cancel(true);
+            _cancellationLoadingTrailerToken = new CancellationTokenSource();
             StopPlayingTrailer();
         }
 

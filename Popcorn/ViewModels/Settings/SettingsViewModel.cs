@@ -27,8 +27,8 @@ namespace Popcorn.ViewModels.Settings
         /// </summary>
         public SettingsViewModel(ILanguageService languageService)
         {
-            RegisterCommands();
             _languageService = languageService;
+            RegisterCommands();
         }
 
         /// <summary>

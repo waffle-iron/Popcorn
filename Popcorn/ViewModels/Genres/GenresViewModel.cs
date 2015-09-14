@@ -28,15 +28,19 @@ namespace Popcorn.ViewModels.Genres
         private ObservableCollection<MovieGenre> _movieGenres = new ObservableCollection<MovieGenre>();
 
         /// <summary>
+        /// Used to cancel loading genres
+        /// </summary>
+        private CancellationTokenSource _cancellationLoadingGenres;
+
+        /// <summary>
         /// Initialize a new instance of GenresViewModel class
         /// </summary>
         /// <param name="movieService">The movie service</param>
         public GenresViewModel(IMovieService movieService)
         {
             _movieService = movieService;
-
+            _cancellationLoadingGenres = new CancellationTokenSource();
             RegisterMessages();
-            CancellationLoadingGenres = new CancellationTokenSource();
         }
 
         /// <summary>
@@ -49,19 +53,15 @@ namespace Popcorn.ViewModels.Genres
         }
 
         /// <summary>
-        /// Used to cancel loading genres
-        /// </summary>
-        private CancellationTokenSource CancellationLoadingGenres { get; set; }
-
-        /// <summary>
         /// Load genres asynchronously
         /// </summary>
         /// <returns></returns>
         public async Task LoadGenresAsync()
         {
             MovieGenres =
-                new ObservableCollection<MovieGenre>(await _movieService.GetGenresAsync(CancellationLoadingGenres.Token));
-            if (CancellationLoadingGenres.IsCancellationRequested)
+                new ObservableCollection<MovieGenre>(
+                    await _movieService.GetGenresAsync(_cancellationLoadingGenres.Token));
+            if (_cancellationLoadingGenres.IsCancellationRequested)
                 return;
 
             MovieGenres?.Insert(0, new MovieGenre
@@ -81,7 +81,6 @@ namespace Popcorn.ViewModels.Genres
         public override void Cleanup()
         {
             StopLoadingGenres();
-
             base.Cleanup();
         }
 
@@ -110,8 +109,8 @@ namespace Popcorn.ViewModels.Genres
             Logger.Debug(
                 "Stop loading genres.");
 
-            CancellationLoadingGenres.Cancel(true);
-            CancellationLoadingGenres = new CancellationTokenSource();
+            _cancellationLoadingGenres.Cancel(true);
+            _cancellationLoadingGenres = new CancellationTokenSource();
         }
     }
 }

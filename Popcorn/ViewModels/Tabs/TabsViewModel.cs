@@ -37,9 +37,11 @@ namespace Popcorn.ViewModels.Tabs
         /// </summary>
         protected readonly IMovieHistoryService MovieHistoryService;
 
-        private ObservableCollection<MovieShort> _movies = new ObservableCollection<MovieShort>();
-
         private static MovieGenre _genre;
+
+        private static double _rating;
+
+        private ObservableCollection<MovieShort> _movies = new ObservableCollection<MovieShort>();
 
         private int _currentNumberOfMovies;
 
@@ -51,9 +53,23 @@ namespace Popcorn.ViewModels.Tabs
 
         private bool _isMoviesFound = true;
 
-        private static double _rating;
-
         private bool _hasLoadingFailed;
+
+        /// <summary>
+        /// Initializes a new instance of the TabsViewModel class.
+        /// </summary>
+        protected TabsViewModel(IApplicationState applicationState, IMovieService movieService, IMovieHistoryService movieHistoryService)
+        {
+            ApplicationState = applicationState;
+            MovieService = movieService;
+            MovieHistoryService = movieHistoryService;
+
+            RegisterMessages();
+            RegisterCommands();
+
+            MaxMoviesPerPage = Constants.MaxMoviesPerPage;
+            CancellationLoadingMovies = new CancellationTokenSource();
+        }
 
         /// <summary>
         /// Services used to interact with movie history
@@ -167,22 +183,6 @@ namespace Popcorn.ViewModels.Tabs
         /// Token to cancel movie loading
         /// </summary>
         protected CancellationTokenSource CancellationLoadingMovies { get; private set; }
-
-        /// <summary>
-        /// Initializes a new instance of the TabsViewModel class.
-        /// </summary>
-        protected TabsViewModel(IApplicationState applicationState, IMovieService movieService, IMovieHistoryService movieHistoryService)
-        {
-            ApplicationState = applicationState;
-            MovieService = movieService;
-            MovieHistoryService = movieHistoryService;
-
-            RegisterMessages();
-            RegisterCommands();
-
-            MaxMoviesPerPage = Constants.MaxMoviesPerPage;
-            CancellationLoadingMovies = new CancellationTokenSource();
-        }
 
         /// <summary>
         /// Load movies

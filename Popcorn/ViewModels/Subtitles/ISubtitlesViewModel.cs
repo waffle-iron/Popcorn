@@ -12,6 +12,11 @@ namespace Popcorn.ViewModels.Subtitles
         Task LoadSubtitlesAsync(MovieFull movie);
 
         /// <summary>
+        /// Stop downloading subtitles and clear movie
+        /// </summary>
+        void ClearSubtitles();
+
+        /// <summary>
         /// Cleanup resources
         /// </summary>
         void Cleanup();

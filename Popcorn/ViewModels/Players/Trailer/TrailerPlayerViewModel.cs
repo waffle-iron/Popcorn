@@ -48,6 +48,8 @@ namespace Popcorn.ViewModels.Players.Trailer
         /// <param name="trailer">Trailer to load</param>
         public void LoadTrailer(Models.Trailer.Trailer trailer)
         {
+            Logger.Info(
+                $"Loading trailer: {trailer.Uri.AbsoluteUri}.");
             Trailer = trailer;
         }
 
@@ -56,11 +58,7 @@ namespace Popcorn.ViewModels.Players.Trailer
         /// </summary>
         public override void Cleanup()
         {
-            Logger.Debug(
-                "Cleaning up TrailerPlayerViewModel");
-
             OnStoppedPlayingMedia(new EventArgs());
-
             base.Cleanup();
         }
 

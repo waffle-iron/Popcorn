@@ -45,6 +45,8 @@ namespace Popcorn.ViewModels.Players.Movie
         /// <param name="movie">Movie to load</param>
         public void LoadMovie(MovieFull movie)
         {
+            Logger.Info(
+                $"Loading movie: {movie.Title}.");
             Movie = movie;
             TabName = !string.IsNullOrEmpty(Movie.Title) ? Movie.Title : Properties.Resources.PlayingTitleTab;
         }
@@ -54,11 +56,7 @@ namespace Popcorn.ViewModels.Players.Movie
         /// </summary>
         public override void Cleanup()
         {
-            Logger.Debug(
-                "Cleaning up MoviePlayerViewModel");
-
             OnStoppedPlayingMedia(new EventArgs());
-
             base.Cleanup();
         }
 

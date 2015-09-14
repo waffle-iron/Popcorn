@@ -45,6 +45,13 @@ namespace Popcorn.ViewModels.DownloadMovie
 
         private MovieFull _movie;
 
+        private bool _isMovieBuffered;
+
+        /// <summary>
+        /// Token to cancel the download
+        /// </summary>
+        private CancellationTokenSource _cancellationDownloadingMovie;
+
         /// <summary>
         /// Initializes a new instance of the DownloadMovieViewModel class.
         /// </summary>
@@ -56,11 +63,10 @@ namespace Popcorn.ViewModels.DownloadMovie
         {
             _movieService = movieService;
             _settingsViewModel = settingsViewModel;
+            _cancellationDownloadingMovie = new CancellationTokenSource();
             MovieSettings = movieSettingsViewModel;
-
             RegisterMessages();
             RegisterCommands();
-            CancellationDownloadingMovie = new CancellationTokenSource();
         }
 
         /// <summary>
@@ -132,20 +138,13 @@ namespace Popcorn.ViewModels.DownloadMovie
         public RelayCommand StopDownloadingMovieCommand { get; private set; }
 
         /// <summary>
-        /// Token to cancel the download
-        /// </summary>
-        private CancellationTokenSource CancellationDownloadingMovie { get; set; }
-
-        private bool IsMovieBuffered { get; set; }
-
-        /// <summary>
         /// Load a movie
         /// </summary>
         /// <param name="movie">The movie to load</param>
         public void LoadMovie(MovieFull movie)
         {
             Movie = movie;
-            MovieSettings.LoadMovie(movie);
+            MovieSettings.LoadMovie(Movie);
         }
 
         /// <summary>
@@ -157,9 +156,9 @@ namespace Popcorn.ViewModels.DownloadMovie
                 "Stop downloading a movie");
 
             IsDownloadingMovie = false;
-            IsMovieBuffered = false;
-            CancellationDownloadingMovie.Cancel(true);
-            CancellationDownloadingMovie = new CancellationTokenSource();
+            _isMovieBuffered = false;
+            _cancellationDownloadingMovie.Cancel(true);
+            _cancellationDownloadingMovie = new CancellationTokenSource();
         }
 
         /// <summary>
@@ -169,7 +168,6 @@ namespace Popcorn.ViewModels.DownloadMovie
         {
             StopDownloadingMovie();
             MovieSettings?.Cleanup();
-
             base.Cleanup();
         }
 
@@ -189,11 +187,11 @@ namespace Popcorn.ViewModels.DownloadMovie
                     IsDownloadingSubtitles = true;
                     await
                         _movieService.DownloadSubtitleAsync(message.Movie, reportDownloadSubtitles,
-                            CancellationDownloadingMovie);
+                            _cancellationDownloadingMovie);
                     IsDownloadingSubtitles = false;
                     await
                         DownloadMovieAsync(message.Movie,
-                            reportDownloadProgress, reportDownloadRate, CancellationDownloadingMovie);
+                            reportDownloadProgress, reportDownloadRate, _cancellationDownloadingMovie);
                 });
         }
 
@@ -233,10 +231,8 @@ namespace Popcorn.ViewModels.DownloadMovie
             if (value < Constants.MinimumBufferingBeforeMoviePlaying)
                 return;
 
-            if (!IsMovieBuffered)
-            {
-                IsMovieBuffered = true;
-            }
+            if (!_isMovieBuffered)
+                _isMovieBuffered = true;
         }
 
         /// <summary>
