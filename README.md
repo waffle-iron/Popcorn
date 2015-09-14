@@ -1,9 +1,9 @@
 # Popcorn
 
-[![Join the chat at https://gitter.im/bbougot/Popcorn](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/bbougot/Popcorn?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 An application which aims to provide a simple interface to watch any movie.
 
 [![Build status](https://ci.appveyor.com/api/projects/status/2tijq4sm43r87lmf?svg=true)](https://ci.appveyor.com/project/bbougot/popcorn)
+[![Join the chat at https://gitter.im/bbougot/Popcorn](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/bbougot/Popcorn?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 
 ![Screenshot1](https://cloud.githubusercontent.com/assets/8962802/9643432/2d85a3a4-51c2-11e5-87bf-55ee81d5cc7a.jpg)
 
