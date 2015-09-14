@@ -15,7 +15,7 @@ namespace Popcorn.Controls
         public static readonly DependencyProperty DownloadProgressProperty =
             DependencyProperty.Register("DownloadProgress",
                 typeof (double), typeof (DownloadMovieProgress),
-                new PropertyMetadata(0.0, OnDownloadProgressChanged));
+                new PropertyMetadata(0d, OnDownloadProgressChanged));
 
         /// <summary>
         /// Download rate property
@@ -23,7 +23,7 @@ namespace Popcorn.Controls
         public static readonly DependencyProperty DownloadRateProperty =
             DependencyProperty.Register("DownloadRate",
                 typeof (double), typeof (DownloadMovieProgress),
-                new PropertyMetadata(0.0));
+                new PropertyMetadata(0d));
 
         /// <summary>
         /// Movie title property
@@ -67,7 +67,7 @@ namespace Popcorn.Controls
         {
             InitializeComponent();
             DisplayText.Text =
-                $"{LocalizationProviderHelper.GetLocalizedValue<string>("BufferingLabel")} : {Math.Round(DownloadProgress*50.0, 0)} % ({DownloadRate} kB/s)";
+                $"{LocalizationProviderHelper.GetLocalizedValue<string>("BufferingLabel")} : {Math.Round(DownloadProgress*50d, 0)} % ({DownloadRate} kB/s)";
         }
 
         /// <summary>
@@ -94,8 +94,8 @@ namespace Popcorn.Controls
             else
             {
                 DisplayText.Text = DownloadRate >= 1000.0
-                    ? $"{LocalizationProviderHelper.GetLocalizedValue<string>("BufferingLabel")} : {Math.Round(DownloadProgress*50.0, 0)} % ({DownloadRate/1000.0} MB/s)"
-                    : $"{LocalizationProviderHelper.GetLocalizedValue<string>("BufferingLabel")} : {Math.Round(DownloadProgress*50.0, 0)} % ({DownloadRate} kB/s)";
+                    ? $"{LocalizationProviderHelper.GetLocalizedValue<string>("BufferingLabel")} : {Math.Round(DownloadProgress*50d, 0)} % ({DownloadRate/1000d} MB/s)"
+                    : $"{LocalizationProviderHelper.GetLocalizedValue<string>("BufferingLabel")} : {Math.Round(DownloadProgress*50d, 0)} % ({DownloadRate} kB/s)";
             }
         }
     }

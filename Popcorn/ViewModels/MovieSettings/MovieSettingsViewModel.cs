@@ -1,7 +1,6 @@
 ﻿using GalaSoft.MvvmLight;
 using GalaSoft.MvvmLight.CommandWpf;
 using GalaSoft.MvvmLight.Messaging;
-using NLog;
 using Popcorn.Messaging;
 using Popcorn.Models.Movie.Full;
 using Popcorn.ViewModels.Subtitles;
@@ -13,11 +12,6 @@ namespace Popcorn.ViewModels.MovieSettings
     /// </summary>
     public sealed class MovieSettingsViewModel : ViewModelBase, IMovieSettingsViewModel
     {
-        /// <summary>
-        /// Logger of the class
-        /// </summary>
-        private static readonly Logger Logger = LogManager.GetCurrentClassLogger();
-
         private MovieFull _movie;
 
         private ISubtitlesViewModel _subtitles;
@@ -61,65 +55,34 @@ namespace Popcorn.ViewModels.MovieSettings
         /// Used to enable or disable subtitles
         /// </summary>
         public RelayCommand SetSubtitlesCommand
-        {
-            get
+            => _setSubtitlesCommand ?? (_setSubtitlesCommand = new RelayCommand(async () =>
             {
-                return _setSubtitlesCommand ?? (_setSubtitlesCommand = new RelayCommand(async () =>
-                {
-                    Logger.Info(
-                        $"Setting subtitles for movie: {Movie.Title}");
-
-                    Movie.SelectedSubtitle = null;
-                    await Subtitles.LoadSubtitlesAsync(Movie);
-                }));
-            }
-        }
+                await Subtitles.LoadSubtitlesAsync(Movie);
+            }));
 
         /// <summary>
         /// Used to enable or disable subtitles
         /// </summary>
         public RelayCommand UnSetSubtitlesCommand
-        {
-            get
-            {
-                return _unSetSubtitlesCommand ?? (_unSetSubtitlesCommand = new RelayCommand(() =>
-                {
-                    Logger.Info(
-                        $"Disabling subtitles for movie: {Movie.Title}");
-
-                    Movie.SelectedSubtitle = null;
-                    Subtitles.ClearSubtitles();
-                }));
-            }
-        }
+            => _unSetSubtitlesCommand ?? (_unSetSubtitlesCommand = new RelayCommand(
+                () => Subtitles.ClearSubtitles()));
 
         /// <summary>
         /// Command used to download the movie
         /// </summary>
         public RelayCommand DownloadMovieCommand
-        {
-            get
+            => _downloadMovieCommand ?? (_downloadMovieCommand = new RelayCommand(() =>
             {
-                return _downloadMovieCommand ?? (_downloadMovieCommand = new RelayCommand(() =>
-                {
-                    Messenger.Default.Send(new DownloadMovieMessage(Movie));
-                }));
-            }
-        }
+                Messenger.Default.Send(new DownloadMovieMessage(Movie));
+            }));
 
         /// <summary>
         /// Command used to cancel the download of a movie
         /// </summary>
-        public RelayCommand CancelCommand
+        public RelayCommand CancelCommand => _cancelCommand ?? (_cancelCommand = new RelayCommand(() =>
         {
-            get
-            {
-                return _cancelCommand ?? (_cancelCommand = new RelayCommand(() =>
-                {
-                    Messenger.Default.Send(new StopPlayingMovieMessage());
-                }));
-            }
-        }
+            Messenger.Default.Send(new StopPlayingMovieMessage());
+        }));
 
         /// <summary>
         /// Load a movie
@@ -128,6 +91,7 @@ namespace Popcorn.ViewModels.MovieSettings
         public void LoadMovie(MovieFull movie)
         {
             Movie = movie;
+            Subtitles.ClearSubtitles();
         }
 
         /// <summary>

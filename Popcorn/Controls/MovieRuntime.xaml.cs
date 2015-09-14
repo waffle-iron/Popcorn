@@ -15,7 +15,7 @@ namespace Popcorn.Controls
         public static readonly DependencyProperty RuntimeProperty =
             DependencyProperty.Register("Runtime",
                 typeof (double), typeof (MovieRuntime),
-                new PropertyMetadata(0.0, OnRuntimeChanged));
+                new PropertyMetadata(0d, OnRuntimeChanged));
 
         /// <summary>
         /// The movie runtime
@@ -51,11 +51,11 @@ namespace Popcorn.Controls
         private void DisplayMovieRuntime()
         {
             var result = Convert.ToDouble(Runtime, CultureInfo.InvariantCulture);
-            if (!(result >= 60.0)) return;
-            var hours = result/60.0;
-            var minutes = result%60.0;
+            if (!(result >= 60d)) return;
+            var hours = result/60d;
+            var minutes = result%60d;
 
-            DisplayText.Text = minutes < 10.0 ? $"{Math.Floor(hours)}h0{minutes}" : $"{Math.Floor(hours)}h{minutes}";
+            DisplayText.Text = minutes < 10d ? $"{Math.Floor(hours)}h0{minutes}" : $"{Math.Floor(hours)}h{minutes}";
         }
     }
 }

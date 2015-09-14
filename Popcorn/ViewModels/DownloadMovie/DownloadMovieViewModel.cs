@@ -255,6 +255,9 @@ namespace Popcorn.ViewModels.DownloadMovie
 
                     IsDownloadingMovie = true;
 
+                    downloadProgress?.Report(0d);
+                    downloadRate?.Report(0d);
+
                     session.listen_on(6881, 6889);
                     var torrentUrl = movie.WatchInFullHdQuality
                         ? movie.Torrents?.FirstOrDefault(torrent => torrent.Quality == "1080p")?.Url
@@ -284,10 +287,10 @@ namespace Popcorn.ViewModels.DownloadMovie
                     while (IsDownloadingMovie)
                     {
                         var status = handle.status();
-                        var progress = status.progress*100.0;
+                        var progress = status.progress*100d;
 
                         downloadProgress?.Report(progress);
-                        downloadRate?.Report(Math.Round(status.download_rate/1024.0, 0));
+                        downloadRate?.Report(Math.Round(status.download_rate/1024d, 0));
 
                         handle.flush_cache();
                         if (handle.need_save_resume_data())

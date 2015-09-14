@@ -23,7 +23,7 @@ namespace Popcorn.Converters
         /// <returns>Double value affected by the ratio</returns>
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
-            var size = 0.0;
+            var size = 0d;
             if (value != null)
             {
                 size = System.Convert.ToDouble(value, CultureInfo.InvariantCulture)*

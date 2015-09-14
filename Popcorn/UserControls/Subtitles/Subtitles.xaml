@@ -13,52 +13,58 @@
     <UserControl.Resources>
         <ResourceDictionary>
             <converters:UriToCachedImageConverter x:Key="UriToCachedImageConverter" />
-
-            <Style x:Key="StandardListBox" TargetType="{x:Type ListBox}">
-                <Setter Property="Background" Value="Transparent" />
-                <Setter Property="BorderThickness" Value="0" />
-                <Style.Resources>
-                    <Style TargetType="{x:Type ListBoxItem}">
-                        <Setter Property="FocusVisualStyle" Value="{x:Null}" />
-                        <Setter Property="Background" Value="{DynamicResource FlyoutBackgroundBrush}" />
-                        <Setter Property="BorderBrush" Value="Transparent" />
-                        <Setter Property="Template">
-                            <Setter.Value>
-                                <ControlTemplate TargetType="{x:Type ListBoxItem}">
-                                    <Grid Margin="4,0,4,4">
-                                        <Border Background="{TemplateBinding Background}"
-                                                BorderBrush="{TemplateBinding BorderBrush}"
-                                                BorderThickness="1"
-                                                SnapsToDevicePixels="True" />
-                                        <ContentPresenter Margin="8,5" />
-                                    </Grid>
-                                    <ControlTemplate.Triggers>
-                                        <MultiTrigger>
-                                            <MultiTrigger.Conditions>
-                                                <Condition Property="IsMouseOver" Value="True" />
-                                                <Condition Property="IsSelected" Value="False" />
-                                            </MultiTrigger.Conditions>
-                                            <Setter Property="Background" Value="{DynamicResource AccentColorBrush4}" />
-                                            <Setter Property="BorderBrush" Value="{DynamicResource HighlightBrush}" />
-                                        </MultiTrigger>
-                                        <Trigger Property="IsSelected" Value="True">
-                                            <Setter Property="Background" Value="{DynamicResource AccentColorBrush}" />
-                                            <Setter Property="BorderBrush" Value="{DynamicResource HighlightBrush}" />
-                                        </Trigger>
-                                    </ControlTemplate.Triggers>
-                                </ControlTemplate>
-                            </Setter.Value>
-                        </Setter>
-                    </Style>
-                </Style.Resources>
-            </Style>
-            <Style BasedOn="{StaticResource StandardListBox}" TargetType="ListBox" />
         </ResourceDictionary>
     </UserControl.Resources>
     <Grid>
         <ListBox ItemsSource="{Binding Movie.AvailableSubtitles}"
                  ScrollViewer.VerticalScrollBarVisibility="Disabled"
                  SelectedItem="{Binding Movie.SelectedSubtitle}">
+            <ListBox.Resources>
+                <Style x:Key="StandardListBox" TargetType="{x:Type ListBox}">
+                    <Setter Property="ItemContainerStyle">
+                        <Setter.Value>
+                            <Style TargetType="ListBoxItem">
+                                <Setter Property="HorizontalContentAlignment" Value="Stretch" />
+                                <Setter Property="VerticalContentAlignment" Value="Stretch" />
+                                <Setter Property="FocusVisualStyle" Value="{x:Null}" />
+                                <Setter Property="Background" Value="{DynamicResource FlyoutBackgroundBrush}" />
+                                <Setter Property="BorderBrush" Value="Transparent" />
+                                <Setter Property="Template">
+                                    <Setter.Value>
+                                        <ControlTemplate TargetType="{x:Type ListBoxItem}">
+                                            <Grid Margin="4,0,4,4">
+                                                <Border Background="{TemplateBinding Background}"
+                                                BorderBrush="{TemplateBinding BorderBrush}"
+                                                BorderThickness="1"
+                                                SnapsToDevicePixels="True" />
+                                                <ContentPresenter Margin="8,5" />
+                                            </Grid>
+                                            <ControlTemplate.Triggers>
+                                                <MultiTrigger>
+                                                    <MultiTrigger.Conditions>
+                                                        <Condition Property="IsMouseOver" Value="True" />
+                                                        <Condition Property="IsSelected" Value="False" />
+                                                    </MultiTrigger.Conditions>
+                                                    <Setter Property="Background" Value="{DynamicResource AccentColorBrush4}" />
+                                                    <Setter Property="BorderBrush" Value="{DynamicResource HighlightBrush}" />
+                                                </MultiTrigger>
+                                                <Trigger Property="IsSelected" Value="True">
+                                                    <Setter Property="Background" Value="{DynamicResource AccentColorBrush}" />
+                                                    <Setter Property="BorderBrush" Value="{DynamicResource HighlightBrush}" />
+                                                </Trigger>
+                                            </ControlTemplate.Triggers>
+                                        </ControlTemplate>
+                                    </Setter.Value>
+                                </Setter>
+                            </Style>
+                        </Setter.Value>
+                    </Setter>
+                    <Setter Property="Background" Value="Transparent" />
+                    <Setter Property="BorderThickness" Value="0" />
+                </Style>
+                
+                <Style BasedOn="{StaticResource StandardListBox}" TargetType="ListBox" />
+            </ListBox.Resources>
             <ListBox.ItemTemplate>
                 <DataTemplate>
                     <StackPanel>

@@ -91,7 +91,7 @@
     <Compile Include="Converters\BoolToInverseBoolConverterTest.cs" />
     <Compile Include="Converters\MultiBooleanToBoolConverterTest.cs" />
     <Compile Include="Converters\MultiBooleanToVisibilityConverterTest.cs" />
-    <Compile Include="Converters\NullAsTrueConverterTest.cs" />
+    <Compile Include="Converters\NullAsBoolConverterTest.cs" />
     <Compile Include="Converters\UriToCachedImageConverterTest.cs" />
     <Compile Include="Converters\RatioConverterTest.cs" />
     <Compile Include="Converters\BoolToVisibilityConverterTest.cs" />

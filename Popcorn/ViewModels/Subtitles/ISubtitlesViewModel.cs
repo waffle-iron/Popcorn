@@ -6,6 +6,11 @@ namespace Popcorn.ViewModels.Subtitles
     public interface ISubtitlesViewModel
     {
         /// <summary>
+        /// Indicates if subtitles are enabled
+        /// </summary>
+        bool EnabledSubtitles { get; set; }
+
+        /// <summary>
         /// Get the movie's subtitles
         /// </summary>
         /// <param name="movie">The movie</param>

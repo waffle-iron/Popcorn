@@ -234,7 +234,7 @@
     <Compile Include="Converters\BoolToVisibilityConverter.cs" />
     <Compile Include="Converters\MultiBooleanToBoolConverter.cs" />
     <Compile Include="Converters\MultiBooleanToVisibilityConverter.cs" />
-    <Compile Include="Converters\NullAsTrueConverter.cs" />
+    <Compile Include="Converters\NullAsBoolConverter.cs" />
     <Compile Include="Converters\UriToCachedImageConverter.cs" />
     <Compile Include="Converters\RatioConverter.cs" />
     <Compile Include="Converters\WindowStateToBooleanConverter.cs" />

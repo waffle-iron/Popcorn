@@ -21,6 +21,8 @@ namespace Popcorn.ViewModels.Subtitles
 
         private MovieFull _movie;
 
+        private bool _enabledSubtitles;
+
         /// <summary>
         /// Token to cancel downloading subtitles
         /// </summary>
@@ -46,6 +48,15 @@ namespace Popcorn.ViewModels.Subtitles
         }
 
         /// <summary>
+        /// Indicates if subtitles are enabled
+        /// </summary>
+        public bool EnabledSubtitles
+        {
+            get { return _enabledSubtitles; }
+            set { Set(() => EnabledSubtitles, ref _enabledSubtitles, value); }
+        }
+
+        /// <summary>
         /// Get the movie's subtitles
         /// </summary>
         /// <param name="movie">The movie</param>
@@ -54,6 +65,7 @@ namespace Popcorn.ViewModels.Subtitles
             Logger.Debug(
                 $"Load subtitles for movie: {movie.Title}");
             Movie = movie;
+            EnabledSubtitles = true;
             await _movieService.LoadSubtitlesAsync(movie, _cancellationDownloadingSubtitlesToken.Token);
         }
 
@@ -62,8 +74,10 @@ namespace Popcorn.ViewModels.Subtitles
         /// </summary>
         public void ClearSubtitles()
         {
+            EnabledSubtitles = false;
             StopDownloadingSubtitles();
-            Movie = null;
+            if (Movie != null)
+                Movie.SelectedSubtitle = null;
         }
 
         /// <summary>

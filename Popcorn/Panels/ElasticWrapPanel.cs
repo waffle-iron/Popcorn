@@ -61,10 +61,10 @@ namespace Popcorn.Panels
         {
             if (_columns == 0) return base.ArrangeOverride(finalSize);
             var columnWidth = Math.Floor(finalSize.Width/_columns);
-            var totalHeight = 0.0;
-            var top = 0.0;
-            var rowHeight = 0.0;
-            var overflow = 0.0;
+            var totalHeight = 0d;
+            var top = 0d;
+            var rowHeight = 0d;
+            var overflow = 0d;
             var column = 0;
             var index = 0;
             var overflowAlreadyCount = false;

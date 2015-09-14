@@ -7,7 +7,7 @@ namespace Popcorn.Converters
     /// Convert a boolean to null if true
     /// </summary>
     [ValueConversion(typeof(object), typeof(bool))]
-    public class NullAsTrueConverter : IValueConverter
+    public class NullAsBoolConverter : IValueConverter
     {
         /// <summary>
         /// Convert a boolean to null if true
@@ -20,7 +20,11 @@ namespace Popcorn.Converters
         public object Convert(object value, Type targetType, object parameter,
             System.Globalization.CultureInfo culture)
         {
-            return value == null;
+            var boolean = parameter as bool?;
+            if (boolean.HasValue && boolean.Value)
+                return value == null;
+            
+            return value != null;
         }
 
         /// <summary>
@@ -33,7 +37,11 @@ namespace Popcorn.Converters
         public object ConvertBack(object value, Type targetType, object parameter,
             System.Globalization.CultureInfo culture)
         {
-            throw new NotSupportedException();
+            var boolean = parameter as bool?;
+            if (boolean.HasValue && boolean.Value)
+                return value == null;
+
+            return value != null;
         }
     }
 }

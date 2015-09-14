@@ -285,7 +285,7 @@ namespace Popcorn.UserControls.Players.Trailer
                 Duration = new Duration(TimeSpan.FromSeconds(0.5)),
                 KeyFrames = new DoubleKeyFrameCollection
                 {
-                    new EasingDoubleKeyFrame(0.0, KeyTime.FromPercent(1.0), new PowerEase
+                    new EasingDoubleKeyFrame(0.0, KeyTime.FromPercent(1d), new PowerEase
                     {
                         EasingMode = EasingMode.EaseInOut
                     })
