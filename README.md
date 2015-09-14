@@ -40,9 +40,6 @@ At this time, only Windows 7+ is supported (Windows 7, 8, 8.1, 10 | 32/64 Bits).
 ## Can I help you?
 Of course yes! Any pull-request will be considered.
 
-## Chatroom
-Drop in on the Gitter room - https://gitter.im/bbougot/Popcorn - if you want to ask a question or discuss something.
-
 ## Tasks
 - [ ] Subtitles support
 - [ ] Seekable movie stream
@@ -61,6 +58,12 @@ Drop in on the Gitter room - https://gitter.im/bbougot/Popcorn - if you want to 
 - [x] Player features : Play, Pause, Stop, Volume, Fullscreen
 - [x] Settings features : Language (English/French), Broadband limit
 - [x] Automatic incremental updating on startup (updates stored in Azure Storage)
+
+## Chatroom
+Drop in on the Gitter room - https://gitter.im/bbougot/Popcorn - if you want to ask a question or discuss something.
+
+## Continuous integration
+CI is hosted on [Appveyor](https://ci.appveyor.com/project/bbougot/popcorn).
 
 ## Visual Studio
 The solution is built using Visual Studio 2015.
