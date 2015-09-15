@@ -12,30 +12,20 @@ using Popcorn.ViewModels.Players.Movie;
 namespace Popcorn.UserControls.Players.Movie
 {
     /// <summary>
-    /// Interaction logic for MoviePlayer.xaml
+    ///     Interaction logic for MoviePlayer.xaml
     /// </summary>
     public partial class MoviePlayer : IDisposable
     {
-        private bool _isMouseActivityCaptured;
-
         /// <summary>
-        /// Get or set the media volume 
-        /// </summary>
-        public int Volume
-        {
-            get { return (int) GetValue(VolumeProperty); }
-
-            set { SetValue(VolumeProperty, value); }
-        }
-
-        /// <summary>
-        /// Identifies the <see cref="Volume"/> dependency property. 
+        ///     Identifies the <see cref="Volume" /> dependency property.
         /// </summary>
         internal static readonly DependencyProperty VolumeProperty = DependencyProperty.Register("Volume", typeof (int),
             typeof (MoviePlayer), new PropertyMetadata(100, OnVolumeChanged));
 
+        private bool _isMouseActivityCaptured;
+
         /// <summary>
-        /// Initializes a new instance of the MoviePlayer class.
+        ///     Initializes a new instance of the MoviePlayer class.
         /// </summary>
         public MoviePlayer()
         {
@@ -45,7 +35,25 @@ namespace Popcorn.UserControls.Players.Movie
         }
 
         /// <summary>
-        /// Subscribe to events and play the movie when control has been loaded
+        ///     Get or set the media volume
+        /// </summary>
+        public int Volume
+        {
+            get { return (int) GetValue(VolumeProperty); }
+
+            set { SetValue(VolumeProperty, value); }
+        }
+
+        /// <summary>
+        ///     Free resources
+        /// </summary>
+        public void Dispose()
+        {
+            Dispose(true);
+        }
+
+        /// <summary>
+        ///     Subscribe to events and play the movie when control has been loaded
         /// </summary>
         /// <param name="sender">Sender object</param>
         /// <param name="e">EventArgs</param>
@@ -53,43 +61,37 @@ namespace Popcorn.UserControls.Players.Movie
         {
             var window = Window.GetWindow(this);
             if (window != null)
-            {
                 window.Closing += (s1, e1) => Dispose();
-            }
 
             var vm = DataContext as MoviePlayerViewModel;
-            if (vm != null)
-            {
-                if (vm.Movie.FilePath == null)
-                    return;
+            if (vm == null) return;
+            if (vm.Movie.FilePath == null)
+                return;
 
-                // start the timer used to report time on MediaPlayerSliderProgress
-                MediaPlayerTimer = new DispatcherTimer {Interval = TimeSpan.FromSeconds(1)};
-                MediaPlayerTimer.Tick += MediaPlayerTimerTick;
-                MediaPlayerTimer.Start();
+            // start the timer used to report time on MediaPlayerSliderProgress
+            MediaPlayerTimer = new DispatcherTimer {Interval = TimeSpan.FromSeconds(1)};
+            MediaPlayerTimer.Tick += MediaPlayerTimerTick;
+            MediaPlayerTimer.Start();
 
-                // start the activity timer used to manage visibility of the PlayerStatusBar
-                ActivityTimer = new DispatcherTimer {Interval = TimeSpan.FromSeconds(4)};
-                ActivityTimer.Tick += OnInactivity;
-                ActivityTimer.Start();
+            // start the activity timer used to manage visibility of the PlayerStatusBar
+            ActivityTimer = new DispatcherTimer {Interval = TimeSpan.FromSeconds(4)};
+            ActivityTimer.Tick += OnInactivity;
+            ActivityTimer.Start();
 
-                InputManager.Current.PreProcessInput += OnActivity;
+            InputManager.Current.PreProcessInput += OnActivity;
 
-                vm.StoppedPlayingMedia += OnStoppedPlayingMedia;
-                Player.VlcMediaPlayer.EndReached += MediaPlayerEndReached;
+            vm.StoppedPlayingMedia += OnStoppedPlayingMedia;
+            Player.VlcMediaPlayer.EndReached += MediaPlayerEndReached;
 
-                if (!string.IsNullOrEmpty(vm.Movie.SelectedSubtitle?.FilePath))
-                {
-                    Player.AddOption("--sub-file = " + vm.Movie.SelectedSubtitle.FilePath);
-                }
+            if (!string.IsNullOrEmpty(vm.Movie.SelectedSubtitle?.FilePath))
+                Player.AddOption("--sub-file = " + vm.Movie.SelectedSubtitle.FilePath);
 
-                Player.LoadMedia(vm.Movie.FilePath);
-                PlayMedia();
-            }
+            Player.LoadMedia(vm.Movie.FilePath);
+            PlayMedia();
         }
 
         /// <summary>
-        /// When media's volume changed, update volume
+        ///     When media's volume changed, update volume
         /// </summary>
         /// <param name="e">e</param>
         /// <param name="obj">obj</param>
@@ -104,29 +106,24 @@ namespace Popcorn.UserControls.Players.Movie
         }
 
         /// <summary>
-        /// Change the media's volume
+        ///     Change the media's volume
         /// </summary>
         /// <param name="newValue">New volume value</param>
-        private void ChangeMediaVolume(int newValue)
-        {
-            Player.Volume = newValue;
-        }
+        private void ChangeMediaVolume(int newValue) => Player.Volume = newValue;
 
         /// <summary>
-        /// When user uses the mousewheel, update the volume
+        ///     When user uses the mousewheel, update the volume
         /// </summary>
         /// <param name="sender">Sender object</param>
         /// <param name="e">MouseWheelEventArgs</param>
         private void MouseWheelMediaPlayer(object sender, MouseWheelEventArgs e)
         {
             if ((Volume <= 190 && e.Delta > 0) || (Volume >= 10 && e.Delta < 0))
-            {
                 Volume += (e.Delta > 0) ? 10 : -10;
-            }
         }
 
         /// <summary>
-        /// When a movie has been fully played, save seen property into database and send a StopPlayingMovieMessage message
+        ///     When a movie has been fully played, save seen property into database and send a StopPlayingMovieMessage message
         /// </summary>
         /// <param name="sender">Sender object</param>
         /// <param name="e">EventArgs</param>
@@ -143,7 +140,7 @@ namespace Popcorn.UserControls.Players.Movie
         }
 
         /// <summary>
-        /// Play the movie
+        ///     Play the movie
         /// </summary>
         private void PlayMedia()
         {
@@ -155,7 +152,7 @@ namespace Popcorn.UserControls.Players.Movie
         }
 
         /// <summary>
-        /// Pause the movie
+        ///     Pause the movie
         /// </summary>
         private void PauseMedia()
         {
@@ -167,17 +164,14 @@ namespace Popcorn.UserControls.Players.Movie
         }
 
         /// <summary>
-        /// When media has finished playing, stop player and dispose control
+        ///     When media has finished playing, stop player and dispose control
         /// </summary>
         /// <param name="sender">Sender object</param>
         /// <param name="e">EventArgs</param>
-        private void OnStoppedPlayingMedia(object sender, EventArgs e)
-        {
-            Dispose();
-        }
+        private void OnStoppedPlayingMedia(object sender, EventArgs e) => Dispose();
 
         /// <summary>
-        /// Report the playing progress on the timeline
+        ///     Report the playing progress on the timeline
         /// </summary>
         /// <param name="sender">Sender object</param>
         /// <param name="e">EventArgs</param>
@@ -190,7 +184,7 @@ namespace Popcorn.UserControls.Players.Movie
         }
 
         /// <summary>
-        /// Each time the CanExecute play command change, update the visibility of Play/Pause buttons in the player
+        ///     Each time the CanExecute play command change, update the visibility of Play/Pause buttons in the player
         /// </summary>
         /// <param name="sender">Sender object</param>
         /// <param name="e">CanExecuteRoutedEventArgs</param>
@@ -211,7 +205,7 @@ namespace Popcorn.UserControls.Players.Movie
         }
 
         /// <summary>
-        /// Each time the CanExecute play command change, update the visibility of Play/Pause buttons in the media player
+        ///     Each time the CanExecute play command change, update the visibility of Play/Pause buttons in the media player
         /// </summary>
         /// <param name="sender">Sender object</param>
         /// <param name="e">CanExecuteRoutedEventArgs</param>
@@ -232,7 +226,7 @@ namespace Popcorn.UserControls.Players.Movie
         }
 
         /// <summary>
-        /// Report when user has finished dragging the media player progress
+        ///     Report when user has finished dragging the media player progress
         /// </summary>
         /// <param name="sender">Sender object</param>
         /// <param name="e">DragCompletedEventArgs</param>
@@ -243,7 +237,7 @@ namespace Popcorn.UserControls.Players.Movie
         }
 
         /// <summary>
-        /// Report runtime when movie player progress changed
+        ///     Report runtime when movie player progress changed
         /// </summary>
         /// <param name="sender">Sender object</param>
         /// <param name="e">RoutedPropertyChangedEventArgs</param>
@@ -257,27 +251,21 @@ namespace Popcorn.UserControls.Players.Movie
         }
 
         /// <summary>
-        /// Play media
+        ///     Play media
         /// </summary>
         /// <param name="sender">Sender object</param>
         /// <param name="e">ExecutedRoutedEventArgs</param>
-        private void MediaPlayerPlayExecuted(object sender, ExecutedRoutedEventArgs e)
-        {
-            PlayMedia();
-        }
+        private void MediaPlayerPlayExecuted(object sender, ExecutedRoutedEventArgs e) => PlayMedia();
 
         /// <summary>
-        /// Pause media
+        ///     Pause media
         /// </summary>
         /// <param name="sender">Sender object</param>
         /// <param name="e">CanExecuteRoutedEventArgs</param>
-        private void MediaPlayerPauseExecuted(object sender, ExecutedRoutedEventArgs e)
-        {
-            PauseMedia();
-        }
+        private void MediaPlayerPauseExecuted(object sender, ExecutedRoutedEventArgs e) => PauseMedia();
 
         /// <summary>
-        /// Hide the PlayerStatusBar on mouse inactivity 
+        ///     Hide the PlayerStatusBar on mouse inactivity
         /// </summary>
         /// <param name="sender">Sender object</param>
         /// <param name="e">EventArgs</param>
@@ -301,7 +289,7 @@ namespace Popcorn.UserControls.Players.Movie
         }
 
         /// <summary>
-        /// Show the PlayerStatusBar on mouse activity 
+        ///     Show the PlayerStatusBar on mouse activity
         /// </summary>
         /// <param name="sender">Sender object</param>
         /// <param name="e">EventArgs</param>
@@ -348,14 +336,6 @@ namespace Popcorn.UserControls.Players.Movie
 
             await Task.Delay(TimeSpan.FromSeconds(1));
             _isMouseActivityCaptured = false;
-        }
-
-        /// <summary>
-        /// Free resources
-        /// </summary>
-        public void Dispose()
-        {
-            Dispose(true);
         }
 
         private void Dispose(bool disposing)

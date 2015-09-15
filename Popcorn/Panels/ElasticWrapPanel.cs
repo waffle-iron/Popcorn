@@ -5,24 +5,24 @@ using System.Windows.Controls;
 namespace Popcorn.Panels
 {
     /// <summary>
-    /// Custom panel which resize elements and stretch them in itself when window is resizing
+    ///     Custom panel which resize elements and stretch them in itself when window is resizing
     /// </summary>
     public class ElasticWrapPanel : Panel
     {
         /// <summary>
-        /// The panel's number of columns
-        /// </summary>
-        private int _columns;
-
-        /// <summary>
-        /// Identifies the <see cref="DesiredColumnWidth"/> dependency property. 
+        ///     Identifies the <see cref="DesiredColumnWidth" /> dependency property.
         /// </summary>
         internal static readonly DependencyProperty DesiredColumnWidthProperty =
             DependencyProperty.Register("DesiredColumnWidth", typeof (double), typeof (ElasticWrapPanel),
                 new PropertyMetadata(230d, OnDesiredColumnWidthChanged));
 
         /// <summary>
-        /// DesiredColumnWidth 
+        ///     The panel's number of columns
+        /// </summary>
+        private int _columns;
+
+        /// <summary>
+        ///     DesiredColumnWidth
         /// </summary>
         public double DesiredColumnWidth
         {
@@ -31,29 +31,25 @@ namespace Popcorn.Panels
         }
 
         /// <summary>
-        /// Calculate the available space for each column
+        ///     Calculate the available space for each column
         /// </summary>
         /// <param name="availableSize">availableSize</param>
         /// <returns>Computed overrided size</returns>
         protected override Size MeasureOverride(Size availableSize)
         {
             if (availableSize.Height.Equals(0))
-            {
                 availableSize.Height = MaxHeight;
-            }
 
             _columns = (int) (availableSize.Width/DesiredColumnWidth);
 
             foreach (UIElement child in Children)
-            {
                 child.Measure(availableSize);
-            }
 
             return base.MeasureOverride(availableSize);
         }
 
         /// <summary>
-        /// Calculate the size of each column to organize their location
+        ///     Calculate the size of each column to organize their location
         /// </summary>
         /// <param name="finalSize">finalSize</param>
         /// <returns>Computed arranged size</returns>
@@ -90,9 +86,7 @@ namespace Popcorn.Panels
                 else
                 {
                     if (!overflowAlreadyCount)
-                    {
                         totalHeight += rowHeight;
-                    }
                 }
 
                 if (column != _columns) continue;
@@ -102,9 +96,7 @@ namespace Popcorn.Panels
             }
 
             if (Children.Count >= _columns)
-            {
                 totalHeight = totalHeight/_columns + overflow;
-            }
 
             Height = totalHeight;
             finalSize.Height = totalHeight;
@@ -112,7 +104,7 @@ namespace Popcorn.Panels
         }
 
         /// <summary>
-        /// Inform when DesiredColumnWidthProperty has changed
+        ///     Inform when DesiredColumnWidthProperty has changed
         /// </summary>
         /// <param name="e">e</param>
         /// <param name="obj">obj</param>

@@ -5,7 +5,12 @@ namespace Popcorn.Models.Movie
 {
     public class Meta : ObservableObject
     {
+        private int _apiVersion;
+
+        private string _executionTime;
         private int _serverTimer;
+
+        private string _serverTimezone;
 
         [DeserializeAs(Name = "server_time")]
         public int ServerTime
@@ -14,8 +19,6 @@ namespace Popcorn.Models.Movie
             set { Set(() => ServerTime, ref _serverTimer, value); }
         }
 
-        private string _serverTimezone;
-
         [DeserializeAs(Name = "server_timezone")]
         public string ServerTimezone
         {
@@ -23,16 +26,12 @@ namespace Popcorn.Models.Movie
             set { Set(() => ServerTimezone, ref _serverTimezone, value); }
         }
 
-        private int _apiVersion;
-
         [DeserializeAs(Name = "api_version")]
         public int ApiVersion
         {
             get { return _apiVersion; }
             set { Set(() => ApiVersion, ref _apiVersion, value); }
         }
-
-        private string _executionTime;
 
         [DeserializeAs(Name = "execution_time")]
         public string ExecutionTime

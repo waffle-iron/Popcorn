@@ -4,12 +4,12 @@ using System.Windows;
 namespace Popcorn.Controls
 {
     /// <summary>
-    /// Interaction logic for CapitalizeText.xaml
+    ///     Interaction logic for CapitalizeText.xaml
     /// </summary>
     public partial class CapitalizeText
     {
         /// <summary>
-        /// Text property
+        ///     Text property
         /// </summary>
         public static readonly DependencyProperty TextProperty =
             DependencyProperty.Register("Text",
@@ -17,7 +17,15 @@ namespace Popcorn.Controls
                 new PropertyMetadata(string.Empty, OnTextChanged));
 
         /// <summary>
-        /// The text to capitalize
+        ///     Initialize a new instance of CapitalizeText
+        /// </summary>
+        public CapitalizeText()
+        {
+            InitializeComponent();
+        }
+
+        /// <summary>
+        ///     The text to capitalize
         /// </summary>
         public string Text
         {
@@ -26,15 +34,7 @@ namespace Popcorn.Controls
         }
 
         /// <summary>
-        /// Initialize a new instance of CapitalizeText
-        /// </summary>
-        public CapitalizeText()
-        {
-            InitializeComponent();
-        }
-
-        /// <summary>
-        /// On text changed
+        ///     On text changed
         /// </summary>
         /// <param name="d">Dependency object</param>
         /// <param name="e">Event args</param>
@@ -45,7 +45,7 @@ namespace Popcorn.Controls
         }
 
         /// <summary>
-        /// Display capitalized text
+        ///     Display capitalized text
         /// </summary>
         private void DisplayCapitalizedText()
         {

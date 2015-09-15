@@ -4,40 +4,35 @@ using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.IO;
 using System.IO.Compression;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using NLog;
-using RestSharp;
 using Popcorn.Helpers;
-using TMDbLib.Client;
-using TMDbLib.Objects.Movies;
-using Popcorn.Models.Localization;
-using System.Linq;
 using Popcorn.Models.Genre;
+using Popcorn.Models.Localization;
 using Popcorn.Models.Movie.Full;
 using Popcorn.Models.Movie.Short;
 using Popcorn.Models.Subtitle;
+using RestSharp;
+using TMDbLib.Client;
 using TMDbLib.Objects.General;
+using TMDbLib.Objects.Movies;
 
 namespace Popcorn.Services.Movie
 {
     /// <summary>
-    /// Services used to interact with movies
+    ///     Services used to interact with movies
     /// </summary>
     public class MovieService : IMovieService
     {
         /// <summary>
-        /// Logger of the class
+        ///     Logger of the class
         /// </summary>
         private static readonly Logger Logger = LogManager.GetCurrentClassLogger();
 
         /// <summary>
-        ///TMDb client
-        /// </summary>
-        private TMDbClient TmdbClient { get; }
-
-        /// <summary>
-        /// Initialize a new instance of MovieService class
+        ///     Initialize a new instance of MovieService class
         /// </summary>
         public MovieService()
         {
@@ -49,16 +44,18 @@ namespace Popcorn.Services.Movie
         }
 
         /// <summary>
-        /// Change the culture of TMDb
+        ///     TMDb client
         /// </summary>
-        /// <param name="language">Language to set</param>
-        public void ChangeTmdbLanguage(ILanguage language)
-        {
-            TmdbClient.DefaultLanguage = language.Culture;
-        }
+        private TMDbClient TmdbClient { get; }
 
         /// <summary>
-        /// Get all movie's genres
+        ///     Change the culture of TMDb
+        /// </summary>
+        /// <param name="language">Language to set</param>
+        public void ChangeTmdbLanguage(ILanguage language) => TmdbClient.DefaultLanguage = language.Culture;
+
+        /// <summary>
+        ///     Get all movie's genres
         /// </summary>
         /// <param name="ct">Used to cancel loading genres</param>
         /// <returns>Genres</returns>
@@ -103,7 +100,7 @@ namespace Popcorn.Services.Movie
         }
 
         /// <summary>
-        /// Get popular movies by page
+        ///     Get popular movies by page
         /// </summary>
         /// <param name="page">Page to return</param>
         /// <param name="limit">The maximum number of movies to return</param>
@@ -174,7 +171,7 @@ namespace Popcorn.Services.Movie
         }
 
         /// <summary>
-        /// Get greatest movies by page
+        ///     Get greatest movies by page
         /// </summary>
         /// <param name="page">Page to return</param>
         /// <param name="limit">The maximum number of movies to return</param>
@@ -245,7 +242,7 @@ namespace Popcorn.Services.Movie
         }
 
         /// <summary>
-        /// Get recent movies by page
+        ///     Get recent movies by page
         /// </summary>
         /// <param name="page">Page to return</param>
         /// <param name="limit">The maximum number of movies to return</param>
@@ -316,7 +313,7 @@ namespace Popcorn.Services.Movie
         }
 
         /// <summary>
-        /// Search movies by criteria
+        ///     Search movies by criteria
         /// </summary>
         /// <param name="criteria">Criteria used for search</param>
         /// <param name="page">Page to return</param>
@@ -389,7 +386,7 @@ namespace Popcorn.Services.Movie
         }
 
         /// <summary>
-        /// Get TMDb movie informations
+        ///     Get TMDb movie informations
         /// </summary>
         /// <param name="movieToLoad">Movie to load</param>
         /// <param name="ct">Used to cancel loading</param>
@@ -476,7 +473,7 @@ namespace Popcorn.Services.Movie
         }
 
         /// <summary>
-        /// Translate movie informations (title, description, ...)
+        ///     Translate movie informations (title, description, ...)
         /// </summary>
         /// <param name="movieToTranslate">Movie to translate</param>
         /// <param name="ct">Used to cancel translation</param>
@@ -516,7 +513,7 @@ namespace Popcorn.Services.Movie
         }
 
         /// <summary>
-        /// Translate movie informations (title, description, ...)
+        ///     Translate movie informations (title, description, ...)
         /// </summary>
         /// <param name="movieToTranslate">Movie to translate</param>
         /// <param name="ct">Used to cancel translation</param>
@@ -557,43 +554,7 @@ namespace Popcorn.Services.Movie
         }
 
         /// <summary>
-        /// Get movies as a list from wrapped movies
-        /// </summary>
-        /// <param name="wrapper">Wrapped movies</param>
-        /// <returns>List of movies</returns>
-        private static IEnumerable<MovieShort> GetMoviesListFromWrapper(WrapperMovieShort wrapper)
-        {
-            return wrapper?.Data?.Movies?.Select(movie => new MovieShort
-            {
-                ApiVersion = movie.ApiVersion,
-                DateUploaded = movie.DateUploaded,
-                DateUploadedUnix = movie.DateUploadedUnix,
-                ExecutionTime = movie.ExecutionTime,
-                Genres = movie.Genres,
-                Id = movie.Id,
-                ImdbCode = movie.ImdbCode,
-                IsFavorite = false,
-                HasBeenSeen = false,
-                Language = movie.Language,
-                MediumCoverImage = movie.MediumCoverImage,
-                CoverImagePath = string.Empty,
-                MpaRating = movie.MpaRating,
-                RatingValue = movie.Rating,
-                Runtime = movie.Runtime,
-                ServerTime = movie.ServerTime,
-                ServerTimezone = movie.ServerTimezone,
-                SmallCoverImage = movie.SmallCoverImage,
-                State = movie.State,
-                Title = movie.Title,
-                TitleLong = movie.TitleLong,
-                Torrents = movie.Torrents,
-                Url = movie.Url,
-                Year = movie.Year
-            }).ToList();
-        }
-
-        /// <summary>
-        /// Get the link to the youtube trailer of a movie
+        ///     Get the link to the youtube trailer of a movie
         /// </summary>
         /// <param name="movie">The movie</param>
         /// <param name="ct">Used to cancel loading trailer</param>
@@ -605,10 +566,7 @@ namespace Popcorn.Services.Movie
             var trailers = new ResultContainer<Video>();
             try
             {
-                await Task.Run(() =>
-                {
-                    trailers = TmdbClient.GetMovie(movie.ImdbCode, MovieMethods.Videos)?.Videos;
-                }, ct);
+                await Task.Run(() => trailers = TmdbClient.GetMovie(movie.ImdbCode, MovieMethods.Videos)?.Videos, ct);
             }
             catch (Exception exception) when (exception is TaskCanceledException)
             {
@@ -633,7 +591,7 @@ namespace Popcorn.Services.Movie
         }
 
         /// <summary>
-        /// Get the movie's subtitles according to a language
+        ///     Get the movie's subtitles according to a language
         /// </summary>
         /// <param name="movie">The movie of which to retrieve its subtitles</param>
         /// <param name="ct">Cancellation token</param>
@@ -701,7 +659,7 @@ namespace Popcorn.Services.Movie
         }
 
         /// <summary>
-        /// Download a subtitle
+        ///     Download a subtitle
         /// </summary>
         /// <param name="movie">The movie of which to retrieve its subtitles</param>
         /// <param name="progress">Report the progress of the download</param>
@@ -733,9 +691,7 @@ namespace Popcorn.Services.Movie
                             var subtitlePath = Path.Combine(Constants.Subtitles + movie.ImdbCode,
                                 entry.FullName);
                             if (!File.Exists(subtitlePath))
-                            {
                                 entry.ExtractToFile(subtitlePath);
-                            }
 
                             movie.SelectedSubtitle.FilePath = subtitlePath;
                         }
@@ -763,7 +719,7 @@ namespace Popcorn.Services.Movie
         }
 
         /// <summary>
-        /// Download the movie's background image
+        ///     Download the movie's background image
         /// </summary>
         /// <param name="movie">The movie to process</param>
         /// <param name="ct">Used to cancel downloading background image</param>
@@ -792,9 +748,7 @@ namespace Popcorn.Services.Movie
                             (background, t) =>
                             {
                                 if (t.Item3 == null && !string.IsNullOrEmpty(t.Item2))
-                                {
                                     movie.BackgroundImagePath = t.Item2;
-                                }
                             });
                 }, ct.Token);
             }
@@ -819,7 +773,7 @@ namespace Popcorn.Services.Movie
         }
 
         /// <summary>
-        /// Download cover image for each of the movies provided
+        ///     Download cover image for each of the movies provided
         /// </summary>
         /// <param name="movies">The movies to process</param>
         /// <param name="ct">Used to cancel task</param>
@@ -838,9 +792,7 @@ namespace Popcorn.Services.Movie
                         (movie, t) =>
                         {
                             if (t.Item3 == null && !string.IsNullOrEmpty(t.Item2))
-                            {
                                 movie.CoverImagePath = t.Item2;
-                            }
                         });
             }
             catch (Exception exception) when (exception is TaskCanceledException)
@@ -864,7 +816,7 @@ namespace Popcorn.Services.Movie
         }
 
         /// <summary>
-        /// Download the movie's poster image
+        ///     Download the movie's poster image
         /// </summary>
         /// <param name="movie">The movie to process</param>
         /// <param name="ct">Used to cancel downloading poster image</param>
@@ -890,9 +842,7 @@ namespace Popcorn.Services.Movie
                         (poster, t) =>
                         {
                             if (t.Item3 == null && !string.IsNullOrEmpty(t.Item2))
-                            {
                                 movie.PosterImagePath = t.Item2;
-                            }
                         });
             }
             catch (Exception exception) when (exception is TaskCanceledException)
@@ -916,7 +866,7 @@ namespace Popcorn.Services.Movie
         }
 
         /// <summary>
-        /// Download directors' image for a movie
+        ///     Download directors' image for a movie
         /// </summary>
         /// <param name="movie">The movie to process</param>
         /// <param name="ct">Used to cancel downloading director image</param>
@@ -937,9 +887,7 @@ namespace Popcorn.Services.Movie
                         (director, t) =>
                         {
                             if (t.Item3 == null && !string.IsNullOrEmpty(t.Item2))
-                            {
                                 director.SmallImagePath = t.Item2;
-                            }
                         });
             }
             catch (Exception exception) when (exception is TaskCanceledException)
@@ -963,7 +911,7 @@ namespace Popcorn.Services.Movie
         }
 
         /// <summary>
-        /// Download actors' image for a movie
+        ///     Download actors' image for a movie
         /// </summary>
         /// <param name="movie">The movie to process</param>
         /// <param name="ct">Used to cancel downloading actor image</param>
@@ -984,9 +932,7 @@ namespace Popcorn.Services.Movie
                         (actor, t) =>
                         {
                             if (t.Item3 == null && !string.IsNullOrEmpty(t.Item2))
-                            {
                                 actor.SmallImagePath = t.Item2;
-                            }
                         });
             }
             catch (Exception exception) when (exception is TaskCanceledException)
@@ -1008,5 +954,39 @@ namespace Popcorn.Services.Movie
                     $"DownloadActorImageAsync ({movie.ImdbCode}) in {elapsedMs} milliseconds.");
             }
         }
+
+        /// <summary>
+        ///     Get movies as a list from wrapped movies
+        /// </summary>
+        /// <param name="wrapper">Wrapped movies</param>
+        /// <returns>List of movies</returns>
+        private static IEnumerable<MovieShort> GetMoviesListFromWrapper(WrapperMovieShort wrapper)
+            => wrapper?.Data?.Movies?.Select(movie => new MovieShort
+            {
+                ApiVersion = movie.ApiVersion,
+                DateUploaded = movie.DateUploaded,
+                DateUploadedUnix = movie.DateUploadedUnix,
+                ExecutionTime = movie.ExecutionTime,
+                Genres = movie.Genres,
+                Id = movie.Id,
+                ImdbCode = movie.ImdbCode,
+                IsFavorite = false,
+                HasBeenSeen = false,
+                Language = movie.Language,
+                MediumCoverImage = movie.MediumCoverImage,
+                CoverImagePath = string.Empty,
+                MpaRating = movie.MpaRating,
+                RatingValue = movie.Rating,
+                Runtime = movie.Runtime,
+                ServerTime = movie.ServerTime,
+                ServerTimezone = movie.ServerTimezone,
+                SmallCoverImage = movie.SmallCoverImage,
+                State = movie.State,
+                Title = movie.Title,
+                TitleLong = movie.TitleLong,
+                Torrents = movie.Torrents,
+                Url = movie.Url,
+                Year = movie.Year
+            }).ToList();
     }
 }

@@ -6,10 +6,13 @@ namespace Popcorn.Models.ApplicationState
 {
     public class ApplicationState : ObservableObject, IApplicationState
     {
+        private bool _isConnectionInError;
+
+        private bool _isFullScreen;
         private bool _isMoviePlaying;
 
         /// <summary>
-        /// Indicates if a movie is playing
+        ///     Indicates if a movie is playing
         /// </summary>
         public bool IsMoviePlaying
         {
@@ -21,10 +24,8 @@ namespace Popcorn.Models.ApplicationState
             }
         }
 
-        private bool _isConnectionInError;
-
         /// <summary>
-        /// Specify if a connection error has occured
+        ///     Specify if a connection error has occured
         /// </summary>
         public bool IsConnectionInError
         {
@@ -32,10 +33,8 @@ namespace Popcorn.Models.ApplicationState
             set { Set(() => IsConnectionInError, ref _isConnectionInError, value); }
         }
 
-        private bool _isFullScreen;
-
         /// <summary>
-        /// Indicates if application is fullscreen
+        ///     Indicates if application is fullscreen
         /// </summary>
         public bool IsFullScreen
         {

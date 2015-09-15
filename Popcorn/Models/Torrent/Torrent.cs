@@ -5,6 +5,25 @@ namespace Popcorn.Models.Torrent
 {
     public class Torrent : ObservableObject
     {
+        private string _dateUploaded;
+
+        private int _dateUploadedUnix;
+
+        private string _framerate;
+
+        private string _hash;
+
+        private int _peers;
+
+        private string _quality;
+
+        private string _resolution;
+
+        private int _seeds;
+
+        private string _size;
+
+        private long _sizeBytes;
         private string _url;
 
         [DeserializeAs(Name = "url")]
@@ -14,16 +33,12 @@ namespace Popcorn.Models.Torrent
             set { Set(() => Url, ref _url, value); }
         }
 
-        private string _hash;
-
         [DeserializeAs(Name = "hash")]
         public string Hash
         {
             get { return _hash; }
             set { Set(() => Hash, ref _hash, value); }
         }
-
-        private string _quality;
 
         [DeserializeAs(Name = "quality")]
         public string Quality
@@ -32,16 +47,12 @@ namespace Popcorn.Models.Torrent
             set { Set(() => Quality, ref _quality, value); }
         }
 
-        private string _framerate;
-
         [DeserializeAs(Name = "framerate")]
         public string Framerate
         {
             get { return _framerate; }
             set { Set(() => Framerate, ref _framerate, value); }
         }
-
-        private string _resolution;
 
         [DeserializeAs(Name = "resolution")]
         public string Resolution
@@ -50,16 +61,12 @@ namespace Popcorn.Models.Torrent
             set { Set(() => Resolution, ref _resolution, value); }
         }
 
-        private int _seeds;
-
         [DeserializeAs(Name = "seeds")]
         public int Seeds
         {
             get { return _seeds; }
             set { Set(() => Seeds, ref _seeds, value); }
         }
-
-        private int _peers;
 
         [DeserializeAs(Name = "peers")]
         public int Peers
@@ -68,16 +75,12 @@ namespace Popcorn.Models.Torrent
             set { Set(() => Peers, ref _peers, value); }
         }
 
-        private string _size;
-
         [DeserializeAs(Name = "size")]
         public string Size
         {
             get { return _size; }
             set { Set(() => Size, ref _size, value); }
         }
-
-        private long _sizeBytes;
 
         [DeserializeAs(Name = "size_bytes")]
         public long SizeBytes
@@ -86,16 +89,12 @@ namespace Popcorn.Models.Torrent
             set { Set(() => SizeBytes, ref _sizeBytes, value); }
         }
 
-        private string _dateUploaded;
-
         [DeserializeAs(Name = "date_uploaded")]
         public string DateUploaded
         {
             get { return _dateUploaded; }
             set { Set(() => DateUploaded, ref _dateUploaded, value); }
         }
-
-        private int _dateUploadedUnix;
 
         [DeserializeAs(Name = "date_uploaded_unix")]
         public int DateUploadedUnix

@@ -4,12 +4,12 @@ using Popcorn.Models.Movie.Short;
 namespace Popcorn.Comparers
 {
     /// <summary>
-    /// Compare two movies
+    ///     Compare two movies
     /// </summary>
     public class MovieShortComparer : IEqualityComparer<MovieShort>
     {
         /// <summary>
-        /// Compare two movies
+        ///     Compare two movies
         /// </summary>
         /// <param name="x">First movie</param>
         /// <param name="y">Second movie</param>
@@ -27,7 +27,7 @@ namespace Popcorn.Comparers
         }
 
         /// <summary>
-        /// Define a unique hash code for a movie
+        ///     Define a unique hash code for a movie
         /// </summary>
         /// <param name="movie">A movie</param>
         /// <returns>Unique hashcode</returns>

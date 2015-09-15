@@ -17,21 +17,22 @@ using Torrent = Popcorn.Models.Torrent.Torrent;
 namespace Popcorn.Services.History
 {
     /// <summary>
-    /// Services used to interacts with movie history
+    ///     Services used to interacts with movie history
     /// </summary>
     public class MovieHistoryService : IMovieHistoryService
     {
         /// <summary>
-        /// Logger of the class
+        ///     Logger of the class
         /// </summary>
         private static readonly Logger Logger = LogManager.GetCurrentClassLogger();
 
         /// <summary>
-        /// Retrieve from database and set the IsFavorite and HasBeenSeen properties of each movie in params, 
+        ///     Retrieve from database and set the IsFavorite and HasBeenSeen properties of each movie in params,
         /// </summary>
         /// <param name="movies">All movies to compute</param>
         public async Task ComputeMovieHistoryAsync(IEnumerable<MovieShort> movies)
         {
+            if (movies == null) throw new ArgumentNullException(nameof(movies));
             var watch = Stopwatch.StartNew();
 
             try
@@ -69,7 +70,7 @@ namespace Popcorn.Services.History
         }
 
         /// <summary>
-        /// Get the favorites movies
+        ///     Get the favorites movies
         /// </summary>
         /// <param name="genre">The genre of the movies</param>
         /// <param name="ratingFilter">Used to filter by rating</param>
@@ -118,7 +119,7 @@ namespace Popcorn.Services.History
         }
 
         /// <summary>
-        /// Get the seen movies
+        ///     Get the seen movies
         /// </summary>
         /// <returns>Seen movies</returns>
         /// <param name="genre">The genre of the movies</param>
@@ -152,7 +153,6 @@ namespace Popcorn.Services.History
             }
             catch (Exception exception)
             {
-
                 Logger.Error(
                     $"GetSeenMoviesIdAsync: {exception.Message}");
             }
@@ -168,11 +168,12 @@ namespace Popcorn.Services.History
         }
 
         /// <summary>
-        /// Set the movie as favorite
+        ///     Set the movie as favorite
         /// </summary>
         /// <param name="movie">Favorite movie</param>
         public async Task SetFavoriteMovieAsync(MovieShort movie)
         {
+            if (movie == null) throw new ArgumentNullException(nameof(movie));
             var watch = Stopwatch.StartNew();
 
             try
@@ -226,11 +227,12 @@ namespace Popcorn.Services.History
         }
 
         /// <summary>
-        /// Set a movie as seen
+        ///     Set a movie as seen
         /// </summary>
         /// <param name="movie">Seen movie</param>
         public async Task SetHasBeenSeenMovieAsync(MovieFull movie)
         {
+            if (movie == null) throw new ArgumentNullException(nameof(movie));
             var watch = Stopwatch.StartNew();
 
             try
@@ -284,7 +286,7 @@ namespace Popcorn.Services.History
         }
 
         /// <summary>
-        /// Scaffold UserData Table on database if empty
+        ///     Scaffold UserData Table on database if empty
         /// </summary>
         private static async Task CreateMovieHistoryAsync()
         {
@@ -323,12 +325,13 @@ namespace Popcorn.Services.History
         }
 
         /// <summary>
-        /// Convert a short movie entity to a short movie model
+        ///     Convert a short movie entity to a short movie model
         /// </summary>
         /// <param name="movie">The movie to convert</param>
         /// <returns>Short movie model</returns>
         private static MovieShort MovieShortFromEntityToModel(Entity.Movie.MovieShort movie)
         {
+            if (movie == null) throw new ArgumentNullException(nameof(movie));
             var torrents = movie.Torrents.Select(torrent => new Torrent
             {
                 DateUploaded = torrent.DateUploaded,
@@ -374,12 +377,13 @@ namespace Popcorn.Services.History
         }
 
         /// <summary>
-        /// Convert a short movie model to a short movie entity
+        ///     Convert a short movie model to a short movie entity
         /// </summary>
         /// <param name="movie">The movie to convert</param>
         /// <returns>Short movie entity</returns>
         private static Entity.Movie.MovieShort MovieShortFromModelToEntity(MovieShort movie)
         {
+            if (movie == null) throw new ArgumentNullException(nameof(movie));
             var torrents = movie.Torrents.Select(torrent => new Entity.Movie.Torrent
             {
                 DateUploaded = torrent.DateUploaded,
@@ -433,12 +437,13 @@ namespace Popcorn.Services.History
         }
 
         /// <summary>
-        /// Convert a full movie model to a full movie entity
+        ///     Convert a full movie model to a full movie entity
         /// </summary>
         /// <param name="movie">The movie to convert</param>
         /// <returns>Full movie entity</returns>
         private static Entity.Movie.MovieFull MovieFullFromModelToEntity(MovieFull movie)
         {
+            if (movie == null) throw new ArgumentNullException(nameof(movie));
             var torrents = movie.Torrents.Select(torrent => new Entity.Movie.Torrent
             {
                 DateUploaded = torrent.DateUploaded,

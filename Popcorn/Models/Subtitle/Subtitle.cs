@@ -1,14 +1,25 @@
 ﻿using System;
 using GalaSoft.MvvmLight;
-using Popcorn.Models.Localization;
 using Popcorn.Helpers;
+using Popcorn.Models.Localization;
 using RestSharp.Deserializers;
 
 namespace Popcorn.Models.Subtitle
 {
     public class Subtitle : ObservableObject, IComparable<Subtitle>
     {
+        private string _filePath;
+
+        private string _flagImagePath;
+
+        private int _hi;
         private int _id;
+
+        private ILanguage _language;
+
+        private int _rating;
+
+        private string _url;
 
         [DeserializeAs(Name = "id")]
         public int Id
@@ -17,16 +28,12 @@ namespace Popcorn.Models.Subtitle
             set { Set(() => Id, ref _id, value); }
         }
 
-        private int _hi;
-
         [DeserializeAs(Name = "hi")]
         public int Hi
         {
             get { return _hi; }
             set { Set(() => Hi, ref _hi, value); }
         }
-
-        private int _rating;
 
         [DeserializeAs(Name = "rating")]
         public int Rating
@@ -35,8 +42,6 @@ namespace Popcorn.Models.Subtitle
             set { Set(() => Rating, ref _rating, value); }
         }
 
-        private string _url;
-
         [DeserializeAs(Name = "url")]
         public string Url
         {
@@ -44,10 +49,8 @@ namespace Popcorn.Models.Subtitle
             set { Set(() => Url, ref _url, value); }
         }
 
-        private ILanguage _language;
-
         /// <summary>
-        /// Language's subtitle
+        ///     Language's subtitle
         /// </summary>
         public ILanguage Language
         {
@@ -59,10 +62,8 @@ namespace Popcorn.Models.Subtitle
             }
         }
 
-        private string _flagImagePath;
-
         /// <summary>
-        /// Flag image's path
+        ///     Flag image's path
         /// </summary>
         public string FlagImagePath
         {
@@ -70,10 +71,8 @@ namespace Popcorn.Models.Subtitle
             set { Set(() => FlagImagePath, ref _flagImagePath, value); }
         }
 
-        private string _filePath;
-
         /// <summary>
-        /// Subtitle file path
+        ///     Subtitle file path
         /// </summary>
         public string FilePath
         {
@@ -82,7 +81,17 @@ namespace Popcorn.Models.Subtitle
         }
 
         /// <summary>
-        /// Set file path of flag image depending on its language
+        ///     Used to comapre subtitle by english name
+        /// </summary>
+        /// <param name="subtitle">The subtitle to compare with</param>
+        /// <returns></returns>
+        public int CompareTo(Subtitle subtitle)
+        {
+            return string.Compare(Language.EnglishName, subtitle.Language.EnglishName, StringComparison.CurrentCulture);
+        }
+
+        /// <summary>
+        ///     Set file path of flag image depending on its language
         /// </summary>
         private void SetFlagImagePath()
         {
@@ -188,16 +197,6 @@ namespace Popcorn.Models.Subtitle
                     FlagImagePath = Constants.FlagImagesDirectory + "in.png";
                     break;
             }
-        }
-
-        /// <summary>
-        /// Used to comapre subtitle by english name
-        /// </summary>
-        /// <param name="subtitle">The subtitle to compare with</param>
-        /// <returns></returns>
-        public int CompareTo(Subtitle subtitle)
-        {
-            return string.Compare(Language.EnglishName, subtitle.Language.EnglishName, StringComparison.CurrentCulture);
         }
     }
 }

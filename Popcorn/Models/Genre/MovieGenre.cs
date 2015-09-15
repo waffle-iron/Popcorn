@@ -6,8 +6,10 @@ namespace Popcorn.Models.Genre
     {
         private string _englishName;
 
+        private TMDbLib.Objects.General.Genre _tmdbGenre;
+
         /// <summary>
-        /// Genre's english name
+        ///     Genre's english name
         /// </summary>
         public string EnglishName
         {
@@ -15,10 +17,8 @@ namespace Popcorn.Models.Genre
             set { Set(() => EnglishName, ref _englishName, value); }
         }
 
-        private TMDbLib.Objects.General.Genre _tmdbGenre;
-
         /// <summary>
-        /// Tmdb genre
+        ///     Tmdb genre
         /// </summary>
         public TMDbLib.Objects.General.Genre TmdbGenre
         {

@@ -1,9 +1,9 @@
 ﻿using System.Diagnostics;
+using System.Threading;
+using System.Threading.Tasks;
 using GalaSoft.MvvmLight;
 using GalaSoft.MvvmLight.CommandWpf;
 using GalaSoft.MvvmLight.Messaging;
-using System.Threading;
-using System.Threading.Tasks;
 using NLog;
 using Popcorn.Messaging;
 using Popcorn.Models.Movie.Full;
@@ -15,46 +15,46 @@ using Popcorn.ViewModels.Trailer;
 namespace Popcorn.ViewModels.Movie
 {
     /// <summary>
-    /// Manage the movie
+    ///     Manage the movie
     /// </summary>
     public sealed class MovieViewModel : ViewModelBase
     {
         /// <summary>
-        /// Logger of the class
+        ///     Logger of the class
         /// </summary>
         private static readonly Logger Logger = LogManager.GetCurrentClassLogger();
 
         /// <summary>
-        /// The service used to interact with movies
+        ///     The service used to interact with movies
         /// </summary>
         private readonly IMovieService _movieService;
 
-        private MovieFull _movie = new MovieFull();
-
-        private IDownloadMovieViewModel _downloadMovie;
-
-        private ITrailerViewModel _trailer;
-
-        private bool _isMovieLoading;
-
-        private bool _isTrailerLoading;
-
-        private bool _isPlayingTrailer;
-
-        private bool _isDownloadingMovie;
-
         /// <summary>
-        /// Token to cancel trailer loading
-        /// </summary>
-        private CancellationTokenSource _cancellationLoadingTrailerToken;
-
-        /// <summary>
-        /// Token to cancel movie loading
+        ///     Token to cancel movie loading
         /// </summary>
         private CancellationTokenSource _cancellationLoadingToken;
 
         /// <summary>
-        /// Initializes a new instance of the MovieViewModel class.
+        ///     Token to cancel trailer loading
+        /// </summary>
+        private CancellationTokenSource _cancellationLoadingTrailerToken;
+
+        private IDownloadMovieViewModel _downloadMovie;
+
+        private bool _isDownloadingMovie;
+
+        private bool _isMovieLoading;
+
+        private bool _isPlayingTrailer;
+
+        private bool _isTrailerLoading;
+
+        private MovieFull _movie = new MovieFull();
+
+        private ITrailerViewModel _trailer;
+
+        /// <summary>
+        ///     Initializes a new instance of the MovieViewModel class.
         /// </summary>
         /// <param name="downloadMovieViewModel">ViewModel which manages the movie download</param>
         /// <param name="movieService">Service used to interact with movies</param>
@@ -72,7 +72,7 @@ namespace Popcorn.ViewModels.Movie
         }
 
         /// <summary>
-        /// The selected movie to show into the interface
+        ///     The selected movie to show into the interface
         /// </summary>
         public MovieFull Movie
         {
@@ -81,7 +81,7 @@ namespace Popcorn.ViewModels.Movie
         }
 
         /// <summary>
-        /// Indicates if a movie is loading
+        ///     Indicates if a movie is loading
         /// </summary>
         public bool IsMovieLoading
         {
@@ -90,7 +90,7 @@ namespace Popcorn.ViewModels.Movie
         }
 
         /// <summary>
-        /// View model which takes care of downloading the movie
+        ///     View model which takes care of downloading the movie
         /// </summary>
         public IDownloadMovieViewModel DownloadMovie
         {
@@ -99,9 +99,8 @@ namespace Popcorn.ViewModels.Movie
         }
 
         /// <summary>
-        /// View model which takes care of the movie's trailer
+        ///     View model which takes care of the movie's trailer
         /// </summary>
-
         public ITrailerViewModel Trailer
         {
             get { return _trailer; }
@@ -109,7 +108,7 @@ namespace Popcorn.ViewModels.Movie
         }
 
         /// <summary>
-        /// Specify if a trailer is loading
+        ///     Specify if a trailer is loading
         /// </summary>
         public bool IsTrailerLoading
         {
@@ -118,7 +117,7 @@ namespace Popcorn.ViewModels.Movie
         }
 
         /// <summary>
-        /// Specify if a trailer is loading
+        ///     Specify if a trailer is loading
         /// </summary>
         public bool IsPlayingTrailer
         {
@@ -127,7 +126,7 @@ namespace Popcorn.ViewModels.Movie
         }
 
         /// <summary>
-        /// Specify if a movie is downloading
+        ///     Specify if a movie is downloading
         /// </summary>
         public bool IsDownloadingMovie
         {
@@ -136,27 +135,27 @@ namespace Popcorn.ViewModels.Movie
         }
 
         /// <summary>
-        /// Command used to load the movie
+        ///     Command used to load the movie
         /// </summary>
         public RelayCommand<MovieShort> LoadMovieCommand { get; private set; }
 
         /// <summary>
-        /// Stop loading the trailer
+        ///     Stop loading the trailer
         /// </summary>
         public RelayCommand StopLoadingTrailerCommand { get; private set; }
 
         /// <summary>
-        /// Command used to play the movie
+        ///     Command used to play the movie
         /// </summary>
         public RelayCommand PlayMovieCommand { get; private set; }
 
         /// <summary>
-        /// Command used to play the trailer
+        ///     Command used to play the trailer
         /// </summary>
         public RelayCommand PlayTrailerCommand { get; private set; }
 
         /// <summary>
-        /// Cleanup resources
+        ///     Cleanup resources
         /// </summary>
         public override void Cleanup()
         {
@@ -168,7 +167,7 @@ namespace Popcorn.ViewModels.Movie
         }
 
         /// <summary>
-        /// Register messages
+        ///     Register messages
         /// </summary>
         private void RegisterMessages()
         {
@@ -192,7 +191,7 @@ namespace Popcorn.ViewModels.Movie
         }
 
         /// <summary>
-        /// Register commands
+        ///     Register commands
         /// </summary>
         private void RegisterCommands()
         {
@@ -216,7 +215,7 @@ namespace Popcorn.ViewModels.Movie
         }
 
         /// <summary>
-        /// Get the requested movie
+        ///     Get the requested movie
         /// </summary>
         /// <param name="movie">The movie to load</param>
         private async Task LoadMovieAsync(MovieShort movie)
@@ -236,11 +235,10 @@ namespace Popcorn.ViewModels.Movie
             watch.Stop();
             var elapsedMs = watch.ElapsedMilliseconds;
             Logger.Debug($"LoadMovieAsync ({movie.ImdbCode}) in {elapsedMs} milliseconds.");
-
         }
 
         /// <summary>
-        /// Stop loading the movie
+        ///     Stop loading the movie
         /// </summary>
         private void StopLoadingMovie()
         {
@@ -253,7 +251,7 @@ namespace Popcorn.ViewModels.Movie
         }
 
         /// <summary>
-        /// Stop playing a trailer
+        ///     Stop playing a trailer
         /// </summary>
         private void StopLoadingTrailer()
         {
@@ -267,7 +265,7 @@ namespace Popcorn.ViewModels.Movie
         }
 
         /// <summary>
-        /// Stop playing a trailer
+        ///     Stop playing a trailer
         /// </summary>
         private void StopPlayingTrailer()
         {
@@ -279,7 +277,7 @@ namespace Popcorn.ViewModels.Movie
         }
 
         /// <summary>
-        /// Stop playing a movie
+        ///     Stop playing a movie
         /// </summary>
         private void StopPlayingMovie()
         {

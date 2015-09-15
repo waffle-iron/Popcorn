@@ -3,24 +3,24 @@ using System.Collections.Generic;
 using System.Data.Entity;
 using System.Data.Entity.Migrations;
 using System.Diagnostics;
-using Popcorn.Entity;
-using NLog;
 using System.Threading.Tasks;
+using NLog;
+using Popcorn.Entity;
 
 namespace Popcorn.Services.Settings
 {
     /// <summary>
-    /// Services used to interacts with application's settings
+    ///     Services used to interacts with application's settings
     /// </summary>
     public class SettingsService : ISettingsService
     {
         /// <summary>
-        /// Logger of the class
+        ///     Logger of the class
         /// </summary>
         private static readonly Logger Logger = LogManager.GetCurrentClassLogger();
 
         /// <summary>
-        /// Scaffold Settings table on database if empty
+        ///     Scaffold Settings table on database if empty
         /// </summary>
         public async Task CreateApplicationSettingsAsync()
         {

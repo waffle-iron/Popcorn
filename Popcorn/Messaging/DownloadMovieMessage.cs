@@ -4,17 +4,17 @@ using Popcorn.Models.Movie.Full;
 namespace Popcorn.Messaging
 {
     /// <summary>
-    /// Used to broadcast a downloading movie message action
+    ///     Used to broadcast a downloading movie message action
     /// </summary>
     public class DownloadMovieMessage : MessageBase
     {
         /// <summary>
-        /// Movie
+        ///     Movie
         /// </summary>
         public readonly MovieFull Movie;
 
         /// <summary>
-        /// DownloadMovieMessage
+        ///     DownloadMovieMessage
         /// </summary>
         /// <param name="movie">The movie to download</param>
         public DownloadMovieMessage(MovieFull movie)

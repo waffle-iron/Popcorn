@@ -58,29 +58,27 @@ namespace Popcorn.UserControls.Players.Trailer
             }
 
             var vm = DataContext as TrailerPlayerViewModel;
-            if (vm != null)
-            {
-                if (vm.Trailer?.Uri == null)
-                    return;
+            if (vm == null) return;
+            if (vm.Trailer?.Uri == null)
+                return;
 
-                // start the timer used to report time on MediaPlayerSliderProgress
-                MediaPlayerTimer = new DispatcherTimer {Interval = TimeSpan.FromSeconds(1)};
-                MediaPlayerTimer.Tick += MediaPlayerTimerTick;
-                MediaPlayerTimer.Start();
+            // start the timer used to report time on MediaPlayerSliderProgress
+            MediaPlayerTimer = new DispatcherTimer {Interval = TimeSpan.FromSeconds(1)};
+            MediaPlayerTimer.Tick += MediaPlayerTimerTick;
+            MediaPlayerTimer.Start();
 
-                // start the activity timer used to manage visibility of the PlayerStatusBar
-                ActivityTimer = new DispatcherTimer {Interval = TimeSpan.FromSeconds(4)};
-                ActivityTimer.Tick += OnInactivity;
-                ActivityTimer.Start();
+            // start the activity timer used to manage visibility of the PlayerStatusBar
+            ActivityTimer = new DispatcherTimer {Interval = TimeSpan.FromSeconds(4)};
+            ActivityTimer.Tick += OnInactivity;
+            ActivityTimer.Start();
 
-                InputManager.Current.PreProcessInput += OnActivity;
+            InputManager.Current.PreProcessInput += OnActivity;
 
-                vm.StoppedPlayingMedia += OnStoppedPlayingMedia;
-                Player.VlcMediaPlayer.EndReached += MediaPlayerEndReached;
+            vm.StoppedPlayingMedia += OnStoppedPlayingMedia;
+            Player.VlcMediaPlayer.EndReached += MediaPlayerEndReached;
 
-                Player.LoadMedia(vm.Trailer.Uri);
-                PlayMedia();
-            }
+            Player.LoadMedia(vm.Trailer.Uri);
+            PlayMedia();
         }
 
         /// <summary>
@@ -102,10 +100,7 @@ namespace Popcorn.UserControls.Players.Trailer
         /// Change the media's volume
         /// </summary>
         /// <param name="newValue">New volume value</param>
-        private void ChangeMediaVolume(int newValue)
-        {
-            Player.Volume = newValue;
-        }
+        private void ChangeMediaVolume(int newValue) => Player.Volume = newValue;
 
         /// <summary>
         /// When user uses the mousewheel, update the volume
@@ -115,9 +110,7 @@ namespace Popcorn.UserControls.Players.Trailer
         private void MouseWheelMediaPlayer(object sender, MouseWheelEventArgs e)
         {
             if ((Volume <= 190 && e.Delta > 0) || (Volume >= 10 && e.Delta < 0))
-            {
                 Volume += (e.Delta > 0) ? 10 : -10;
-            }
         }
 
         /// <summary>
@@ -166,10 +159,7 @@ namespace Popcorn.UserControls.Players.Trailer
         /// </summary>
         /// <param name="sender">Sender object</param>
         /// <param name="e">EventArgs</param>
-        private void OnStoppedPlayingMedia(object sender, EventArgs e)
-        {
-            Dispose();
-        }
+        private void OnStoppedPlayingMedia(object sender, EventArgs e) => Dispose();
 
         /// <summary>
         /// Report the playing progress on the timeline
@@ -256,20 +246,14 @@ namespace Popcorn.UserControls.Players.Trailer
         /// </summary>
         /// <param name="sender">Sender object</param>
         /// <param name="e">ExecutedRoutedEventArgs</param>
-        private void MediaPlayerPlayExecuted(object sender, ExecutedRoutedEventArgs e)
-        {
-            PlayMedia();
-        }
+        private void MediaPlayerPlayExecuted(object sender, ExecutedRoutedEventArgs e) => PlayMedia();
 
         /// <summary>
         /// Pause media
         /// </summary>
         /// <param name="sender">Sender object</param>
         /// <param name="e">CanExecuteRoutedEventArgs</param>
-        private void MediaPlayerPauseExecuted(object sender, ExecutedRoutedEventArgs e)
-        {
-            PauseMedia();
-        }
+        private void MediaPlayerPauseExecuted(object sender, ExecutedRoutedEventArgs e) => PauseMedia();
 
         /// <summary>
         /// Hide the PlayerStatusBar on mouse inactivity 
@@ -348,10 +332,7 @@ namespace Popcorn.UserControls.Players.Trailer
         /// <summary>
         /// Free resources
         /// </summary>
-        public void Dispose()
-        {
-            Dispose(true);
-        }
+        public void Dispose() => Dispose(true);
 
         private void Dispose(bool disposing)
         {

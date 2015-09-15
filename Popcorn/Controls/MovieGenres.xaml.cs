@@ -5,12 +5,12 @@ using System.Windows;
 namespace Popcorn.Controls
 {
     /// <summary>
-    /// Interaction logic for MovieGenres.xaml
+    ///     Interaction logic for MovieGenres.xaml
     /// </summary>
     public partial class MovieGenres
     {
         /// <summary>
-        /// Genres property
+        ///     Genres property
         /// </summary>
         public static readonly DependencyProperty GenresProperty =
             DependencyProperty.Register("Genres",
@@ -18,7 +18,15 @@ namespace Popcorn.Controls
                 new PropertyMetadata(null, OnGenresChanged));
 
         /// <summary>
-        /// The movie runtime
+        ///     Initialize a new instance of MovieGenres
+        /// </summary>
+        public MovieGenres()
+        {
+            InitializeComponent();
+        }
+
+        /// <summary>
+        ///     The movie runtime
         /// </summary>
         public IEnumerable<string> Genres
         {
@@ -27,15 +35,7 @@ namespace Popcorn.Controls
         }
 
         /// <summary>
-        /// Initialize a new instance of MovieGenres
-        /// </summary>
-        public MovieGenres()
-        {
-            InitializeComponent();
-        }
-
-        /// <summary>
-        /// On genres changed
+        ///     On genres changed
         /// </summary>
         /// <param name="d">Dependency object</param>
         /// <param name="e">Event args</param>
@@ -46,7 +46,7 @@ namespace Popcorn.Controls
         }
 
         /// <summary>
-        /// Display movie genres
+        ///     Display movie genres
         /// </summary>
         private void DisplayMovieGenres()
         {
@@ -61,9 +61,7 @@ namespace Popcorn.Controls
                 DisplayText.Text += genre;
                 // Add the comma at the end of each genre.
                 if (index != Genres.Count())
-                {
                     DisplayText.Text += ", ";
-                }
             }
         }
     }

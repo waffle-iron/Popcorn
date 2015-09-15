@@ -5,11 +5,56 @@ using RestSharp.Deserializers;
 namespace Popcorn.Models.Movie.Short
 {
     /// <summary>
-    /// Represents partial details of a movie
+    ///     Represents partial details of a movie
     /// </summary>
     public class MovieShort : ObservableObject
     {
+        private int _apiVersion;
+
+        private string _coverImagePath;
+
+        private string _dateUploaded;
+
+        private int _dateUploadedUnix;
+
+        private string _executionTime;
+
+        private List<string> _genres;
+
+        private bool _hasBeenSeen;
         private int _id;
+
+        private string _imdbCode;
+
+        private bool _isFavorite;
+
+        private string _language;
+
+        private string _mediumCoverImage;
+
+        private string _mpaRating;
+
+        private double _rating;
+
+        private double _ratingValue;
+
+        private int _runtime;
+
+        private int _serverTime;
+
+        private string _serverTimezone;
+
+        private string _smallCoverImage;
+
+        private string _title;
+
+        private string _titleLong;
+
+        private List<Torrent.Torrent> _torrents;
+
+        private string _url;
+
+        private int _year;
 
         [DeserializeAs(Name = "id")]
         public int Id
@@ -18,16 +63,12 @@ namespace Popcorn.Models.Movie.Short
             set { Set(() => Id, ref _id, value); }
         }
 
-        private string _url;
-
         [DeserializeAs(Name = "url")]
         public string Url
         {
             get { return _url; }
             set { Set(() => Url, ref _url, value); }
         }
-
-        private string _imdbCode;
 
         [DeserializeAs(Name = "imdb_code")]
         public string ImdbCode
@@ -36,16 +77,12 @@ namespace Popcorn.Models.Movie.Short
             set { Set(() => ImdbCode, ref _imdbCode, value); }
         }
 
-        private string _title;
-
         [DeserializeAs(Name = "title")]
         public string Title
         {
             get { return _title; }
             set { Set(() => Title, ref _title, value); }
         }
-
-        private string _titleLong;
 
         [DeserializeAs(Name = "title_long")]
         public string TitleLong
@@ -54,16 +91,12 @@ namespace Popcorn.Models.Movie.Short
             set { Set(() => TitleLong, ref _titleLong, value); }
         }
 
-        private int _year;
-
         [DeserializeAs(Name = "year")]
         public int Year
         {
             get { return _year; }
             set { Set(() => Year, ref _year, value); }
         }
-
-        private double _rating;
 
         [DeserializeAs(Name = "rating")]
         public double Rating
@@ -72,16 +105,12 @@ namespace Popcorn.Models.Movie.Short
             set { Set(() => Rating, ref _rating, value); }
         }
 
-        private int _runtime;
-
         [DeserializeAs(Name = "runtime")]
         public int Runtime
         {
             get { return _runtime; }
             set { Set(() => Runtime, ref _runtime, value); }
         }
-
-        private List<string> _genres;
 
         [DeserializeAs(Name = "genres")]
         public List<string> Genres
@@ -90,16 +119,12 @@ namespace Popcorn.Models.Movie.Short
             set { Set(() => Genres, ref _genres, value); }
         }
 
-        private string _language;
-
         [DeserializeAs(Name = "language")]
         public string Language
         {
             get { return _language; }
             set { Set(() => Language, ref _language, value); }
         }
-
-        private string _mpaRating;
 
         [DeserializeAs(Name = "mpa_rating")]
         public string MpaRating
@@ -108,16 +133,12 @@ namespace Popcorn.Models.Movie.Short
             set { Set(() => MpaRating, ref _mpaRating, value); }
         }
 
-        private string _smallCoverImage;
-
         [DeserializeAs(Name = "small_cover_image")]
         public string SmallCoverImage
         {
             get { return _smallCoverImage; }
             set { Set(() => SmallCoverImage, ref _smallCoverImage, value); }
         }
-
-        private string _mediumCoverImage;
 
         [DeserializeAs(Name = "medium_cover_image")]
         public string MediumCoverImage
@@ -129,16 +150,12 @@ namespace Popcorn.Models.Movie.Short
         [DeserializeAs(Name = "state")]
         public string State { get; set; }
 
-        private List<Torrent.Torrent> _torrents;
-
         [DeserializeAs(Name = "torrents")]
         public List<Torrent.Torrent> Torrents
         {
             get { return _torrents; }
             set { Set(() => Torrents, ref _torrents, value); }
         }
-
-        private string _dateUploaded;
 
         [DeserializeAs(Name = "date_uploaded")]
         public string DateUploaded
@@ -147,16 +164,12 @@ namespace Popcorn.Models.Movie.Short
             set { Set(() => DateUploaded, ref _dateUploaded, value); }
         }
 
-        private int _dateUploadedUnix;
-
         [DeserializeAs(Name = "date_uploaded_unix")]
         public int DateUploadedUnix
         {
             get { return _dateUploadedUnix; }
             set { Set(() => DateUploadedUnix, ref _dateUploadedUnix, value); }
         }
-
-        private int _serverTime;
 
         [DeserializeAs(Name = "server_time")]
         public int ServerTime
@@ -165,16 +178,12 @@ namespace Popcorn.Models.Movie.Short
             set { Set(() => ServerTime, ref _serverTime, value); }
         }
 
-        private string _serverTimezone;
-
         [DeserializeAs(Name = "server_timezone")]
         public string ServerTimezone
         {
             get { return _serverTimezone; }
             set { Set(() => ServerTimezone, ref _serverTimezone, value); }
         }
-
-        private int _apiVersion;
 
         [DeserializeAs(Name = "api_version")]
         public int ApiVersion
@@ -183,8 +192,6 @@ namespace Popcorn.Models.Movie.Short
             set { Set(() => ApiVersion, ref _apiVersion, value); }
         }
 
-        private string _executionTime;
-
         [DeserializeAs(Name = "execution_time")]
         public string ExecutionTime
         {
@@ -192,10 +199,8 @@ namespace Popcorn.Models.Movie.Short
             set { Set(() => ExecutionTime, ref _executionTime, value); }
         }
 
-        private double _ratingValue;
-
         /// <summary>
-        /// Movie rating
+        ///     Movie rating
         /// </summary>
         public double RatingValue
         {
@@ -203,10 +208,8 @@ namespace Popcorn.Models.Movie.Short
             set { Set(() => RatingValue, ref _ratingValue, value); }
         }
 
-        private string _coverImagePath;
-
         /// <summary>
-        /// Local path of the downloaded movie's cover image
+        ///     Local path of the downloaded movie's cover image
         /// </summary>
         public string CoverImagePath
         {
@@ -214,10 +217,8 @@ namespace Popcorn.Models.Movie.Short
             set { Set(() => CoverImagePath, ref _coverImagePath, value); }
         }
 
-        private bool _isFavorite;
-
         /// <summary>
-        /// Indicate if movie is favorite
+        ///     Indicate if movie is favorite
         /// </summary>
         public bool IsFavorite
         {
@@ -225,10 +226,8 @@ namespace Popcorn.Models.Movie.Short
             set { Set(() => IsFavorite, ref _isFavorite, value); }
         }
 
-        private bool _hasBeenSeen;
-
         /// <summary>
-        /// Indicate if movie has been seen by the user
+        ///     Indicate if movie has been seen by the user
         /// </summary>
         public bool HasBeenSeen
         {

@@ -7,19 +7,19 @@ using Popcorn.Messaging;
 namespace Popcorn.ViewModels.Search
 {
     /// <summary>
-    /// Movie's search
+    ///     Movie's search
     /// </summary>
     public sealed class SearchViewModel : ViewModelBase
     {
         /// <summary>
-        /// Logger of the class
+        ///     Logger of the class
         /// </summary>
         private static readonly Logger Logger = LogManager.GetCurrentClassLogger();
 
         private string _searchFilter;
 
         /// <summary>
-        /// Initializes a new instance of the SearchViewModel class.
+        ///     Initializes a new instance of the SearchViewModel class.
         /// </summary>
         public SearchViewModel()
         {
@@ -28,7 +28,7 @@ namespace Popcorn.ViewModels.Search
         }
 
         /// <summary>
-        /// The filter for searching movies
+        ///     The filter for searching movies
         /// </summary>
         public string SearchFilter
         {
@@ -37,12 +37,12 @@ namespace Popcorn.ViewModels.Search
         }
 
         /// <summary>
-        /// Command used to search movies
+        ///     Command used to search movies
         /// </summary>
         public RelayCommand SearchMovieCommand { get; private set; }
 
         /// <summary>
-        /// Register messages
+        ///     Register messages
         /// </summary>
         private void RegisterMessages()
         {
@@ -56,7 +56,7 @@ namespace Popcorn.ViewModels.Search
         }
 
         /// <summary>
-        /// Register commands
+        ///     Register commands
         /// </summary>
         private void RegisterCommands()
         {

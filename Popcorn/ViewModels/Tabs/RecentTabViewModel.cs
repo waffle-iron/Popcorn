@@ -3,12 +3,12 @@ using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
-using GalaSoft.MvvmLight.Messaging;
-using Popcorn.Helpers;
-using Popcorn.Messaging;
 using GalaSoft.MvvmLight.CommandWpf;
+using GalaSoft.MvvmLight.Messaging;
 using NLog;
 using Popcorn.Comparers;
+using Popcorn.Helpers;
+using Popcorn.Messaging;
 using Popcorn.Models.ApplicationState;
 using Popcorn.Models.Genre;
 using Popcorn.Models.Movie.Short;
@@ -18,22 +18,23 @@ using Popcorn.Services.Movie;
 namespace Popcorn.ViewModels.Tabs
 {
     /// <summary>
-    /// The recent movies tab
+    ///     The recent movies tab
     /// </summary>
     public sealed class RecentTabViewModel : TabsViewModel
     {
         /// <summary>
-        /// Logger of the class
+        ///     Logger of the class
         /// </summary>
         private static readonly Logger Logger = LogManager.GetCurrentClassLogger();
 
         /// <summary>
-        /// Initializes a new instance of the RecentTabViewModel class.
+        ///     Initializes a new instance of the RecentTabViewModel class.
         /// </summary>
         /// <param name="applicationState">Application state</param>
         /// <param name="movieService">Movie service</param>
         /// <param name="movieHistoryService">Movie history service</param>
-        public RecentTabViewModel(IApplicationState applicationState, IMovieService movieService, IMovieHistoryService movieHistoryService)
+        public RecentTabViewModel(IApplicationState applicationState, IMovieService movieService,
+            IMovieHistoryService movieHistoryService)
             : base(applicationState, movieService, movieHistoryService)
         {
             RegisterMessages();
@@ -42,7 +43,7 @@ namespace Popcorn.ViewModels.Tabs
         }
 
         /// <summary>
-        /// Load next page
+        ///     Load next page
         /// </summary>
         public override async Task LoadMoviesAsync()
         {
@@ -94,7 +95,7 @@ namespace Popcorn.ViewModels.Tabs
         }
 
         /// <summary>
-        /// Register messages
+        ///     Register messages
         /// </summary>
         private void RegisterMessages()
         {
@@ -122,7 +123,7 @@ namespace Popcorn.ViewModels.Tabs
         }
 
         /// <summary>
-        /// Register commands
+        ///     Register commands
         /// </summary>
         private void RegisterCommands()
         {

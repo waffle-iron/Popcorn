@@ -3,12 +3,12 @@
 namespace Popcorn.Controls
 {
     /// <summary>
-    /// Interaction logic for MoviesNumberSummary.xaml
+    ///     Interaction logic for MoviesNumberSummary.xaml
     /// </summary>
     public partial class MoviesNumberSummary
     {
         /// <summary>
-        /// Max number property
+        ///     Max number property
         /// </summary>
         public static readonly DependencyProperty MaxNumberOfMoviesProperty =
             DependencyProperty.Register("MaxNumberOfMovies",
@@ -16,7 +16,7 @@ namespace Popcorn.Controls
                 new PropertyMetadata(0d, OnNumberOfMoviesChanged));
 
         /// <summary>
-        /// Current number property
+        ///     Current number property
         /// </summary>
         public static readonly DependencyProperty CurrentNumberOfMoviesProperty =
             DependencyProperty.Register("CurrentNumberOfMovies",
@@ -24,7 +24,15 @@ namespace Popcorn.Controls
                 new PropertyMetadata(0d, OnNumberOfMoviesChanged));
 
         /// <summary>
-        /// The maximum number of movies
+        ///     Initialize a new instance of MoviesNumberSummary
+        /// </summary>
+        public MoviesNumberSummary()
+        {
+            InitializeComponent();
+        }
+
+        /// <summary>
+        ///     The maximum number of movies
         /// </summary>
         public double MaxNumberOfMovies
         {
@@ -33,7 +41,7 @@ namespace Popcorn.Controls
         }
 
         /// <summary>
-        /// The current number of movies
+        ///     The current number of movies
         /// </summary>
         public double CurrentNumberOfMovies
         {
@@ -42,15 +50,7 @@ namespace Popcorn.Controls
         }
 
         /// <summary>
-        /// Initialize a new instance of MoviesNumberSummary
-        /// </summary>
-        public MoviesNumberSummary()
-        {
-            InitializeComponent();
-        }
-
-        /// <summary>
-        /// On number of movies changed
+        ///     On number of movies changed
         /// </summary>
         /// <param name="d">Dependency object</param>
         /// <param name="e">Event args</param>
@@ -61,7 +61,7 @@ namespace Popcorn.Controls
         }
 
         /// <summary>
-        /// Display movies summary
+        ///     Display movies summary
         /// </summary>
         private void DisplayMoviesNumberSummary()
         {

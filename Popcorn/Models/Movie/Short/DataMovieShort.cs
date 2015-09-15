@@ -6,7 +6,12 @@ namespace Popcorn.Models.Movie.Short
 {
     public class DataMovieShort : ObservableObject
     {
+        private int _limit;
         private int _movieCount;
+
+        private List<MovieShort> _movies;
+
+        private int _pageNumber;
 
         [DeserializeAs(Name = "movie_count")]
         public int MovieCount
@@ -15,8 +20,6 @@ namespace Popcorn.Models.Movie.Short
             set { Set(() => MovieCount, ref _movieCount, value); }
         }
 
-        private int _limit;
-
         [DeserializeAs(Name = "limit")]
         public int Limit
         {
@@ -24,16 +27,12 @@ namespace Popcorn.Models.Movie.Short
             set { Set(() => Limit, ref _limit, value); }
         }
 
-        private int _pageNumber;
-
         [DeserializeAs(Name = "page_number")]
         public int PageNumber
         {
             get { return _pageNumber; }
             set { Set(() => PageNumber, ref _pageNumber, value); }
         }
-
-        private List<MovieShort> _movies;
 
         [DeserializeAs(Name = "movies")]
         public List<MovieShort> Movies

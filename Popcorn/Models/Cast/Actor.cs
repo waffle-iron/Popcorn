@@ -5,7 +5,15 @@ namespace Popcorn.Models.Cast
 {
     public class Actor : ObservableObject
     {
+        private string _characterName;
+
+        private string _mediumImage;
         private string _name;
+
+        private string _smallImage;
+
+        private string _smallImagePath = string.Empty;
+
         [DeserializeAs(Name = "name")]
         public string Name
         {
@@ -13,7 +21,6 @@ namespace Popcorn.Models.Cast
             set { Set(() => Name, ref _name, value); }
         }
 
-        private string _characterName;
         [DeserializeAs(Name = "character_name")]
         public string CharacterName
         {
@@ -21,7 +28,6 @@ namespace Popcorn.Models.Cast
             set { Set(() => CharacterName, ref _characterName, value); }
         }
 
-        private string _smallImage;
         [DeserializeAs(Name = "small_image")]
         public string SmallImage
         {
@@ -29,7 +35,6 @@ namespace Popcorn.Models.Cast
             set { Set(() => SmallImage, ref _smallImage, value); }
         }
 
-        private string _mediumImage;
         [DeserializeAs(Name = "medium_image")]
         public string MediumImage
         {
@@ -37,10 +42,8 @@ namespace Popcorn.Models.Cast
             set { Set(() => MediumImage, ref _mediumImage, value); }
         }
 
-        private string _smallImagePath = string.Empty;
-
         /// <summary>
-        /// Local path of the downloaded actor's small-sized image
+        ///     Local path of the downloaded actor's small-sized image
         /// </summary>
         public string SmallImagePath
         {

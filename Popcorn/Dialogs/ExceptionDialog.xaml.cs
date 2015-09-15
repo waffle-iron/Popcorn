@@ -7,22 +7,12 @@ using MahApps.Metro.Controls.Dialogs;
 namespace Popcorn.Dialogs
 {
     /// <summary>
-    /// Manage exception settings
+    ///     Manage exception settings
     /// </summary>
     public class ExceptionDialogSettings : MetroDialogSettings
     {
         /// <summary>
-        /// Dialog title
-        /// </summary>
-        public string Title { get; }
-
-        /// <summary>
-        /// Dialog message
-        /// </summary>
-        public string Message { get; }
-
-        /// <summary>
-        /// Initialize a new instance of ExceptionDialogSettings
+        ///     Initialize a new instance of ExceptionDialogSettings
         /// </summary>
         /// <param name="title">The dialog title</param>
         /// <param name="message">The dialog message</param>
@@ -31,43 +21,37 @@ namespace Popcorn.Dialogs
             Title = title;
             Message = message;
         }
+
+        /// <summary>
+        ///     Dialog title
+        /// </summary>
+        public string Title { get; }
+
+        /// <summary>
+        ///     Dialog message
+        /// </summary>
+        public string Message { get; }
     }
 
     /// <summary>
-    /// Manage exception dialog
+    ///     Manage exception dialog
     /// </summary>
     public partial class ExceptionDialog
     {
         /// <summary>
-        /// Dialog message
+        ///     Message property
         /// </summary>
-        public string Message
-        {
-            get { return (string)GetValue(MessageProperty); }
-            set { SetValue(MessageProperty, value); }
-        }
+        public static readonly DependencyProperty MessageProperty = DependencyProperty.Register("Message",
+            typeof (string), typeof (ExceptionDialog), new PropertyMetadata(default(string)));
 
         /// <summary>
-        /// Ok button content
+        ///     Ok button property
         /// </summary>
-        public string OkButtonText
-        {
-            get { return (string)GetValue(OkButtonTextProperty); }
-            set { SetValue(OkButtonTextProperty, value); }
-        }
+        public static readonly DependencyProperty OkButtonTextProperty = DependencyProperty.Register("OkButtonText",
+            typeof (string), typeof (ExceptionDialog), new PropertyMetadata("Ok"));
 
         /// <summary>
-        /// Message property
-        /// </summary>
-        public static readonly DependencyProperty MessageProperty = DependencyProperty.Register("Message", typeof(string), typeof(ExceptionDialog), new PropertyMetadata(default(string)));
-
-        /// <summary>
-        /// Ok button property
-        /// </summary>
-        public static readonly DependencyProperty OkButtonTextProperty = DependencyProperty.Register("OkButtonText", typeof(string), typeof(ExceptionDialog), new PropertyMetadata("Ok"));
-    
-        /// <summary>
-        /// Initialize a new instance of ExceptionDialog
+        ///     Initialize a new instance of ExceptionDialog
         /// </summary>
         /// <param name="settings">The dialog settings</param>
         internal ExceptionDialog(ExceptionDialogSettings settings)
@@ -78,7 +62,25 @@ namespace Popcorn.Dialogs
         }
 
         /// <summary>
-        /// Asynchronous task, waiting for button press event to complete
+        ///     Dialog message
+        /// </summary>
+        public string Message
+        {
+            get { return (string) GetValue(MessageProperty); }
+            set { SetValue(MessageProperty, value); }
+        }
+
+        /// <summary>
+        ///     Ok button content
+        /// </summary>
+        public string OkButtonText
+        {
+            get { return (string) GetValue(OkButtonTextProperty); }
+            set { SetValue(OkButtonTextProperty, value); }
+        }
+
+        /// <summary>
+        ///     Asynchronous task, waiting for button press event to complete
         /// </summary>
         /// <returns></returns>
         internal Task WaitForButtonPressAsync()
@@ -98,7 +100,8 @@ namespace Popcorn.Dialogs
                 tcs.TrySetResult(null);
             });
 
-            cleanUpHandlers = () => {
+            cleanUpHandlers = () =>
+            {
                 KeyDown -= escapeKeyHandler;
 
                 PART_OkButton.Click -= okHandler;
@@ -143,7 +146,7 @@ namespace Popcorn.Dialogs
         }
 
         /// <summary>
-        /// Set the color scheme on load
+        ///     Set the color scheme on load
         /// </summary>
         protected override void OnLoaded()
         {
@@ -152,6 +155,12 @@ namespace Popcorn.Dialogs
                 case MetroDialogColorScheme.Accented:
                     PART_OkButton.Style = FindResource("AccentedDialogHighlightedSquareButton") as Style;
                     break;
+                case MetroDialogColorScheme.Theme:
+                    break;
+                case MetroDialogColorScheme.Inverted:
+                    break;
+                default:
+                    throw new ArgumentOutOfRangeException();
             }
         }
     }

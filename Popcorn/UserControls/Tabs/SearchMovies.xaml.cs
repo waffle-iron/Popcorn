@@ -27,9 +27,7 @@ namespace Popcorn.UserControls.Tabs
             if (!totalHeight.Equals(e.ExtentHeight)) return;
             var vm = DataContext as SearchTabViewModel;
             if (vm != null && !vm.IsLoadingMovies)
-            {
                 await vm.SearchMoviesAsync(vm.SearchFilter);
-            }
         }
     }
 }

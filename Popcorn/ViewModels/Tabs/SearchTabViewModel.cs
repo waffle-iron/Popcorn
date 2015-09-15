@@ -1,14 +1,14 @@
 ﻿using System;
 using System.Collections.ObjectModel;
-using System.Linq;
-using GalaSoft.MvvmLight.Messaging;
-using System.Threading.Tasks;
-using Popcorn.Helpers;
-using Popcorn.Messaging;
 using System.Diagnostics;
+using System.Linq;
+using System.Threading.Tasks;
 using GalaSoft.MvvmLight.CommandWpf;
+using GalaSoft.MvvmLight.Messaging;
 using NLog;
 using Popcorn.Comparers;
+using Popcorn.Helpers;
+using Popcorn.Messaging;
 using Popcorn.Models.ApplicationState;
 using Popcorn.Models.Genre;
 using Popcorn.Models.Movie.Short;
@@ -18,27 +18,23 @@ using Popcorn.Services.Movie;
 namespace Popcorn.ViewModels.Tabs
 {
     /// <summary>
-    /// The search movies tab
+    ///     The search movies tab
     /// </summary>
     public sealed class SearchTabViewModel : TabsViewModel
     {
         /// <summary>
-        /// Logger of the class
+        ///     Logger of the class
         /// </summary>
         private static readonly Logger Logger = LogManager.GetCurrentClassLogger();
 
         /// <summary>
-        /// The search filter
-        /// </summary>
-        public string SearchFilter { get; private set; }
-
-        /// <summary>
-        /// Initializes a new instance of the SearchTabViewModel class.
+        ///     Initializes a new instance of the SearchTabViewModel class.
         /// </summary>
         /// <param name="applicationState">Application state</param>
         /// <param name="movieService">Movie service</param>
         /// <param name="movieHistoryService">Movie history service</param>
-        public SearchTabViewModel(IApplicationState applicationState, IMovieService movieService, IMovieHistoryService movieHistoryService)
+        public SearchTabViewModel(IApplicationState applicationState, IMovieService movieService,
+            IMovieHistoryService movieHistoryService)
             : base(applicationState, movieService, movieHistoryService)
         {
             RegisterMessages();
@@ -47,7 +43,12 @@ namespace Popcorn.ViewModels.Tabs
         }
 
         /// <summary>
-        /// Search movies
+        ///     The search filter
+        /// </summary>
+        public string SearchFilter { get; private set; }
+
+        /// <summary>
+        ///     Search movies
         /// </summary>
         /// <param name="searchFilter">The parameter of the search</param>
         public async Task SearchMoviesAsync(string searchFilter)
@@ -111,7 +112,7 @@ namespace Popcorn.ViewModels.Tabs
         }
 
         /// <summary>
-        /// Register messages
+        ///     Register messages
         /// </summary>
         private void RegisterMessages()
         {
@@ -139,7 +140,7 @@ namespace Popcorn.ViewModels.Tabs
         }
 
         /// <summary>
-        /// Register commands
+        ///     Register commands
         /// </summary>
         private void RegisterCommands()
         {

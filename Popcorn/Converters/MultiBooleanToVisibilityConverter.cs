@@ -1,16 +1,18 @@
 ﻿using System;
+using System.Globalization;
 using System.Linq;
+using System.Windows;
 using System.Windows.Data;
 
 namespace Popcorn.Converters
 {
     /// <summary>
-    /// Convert booleans to a visibility property
+    ///     Convert booleans to a visibility property
     /// </summary>
     public class MultiBooleanToVisibilityConverter : IMultiValueConverter
     {
         /// <summary>
-        /// Convert booleans to a visibility property
+        ///     Convert booleans to a visibility property
         /// </summary>
         /// <param name="values">The value produced by the binding source.</param>
         /// <param name="targetType">The type of the binding target property.</param>
@@ -18,10 +20,10 @@ namespace Popcorn.Converters
         /// <param name="culture">The culture to use in the converter.</param>
         /// <returns>Visible if all booleans are true, collapsed otherwise</returns>
         public object Convert(object[] values, Type targetType, object parameter,
-            System.Globalization.CultureInfo culture)
+            CultureInfo culture)
         {
             var param = parameter as string;
-            if(string.IsNullOrEmpty(param))
+            if (string.IsNullOrEmpty(param))
                 throw new ArgumentException();
 
             bool visible;
@@ -38,11 +40,11 @@ namespace Popcorn.Converters
                     break;
             }
 
-            return visible ? System.Windows.Visibility.Visible : System.Windows.Visibility.Collapsed;
+            return visible ? Visibility.Visible : Visibility.Collapsed;
         }
 
         /// <summary>
-        /// Not supported
+        ///     Not supported
         /// </summary>
         /// <param name="value">The value produced by the binding source.</param>
         /// <param name="targetTypes">The type of the binding target property.</param>
@@ -51,7 +53,7 @@ namespace Popcorn.Converters
         public object[] ConvertBack(object value,
             Type[] targetTypes,
             object parameter,
-            System.Globalization.CultureInfo culture)
+            CultureInfo culture)
         {
             throw new NotSupportedException();
         }

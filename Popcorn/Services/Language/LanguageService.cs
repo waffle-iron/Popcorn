@@ -1,5 +1,4 @@
-﻿using GalaSoft.MvvmLight.Messaging;
-using NLog;
+﻿using System;
 using System.Collections.Generic;
 using System.Data.Entity;
 using System.Data.Entity.Migrations;
@@ -7,37 +6,39 @@ using System.Diagnostics;
 using System.Globalization;
 using System.Linq;
 using System.Threading.Tasks;
-using WPFLocalizeExtension.Engine;
+using GalaSoft.MvvmLight.Messaging;
+using NLog;
 using Popcorn.Entity;
 using Popcorn.Messaging;
 using Popcorn.Models.Localization;
 using Popcorn.Services.Movie;
 using Popcorn.Services.Settings;
+using WPFLocalizeExtension.Engine;
 
 namespace Popcorn.Services.Language
 {
     /// <summary>
-    /// Services used to interacts with languages
+    ///     Services used to interacts with languages
     /// </summary>
     public class LanguageService : ILanguageService
     {
         /// <summary>
-        /// Logger of the class
+        ///     Logger of the class
         /// </summary>
         private static readonly Logger Logger = LogManager.GetCurrentClassLogger();
 
         /// <summary>
-        /// Services used to interacts with application settings
-        /// </summary>
-        private readonly ISettingsService _settingsService;
-
-        /// <summary>
-        /// Services used to interact with movies
+        ///     Services used to interact with movies
         /// </summary>
         private readonly IMovieService _movieService;
 
         /// <summary>
-        /// Initialize a new instance of LanguageService class
+        ///     Services used to interacts with application settings
+        /// </summary>
+        private readonly ISettingsService _settingsService;
+
+        /// <summary>
+        ///     Initialize a new instance of LanguageService class
         /// </summary>
         public LanguageService(ISettingsService settingsService, IMovieService movieService)
         {
@@ -46,7 +47,7 @@ namespace Popcorn.Services.Language
         }
 
         /// <summary>
-        /// Get all available languages from the database
+        ///     Get all available languages from the database
         /// </summary>
         /// <returns>All available languages</returns>
         public async Task<ICollection<ILanguage>> GetAvailableLanguagesAsync()
@@ -86,13 +87,13 @@ namespace Popcorn.Services.Language
             watch.Stop();
             var elapsedMs = watch.ElapsedMilliseconds;
             Logger.Debug(
-                "GetAvailableLanguagesAsync in {0} milliseconds.", elapsedMs);
+                $"GetAvailableLanguagesAsync in {elapsedMs} milliseconds.");
 
             return availableLanguages;
         }
 
         /// <summary>
-        /// Get the current language of the application
+        ///     Get the current language of the application
         /// </summary>
         /// <returns>Current language</returns>
         public async Task<ILanguage> GetCurrentLanguageAsync()
@@ -130,17 +131,18 @@ namespace Popcorn.Services.Language
             watch.Stop();
             var elapsedMs = watch.ElapsedMilliseconds;
             Logger.Debug(
-                "GetCurrentLanguageAsync in {0} milliseconds.", elapsedMs);
+                $"GetCurrentLanguageAsync in {elapsedMs} milliseconds.");
 
             return currentLanguage;
         }
 
         /// <summary>
-        /// Get the current language of the application
+        ///     Get the current language of the application
         /// </summary>
         /// <param name="language">Language to set</param>
         public async Task SetCurrentLanguageAsync(ILanguage language)
         {
+            if (language == null) throw new ArgumentNullException(nameof(language));
             var watch = Stopwatch.StartNew();
 
             using (var context = new ApplicationDbContext())
@@ -167,15 +169,16 @@ namespace Popcorn.Services.Language
             watch.Stop();
             var elapsedMs = watch.ElapsedMilliseconds;
             Logger.Debug(
-                "SetCurrentLanguageAsync ({0}) in {1} milliseconds.", language.LocalizedName, elapsedMs);
+                $"SetCurrentLanguageAsync ({language.LocalizedName}) in {elapsedMs} milliseconds.");
         }
 
         /// <summary>
-        /// Change language 
+        ///     Change language
         /// </summary>
         /// <param name="language"></param>
         private void ChangeLanguage(ILanguage language)
         {
+            if (language == null) throw new ArgumentNullException(nameof(language));
             _movieService.ChangeTmdbLanguage(language);
             LocalizeDictionary.Instance.Culture = new CultureInfo(language.Culture);
             Messenger.Default.Send(new ChangeLanguageMessage());

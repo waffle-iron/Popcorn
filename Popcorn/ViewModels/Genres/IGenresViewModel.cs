@@ -7,18 +7,18 @@ namespace Popcorn.ViewModels.Genres
     public interface IGenresViewModel
     {
         /// <summary>
-        /// Movie genres
+        ///     Movie genres
         /// </summary>
         ObservableCollection<MovieGenre> MovieGenres { get; set; }
 
         /// <summary>
-        /// Load genres asynchronously
+        ///     Load genres asynchronously
         /// </summary>
         /// <returns></returns>
         Task LoadGenresAsync();
 
         /// <summary>
-        /// Cleanup resources
+        ///     Cleanup resources
         /// </summary>
         void Cleanup();
     }

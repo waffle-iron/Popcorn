@@ -18,22 +18,23 @@ using Popcorn.Services.Movie;
 namespace Popcorn.ViewModels.Tabs
 {
     /// <summary>
-    /// The popular movies tab
+    ///     The popular movies tab
     /// </summary>
     public sealed class PopularTabViewModel : TabsViewModel
     {
         /// <summary>
-        /// Logger of the class
+        ///     Logger of the class
         /// </summary>
         private static readonly Logger Logger = LogManager.GetCurrentClassLogger();
 
         /// <summary>
-        /// Initializes a new instance of the PopularTabViewModel class.
+        ///     Initializes a new instance of the PopularTabViewModel class.
         /// </summary>
         /// <param name="applicationState">Application state</param>
         /// <param name="movieService">Movie service</param>
         /// <param name="movieHistoryService">Movie history service</param>
-        public PopularTabViewModel(IApplicationState applicationState, IMovieService movieService, IMovieHistoryService movieHistoryService)
+        public PopularTabViewModel(IApplicationState applicationState, IMovieService movieService,
+            IMovieHistoryService movieHistoryService)
             : base(applicationState, movieService, movieHistoryService)
         {
             RegisterMessages();
@@ -42,7 +43,7 @@ namespace Popcorn.ViewModels.Tabs
         }
 
         /// <summary>
-        /// Load next page
+        ///     Load next page
         /// </summary>
         public override async Task LoadMoviesAsync()
         {
@@ -94,7 +95,7 @@ namespace Popcorn.ViewModels.Tabs
         }
 
         /// <summary>
-        /// Register messages
+        ///     Register messages
         /// </summary>
         private void RegisterMessages()
         {
@@ -122,7 +123,7 @@ namespace Popcorn.ViewModels.Tabs
         }
 
         /// <summary>
-        /// Register commands
+        ///     Register commands
         /// </summary>
         private void RegisterCommands()
         {

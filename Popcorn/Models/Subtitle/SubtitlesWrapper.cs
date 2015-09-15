@@ -6,6 +6,11 @@ namespace Popcorn.Models.Subtitle
 {
     public class SubtitlesWrapper : ObservableObject
     {
+        private int _lastModified;
+
+        private Dictionary<string, Dictionary<string, List<Subtitle>>> _subtitles;
+
+        private int _subtitlesCount;
         private bool _success;
 
         [DeserializeAs(Name = "success")]
@@ -15,8 +20,6 @@ namespace Popcorn.Models.Subtitle
             set { Set(() => Success, ref _success, value); }
         }
 
-        private int _lastModified;
-
         [DeserializeAs(Name = "lastModified")]
         public int LastModified
         {
@@ -24,16 +27,12 @@ namespace Popcorn.Models.Subtitle
             set { Set(() => LastModified, ref _lastModified, value); }
         }
 
-        private int _subtitlesCount;
-
         [DeserializeAs(Name = "subtitles")]
         public int SubtitlesCount
         {
             get { return _subtitlesCount; }
             set { Set(() => SubtitlesCount, ref _subtitlesCount, value); }
         }
-
-        private Dictionary<string, Dictionary<string, List<Subtitle>>> _subtitles;
 
         [DeserializeAs(Name = "subs")]
         public Dictionary<string, Dictionary<string, List<Subtitle>>> Subtitles

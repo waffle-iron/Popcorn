@@ -1,28 +1,28 @@
-﻿using Popcorn.Models.Movie.Full;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
+using Popcorn.Models.Movie.Full;
 
 namespace Popcorn.ViewModels.Subtitles
 {
     public interface ISubtitlesViewModel
     {
         /// <summary>
-        /// Indicates if subtitles are enabled
+        ///     Indicates if subtitles are enabled
         /// </summary>
         bool EnabledSubtitles { get; set; }
 
         /// <summary>
-        /// Get the movie's subtitles
+        ///     Get the movie's subtitles
         /// </summary>
         /// <param name="movie">The movie</param>
         Task LoadSubtitlesAsync(MovieFull movie);
 
         /// <summary>
-        /// Stop downloading subtitles and clear movie
+        ///     Stop downloading subtitles and clear movie
         /// </summary>
         void ClearSubtitles();
 
         /// <summary>
-        /// Cleanup resources
+        ///     Cleanup resources
         /// </summary>
         void Cleanup();
     }

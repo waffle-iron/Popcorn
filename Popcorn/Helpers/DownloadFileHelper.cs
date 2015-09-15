@@ -11,20 +11,24 @@ namespace Popcorn.Helpers
     public static class DownloadFileHelper
     {
         /// <summary>
-        /// Logger of the class
+        ///     Logger of the class
         /// </summary>
         private static readonly Logger Logger = LogManager.GetCurrentClassLogger();
 
         /// <summary>
-        /// Downloads a file from a specified Internet address.
+        ///     Downloads a file from a specified Internet address.
         /// </summary>
         /// <param name="remotePath">Internet address of the file to download.</param>
-        /// <param name="localPath">Local file name where to store the content of the download, if null a temporary file name will be generated.</param>
+        /// <param name="localPath">
+        ///     Local file name where to store the content of the download, if null a temporary file name will
+        ///     be generated.
+        /// </param>
         /// <param name="timeOut">Duration in miliseconds before cancelling the  operation.</param>
         /// <param name="progress">Report the progress of the download</param>
         /// <param name="ct">Cancellation token</param>
         public static async Task<Tuple<string, string, Exception>> DownloadFileTaskAsync(string remotePath,
-            string localPath = null, int timeOut = int.MaxValue, IProgress<long> progress = null, CancellationTokenSource ct = null)
+            string localPath = null, int timeOut = int.MaxValue, IProgress<long> progress = null,
+            CancellationTokenSource ct = null)
         {
             var watch = Stopwatch.StartNew();
 
@@ -47,26 +51,21 @@ namespace Popcorn.Helpers
                 {
                     var fileInfo = new FileInfo(localPath).Length;
                     if (fileInfo != 0)
-                    {
                         return new Tuple<string, string, Exception>(remotePath, localPath, null);
-                    }
                 }
 
                 var direcory = Path.GetDirectoryName(localPath);
                 if (!string.IsNullOrEmpty(direcory) && !Directory.Exists(direcory))
-                {
                     Directory.CreateDirectory(direcory);
-                }
 
                 using (var client = new NoKeepAliveWebClient())
                 {
                     if (progress != null)
-                    {
-                        client.DownloadProgressChanged += delegate(object sender, DownloadProgressChangedEventArgs e)
-                        {
-                            progress.Report(e.BytesReceived/e.TotalBytesToReceive);
-                        };
-                    }
+                        client.DownloadProgressChanged +=
+                            delegate(object sender, DownloadProgressChangedEventArgs e)
+                            {
+                                progress.Report(e.BytesReceived/e.TotalBytesToReceive);
+                            };
 
                     TimerCallback timerCallback = c =>
                     {
@@ -81,13 +80,9 @@ namespace Popcorn.Helpers
                         using (new Timer(timerCallback, client, timeOut, Timeout.Infinite))
                         {
                             if (ct != null)
-                            {
                                 await client.DownloadFileTaskAsync(remotePath, localPath, ct.Token);
-                            }
                             else
-                            {
                                 await client.DownloadFileTaskAsync(remotePath, localPath);
-                            }
                         }
                     }
                     catch (Exception exception) when (exception is TaskCanceledException)

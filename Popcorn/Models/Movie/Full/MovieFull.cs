@@ -1,6 +1,6 @@
-﻿using System.Collections.ObjectModel;
-using System;
+﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using GalaSoft.MvvmLight;
 using Popcorn.Models.Cast;
 using Popcorn.Models.Images;
@@ -9,11 +9,81 @@ using RestSharp.Deserializers;
 namespace Popcorn.Models.Movie.Full
 {
     /// <summary>
-    /// Represents all of the movie's details
+    ///     Represents all of the movie's details
     /// </summary>
     public class MovieFull : ObservableObject
     {
+        private List<Actor> _actors;
+
+        private ObservableCollection<Subtitle.Subtitle> _availableSubtitles =
+            new ObservableCollection<Subtitle.Subtitle>();
+
+        private string _backgroundImagePath = string.Empty;
+
+        private string _dateUploaded;
+
+        private int _dateUploadedUnix;
+
+        private string _descriptionFull;
+
+        private string _descriptionIntro;
+
+        private List<Director> _directors;
+
+        private string _downloadCount;
+
+        private Uri _filePath;
+
+        private bool _fullHdAvailable;
+
+        private List<string> _genres;
+
+        private bool _hasBeenSeen;
         private int _id;
+
+        private MovieImages _images;
+
+        private string _imdbCode;
+
+        private bool _isFavorite;
+
+        private string _language;
+
+        private string _likeCount;
+
+        private string _mpaRating;
+
+        private string _posterImagePath = string.Empty;
+
+        private double _rating;
+
+        private double _ratingValue;
+
+        private string _rtAudienceRating;
+
+        private string _rtAudienceScore;
+
+        private string _rtCriticsRating;
+
+        private string _rtCriticsScore;
+
+        private int _runtime;
+
+        private Subtitle.Subtitle _selectedSubtitle;
+
+        private string _title;
+
+        private string _titleLong;
+
+        private List<Torrent.Torrent> _torrents;
+
+        private string _url;
+
+        private bool _watchInFullHdQuality;
+
+        private int _year;
+
+        private string _ytTrailerCode;
 
         [DeserializeAs(Name = "id")]
         public int Id
@@ -22,16 +92,12 @@ namespace Popcorn.Models.Movie.Full
             set { Set(() => Id, ref _id, value); }
         }
 
-        private string _url;
-
         [DeserializeAs(Name = "url")]
         public string Url
         {
             get { return _url; }
             set { Set(() => Url, ref _url, value); }
         }
-
-        private string _imdbCode;
 
         [DeserializeAs(Name = "imdb_code")]
         public string ImdbCode
@@ -40,16 +106,12 @@ namespace Popcorn.Models.Movie.Full
             set { Set(() => ImdbCode, ref _imdbCode, value); }
         }
 
-        private string _title;
-
         [DeserializeAs(Name = "title")]
         public string Title
         {
             get { return _title; }
             set { Set(() => Title, ref _title, value); }
         }
-
-        private string _titleLong;
 
         [DeserializeAs(Name = "title_long")]
         public string TitleLong
@@ -58,16 +120,12 @@ namespace Popcorn.Models.Movie.Full
             set { Set(() => TitleLong, ref _titleLong, value); }
         }
 
-        private int _year;
-
         [DeserializeAs(Name = "year")]
         public int Year
         {
             get { return _year; }
             set { Set(() => Year, ref _year, value); }
         }
-
-        private double _rating;
 
         [DeserializeAs(Name = "rating")]
         public double Rating
@@ -76,16 +134,12 @@ namespace Popcorn.Models.Movie.Full
             set { Set(() => Rating, ref _rating, value); }
         }
 
-        private int _runtime;
-
         [DeserializeAs(Name = "runtime")]
         public int Runtime
         {
             get { return _runtime; }
             set { Set(() => Runtime, ref _runtime, value); }
         }
-
-        private List<string> _genres;
 
         [DeserializeAs(Name = "genres")]
         public List<string> Genres
@@ -94,16 +148,12 @@ namespace Popcorn.Models.Movie.Full
             set { Set(() => Genres, ref _genres, value); }
         }
 
-        private string _language;
-
         [DeserializeAs(Name = "language")]
         public string Language
         {
             get { return _language; }
             set { Set(() => Language, ref _language, value); }
         }
-
-        private string _mpaRating;
 
         [DeserializeAs(Name = "mpa_rating")]
         public string MpaRating
@@ -112,16 +162,12 @@ namespace Popcorn.Models.Movie.Full
             set { Set(() => MpaRating, ref _mpaRating, value); }
         }
 
-        private string _downloadCount;
-
         [DeserializeAs(Name = "download_count")]
         public string DownloadCount
         {
             get { return _downloadCount; }
             set { Set(() => DownloadCount, ref _downloadCount, value); }
         }
-
-        private string _likeCount;
 
         [DeserializeAs(Name = "like_count")]
         public string LikeCount
@@ -130,16 +176,12 @@ namespace Popcorn.Models.Movie.Full
             set { Set(() => LikeCount, ref _likeCount, value); }
         }
 
-        private string _rtCriticsScore;
-
         [DeserializeAs(Name = "rt_critics_score")]
         public string RtCrtiticsScore
         {
             get { return _rtCriticsScore; }
             set { Set(() => RtCrtiticsScore, ref _rtCriticsScore, value); }
         }
-
-        private string _rtCriticsRating;
 
         [DeserializeAs(Name = "rt_critics_rating")]
         public string RtCriticsRating
@@ -148,16 +190,12 @@ namespace Popcorn.Models.Movie.Full
             set { Set(() => RtCriticsRating, ref _rtCriticsRating, value); }
         }
 
-        private string _rtAudienceScore;
-
         [DeserializeAs(Name = "rt_audience_score")]
         public string RtAudienceScore
         {
             get { return _rtAudienceScore; }
             set { Set(() => RtAudienceScore, ref _rtAudienceScore, value); }
         }
-
-        private string _rtAudienceRating;
 
         [DeserializeAs(Name = "rt_audience_rating")]
         public string RtAudienceRating
@@ -166,16 +204,12 @@ namespace Popcorn.Models.Movie.Full
             set { Set(() => RtAudienceRating, ref _rtAudienceRating, value); }
         }
 
-        private string _descriptionIntro;
-
         [DeserializeAs(Name = "description_intro")]
         public string DescriptionIntro
         {
             get { return _descriptionIntro; }
             set { Set(() => DescriptionIntro, ref _descriptionIntro, value); }
         }
-
-        private string _descriptionFull;
 
         [DeserializeAs(Name = "description_full")]
         public string DescriptionFull
@@ -184,16 +218,12 @@ namespace Popcorn.Models.Movie.Full
             set { Set(() => DescriptionFull, ref _descriptionFull, value); }
         }
 
-        private string _ytTrailerCode;
-
         [DeserializeAs(Name = "yt_trailer_code")]
         public string YtTrailerCode
         {
             get { return _ytTrailerCode; }
             set { Set(() => YtTrailerCode, ref _ytTrailerCode, value); }
         }
-
-        private MovieImages _images;
 
         [DeserializeAs(Name = "images")]
         public MovieImages Images
@@ -202,16 +232,12 @@ namespace Popcorn.Models.Movie.Full
             set { Set(() => Images, ref _images, value); }
         }
 
-        private List<Director> _directors;
-
         [DeserializeAs(Name = "directors")]
         public List<Director> Directors
         {
             get { return _directors; }
             set { Set(() => Directors, ref _directors, value); }
         }
-
-        private List<Actor> _actors;
 
         [DeserializeAs(Name = "actors")]
         public List<Actor> Actors
@@ -220,16 +246,12 @@ namespace Popcorn.Models.Movie.Full
             set { Set(() => Actors, ref _actors, value); }
         }
 
-        private List<Torrent.Torrent> _torrents;
-
         [DeserializeAs(Name = "torrents")]
         public List<Torrent.Torrent> Torrents
         {
             get { return _torrents; }
             set { Set(() => Torrents, ref _torrents, value); }
         }
-
-        private string _dateUploaded;
 
         [DeserializeAs(Name = "date_uploaded")]
         public string DateUploaded
@@ -238,8 +260,6 @@ namespace Popcorn.Models.Movie.Full
             set { Set(() => DateUploaded, ref _dateUploaded, value); }
         }
 
-        private int _dateUploadedUnix;
-
         [DeserializeAs(Name = "date_uploaded_unix")]
         public int DateUploadedUnix
         {
@@ -247,10 +267,8 @@ namespace Popcorn.Models.Movie.Full
             set { Set(() => DateUploadedUnix, ref _dateUploadedUnix, value); }
         }
 
-        private double _ratingValue;
-
         /// <summary>
-        /// Movie rating
+        ///     Movie rating
         /// </summary>
         public double RatingValue
         {
@@ -258,21 +276,17 @@ namespace Popcorn.Models.Movie.Full
             set { Set(() => RatingValue, ref _ratingValue, value); }
         }
 
-        private Uri _filePath;
-
         /// <summary>
-        /// Local path of the downloaded movie file
+        ///     Local path of the downloaded movie file
         /// </summary>
         public Uri FilePath
         {
             get { return _filePath; }
             set { Set(() => FilePath, ref _filePath, value); }
         }
-        
-        private string _backgroundImagePath = string.Empty;
 
         /// <summary>
-        /// Local path of the downloaded movie's background image
+        ///     Local path of the downloaded movie's background image
         /// </summary>
         public string BackgroundImagePath
         {
@@ -280,10 +294,8 @@ namespace Popcorn.Models.Movie.Full
             set { Set(() => BackgroundImagePath, ref _backgroundImagePath, value); }
         }
 
-        private string _posterImagePath = string.Empty;
-
         /// <summary>
-        /// Local path of the downloaded movie's poster image
+        ///     Local path of the downloaded movie's poster image
         /// </summary>
         public string PosterImagePath
         {
@@ -291,10 +303,8 @@ namespace Popcorn.Models.Movie.Full
             set { Set(() => PosterImagePath, ref _posterImagePath, value); }
         }
 
-        private bool _watchInFullHdQuality;
-
         /// <summary>
-        /// Decide if movie has to be watched in full HQ or not
+        ///     Decide if movie has to be watched in full HQ or not
         /// </summary>
         public bool WatchInFullHdQuality
         {
@@ -302,10 +312,8 @@ namespace Popcorn.Models.Movie.Full
             set { Set(() => WatchInFullHdQuality, ref _watchInFullHdQuality, value); }
         }
 
-        private bool _fullHdAvailable;
-
         /// <summary>
-        /// Indicate if full HQ quality is available
+        ///     Indicate if full HQ quality is available
         /// </summary>
         public bool FullHdAvailable
         {
@@ -313,11 +321,8 @@ namespace Popcorn.Models.Movie.Full
             set { Set(() => FullHdAvailable, ref _fullHdAvailable, value); }
         }
 
-        private ObservableCollection<Subtitle.Subtitle> _availableSubtitles =
-            new ObservableCollection<Subtitle.Subtitle>();
-
         /// <summary>
-        /// Available subtitles
+        ///     Available subtitles
         /// </summary>
         public ObservableCollection<Subtitle.Subtitle> AvailableSubtitles
         {
@@ -325,10 +330,8 @@ namespace Popcorn.Models.Movie.Full
             set { Set(() => AvailableSubtitles, ref _availableSubtitles, value); }
         }
 
-        private Subtitle.Subtitle _selectedSubtitle;
-
         /// <summary>
-        /// Selected subtitle
+        ///     Selected subtitle
         /// </summary>
         public Subtitle.Subtitle SelectedSubtitle
         {
@@ -336,10 +339,8 @@ namespace Popcorn.Models.Movie.Full
             set { Set(() => SelectedSubtitle, ref _selectedSubtitle, value); }
         }
 
-        private bool _isFavorite;
-
         /// <summary>
-        /// Indicate if movie is favorite
+        ///     Indicate if movie is favorite
         /// </summary>
         public bool IsFavorite
         {
@@ -347,10 +348,8 @@ namespace Popcorn.Models.Movie.Full
             set { Set(() => IsFavorite, ref _isFavorite, value); }
         }
 
-        private bool _hasBeenSeen;
-
         /// <summary>
-        /// Indicate if movie has been seen by the user
+        ///     Indicate if movie has been seen by the user
         /// </summary>
         public bool HasBeenSeen
         {

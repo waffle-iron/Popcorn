@@ -1,18 +1,18 @@
 ﻿using System.Windows;
 using System.Windows.Controls;
-using Popcorn.Helpers;
 using Popcorn.Events;
+using Popcorn.Helpers;
 using Popcorn.ViewModels.Main;
 
 namespace Popcorn.Windows
 {
     /// <summary>
-    /// Interaction logic for MainWindow.xaml
+    ///     Interaction logic for MainWindow.xaml
     /// </summary>
     public partial class MainWindow
     {
         /// <summary>
-        /// Initializes a new instance of the MainWindow class.
+        ///     Initializes a new instance of the MainWindow class.
         /// </summary>
         public MainWindow()
         {
@@ -26,8 +26,9 @@ namespace Popcorn.Windows
         }
 
         /// <summary>
-        /// When window got maximized while a movie is playing : collapse menu bar, header tab and let tabcontrol takes up all the place available. 
-        /// Rollback when window go back to normal.
+        ///     When window got maximized while a movie is playing : collapse menu bar, header tab and let tabcontrol takes up all
+        ///     the place available.
+        ///     Rollback when window go back to normal.
         /// </summary>
         /// <param name="sender">Sender object</param>
         /// <param name="e">EventArgs</param>

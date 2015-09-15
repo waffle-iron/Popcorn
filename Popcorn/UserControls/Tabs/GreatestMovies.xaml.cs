@@ -4,12 +4,12 @@ using Popcorn.ViewModels.Tabs;
 namespace Popcorn.UserControls.Tabs
 {
     /// <summary>
-    /// Interaction logic for GreatestMovies.xaml
+    ///     Interaction logic for GreatestMovies.xaml
     /// </summary>
     public partial class GreatestMovies
     {
         /// <summary>
-        /// Initializes a new instance of the GreatestMovies class.
+        ///     Initializes a new instance of the GreatestMovies class.
         /// </summary>
         public GreatestMovies()
         {
@@ -17,7 +17,7 @@ namespace Popcorn.UserControls.Tabs
         }
 
         /// <summary>
-        /// Decide if we have to load next page regarding to the scroll position
+        ///     Decide if we have to load next page regarding to the scroll position
         /// </summary>
         /// <param name="sender">Sender object</param>
         /// <param name="e">ScrollChangedEventArgs</param>
@@ -27,9 +27,7 @@ namespace Popcorn.UserControls.Tabs
             if (!totalHeight.Equals(e.ExtentHeight)) return;
             var vm = DataContext as GreatestTabViewModel;
             if (vm != null && !vm.IsLoadingMovies)
-            {
                 await vm.LoadMoviesAsync();
-            }
         }
     }
 }

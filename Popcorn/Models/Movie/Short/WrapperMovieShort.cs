@@ -5,7 +5,12 @@ namespace Popcorn.Models.Movie.Short
 {
     public class WrapperMovieShort : ObservableObject
     {
+        private DataMovieShort _data;
+
+        private Meta _meta;
         private string _status;
+
+        private string _statusMessage;
 
         [DeserializeAs(Name = "status")]
         public string Status
@@ -14,17 +19,12 @@ namespace Popcorn.Models.Movie.Short
             set { Set(() => Status, ref _status, value); }
         }
 
-        private string _statusMessage;
-
         [DeserializeAs(Name = "status_message")]
         public string StatusMessage
         {
             get { return _statusMessage; }
             set { Set(() => StatusMessage, ref _statusMessage, value); }
-
         }
-
-        private DataMovieShort _data;
 
         [DeserializeAs(Name = "data")]
         public DataMovieShort Data
@@ -32,8 +32,6 @@ namespace Popcorn.Models.Movie.Short
             get { return _data; }
             set { Set(() => Data, ref _data, value); }
         }
-
-        private Meta _meta;
 
         [DeserializeAs(Name = "@meta")]
         public Meta Meta

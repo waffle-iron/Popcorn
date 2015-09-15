@@ -8,24 +8,24 @@ using Popcorn.ViewModels.Subtitles;
 namespace Popcorn.ViewModels.MovieSettings
 {
     /// <summary>
-    /// Manage the movie's playing settings
+    ///     Manage the movie's playing settings
     /// </summary>
     public sealed class MovieSettingsViewModel : ViewModelBase, IMovieSettingsViewModel
     {
-        private MovieFull _movie;
-
-        private ISubtitlesViewModel _subtitles;
-
-        private RelayCommand _setSubtitlesCommand;
-
-        private RelayCommand _unSetSubtitlesCommand;
+        private RelayCommand _cancelCommand;
 
         private RelayCommand _downloadMovieCommand;
 
-        private RelayCommand _cancelCommand;
+        private MovieFull _movie;
+
+        private RelayCommand _setSubtitlesCommand;
+
+        private ISubtitlesViewModel _subtitles;
+
+        private RelayCommand _unSetSubtitlesCommand;
 
         /// <summary>
-        /// Initializes a new instance of the MovieSettingsViewModel class.
+        ///     Initializes a new instance of the MovieSettingsViewModel class.
         /// </summary>
         /// <param name="subtitles">The subtitles view model</param>
         public MovieSettingsViewModel(ISubtitlesViewModel subtitles)
@@ -34,7 +34,7 @@ namespace Popcorn.ViewModels.MovieSettings
         }
 
         /// <summary>
-        /// The movie
+        ///     The movie
         /// </summary>
         public MovieFull Movie
         {
@@ -43,7 +43,7 @@ namespace Popcorn.ViewModels.MovieSettings
         }
 
         /// <summary>
-        /// The view model used to manage subtitles
+        ///     The view model used to manage subtitles
         /// </summary>
         public ISubtitlesViewModel Subtitles
         {
@@ -52,40 +52,39 @@ namespace Popcorn.ViewModels.MovieSettings
         }
 
         /// <summary>
-        /// Used to enable or disable subtitles
+        ///     Used to enable or disable subtitles
         /// </summary>
-        public RelayCommand SetSubtitlesCommand
-            => _setSubtitlesCommand ?? (_setSubtitlesCommand = new RelayCommand(async () =>
-            {
-                await Subtitles.LoadSubtitlesAsync(Movie);
-            }));
+        public RelayCommand SetSubtitlesCommand => _setSubtitlesCommand ??
+                                                   (_setSubtitlesCommand =
+                                                       new RelayCommand(
+                                                           async () => { await Subtitles.LoadSubtitlesAsync(Movie); }));
 
         /// <summary>
-        /// Used to enable or disable subtitles
+        ///     Used to enable or disable subtitles
         /// </summary>
         public RelayCommand UnSetSubtitlesCommand
             => _unSetSubtitlesCommand ?? (_unSetSubtitlesCommand = new RelayCommand(
                 () => Subtitles.ClearSubtitles()));
 
         /// <summary>
-        /// Command used to download the movie
+        ///     Command used to download the movie
         /// </summary>
         public RelayCommand DownloadMovieCommand
-            => _downloadMovieCommand ?? (_downloadMovieCommand = new RelayCommand(() =>
-            {
-                Messenger.Default.Send(new DownloadMovieMessage(Movie));
-            }));
+            =>
+                _downloadMovieCommand ??
+                (_downloadMovieCommand =
+                    new RelayCommand(() => { Messenger.Default.Send(new DownloadMovieMessage(Movie)); }));
 
         /// <summary>
-        /// Command used to cancel the download of a movie
+        ///     Command used to cancel the download of a movie
         /// </summary>
-        public RelayCommand CancelCommand => _cancelCommand ?? (_cancelCommand = new RelayCommand(() =>
-        {
-            Messenger.Default.Send(new StopPlayingMovieMessage());
-        }));
+        public RelayCommand CancelCommand
+            =>
+                _cancelCommand ??
+                (_cancelCommand = new RelayCommand(() => { Messenger.Default.Send(new StopPlayingMovieMessage()); }));
 
         /// <summary>
-        /// Load a movie
+        ///     Load a movie
         /// </summary>
         /// <param name="movie"></param>
         public void LoadMovie(MovieFull movie)
@@ -95,7 +94,7 @@ namespace Popcorn.ViewModels.MovieSettings
         }
 
         /// <summary>
-        /// Cleanup resources
+        ///     Cleanup resources
         /// </summary>
         public override void Cleanup()
         {

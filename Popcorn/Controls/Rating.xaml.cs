@@ -1,23 +1,29 @@
-﻿using System.Windows;
+﻿using System;
+using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Controls.Primitives;
 
 namespace Popcorn.Controls
 {
     /// <summary>
-    /// Interaction logic for Rating.xaml
+    ///     Interaction logic for Rating.xaml
     /// </summary>
     public partial class Rating
     {
         /// <summary>
-        /// Rating property
+        ///     Max rating value
+        /// </summary>
+        private const int Max = 10;
+
+        /// <summary>
+        ///     Rating property
         /// </summary>
         public static readonly DependencyProperty RatingValueProperty = DependencyProperty.Register("RatingValue",
             typeof (int), typeof (Rating),
             new FrameworkPropertyMetadata(0, FrameworkPropertyMetadataOptions.BindsTwoWayByDefault, RatingChanged));
 
         /// <summary>
-        /// Star buttons property
+        ///     Star buttons property
         /// </summary>
         public static readonly DependencyProperty StarButtonsEnabledProperty =
             DependencyProperty.Register("StarButtonsEnabled",
@@ -25,12 +31,15 @@ namespace Popcorn.Controls
                 new FrameworkPropertyMetadata(false));
 
         /// <summary>
-        /// Max rating value
+        ///     Initialize a new instance of Rating
         /// </summary>
-        private const int Max = 10;
+        public Rating()
+        {
+            InitializeComponent();
+        }
 
         /// <summary>
-        /// Are stars clickable
+        ///     Are stars clickable
         /// </summary>
         public bool StarButtonsEnabled
         {
@@ -39,7 +48,7 @@ namespace Popcorn.Controls
         }
 
         /// <summary>
-        /// Rating property
+        ///     Rating property
         /// </summary>
         public int RatingValue
         {
@@ -61,7 +70,7 @@ namespace Popcorn.Controls
         }
 
         /// <summary>
-        /// Set IsChecked for each star on rating changed
+        ///     Set IsChecked for each star on rating changed
         /// </summary>
         /// <param name="sender">Object sender</param>
         /// <param name="e">Event args</param>
@@ -69,9 +78,7 @@ namespace Popcorn.Controls
         {
             var rating = sender as Rating;
             if (rating == null)
-            {
                 return;
-            }
 
             var newval = (int) e.NewValue;
             newval /= 2;
@@ -95,15 +102,7 @@ namespace Popcorn.Controls
         }
 
         /// <summary>
-        /// Initialize a new instance of Rating
-        /// </summary>
-        public Rating()
-        {
-            InitializeComponent();
-        }
-
-        /// <summary>
-        /// Toggle star on click event
+        ///     Toggle star on click event
         /// </summary>
         /// <param name="sender">Object sender</param>
         /// <param name="e">Event args</param>
@@ -111,9 +110,7 @@ namespace Popcorn.Controls
         {
             var button = sender as ToggleButton;
             if (button == null)
-            {
                 return;
-            }
 
             var tag = button.Tag as string;
             switch (tag)
@@ -140,6 +137,8 @@ namespace Popcorn.Controls
                     RatingValue = 10;
                     button.IsChecked = true;
                     break;
+                default:
+                    throw new ArgumentOutOfRangeException();
             }
         }
     }

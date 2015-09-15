@@ -1,12 +1,12 @@
 ﻿namespace Popcorn.UserControls.Tabs
 {
     /// <summary>
-    /// Interaction logic for FavoritesMovies.xaml
+    ///     Interaction logic for FavoritesMovies.xaml
     /// </summary>
     public partial class FavoritesMovies
     {
         /// <summary>
-        /// Initializes a new instance of the FavoritesMovies class.
+        ///     Initializes a new instance of the FavoritesMovies class.
         /// </summary>
         public FavoritesMovies()
         {

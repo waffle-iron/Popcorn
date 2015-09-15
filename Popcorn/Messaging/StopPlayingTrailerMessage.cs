@@ -3,7 +3,9 @@
 namespace Popcorn.Messaging
 {
     /// <summary>
-    /// Used to broadcast the stop of a trailer playing
+    ///     Used to broadcast the stop of a trailer playing
     /// </summary>
-    public class StopPlayingTrailerMessage : MessageBase { }
+    public class StopPlayingTrailerMessage : MessageBase
+    {
+    }
 }

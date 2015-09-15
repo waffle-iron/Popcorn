@@ -1,15 +1,15 @@
-﻿using GalaSoft.MvvmLight;
-using GalaSoft.MvvmLight.Messaging;
-using Popcorn.Helpers;
-using Popcorn.Messaging;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Net.Sockets;
 using System.Threading;
 using System.Threading.Tasks;
+using GalaSoft.MvvmLight;
+using GalaSoft.MvvmLight.Messaging;
 using NLog;
+using Popcorn.Helpers;
+using Popcorn.Messaging;
 using Popcorn.Models.ApplicationState;
 using Popcorn.Models.Movie.Full;
 using Popcorn.Services.History;
@@ -20,17 +20,17 @@ using YoutubeExtractor;
 namespace Popcorn.ViewModels.Trailer
 {
     /// <summary>
-    /// Manage trailer
+    ///     Manage trailer
     /// </summary>
     public sealed class TrailerViewModel : ViewModelBase, ITrailerViewModel
     {
         /// <summary>
-        /// Logger of the class
+        ///     Logger of the class
         /// </summary>
         private static readonly Logger Logger = LogManager.GetCurrentClassLogger();
 
         /// <summary>
-        /// Map for defining youtube video quality
+        ///     Map for defining youtube video quality
         /// </summary>
         private static readonly IReadOnlyDictionary<Constants.YoutubeStreamingQuality, IEnumerable<int>>
             StreamingQualityMap =
@@ -41,24 +41,25 @@ namespace Popcorn.ViewModels.Trailer
                     {Constants.YoutubeStreamingQuality.Low, new HashSet<int> {360, 240}}
                 };
 
-        /// <summary>
-        /// The service used to interact with movies
-        /// </summary>
-        private readonly IMovieService _movieService;
-
         private readonly IApplicationState _applicationState;
 
         private readonly IMovieHistoryService _movieHistoryService;
 
+        /// <summary>
+        ///     The service used to interact with movies
+        /// </summary>
+        private readonly IMovieService _movieService;
+
         private ITrailerPlayerViewModel _trailerPlayer;
 
         /// <summary>
-        /// Initializes a new instance of the TrailerViewModel class.
+        ///     Initializes a new instance of the TrailerViewModel class.
         /// </summary>
         /// <param name="movieService">Movie service</param>
         /// <param name="applicationState">Application state</param>
         /// <param name="movieHistoryService">Movie history service</param>
-        public TrailerViewModel(IMovieService movieService, IApplicationState applicationState, IMovieHistoryService movieHistoryService)
+        public TrailerViewModel(IMovieService movieService, IApplicationState applicationState,
+            IMovieHistoryService movieHistoryService)
         {
             _movieService = movieService;
             _applicationState = applicationState;
@@ -66,16 +67,16 @@ namespace Popcorn.ViewModels.Trailer
         }
 
         /// <summary>
-        /// The trailer player
+        ///     The trailer player
         /// </summary>
         public ITrailerPlayerViewModel TrailerPlayer
         {
             get { return _trailerPlayer; }
             set { Set(() => TrailerPlayer, ref _trailerPlayer, value); }
         }
-        
+
         /// <summary>
-        /// Get trailer of a movie
+        ///     Get trailer of a movie
         /// </summary>
         /// <param name="movie">The movie</param>
         /// <param name="ct">Cancellation token</param>
@@ -123,7 +124,6 @@ namespace Popcorn.ViewModels.Trailer
                 Logger.Debug(
                     "GetMovieTrailerAsync cancelled.");
                 Messenger.Default.Send(new StopPlayingTrailerMessage());
-
             }
             catch (Exception exception) when (exception is SocketException || exception is WebException)
             {
@@ -153,7 +153,7 @@ namespace Popcorn.ViewModels.Trailer
         }
 
         /// <summary>
-        /// Unload the trailer
+        ///     Unload the trailer
         /// </summary>
         public void UnLoadTrailer()
         {
@@ -162,7 +162,7 @@ namespace Popcorn.ViewModels.Trailer
         }
 
         /// <summary>
-        /// Cleanup resources
+        ///     Cleanup resources
         /// </summary>
         public override void Cleanup()
         {
@@ -172,7 +172,7 @@ namespace Popcorn.ViewModels.Trailer
         }
 
         /// <summary>
-        /// Get VideoInfo of a youtube video
+        ///     Get VideoInfo of a youtube video
         /// </summary>
         /// <param name="youtubeLink">The youtube link of a movie</param>
         /// <param name="qualitySetting">The youtube quality settings</param>
@@ -182,10 +182,7 @@ namespace Popcorn.ViewModels.Trailer
             IEnumerable<VideoInfo> videoInfos = new List<VideoInfo>();
 
             // Get video infos of the requested video
-            await Task.Run(() =>
-            {
-                videoInfos = DownloadUrlResolver.GetDownloadUrls(youtubeLink, false);
-            });
+            await Task.Run(() => { videoInfos = DownloadUrlResolver.GetDownloadUrls(youtubeLink, false); });
 
             // We only want video matching criterias : only mp4 and no adaptive
             var filtered = videoInfos
@@ -195,7 +192,7 @@ namespace Popcorn.ViewModels.Trailer
         }
 
         /// <summary>
-        /// Get youtube video depending of choosen quality settings
+        ///     Get youtube video depending of choosen quality settings
         /// </summary>
         /// <param name="videosToProcess">List of VideoInfo</param>
         /// <param name="quality">The youtube quality settings</param>
@@ -207,10 +204,8 @@ namespace Popcorn.ViewModels.Trailer
                 var videos = videosToProcess.ToList(); // Prevent multiple enumeration
 
                 if (quality == Constants.YoutubeStreamingQuality.High)
-                {
                     // Choose high quality Youtube video
                     return videos.OrderByDescending(x => x.Resolution).FirstOrDefault();
-                }
 
                 // Pick the video with the requested quality settings
                 var preferredResolutions = StreamingQualityMap[quality];

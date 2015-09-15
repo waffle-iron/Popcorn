@@ -7,19 +7,19 @@ namespace Popcorn.ViewModels.Trailer
     public interface ITrailerViewModel
     {
         /// <summary>
-        /// Get trailer of a movie
+        ///     Get trailer of a movie
         /// </summary>
         /// <param name="movie">The movie</param>
         /// <param name="ct">Cancellation token</param>
         Task LoadTrailerAsync(MovieFull movie, CancellationToken ct);
 
         /// <summary>
-        /// Unload the trailer
+        ///     Unload the trailer
         /// </summary>
         void UnLoadTrailer();
 
         /// <summary>
-        /// Cleanup resources
+        ///     Cleanup resources
         /// </summary>
         void Cleanup();
     }

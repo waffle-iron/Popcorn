@@ -10,31 +10,32 @@ using Popcorn.Services.Movie;
 namespace Popcorn.ViewModels.Players.Trailer
 {
     /// <summary>
-    /// Manage trailer player
+    ///     Manage trailer player
     /// </summary>
     public sealed class TrailerPlayerViewModel : MediaPlayerViewModel, ITrailerPlayerViewModel
     {
         /// <summary>
-        /// Logger of the class
+        ///     Logger of the class
         /// </summary>
         private static readonly Logger Logger = LogManager.GetCurrentClassLogger();
 
         private Models.Trailer.Trailer _trailer;
 
         /// <summary>
-        /// Initializes a new instance of the TrailerPlayerViewModel class.
+        ///     Initializes a new instance of the TrailerPlayerViewModel class.
         /// </summary>
         /// <param name="applicationState">Main view model</param>
         /// <param name="movieService">Movie service</param>
         /// <param name="movieHistoryService">Movie history service</param>
-        public TrailerPlayerViewModel(IApplicationState applicationState, IMovieService movieService, IMovieHistoryService movieHistoryService)
+        public TrailerPlayerViewModel(IApplicationState applicationState, IMovieService movieService,
+            IMovieHistoryService movieHistoryService)
             : base(applicationState, movieService, movieHistoryService)
         {
             RegisterCommands();
         }
 
         /// <summary>
-        /// The trailer
+        ///     The trailer
         /// </summary>
         public Models.Trailer.Trailer Trailer
         {
@@ -43,7 +44,7 @@ namespace Popcorn.ViewModels.Players.Trailer
         }
 
         /// <summary>
-        /// Load a trailer
+        ///     Load a trailer
         /// </summary>
         /// <param name="trailer">Trailer to load</param>
         public void LoadTrailer(Models.Trailer.Trailer trailer)
@@ -54,7 +55,7 @@ namespace Popcorn.ViewModels.Players.Trailer
         }
 
         /// <summary>
-        /// Cleanup resources
+        ///     Cleanup resources
         /// </summary>
         public override void Cleanup()
         {
@@ -63,14 +64,9 @@ namespace Popcorn.ViewModels.Players.Trailer
         }
 
         /// <summary>
-        /// Register commands
+        ///     Register commands
         /// </summary>
-        private void RegisterCommands()
-        {
-            StopPlayingMediaCommand = new RelayCommand(() =>
-            {
-                Messenger.Default.Send(new StopPlayingTrailerMessage());
-            });
-        }
+        private void RegisterCommands() => StopPlayingMediaCommand =
+            new RelayCommand(() => { Messenger.Default.Send(new StopPlayingTrailerMessage()); });
     }
 }
