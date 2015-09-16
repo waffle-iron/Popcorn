@@ -23,7 +23,6 @@ namespace Popcorn.Models.Localization
         private readonly ILanguageService _languageService;
 
         private ILanguage _currentLanguages;
-
         private ICollection<ILanguage> _languages;
 
         /// <summary>

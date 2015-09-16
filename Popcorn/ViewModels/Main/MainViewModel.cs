@@ -491,17 +491,11 @@ namespace Popcorn.ViewModels.Main
                     Logger.Info(
                         $"A new update has been found!\n Currently installed version: {updateInfo.CurrentlyInstalledVersion?.Version?.Major}.{updateInfo.CurrentlyInstalledVersion?.Version?.Minor}.{updateInfo.CurrentlyInstalledVersion?.Version?.Build} - New update: {updateInfo.FutureReleaseEntry?.Version?.Major}.{updateInfo.FutureReleaseEntry?.Version?.Minor}.{updateInfo.FutureReleaseEntry?.Version?.Build}");
 
-                    await _updateManager.DownloadReleases(updateInfo.ReleasesToApply, x =>
-                    {
-                        Logger.Info(
-                            $"Downloading new update... {x}%");
-                    });
+                    await _updateManager.DownloadReleases(updateInfo.ReleasesToApply, x => Logger.Info(
+                        $"Downloading new update... {x}%"));
 
-                    await _updateManager.ApplyReleases(updateInfo, x =>
-                    {
-                        Logger.Info(
-                            $"Applying... {x}%");
-                    });
+                    await _updateManager.ApplyReleases(updateInfo, x => Logger.Info(
+                        $"Applying... {x}%"));
 
                     Logger.Info(
                         "A new update has been applied.");

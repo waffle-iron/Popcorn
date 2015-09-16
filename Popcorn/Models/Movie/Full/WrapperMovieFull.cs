@@ -6,10 +6,8 @@ namespace Popcorn.Models.Movie.Full
     public class WrapperMovieFull : ObservableObject
     {
         private Meta _meta;
-
         private MovieFull _movie;
         private string _status;
-
         private string _statusMessage;
 
         [DeserializeAs(Name = "status")]

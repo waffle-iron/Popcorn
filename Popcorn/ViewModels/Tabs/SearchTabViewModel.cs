@@ -118,7 +118,7 @@ namespace Popcorn.ViewModels.Tabs
         {
             Messenger.Default.Register<ChangeLanguageMessage>(
                 this,
-                language => { TabName = LocalizationProviderHelper.GetLocalizedValue<string>("SearchTitleTab"); });
+                language => TabName = LocalizationProviderHelper.GetLocalizedValue<string>("SearchTitleTab"));
 
             Messenger.Default.Register<PropertyChangedMessage<MovieGenre>>(this, async e =>
             {

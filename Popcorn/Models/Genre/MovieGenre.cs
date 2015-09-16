@@ -5,7 +5,6 @@ namespace Popcorn.Models.Genre
     public class MovieGenre : ObservableObject
     {
         private string _englishName;
-
         private TMDbLib.Objects.General.Genre _tmdbGenre;
 
         /// <summary>

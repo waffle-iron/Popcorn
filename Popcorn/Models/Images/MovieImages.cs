@@ -6,24 +6,14 @@ namespace Popcorn.Models.Images
     public class MovieImages : ObservableObject
     {
         private string _backgroundImage;
-
         private string _largeCoverImage;
-
         private string _largeScreenshotImage1;
-
         private string _largeScreenshotImage2;
-
         private string _largeScreenshotImage3;
-
         private string _mediumCoverImage;
-
         private string _mediumScreenshotImage1;
-
-
         private string _mediumScreenshotImage2;
-
         private string _mediumScreenshotImage3;
-
         private string _smallCoverImage;
 
         [DeserializeAs(Name = "background_image")]

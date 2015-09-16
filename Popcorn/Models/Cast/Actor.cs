@@ -6,12 +6,9 @@ namespace Popcorn.Models.Cast
     public class Actor : ObservableObject
     {
         private string _characterName;
-
         private string _mediumImage;
         private string _name;
-
         private string _smallImage;
-
         private string _smallImagePath = string.Empty;
 
         [DeserializeAs(Name = "name")]

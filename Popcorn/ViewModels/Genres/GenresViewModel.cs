@@ -87,19 +87,16 @@ namespace Popcorn.ViewModels.Genres
         /// <summary>
         ///     Register messages
         /// </summary>
-        private void RegisterMessages()
-        {
-            Messenger.Default.Register<ChangeLanguageMessage>(
-                this,
-                message =>
+        private void RegisterMessages() => Messenger.Default.Register<ChangeLanguageMessage>(
+            this,
+            message =>
+            {
+                DispatcherHelper.CheckBeginInvokeOnUI(async () =>
                 {
-                    DispatcherHelper.CheckBeginInvokeOnUI(async () =>
-                    {
-                        StopLoadingGenres();
-                        await LoadGenresAsync();
-                    });
+                    StopLoadingGenres();
+                    await LoadGenresAsync();
                 });
-        }
+            });
 
         /// <summary>
         ///     Cancel the loading of genres

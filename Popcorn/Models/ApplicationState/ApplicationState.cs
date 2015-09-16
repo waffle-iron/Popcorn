@@ -7,7 +7,6 @@ namespace Popcorn.Models.ApplicationState
     public class ApplicationState : ObservableObject, IApplicationState
     {
         private bool _isConnectionInError;
-
         private bool _isFullScreen;
         private bool _isMoviePlaying;
 

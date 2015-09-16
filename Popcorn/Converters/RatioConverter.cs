@@ -43,9 +43,6 @@ namespace Popcorn.Converters
             throw new NotSupportedException();
         }
 
-        public override object ProvideValue(IServiceProvider serviceProvider)
-        {
-            return _instance ?? (_instance = new RatioConverter());
-        }
+        public override object ProvideValue(IServiceProvider serviceProvider) => _instance ?? (_instance = new RatioConverter());
     }
 }

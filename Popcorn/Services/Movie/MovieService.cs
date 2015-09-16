@@ -119,14 +119,10 @@ namespace Popcorn.Services.Movie
             var wrapper = new WrapperMovieShort();
 
             if (limit < 1 || limit > 50)
-            {
                 limit = 20;
-            }
 
             if (page < 1)
-            {
                 page = 1;
-            }
 
             var restClient = new RestClient(Constants.YtsApiEndpoint);
             var request = new RestRequest("/{segment}", Method.GET);
@@ -190,14 +186,10 @@ namespace Popcorn.Services.Movie
             var wrapper = new WrapperMovieShort();
 
             if (limit < 1 || limit > 50)
-            {
                 limit = 20;
-            }
 
             if (page < 1)
-            {
                 page = 1;
-            }
 
             var restClient = new RestClient(Constants.YtsApiEndpoint);
             var request = new RestRequest("/{segment}", Method.GET);
@@ -261,14 +253,10 @@ namespace Popcorn.Services.Movie
             var wrapper = new WrapperMovieShort();
 
             if (limit < 1 || limit > 50)
-            {
                 limit = 20;
-            }
 
             if (page < 1)
-            {
                 page = 1;
-            }
 
             var restClient = new RestClient(Constants.YtsApiEndpoint);
             var request = new RestRequest("/{segment}", Method.GET);
@@ -334,14 +322,10 @@ namespace Popcorn.Services.Movie
             var wrapper = new WrapperMovieShort();
 
             if (limit < 1 || limit > 50)
-            {
                 limit = 20;
-            }
 
             if (page < 1)
-            {
                 page = 1;
-            }
 
             var restClient = new RestClient(Constants.YtsApiEndpoint);
             var request = new RestRequest("/{segment}", Method.GET);

@@ -7,9 +7,7 @@ namespace Popcorn.Models.Cast
     {
         private string _mediumImage;
         private string _name;
-
         private string _smallImage;
-
         private string _smallImagePath = string.Empty;
 
         [DeserializeAs(Name = "name")]

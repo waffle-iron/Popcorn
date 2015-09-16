@@ -174,26 +174,23 @@ namespace Popcorn.ViewModels.DownloadMovie
         /// <summary>
         ///     Register messages
         /// </summary>
-        private void RegisterMessages()
-        {
-            Messenger.Default.Register<DownloadMovieMessage>(
-                this,
-                async message =>
-                {
-                    var reportDownloadProgress = new Progress<double>(ReportMovieDownloadProgress);
-                    var reportDownloadRate = new Progress<double>(ReportMovieDownloadRate);
-                    var reportDownloadSubtitles = new Progress<long>(ReportSubtitlesDownloadProgress);
+        private void RegisterMessages() => Messenger.Default.Register<DownloadMovieMessage>(
+            this,
+            async message =>
+            {
+                var reportDownloadProgress = new Progress<double>(ReportMovieDownloadProgress);
+                var reportDownloadRate = new Progress<double>(ReportMovieDownloadRate);
+                var reportDownloadSubtitles = new Progress<long>(ReportSubtitlesDownloadProgress);
 
-                    IsDownloadingSubtitles = true;
-                    await
-                        _movieService.DownloadSubtitleAsync(message.Movie, reportDownloadSubtitles,
-                            _cancellationDownloadingMovie);
-                    IsDownloadingSubtitles = false;
-                    await
-                        DownloadMovieAsync(message.Movie,
-                            reportDownloadProgress, reportDownloadRate, _cancellationDownloadingMovie);
-                });
-        }
+                IsDownloadingSubtitles = true;
+                await
+                    _movieService.DownloadSubtitleAsync(message.Movie, reportDownloadSubtitles,
+                        _cancellationDownloadingMovie);
+                IsDownloadingSubtitles = false;
+                await
+                    DownloadMovieAsync(message.Movie,
+                        reportDownloadProgress, reportDownloadRate, _cancellationDownloadingMovie);
+            });
 
         /// <summary>
         ///     Register commands

@@ -44,29 +44,21 @@ namespace Popcorn.ViewModels.Search
         /// <summary>
         ///     Register messages
         /// </summary>
-        private void RegisterMessages()
+        private void RegisterMessages() => Messenger.Default.Register<PropertyChangedMessage<string>>(this, e =>
         {
-            Messenger.Default.Register<PropertyChangedMessage<string>>(this, e =>
-            {
-                if (e.PropertyName == GetPropertyName(() => SearchFilter) && string.IsNullOrEmpty(e.NewValue))
-                {
-                    Messenger.Default.Send(new SearchMovieMessage(string.Empty));
-                }
-            });
-        }
+            if (e.PropertyName == GetPropertyName(() => SearchFilter) && string.IsNullOrEmpty(e.NewValue))
+                Messenger.Default.Send(new SearchMovieMessage(string.Empty));
+        });
 
         /// <summary>
         ///     Register commands
         /// </summary>
-        private void RegisterCommands()
-        {
-            SearchMovieCommand =
-                new RelayCommand(() =>
-                {
-                    Logger.Debug(
-                        $"New search criteria: {SearchFilter}");
-                    Messenger.Default.Send(new SearchMovieMessage(SearchFilter));
-                });
-        }
+        private void RegisterCommands() => SearchMovieCommand =
+            new RelayCommand(() =>
+            {
+                Logger.Debug(
+                    $"New search criteria: {SearchFilter}");
+                Messenger.Default.Send(new SearchMovieMessage(SearchFilter));
+            });
     }
 }

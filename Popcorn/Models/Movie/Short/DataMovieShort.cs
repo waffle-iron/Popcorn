@@ -8,9 +8,7 @@ namespace Popcorn.Models.Movie.Short
     {
         private int _limit;
         private int _movieCount;
-
         private List<MovieShort> _movies;
-
         private int _pageNumber;
 
         [DeserializeAs(Name = "movie_count")]

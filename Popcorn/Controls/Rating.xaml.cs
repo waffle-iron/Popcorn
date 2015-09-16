@@ -55,17 +55,11 @@ namespace Popcorn.Controls
             set
             {
                 if (value < 0)
-                {
                     SetValue(RatingValueProperty, 0);
-                }
                 else if (value > Max)
-                {
                     SetValue(RatingValueProperty, Max);
-                }
                 else
-                {
                     SetValue(RatingValueProperty, value);
-                }
             }
         }
 

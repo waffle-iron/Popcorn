@@ -47,10 +47,7 @@ namespace Popcorn.UserControls.Players.Movie
         /// <summary>
         ///     Free resources
         /// </summary>
-        public void Dispose()
-        {
-            Dispose(true);
-        }
+        public void Dispose() => Dispose(true);
 
         /// <summary>
         ///     Subscribe to events and play the movie when control has been loaded
@@ -127,17 +124,14 @@ namespace Popcorn.UserControls.Players.Movie
         /// </summary>
         /// <param name="sender">Sender object</param>
         /// <param name="e">EventArgs</param>
-        private void MediaPlayerEndReached(object sender, EventArgs e)
+        private void MediaPlayerEndReached(object sender, EventArgs e) => DispatcherHelper.CheckBeginInvokeOnUI(async () =>
         {
-            DispatcherHelper.CheckBeginInvokeOnUI(async () =>
-            {
-                var vm = DataContext as MoviePlayerViewModel;
-                if (vm == null)
-                    return;
+            var vm = DataContext as MoviePlayerViewModel;
+            if (vm == null)
+                return;
 
-                await vm.HasSeenMovie();
-            });
-        }
+            await vm.HasSeenMovie();
+        });
 
         /// <summary>
         ///     Play the movie
@@ -363,16 +357,12 @@ namespace Popcorn.UserControls.Players.Movie
 
                 var vm = DataContext as MoviePlayerViewModel;
                 if (vm != null)
-                {
                     vm.StoppedPlayingMedia -= OnStoppedPlayingMedia;
-                }
 
                 Disposed = true;
 
                 if (disposing)
-                {
                     GC.SuppressFinalize(this);
-                }
             });
         }
     }

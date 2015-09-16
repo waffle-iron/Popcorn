@@ -7,9 +7,7 @@ namespace Popcorn.Models.Subtitle
     public class SubtitlesWrapper : ObservableObject
     {
         private int _lastModified;
-
         private Dictionary<string, Dictionary<string, List<Subtitle>>> _subtitles;
-
         private int _subtitlesCount;
         private bool _success;
 

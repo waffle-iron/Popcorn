@@ -10,50 +10,28 @@ namespace Popcorn.Models.Movie.Short
     public class MovieShort : ObservableObject
     {
         private int _apiVersion;
-
         private string _coverImagePath;
-
         private string _dateUploaded;
-
         private int _dateUploadedUnix;
-
         private string _executionTime;
-
         private List<string> _genres;
-
         private bool _hasBeenSeen;
         private int _id;
-
         private string _imdbCode;
-
         private bool _isFavorite;
-
         private string _language;
-
         private string _mediumCoverImage;
-
         private string _mpaRating;
-
         private double _rating;
-
         private double _ratingValue;
-
         private int _runtime;
-
         private int _serverTime;
-
         private string _serverTimezone;
-
         private string _smallCoverImage;
-
         private string _title;
-
         private string _titleLong;
-
         private List<Torrent.Torrent> _torrents;
-
         private string _url;
-
         private int _year;
 
         [DeserializeAs(Name = "id")]

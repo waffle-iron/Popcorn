@@ -17,72 +17,39 @@ namespace Popcorn.Models.Movie.Full
 
         private ObservableCollection<Subtitle.Subtitle> _availableSubtitles =
             new ObservableCollection<Subtitle.Subtitle>();
-
         private string _backgroundImagePath = string.Empty;
-
         private string _dateUploaded;
-
         private int _dateUploadedUnix;
-
         private string _descriptionFull;
-
         private string _descriptionIntro;
-
         private List<Director> _directors;
-
         private string _downloadCount;
-
         private Uri _filePath;
-
         private bool _fullHdAvailable;
-
         private List<string> _genres;
-
         private bool _hasBeenSeen;
         private int _id;
-
         private MovieImages _images;
-
         private string _imdbCode;
-
         private bool _isFavorite;
-
         private string _language;
-
         private string _likeCount;
-
         private string _mpaRating;
-
         private string _posterImagePath = string.Empty;
-
         private double _rating;
-
         private double _ratingValue;
-
         private string _rtAudienceRating;
-
         private string _rtAudienceScore;
-
         private string _rtCriticsRating;
-
         private string _rtCriticsScore;
-
         private int _runtime;
-
         private Subtitle.Subtitle _selectedSubtitle;
-
         private string _title;
-
         private string _titleLong;
-
         private List<Torrent.Torrent> _torrents;
-
         private string _url;
-
         private bool _watchInFullHdQuality;
-
         private int _year;
-
         private string _ytTrailerCode;
 
         [DeserializeAs(Name = "id")]

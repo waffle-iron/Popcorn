@@ -6,10 +6,8 @@ namespace Popcorn.Models.Movie
     public class Meta : ObservableObject
     {
         private int _apiVersion;
-
         private string _executionTime;
         private int _serverTimer;
-
         private string _serverTimezone;
 
         [DeserializeAs(Name = "server_time")]

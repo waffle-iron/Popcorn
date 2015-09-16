@@ -9,16 +9,11 @@ namespace Popcorn.Models.Subtitle
     public class Subtitle : ObservableObject, IComparable<Subtitle>
     {
         private string _filePath;
-
         private string _flagImagePath;
-
         private int _hi;
         private int _id;
-
         private ILanguage _language;
-
         private int _rating;
-
         private string _url;
 
         [DeserializeAs(Name = "id")]

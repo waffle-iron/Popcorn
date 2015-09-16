@@ -184,9 +184,7 @@ namespace Popcorn.ViewModels.Movie
                 async message =>
                 {
                     if (!string.IsNullOrEmpty(Movie?.ImdbCode))
-                    {
                         await _movieService.TranslateMovieFullAsync(Movie, _cancellationLoadingToken.Token);
-                    }
                 });
         }
 

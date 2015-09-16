@@ -200,13 +200,9 @@ namespace Popcorn.Services.History
                     {
                         var movieShort = movieHistory.MoviesShort.FirstOrDefault(p => p.MovieId == movie.Id);
                         if (movieShort == null)
-                        {
                             movieHistory.MoviesShort.Add(MovieShortFromModelToEntity(movie));
-                        }
                         else
-                        {
                             movieShort.IsFavorite = movie.IsFavorite;
-                        }
                     }
 
                     await context.SaveChangesAsync();
@@ -259,13 +255,9 @@ namespace Popcorn.Services.History
                     {
                         var movieFull = movieHistory.MoviesFull.FirstOrDefault(p => p.MovieId == movie.Id);
                         if (movieFull == null)
-                        {
                             movieHistory.MoviesFull.Add(MovieFullFromModelToEntity(movie));
-                        }
                         else
-                        {
                             movieFull.HasBeenSeen = movie.HasBeenSeen;
-                        }
                     }
 
                     await context.SaveChangesAsync();

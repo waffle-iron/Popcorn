@@ -242,7 +242,7 @@ namespace Popcorn.ViewModels.Tabs
 
             Messenger.Default.Register<ChangeFavoriteMovieMessage>(
                 this,
-                async message => { await MovieHistoryService.ComputeMovieHistoryAsync(Movies); });
+                async message => await MovieHistoryService.ComputeMovieHistoryAsync(Movies));
         }
 
         /// <summary>
@@ -259,13 +259,11 @@ namespace Popcorn.ViewModels.Tabs
                 });
 
             ChangeMovieGenreCommand =
-                new RelayCommand<MovieGenre>(genre =>
-                {
-                    Genre = genre.TmdbGenre.Name ==
-                            LocalizationProviderHelper.GetLocalizedValue<string>("AllLabel")
-                        ? null
-                        : genre;
-                });
+                new RelayCommand<MovieGenre>(genre => Genre = genre.TmdbGenre.Name ==
+                                                              LocalizationProviderHelper.GetLocalizedValue<string>(
+                                                                  "AllLabel")
+                    ? null
+                    : genre);
         }
     }
 }

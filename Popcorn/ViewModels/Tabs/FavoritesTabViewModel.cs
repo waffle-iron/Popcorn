@@ -90,7 +90,7 @@ namespace Popcorn.ViewModels.Tabs
         {
             Messenger.Default.Register<ChangeLanguageMessage>(
                 this,
-                language => { TabName = LocalizationProviderHelper.GetLocalizedValue<string>("FavoritesTitleTab"); });
+                language => TabName = LocalizationProviderHelper.GetLocalizedValue<string>("FavoritesTitleTab"));
 
             Messenger.Default.Register<ChangeFavoriteMovieMessage>(
                 this,

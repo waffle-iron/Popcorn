@@ -157,9 +157,7 @@ namespace Popcorn.Services.Language
                 var currentLanguage = applicationSettings.Languages.First(a => a.Culture == language.Culture);
                 currentLanguage.IsCurrentLanguage = true;
                 foreach (var lang in applicationSettings.Languages.Where(a => a.Culture != language.Culture))
-                {
                     lang.IsCurrentLanguage = false;
-                }
 
                 context.Settings.AddOrUpdate(applicationSettings);
                 await context.SaveChangesAsync();

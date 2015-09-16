@@ -182,7 +182,7 @@ namespace Popcorn.ViewModels.Trailer
             IEnumerable<VideoInfo> videoInfos = new List<VideoInfo>();
 
             // Get video infos of the requested video
-            await Task.Run(() => { videoInfos = DownloadUrlResolver.GetDownloadUrls(youtubeLink, false); });
+            await Task.Run(() => videoInfos = DownloadUrlResolver.GetDownloadUrls(youtubeLink, false));
 
             // We only want video matching criterias : only mp4 and no adaptive
             var filtered = videoInfos

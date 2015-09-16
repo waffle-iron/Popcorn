@@ -53,9 +53,7 @@ namespace Popcorn.UserControls.Players.Trailer
         {
             var window = Window.GetWindow(this);
             if (window != null)
-            {
                 window.Closing += (s1, e1) => Dispose();
-            }
 
             var vm = DataContext as TrailerPlayerViewModel;
             if (vm == null) return;
@@ -118,17 +116,14 @@ namespace Popcorn.UserControls.Players.Trailer
         /// </summary>
         /// <param name="sender">Sender object</param>
         /// <param name="e">EventArgs</param>
-        private void MediaPlayerEndReached(object sender, EventArgs e)
+        private void MediaPlayerEndReached(object sender, EventArgs e) => DispatcherHelper.CheckBeginInvokeOnUI(() =>
         {
-            DispatcherHelper.CheckBeginInvokeOnUI(() =>
-            {
-                var vm = DataContext as TrailerPlayerViewModel;
-                if (vm == null)
-                    return;
+            var vm = DataContext as TrailerPlayerViewModel;
+            if (vm == null)
+                return;
 
-                vm.StopPlayingMediaCommand.Execute(null);
-            });
-        }
+            vm.StopPlayingMediaCommand.Execute(null);
+        });
 
         /// <summary>
         /// Play the movie
@@ -359,16 +354,12 @@ namespace Popcorn.UserControls.Players.Trailer
 
                 var vm = DataContext as TrailerPlayerViewModel;
                 if (vm != null)
-                {
                     vm.StoppedPlayingMedia -= OnStoppedPlayingMedia;
-                }
 
                 Disposed = true;
 
                 if (disposing)
-                {
                     GC.SuppressFinalize(this);
-                }
             });
         }
     }
