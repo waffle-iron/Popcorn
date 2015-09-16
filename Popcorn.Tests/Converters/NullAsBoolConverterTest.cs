@@ -32,14 +32,14 @@ namespace Popcorn.Tests.Converters
         public void Convert_NullWithParamFalse_ReturnsTrue()
         {
             Assert.AreEqual(
-                _converter.Convert(null, null, false, null), true);
+                _converter.Convert(null, null, false, null), false);
         }
 
         [Test]
         public void Convert_NotNullWithParamFalse_ReturnsFalse()
         {
             Assert.AreEqual(
-                _converter.Convert(new object(), null, false, null), false);
+                _converter.Convert(new object(), null, false, null), true);
         }
     }
 }
