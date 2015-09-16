@@ -121,9 +121,6 @@ namespace Popcorn.ViewModels.Main
             AppDomain.CurrentDomain.UnhandledException += OnUnhandledException;
             AppDomain.CurrentDomain.ProcessExit += (sender, args) => _updateManager.Dispose();
             _updateManager = new UpdateManager(Constants.UpdateServerUrl, Constants.ApplicationName);
-#if !DEBUG
-            await StartUpdateProcessAsync();
-#endif
         }
 
         /// <summary>
@@ -390,7 +387,13 @@ namespace Popcorn.ViewModels.Main
 
             OpenSettingsCommand = new RelayCommand(() => IsSettingsFlyoutOpen = true);
 
-            InitializeAsyncCommand = new RelayCommand(async () => await LoadTabsAsync());
+            InitializeAsyncCommand = new RelayCommand(async () =>
+            {
+                await LoadTabsAsync();
+#if !DEBUG
+                await StartUpdateProcessAsync();
+#endif
+            });
         }
 
         /// <summary>
