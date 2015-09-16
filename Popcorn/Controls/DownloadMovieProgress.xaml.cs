@@ -5,12 +5,12 @@ using Popcorn.Helpers;
 namespace Popcorn.Controls
 {
     /// <summary>
-    ///     Interaction logic for DownloadMovieProgress.xaml
+    /// Interaction logic for DownloadMovieProgress.xaml
     /// </summary>
     public partial class DownloadMovieProgress
     {
         /// <summary>
-        ///     Download progress property
+        /// Download progress property
         /// </summary>
         public static readonly DependencyProperty DownloadProgressProperty =
             DependencyProperty.Register("DownloadProgress",
@@ -18,7 +18,7 @@ namespace Popcorn.Controls
                 new PropertyMetadata(0d, OnDownloadProgressChanged));
 
         /// <summary>
-        ///     Download rate property
+        /// Download rate property
         /// </summary>
         public static readonly DependencyProperty DownloadRateProperty =
             DependencyProperty.Register("DownloadRate",
@@ -26,7 +26,7 @@ namespace Popcorn.Controls
                 new PropertyMetadata(0d));
 
         /// <summary>
-        ///     Movie title property
+        /// Movie title property
         /// </summary>
         public static readonly DependencyProperty MovieTitleProperty =
             DependencyProperty.Register("MovieTitle",
@@ -34,7 +34,7 @@ namespace Popcorn.Controls
                 new PropertyMetadata(string.Empty));
 
         /// <summary>
-        ///     Initialize a new instance of DownloadMovieProgress
+        /// Initialize a new instance of DownloadMovieProgress
         /// </summary>
         public DownloadMovieProgress()
         {
@@ -44,7 +44,7 @@ namespace Popcorn.Controls
         }
 
         /// <summary>
-        ///     The movie download progress
+        /// The movie download progress
         /// </summary>
         public double DownloadProgress
         {
@@ -53,7 +53,7 @@ namespace Popcorn.Controls
         }
 
         /// <summary>
-        ///     The movie download rate
+        /// The movie download rate
         /// </summary>
         public double DownloadRate
         {
@@ -62,7 +62,7 @@ namespace Popcorn.Controls
         }
 
         /// <summary>
-        ///     The movie title
+        /// The movie title
         /// </summary>
         public string MovieTitle
         {
@@ -71,7 +71,7 @@ namespace Popcorn.Controls
         }
 
         /// <summary>
-        ///     On download progress changed
+        /// On download progress changed
         /// </summary>
         /// <param name="d">Dependency object</param>
         /// <param name="e">Event args</param>
@@ -82,7 +82,7 @@ namespace Popcorn.Controls
         }
 
         /// <summary>
-        ///     Display download progress
+        /// Display download progress
         /// </summary>
         private void DisplayDownloadProgress()
         {

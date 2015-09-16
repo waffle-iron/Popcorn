@@ -7,23 +7,32 @@ using Popcorn.Services.Language;
 namespace Popcorn.ViewModels.Settings
 {
     /// <summary>
-    ///     Application's settings
+    /// Application's settings
     /// </summary>
     public sealed class SettingsViewModel : ViewModelBase, ISettingsViewModel
     {
         /// <summary>
-        ///     Services used to interacts with languages
+        /// Services used to interacts with languages
         /// </summary>
         private readonly ILanguageService _languageService;
 
+        /// <summary>
+        /// The download limit
+        /// </summary>
         private int _downloadLimit;
 
+        /// <summary>
+        /// The language used through the application
+        /// </summary>
         private Language _language;
 
+        /// <summary>
+        /// The upload limit
+        /// </summary>
         private int _uploadLimit;
 
         /// <summary>
-        ///     Initializes a new instance of the SettingsViewModel class.
+        /// Initializes a new instance of the SettingsViewModel class.
         /// </summary>
         public SettingsViewModel(ILanguageService languageService)
         {
@@ -32,7 +41,7 @@ namespace Popcorn.ViewModels.Settings
         }
 
         /// <summary>
-        ///     Download limit
+        /// The download limit
         /// </summary>
         public int DownloadLimit
         {
@@ -41,7 +50,7 @@ namespace Popcorn.ViewModels.Settings
         }
 
         /// <summary>
-        ///     Upload limit
+        /// The upload limit
         /// </summary>
         public int UploadLimit
         {
@@ -50,7 +59,7 @@ namespace Popcorn.ViewModels.Settings
         }
 
         /// <summary>
-        ///     Language
+        /// The language used through the application
         /// </summary>
         public Language Language
         {
@@ -59,14 +68,13 @@ namespace Popcorn.ViewModels.Settings
         }
 
         /// <summary>
-        ///     Command used to initialize asynchronously properties
+        /// Command used to initialize the settings asynchronously
         /// </summary>
         public RelayCommand InitializeAsyncCommand { get; private set; }
 
         /// <summary>
-        ///     Load asynchronously the languages of the application for the current instance
+        /// Load asynchronously the languages of the application
         /// </summary>
-        /// <returns>Instance of SettingsViewModel</returns>
         private async Task InitializeAsync()
         {
             Language = new Language(_languageService);
@@ -74,7 +82,7 @@ namespace Popcorn.ViewModels.Settings
         }
 
         /// <summary>
-        ///     Register commands
+        /// Register commands
         /// </summary>
         private void RegisterCommands()
             => InitializeAsyncCommand = new RelayCommand(async () => await InitializeAsync());

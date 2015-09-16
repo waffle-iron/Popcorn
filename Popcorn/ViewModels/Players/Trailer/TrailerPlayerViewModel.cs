@@ -10,19 +10,22 @@ using Popcorn.Services.Movie;
 namespace Popcorn.ViewModels.Players.Trailer
 {
     /// <summary>
-    ///     Manage trailer player
+    /// Manage trailer player
     /// </summary>
     public sealed class TrailerPlayerViewModel : MediaPlayerViewModel, ITrailerPlayerViewModel
     {
         /// <summary>
-        ///     Logger of the class
+        /// Logger of the class
         /// </summary>
         private static readonly Logger Logger = LogManager.GetCurrentClassLogger();
 
+        /// <summary>
+        /// The trailer to manage
+        /// </summary>
         private Models.Trailer.Trailer _trailer;
 
         /// <summary>
-        ///     Initializes a new instance of the TrailerPlayerViewModel class.
+        /// Initializes a new instance of the TrailerPlayerViewModel class.
         /// </summary>
         /// <param name="applicationState">Main view model</param>
         /// <param name="movieService">Movie service</param>
@@ -35,7 +38,7 @@ namespace Popcorn.ViewModels.Players.Trailer
         }
 
         /// <summary>
-        ///     The trailer
+        /// The trailer to manage
         /// </summary>
         public Models.Trailer.Trailer Trailer
         {
@@ -44,7 +47,7 @@ namespace Popcorn.ViewModels.Players.Trailer
         }
 
         /// <summary>
-        ///     Load a trailer
+        /// Load a trailer
         /// </summary>
         /// <param name="trailer">Trailer to load</param>
         public void LoadTrailer(Models.Trailer.Trailer trailer)
@@ -55,7 +58,7 @@ namespace Popcorn.ViewModels.Players.Trailer
         }
 
         /// <summary>
-        ///     Cleanup resources
+        /// Cleanup resources
         /// </summary>
         public override void Cleanup()
         {
@@ -64,7 +67,7 @@ namespace Popcorn.ViewModels.Players.Trailer
         }
 
         /// <summary>
-        ///     Register commands
+        /// Register commands
         /// </summary>
         private void RegisterCommands() => StopPlayingMediaCommand =
             new RelayCommand(() => { Messenger.Default.Send(new StopPlayingTrailerMessage()); });

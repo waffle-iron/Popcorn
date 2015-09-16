@@ -6,22 +6,22 @@ namespace Popcorn.ViewModels.Settings
     public interface ISettingsViewModel
     {
         /// <summary>
-        ///     Command used to initialize asynchronously properties
+        /// Command used to initialize the settings asynchronously
         /// </summary>
         RelayCommand InitializeAsyncCommand { get; }
 
         /// <summary>
-        ///     Language
+        /// Language
         /// </summary>
         Language Language { get; set; }
 
         /// <summary>
-        ///     Download limit
+        /// The download limit
         /// </summary>
         int DownloadLimit { get; set; }
 
         /// <summary>
-        ///     Upload limit
+        /// The upload limit
         /// </summary>
         int UploadLimit { get; set; }
     }

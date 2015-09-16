@@ -18,17 +18,17 @@ using Popcorn.Services.Movie;
 namespace Popcorn.ViewModels.Tabs
 {
     /// <summary>
-    ///     The recent movies tab
+    /// The recent movies tab
     /// </summary>
     public sealed class RecentTabViewModel : TabsViewModel
     {
         /// <summary>
-        ///     Logger of the class
+        /// Logger of the class
         /// </summary>
         private static readonly Logger Logger = LogManager.GetCurrentClassLogger();
 
         /// <summary>
-        ///     Initializes a new instance of the RecentTabViewModel class.
+        /// Initializes a new instance of the RecentTabViewModel class.
         /// </summary>
         /// <param name="applicationState">Application state</param>
         /// <param name="movieService">Movie service</param>
@@ -43,7 +43,7 @@ namespace Popcorn.ViewModels.Tabs
         }
 
         /// <summary>
-        ///     Load next page
+        /// Load movies asynchronously
         /// </summary>
         public override async Task LoadMoviesAsync()
         {
@@ -74,7 +74,7 @@ namespace Popcorn.ViewModels.Tabs
                 CurrentNumberOfMovies = Movies.Count;
                 MaxNumberOfMovies = movies.Item2;
 
-                await MovieHistoryService.ComputeMovieHistoryAsync(movies.Item1);
+                await MovieHistoryService.SetMovieHistoryAsync(movies.Item1);
                 await MovieService.DownloadCoverImageAsync(movies.Item1, CancellationLoadingMovies);
             }
             catch (Exception exception)
@@ -95,7 +95,7 @@ namespace Popcorn.ViewModels.Tabs
         }
 
         /// <summary>
-        ///     Register messages
+        /// Register messages
         /// </summary>
         private void RegisterMessages()
         {
@@ -123,7 +123,7 @@ namespace Popcorn.ViewModels.Tabs
         }
 
         /// <summary>
-        ///     Register commands
+        /// Register commands
         /// </summary>
         private void RegisterCommands()
         {

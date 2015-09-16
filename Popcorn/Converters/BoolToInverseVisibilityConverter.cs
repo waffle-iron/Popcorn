@@ -6,12 +6,12 @@ using System.Windows.Data;
 namespace Popcorn.Converters
 {
     /// <summary>
-    ///     Used to convert a boolean to a Visibility class property
+    /// Used to convert a boolean to a Visibility class property
     /// </summary>
     public class BoolToInverseVisibilityConverter : IValueConverter
     {
         /// <summary>
-        ///     Convert bool to Visibility
+        /// Convert bool to Visibility
         /// </summary>
         /// <param name="value">The value produced by the binding source.</param>
         /// <param name="targetType">The type of the binding target property.</param>
@@ -31,7 +31,7 @@ namespace Popcorn.Converters
         }
 
         /// <summary>
-        ///     Not supported
+        /// Not supported
         /// </summary>
         /// <param name="value">The value produced by the binding source.</param>
         /// <param name="targetType">The type of the binding target property.</param>

@@ -16,26 +16,16 @@ namespace Popcorn.UserControls.Players.Trailer
     /// </summary>
     public partial class TrailerPlayer : IDisposable
     {
-        private bool _isMouseActivityCaptured;
-
         /// <summary>
-        /// Get or set the media volume 
-        /// </summary>
-        public int Volume
-        {
-            get { return (int) GetValue(VolumeProperty); }
-
-            set { SetValue(VolumeProperty, value); }
-        }
-
-        /// <summary>
-        /// Identifies the <see cref="Volume"/> dependency property. 
+        /// Identifies the <see cref="Volume" /> dependency property.
         /// </summary>
         internal static readonly DependencyProperty VolumeProperty = DependencyProperty.Register("Volume", typeof (int),
             typeof (TrailerPlayer), new PropertyMetadata(100, OnVolumeChanged));
 
+        private bool _isMouseActivityCaptured;
+
         /// <summary>
-        /// Initializes a new instance of the MoviePlayer class.
+        /// Initializes a new instance of the TrailerPlayer class.
         /// </summary>
         public TrailerPlayer()
         {
@@ -45,7 +35,22 @@ namespace Popcorn.UserControls.Players.Trailer
         }
 
         /// <summary>
-        /// Subscribe to events and play the movie when control has been loaded
+        /// Get or set the trailer volume
+        /// </summary>
+        public int Volume
+        {
+            get { return (int) GetValue(VolumeProperty); }
+
+            set { SetValue(VolumeProperty, value); }
+        }
+
+        /// <summary>
+        /// Free resources
+        /// </summary>
+        public void Dispose() => Dispose(true);
+
+        /// <summary>
+        /// Subscribe to events and play the trailer when control has been loaded
         /// </summary>
         /// <param name="sender">Sender object</param>
         /// <param name="e">EventArgs</param>
@@ -80,7 +85,7 @@ namespace Popcorn.UserControls.Players.Trailer
         }
 
         /// <summary>
-        /// When media's volume changed, update volume
+        /// When trailer's volume changed, update volume
         /// </summary>
         /// <param name="e">e</param>
         /// <param name="obj">obj</param>
@@ -95,7 +100,7 @@ namespace Popcorn.UserControls.Players.Trailer
         }
 
         /// <summary>
-        /// Change the media's volume
+        /// Change the trailer's volume
         /// </summary>
         /// <param name="newValue">New volume value</param>
         private void ChangeMediaVolume(int newValue) => Player.Volume = newValue;
@@ -112,7 +117,7 @@ namespace Popcorn.UserControls.Players.Trailer
         }
 
         /// <summary>
-        /// When a movie has been fully played, save seen property into database and send a StopPlayingMovieMessage message
+        /// When a trailer has been fully played, stop playing the trailer
         /// </summary>
         /// <param name="sender">Sender object</param>
         /// <param name="e">EventArgs</param>
@@ -126,7 +131,7 @@ namespace Popcorn.UserControls.Players.Trailer
         });
 
         /// <summary>
-        /// Play the movie
+        /// Play the trailer
         /// </summary>
         private void PlayMedia()
         {
@@ -138,7 +143,7 @@ namespace Popcorn.UserControls.Players.Trailer
         }
 
         /// <summary>
-        /// Pause the movie
+        /// Pause the trailer
         /// </summary>
         private void PauseMedia()
         {
@@ -150,7 +155,7 @@ namespace Popcorn.UserControls.Players.Trailer
         }
 
         /// <summary>
-        /// When media has finished playing, stop player and dispose control
+        /// When trailer has finished playing, stop player and dispose control
         /// </summary>
         /// <param name="sender">Sender object</param>
         /// <param name="e">EventArgs</param>
@@ -191,7 +196,7 @@ namespace Popcorn.UserControls.Players.Trailer
         }
 
         /// <summary>
-        /// Each time the CanExecute play command change, update the visibility of Play/Pause buttons in the media player
+        /// Each time the CanExecute play command change, update the visibility of Play/Pause buttons in the trailer player
         /// </summary>
         /// <param name="sender">Sender object</param>
         /// <param name="e">CanExecuteRoutedEventArgs</param>
@@ -212,7 +217,7 @@ namespace Popcorn.UserControls.Players.Trailer
         }
 
         /// <summary>
-        /// Report when user has finished dragging the media player progress
+        /// Report when user has finished dragging the trailer player progress
         /// </summary>
         /// <param name="sender">Sender object</param>
         /// <param name="e">DragCompletedEventArgs</param>
@@ -223,7 +228,7 @@ namespace Popcorn.UserControls.Players.Trailer
         }
 
         /// <summary>
-        /// Report runtime when movie player progress changed
+        /// Report runtime when trailer player progress changed
         /// </summary>
         /// <param name="sender">Sender object</param>
         /// <param name="e">RoutedPropertyChangedEventArgs</param>
@@ -237,21 +242,21 @@ namespace Popcorn.UserControls.Players.Trailer
         }
 
         /// <summary>
-        /// Play media
+        /// Play trailer
         /// </summary>
         /// <param name="sender">Sender object</param>
         /// <param name="e">ExecutedRoutedEventArgs</param>
         private void MediaPlayerPlayExecuted(object sender, ExecutedRoutedEventArgs e) => PlayMedia();
 
         /// <summary>
-        /// Pause media
+        /// Pause trailer
         /// </summary>
         /// <param name="sender">Sender object</param>
         /// <param name="e">CanExecuteRoutedEventArgs</param>
         private void MediaPlayerPauseExecuted(object sender, ExecutedRoutedEventArgs e) => PauseMedia();
 
         /// <summary>
-        /// Hide the PlayerStatusBar on mouse inactivity 
+        /// Hide the PlayerStatusBar on mouse inactivity
         /// </summary>
         /// <param name="sender">Sender object</param>
         /// <param name="e">EventArgs</param>
@@ -275,7 +280,7 @@ namespace Popcorn.UserControls.Players.Trailer
         }
 
         /// <summary>
-        /// Show the PlayerStatusBar on mouse activity 
+        /// Show the PlayerStatusBar on mouse activity
         /// </summary>
         /// <param name="sender">Sender object</param>
         /// <param name="e">EventArgs</param>
@@ -325,10 +330,9 @@ namespace Popcorn.UserControls.Players.Trailer
         }
 
         /// <summary>
-        /// Free resources
+        /// Dispose the control
         /// </summary>
-        public void Dispose() => Dispose(true);
-
+        /// <param name="disposing">If a disposing is already processing</param>
         private void Dispose(bool disposing)
         {
             if (Disposed)

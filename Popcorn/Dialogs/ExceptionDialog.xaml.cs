@@ -7,12 +7,12 @@ using MahApps.Metro.Controls.Dialogs;
 namespace Popcorn.Dialogs
 {
     /// <summary>
-    ///     Manage exception settings
+    /// Manage exception settings
     /// </summary>
     public class ExceptionDialogSettings : MetroDialogSettings
     {
         /// <summary>
-        ///     Initialize a new instance of ExceptionDialogSettings
+        /// Initialize a new instance of ExceptionDialogSettings
         /// </summary>
         /// <param name="title">The dialog title</param>
         /// <param name="message">The dialog message</param>
@@ -23,35 +23,35 @@ namespace Popcorn.Dialogs
         }
 
         /// <summary>
-        ///     Dialog title
+        /// Dialog title
         /// </summary>
         public string Title { get; }
 
         /// <summary>
-        ///     Dialog message
+        /// Dialog message
         /// </summary>
         public string Message { get; }
     }
 
     /// <summary>
-    ///     Manage exception dialog
+    /// Manage exception dialog
     /// </summary>
     public partial class ExceptionDialog
     {
         /// <summary>
-        ///     Message property
+        /// Message property
         /// </summary>
         public static readonly DependencyProperty MessageProperty = DependencyProperty.Register("Message",
             typeof (string), typeof (ExceptionDialog), new PropertyMetadata(default(string)));
 
         /// <summary>
-        ///     Ok button property
+        /// Ok button property
         /// </summary>
         public static readonly DependencyProperty OkButtonTextProperty = DependencyProperty.Register("OkButtonText",
             typeof (string), typeof (ExceptionDialog), new PropertyMetadata("Ok"));
 
         /// <summary>
-        ///     Initialize a new instance of ExceptionDialog
+        /// Initialize a new instance of ExceptionDialog
         /// </summary>
         /// <param name="settings">The dialog settings</param>
         internal ExceptionDialog(ExceptionDialogSettings settings)
@@ -62,7 +62,7 @@ namespace Popcorn.Dialogs
         }
 
         /// <summary>
-        ///     Dialog message
+        /// Dialog message
         /// </summary>
         public string Message
         {
@@ -71,7 +71,7 @@ namespace Popcorn.Dialogs
         }
 
         /// <summary>
-        ///     Ok button content
+        /// Ok button content
         /// </summary>
         public string OkButtonText
         {
@@ -80,7 +80,7 @@ namespace Popcorn.Dialogs
         }
 
         /// <summary>
-        ///     Asynchronous task, waiting for button press event to complete
+        /// Asynchronous task, waiting for button press event to complete
         /// </summary>
         /// <returns></returns>
         internal Task WaitForButtonPressAsync()
@@ -146,7 +146,7 @@ namespace Popcorn.Dialogs
         }
 
         /// <summary>
-        ///     Set the color scheme on load
+        /// Set the color scheme on load
         /// </summary>
         protected override void OnLoaded()
         {

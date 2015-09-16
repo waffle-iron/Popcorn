@@ -8,7 +8,7 @@ namespace Popcorn.Models.Trailer
         private Uri _uri;
 
         /// <summary>
-        ///     Initialize a new instance of Trailer class
+        /// Initialize a new instance of Trailer class
         /// </summary>
         /// <param name="uri">Trailer's uri</param>
         public Trailer(Uri uri)
@@ -17,7 +17,7 @@ namespace Popcorn.Models.Trailer
         }
 
         /// <summary>
-        ///     Uri to the decrypted Youtube URL
+        /// Uri to the decrypted Youtube URL
         /// </summary>
         public Uri Uri
         {

@@ -13,22 +13,22 @@ using Popcorn.Services.Movie;
 namespace Popcorn.ViewModels.Players.Movie
 {
     /// <summary>
-    ///     Manage movie player
+    /// Manage movie player
     /// </summary>
     public sealed class MoviePlayerViewModel : MediaPlayerViewModel
     {
         /// <summary>
-        ///     Logger of the class
+        /// Logger of the class
         /// </summary>
         private static readonly Logger Logger = LogManager.GetCurrentClassLogger();
 
         /// <summary>
-        ///     Movie
+        /// The movie to manage
         /// </summary>
         public MovieFull Movie;
 
         /// <summary>
-        ///     Initializes a new instance of the MoviePlayerViewModel class.
+        /// Initializes a new instance of the MoviePlayerViewModel class.
         /// </summary>
         /// <param name="applicationState">Main view model</param>
         /// <param name="movieService">Movie service</param>
@@ -42,7 +42,7 @@ namespace Popcorn.ViewModels.Players.Movie
         }
 
         /// <summary>
-        ///     Load a movie
+        /// Load a movie
         /// </summary>
         /// <param name="movie">Movie to load</param>
         public void LoadMovie(MovieFull movie)
@@ -54,7 +54,7 @@ namespace Popcorn.ViewModels.Players.Movie
         }
 
         /// <summary>
-        ///     Cleanup resources
+        /// Cleanup resources
         /// </summary>
         public override void Cleanup()
         {
@@ -63,7 +63,7 @@ namespace Popcorn.ViewModels.Players.Movie
         }
 
         /// <summary>
-        ///     When a movie has been seen, save this information in user data
+        /// When a movie has been seen, save this information in user data
         /// </summary>
         public async Task HasSeenMovie()
         {
@@ -73,7 +73,7 @@ namespace Popcorn.ViewModels.Players.Movie
         }
 
         /// <summary>
-        ///     Register messages
+        /// Register messages
         /// </summary>
         private void RegisterMessages()
         {
@@ -83,7 +83,7 @@ namespace Popcorn.ViewModels.Players.Movie
         }
 
         /// <summary>
-        ///     Register commands
+        /// Register commands
         /// </summary>
         private void RegisterCommands()
             =>

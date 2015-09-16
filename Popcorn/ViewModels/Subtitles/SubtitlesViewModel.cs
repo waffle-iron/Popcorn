@@ -10,26 +10,32 @@ namespace Popcorn.ViewModels.Subtitles
     public sealed class SubtitlesViewModel : ViewModelBase, ISubtitlesViewModel
     {
         /// <summary>
-        ///     Logger of the class
+        /// Logger of the class
         /// </summary>
         private static readonly Logger Logger = LogManager.GetCurrentClassLogger();
 
         /// <summary>
-        ///     The service used to interact with movies
+        /// The service used to interact with movies
         /// </summary>
         private readonly IMovieService _movieService;
 
         /// <summary>
-        ///     Token to cancel downloading subtitles
+        /// Token to cancel downloading subtitles
         /// </summary>
         private CancellationTokenSource _cancellationDownloadingSubtitlesToken;
 
+        /// <summary>
+        /// Specify if movie's subtitles are enabled
+        /// </summary>
         private bool _enabledSubtitles;
 
+        /// <summary>
+        /// The movie to manage
+        /// </summary>
         private MovieFull _movie;
 
         /// <summary>
-        ///     Initializes a new instance of the SubtitlesViewModel class.
+        /// Initializes a new instance of the SubtitlesViewModel class.
         /// </summary>
         /// <param name="movieService">The movie service</param>
         public SubtitlesViewModel(IMovieService movieService)
@@ -39,7 +45,7 @@ namespace Popcorn.ViewModels.Subtitles
         }
 
         /// <summary>
-        ///     The movie
+        /// The movie to manage
         /// </summary>
         public MovieFull Movie
         {
@@ -48,7 +54,7 @@ namespace Popcorn.ViewModels.Subtitles
         }
 
         /// <summary>
-        ///     Indicates if subtitles are enabled
+        /// Specify if movie's subtitles are enabled
         /// </summary>
         public bool EnabledSubtitles
         {
@@ -57,7 +63,7 @@ namespace Popcorn.ViewModels.Subtitles
         }
 
         /// <summary>
-        ///     Get the movie's subtitles
+        /// Load the movie's subtitles asynchronously
         /// </summary>
         /// <param name="movie">The movie</param>
         public async Task LoadSubtitlesAsync(MovieFull movie)
@@ -70,7 +76,7 @@ namespace Popcorn.ViewModels.Subtitles
         }
 
         /// <summary>
-        ///     Stop downloading subtitles and clear movie
+        /// Stop downloading subtitles and clear movie
         /// </summary>
         public void ClearSubtitles()
         {
@@ -81,7 +87,7 @@ namespace Popcorn.ViewModels.Subtitles
         }
 
         /// <summary>
-        ///     Cleanup resources
+        /// Cleanup resources
         /// </summary>
         public override void Cleanup()
         {
@@ -90,7 +96,7 @@ namespace Popcorn.ViewModels.Subtitles
         }
 
         /// <summary>
-        ///     Stop downloading subtitles
+        /// Stop downloading subtitles
         /// </summary>
         private void StopDownloadingSubtitles()
         {

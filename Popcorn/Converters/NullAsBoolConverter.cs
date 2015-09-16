@@ -5,13 +5,13 @@ using System.Windows.Data;
 namespace Popcorn.Converters
 {
     /// <summary>
-    ///     Convert a boolean to null if true
+    /// Convert a boolean to null if true
     /// </summary>
     [ValueConversion(typeof (object), typeof (bool))]
     public class NullAsBoolConverter : IValueConverter
     {
         /// <summary>
-        ///     Convert a boolean to null if true
+        /// Convert a boolean to null if true
         /// </summary>
         /// <param name="value">The value produced by the binding source.</param>
         /// <param name="targetType">The type of the binding target property.</param>
@@ -29,7 +29,7 @@ namespace Popcorn.Converters
         }
 
         /// <summary>
-        ///     Not supported
+        /// Not supported
         /// </summary>
         /// <param name="value">The value produced by the binding source.</param>
         /// <param name="targetType">The type of the binding target property.</param>

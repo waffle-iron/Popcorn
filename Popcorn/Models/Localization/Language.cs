@@ -8,17 +8,17 @@ using Popcorn.Services.Language;
 namespace Popcorn.Models.Localization
 {
     /// <summary>
-    ///     Language
+    /// Language
     /// </summary>
     public class Language : ObservableObject
     {
         /// <summary>
-        ///     Logger of the class
+        /// Logger of the class
         /// </summary>
         private static readonly Logger Logger = LogManager.GetCurrentClassLogger();
 
         /// <summary>
-        ///     Services used to interacts with languages
+        /// Services used to interacts with languages
         /// </summary>
         private readonly ILanguageService _languageService;
 
@@ -26,7 +26,7 @@ namespace Popcorn.Models.Localization
         private ICollection<ILanguage> _languages;
 
         /// <summary>
-        ///     Initialize a new instance of Language
+        /// Initialize a new instance of Language
         /// </summary>
         public Language(ILanguageService languageService)
         {
@@ -34,7 +34,7 @@ namespace Popcorn.Models.Localization
         }
 
         /// <summary>
-        ///     Available languages of the application
+        /// Available languages of the application
         /// </summary>
         public ICollection<ILanguage> Languages
         {
@@ -43,7 +43,7 @@ namespace Popcorn.Models.Localization
         }
 
         /// <summary>
-        ///     Current language used in the application
+        /// Current language used in the application
         /// </summary>
         public ILanguage CurrentLanguage
         {
@@ -56,7 +56,7 @@ namespace Popcorn.Models.Localization
         }
 
         /// <summary>
-        ///     Load languages
+        /// Load languages
         /// </summary>
         public async Task LoadLanguages()
         {

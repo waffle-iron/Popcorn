@@ -16,24 +16,27 @@ namespace Popcorn.ViewModels.Genres
     public class GenresViewModel : ViewModelBase, IGenresViewModel
     {
         /// <summary>
-        ///     Logger of the class
+        /// Logger of the class
         /// </summary>
         private static readonly Logger Logger = LogManager.GetCurrentClassLogger();
 
         /// <summary>
-        ///     Used to interact with movies
+        /// Used to interact with movies
         /// </summary>
         private readonly IMovieService _movieService;
 
         /// <summary>
-        ///     Used to cancel loading genres
+        /// Used to cancel loading genres
         /// </summary>
         private CancellationTokenSource _cancellationLoadingGenres;
 
+        /// <summary>
+        /// Movie genres
+        /// </summary>
         private ObservableCollection<MovieGenre> _movieGenres = new ObservableCollection<MovieGenre>();
 
         /// <summary>
-        ///     Initialize a new instance of GenresViewModel class
+        /// Initialize a new instance of GenresViewModel class
         /// </summary>
         /// <param name="movieService">The movie service</param>
         public GenresViewModel(IMovieService movieService)
@@ -44,7 +47,7 @@ namespace Popcorn.ViewModels.Genres
         }
 
         /// <summary>
-        ///     Movie genres
+        /// Movie genres
         /// </summary>
         public ObservableCollection<MovieGenre> MovieGenres
         {
@@ -53,9 +56,8 @@ namespace Popcorn.ViewModels.Genres
         }
 
         /// <summary>
-        ///     Load genres asynchronously
+        /// Load genres asynchronously
         /// </summary>
-        /// <returns></returns>
         public async Task LoadGenresAsync()
         {
             MovieGenres =
@@ -76,7 +78,7 @@ namespace Popcorn.ViewModels.Genres
         }
 
         /// <summary>
-        ///     Cleanup resources
+        /// Cleanup resources
         /// </summary>
         public override void Cleanup()
         {
@@ -85,7 +87,7 @@ namespace Popcorn.ViewModels.Genres
         }
 
         /// <summary>
-        ///     Register messages
+        /// Register messages
         /// </summary>
         private void RegisterMessages() => Messenger.Default.Register<ChangeLanguageMessage>(
             this,
@@ -99,7 +101,7 @@ namespace Popcorn.ViewModels.Genres
             });
 
         /// <summary>
-        ///     Cancel the loading of genres
+        /// Cancel the loading of genres
         /// </summary>
         private void StopLoadingGenres()
         {

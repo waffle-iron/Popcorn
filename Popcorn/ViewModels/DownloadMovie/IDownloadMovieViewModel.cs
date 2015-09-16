@@ -5,18 +5,18 @@ namespace Popcorn.ViewModels.DownloadMovie
     public interface IDownloadMovieViewModel
     {
         /// <summary>
-        ///     Load a movie
+        /// Load a movie
         /// </summary>
         /// <param name="movie">The movie to load</param>
         void LoadMovie(MovieFull movie);
 
         /// <summary>
-        ///     Stop downloading a movie
+        /// Stop downloading a movie
         /// </summary>
         void StopDownloadingMovie();
 
         /// <summary>
-        ///     Cleanup resources
+        /// Cleanup resources
         /// </summary>
         void Cleanup();
     }

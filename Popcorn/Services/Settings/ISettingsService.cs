@@ -5,7 +5,7 @@ namespace Popcorn.Services.Settings
     public interface ISettingsService
     {
         /// <summary>
-        ///     Scaffold Settings table on database if empty
+        /// Scaffold application settings if empty
         /// </summary>
         Task CreateApplicationSettingsAsync();
     }

@@ -9,17 +9,17 @@ using Popcorn.ViewModels.Tabs;
 namespace Popcorn.ViewModels.Players
 {
     /// <summary>
-    ///     Manage media player
+    /// Manage media player
     /// </summary>
     public class MediaPlayerViewModel : TabsViewModel
     {
         /// <summary>
-        ///     Logger of the class
+        /// Logger of the class
         /// </summary>
         private static readonly Logger Logger = LogManager.GetCurrentClassLogger();
 
         /// <summary>
-        ///     Initializes a new instance of the MediaPlayerViewModel class.
+        /// Initializes a new instance of the MediaPlayerViewModel class.
         /// </summary>
         protected MediaPlayerViewModel(IApplicationState applicationState, IMovieService movieService,
             IMovieHistoryService movieHistoryService)
@@ -28,19 +28,19 @@ namespace Popcorn.ViewModels.Players
         }
 
         /// <summary>
-        ///     Command used to stop playing the media
+        /// Command used to stop playing the media
         /// </summary>
         public RelayCommand StopPlayingMediaCommand { get; set; }
 
         /// <summary>
-        ///     Event fired on stopped playing the media
+        /// Event fired on stopped playing the media
         /// </summary>
         public event EventHandler<EventArgs> StoppedPlayingMedia;
 
         /// <summary>
-        ///     Fire StoppedPlayingMedia event
+        /// Fire StoppedPlayingMedia event
         /// </summary>
-        /// <param name="e">Event data</param>
+        /// <param name="e">Event args</param>
         protected void OnStoppedPlayingMedia(EventArgs e)
         {
             Logger.Debug(

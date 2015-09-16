@@ -45,7 +45,7 @@ namespace Popcorn.Models.Subtitle
         }
 
         /// <summary>
-        ///     Language's subtitle
+        /// Language's subtitle
         /// </summary>
         public ILanguage Language
         {
@@ -58,7 +58,7 @@ namespace Popcorn.Models.Subtitle
         }
 
         /// <summary>
-        ///     Flag image's path
+        /// Flag image's path
         /// </summary>
         public string FlagImagePath
         {
@@ -67,7 +67,7 @@ namespace Popcorn.Models.Subtitle
         }
 
         /// <summary>
-        ///     Subtitle file path
+        /// Subtitle file path
         /// </summary>
         public string FilePath
         {
@@ -76,7 +76,7 @@ namespace Popcorn.Models.Subtitle
         }
 
         /// <summary>
-        ///     Used to comapre subtitle by english name
+        /// Used to comapre subtitle by english name
         /// </summary>
         /// <param name="subtitle">The subtitle to compare with</param>
         /// <returns></returns>
@@ -86,7 +86,7 @@ namespace Popcorn.Models.Subtitle
         }
 
         /// <summary>
-        ///     Set file path of flag image depending on its language
+        /// Set file path of flag image depending on its language
         /// </summary>
         private void SetFlagImagePath()
         {

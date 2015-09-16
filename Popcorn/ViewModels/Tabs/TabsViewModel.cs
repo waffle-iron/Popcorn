@@ -18,46 +18,76 @@ using Popcorn.Services.Movie;
 namespace Popcorn.ViewModels.Tabs
 {
     /// <summary>
-    ///     Manage tab controls
+    /// Manage tab controls
     /// </summary>
     public class TabsViewModel : ViewModelBase
     {
         /// <summary>
-        ///     Logger of the class
+        /// Logger of the class
         /// </summary>
         private static readonly Logger Logger = LogManager.GetCurrentClassLogger();
 
+        /// <summary>
+        /// The genre used to filter movies
+        /// </summary>
         private static MovieGenre _genre;
 
+        /// <summary>
+        /// The rating used to filter movies
+        /// </summary>
         private static double _rating;
 
         /// <summary>
-        ///     Services used to interact with movie history
+        /// Services used to interact with movie history
         /// </summary>
         protected readonly IMovieHistoryService MovieHistoryService;
 
         /// <summary>
-        ///     Services used to interact with movies
+        /// Services used to interact with movies
         /// </summary>
         protected readonly IMovieService MovieService;
 
+        /// <summary>
+        /// The current number of movies of the tab
+        /// </summary>
         private int _currentNumberOfMovies;
 
+        /// <summary>
+        /// Specify if a movie loading has failed
+        /// </summary>
         private bool _hasLoadingFailed;
 
+        /// <summary>
+        /// Specify if movies are loading
+        /// </summary>
         private bool _isLoadingMovies;
 
+        /// <summary>
+        /// Indicates if there's any movie found
+        /// </summary>
         private bool _isMoviesFound = true;
 
+        /// <summary>
+        /// The maximum number of movies found
+        /// </summary>
         private int _maxNumberOfMovies;
 
+        /// <summary>
+        /// The tab's movies
+        /// </summary>
         private ObservableCollection<MovieShort> _movies = new ObservableCollection<MovieShort>();
 
+        /// <summary>
+        /// The tab's name
+        /// </summary>
         private string _tabName;
 
         /// <summary>
-        ///     Initializes a new instance of the TabsViewModel class.
+        /// Initializes a new instance of the TabsViewModel class.
         /// </summary>
+        /// <param name="applicationState">The application state</param>
+        /// <param name="movieService">Used to interact with movies</param>
+        /// <param name="movieHistoryService">Used to interact with movie history</param>
         protected TabsViewModel(IApplicationState applicationState, IMovieService movieService,
             IMovieHistoryService movieHistoryService)
         {
@@ -73,12 +103,12 @@ namespace Popcorn.ViewModels.Tabs
         }
 
         /// <summary>
-        ///     Services used to interact with movie history
+        /// Application state
         /// </summary>
         public IApplicationState ApplicationState { get; set; }
 
         /// <summary>
-        ///     Tab's movies
+        /// Tab's movies
         /// </summary>
         public ObservableCollection<MovieShort> Movies
         {
@@ -87,7 +117,7 @@ namespace Popcorn.ViewModels.Tabs
         }
 
         /// <summary>
-        ///     The current number of movies in the tab
+        /// The current number of movies in the tab
         /// </summary>
         public int CurrentNumberOfMovies
         {
@@ -96,7 +126,7 @@ namespace Popcorn.ViewModels.Tabs
         }
 
         /// <summary>
-        ///     The maximum number of movies found
+        /// The maximum number of movies found
         /// </summary>
         public int MaxNumberOfMovies
         {
@@ -105,7 +135,7 @@ namespace Popcorn.ViewModels.Tabs
         }
 
         /// <summary>
-        ///     The name of the tab shown in the interface
+        /// The tab's name
         /// </summary>
         public string TabName
         {
@@ -114,7 +144,7 @@ namespace Popcorn.ViewModels.Tabs
         }
 
         /// <summary>
-        ///     Specify if movies are loading
+        /// Specify if movies are loading
         /// </summary>
         public bool IsLoadingMovies
         {
@@ -123,7 +153,7 @@ namespace Popcorn.ViewModels.Tabs
         }
 
         /// <summary>
-        ///     Indicates if there's any movie found
+        /// Indicates if there's any movie found
         /// </summary>
         public bool IsMovieFound
         {
@@ -132,7 +162,7 @@ namespace Popcorn.ViewModels.Tabs
         }
 
         /// <summary>
-        ///     Movie rating filter
+        /// The rating used to filter movies
         /// </summary>
         public double Rating
         {
@@ -141,20 +171,23 @@ namespace Popcorn.ViewModels.Tabs
         }
 
         /// <summary>
-        ///     Command used to reload movies
+        /// Command used to reload movies
         /// </summary>
         public RelayCommand ReloadMovies { get; set; }
 
         /// <summary>
-        ///     Command used to set a movie as favorite
+        /// Command used to set a movie as favorite
         /// </summary>
         public RelayCommand<MovieShort> SetFavoriteMovieCommand { get; private set; }
 
         /// <summary>
-        ///     Command used to load movie's genres
+        /// Command used to change movie's genres
         /// </summary>
         public RelayCommand<MovieGenre> ChangeMovieGenreCommand { get; set; }
 
+        /// <summary>
+        /// Specify if a movie loading has failed
+        /// </summary>
         public bool HasLoadingFailed
         {
             get { return _hasLoadingFailed; }
@@ -162,7 +195,7 @@ namespace Popcorn.ViewModels.Tabs
         }
 
         /// <summary>
-        ///     The current movie genre
+        /// The genre used to filter movies
         /// </summary>
         protected MovieGenre Genre
         {
@@ -171,22 +204,22 @@ namespace Popcorn.ViewModels.Tabs
         }
 
         /// <summary>
-        ///     Current page number of loaded movies
+        /// Current page number of loaded movies
         /// </summary>
         protected int Page { get; set; }
 
         /// <summary>
-        ///     Maximum movies number to load per page request
+        /// Maximum movies number to load per page request
         /// </summary>
         protected int MaxMoviesPerPage { get; }
 
         /// <summary>
-        ///     Token to cancel movie loading
+        /// Token to cancel movie loading
         /// </summary>
         protected CancellationTokenSource CancellationLoadingMovies { get; private set; }
 
         /// <summary>
-        ///     Load movies
+        /// Load movies asynchronously
         /// </summary>
         public virtual Task LoadMoviesAsync()
         {
@@ -194,7 +227,7 @@ namespace Popcorn.ViewModels.Tabs
         }
 
         /// <summary>
-        ///     Cleanup resources
+        /// Cleanup resources
         /// </summary>
         public override void Cleanup()
         {
@@ -203,7 +236,7 @@ namespace Popcorn.ViewModels.Tabs
         }
 
         /// <summary>
-        ///     Cancel the loading of the next page
+        /// Cancel the loading of the next page
         /// </summary>
         protected void StopLoadingMovies()
         {
@@ -215,7 +248,7 @@ namespace Popcorn.ViewModels.Tabs
         }
 
         /// <summary>
-        ///     Register messages
+        /// Register messages
         /// </summary>
         private void RegisterMessages()
         {
@@ -242,11 +275,11 @@ namespace Popcorn.ViewModels.Tabs
 
             Messenger.Default.Register<ChangeFavoriteMovieMessage>(
                 this,
-                async message => await MovieHistoryService.ComputeMovieHistoryAsync(Movies));
+                async message => await MovieHistoryService.SetMovieHistoryAsync(Movies));
         }
 
         /// <summary>
-        ///     Register commands
+        /// Register commands
         /// </summary>
         /// <returns></returns>
         private void RegisterCommands()

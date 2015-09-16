@@ -6,12 +6,12 @@ using System.Windows.Media.Imaging;
 namespace Popcorn.Converters
 {
     /// <summary>
-    ///     Used to check if the path to the image file is empty or not
+    /// Used to check if the path to the image file is empty or not
     /// </summary>
     public class UriToCachedImageConverter : IValueConverter
     {
         /// <summary>
-        ///     Convert a path image to a bitmap-cached image
+        /// Convert a path image to a bitmap-cached image
         /// </summary>
         /// <param name="value">The value produced by the binding source.</param>
         /// <param name="targetType">The type of the binding target property.</param>
@@ -31,7 +31,7 @@ namespace Popcorn.Converters
         }
 
         /// <summary>
-        ///     Not supported
+        /// Not supported
         /// </summary>
         /// <param name="value">The value produced by the binding source.</param>
         /// <param name="targetType">The type of the binding target property.</param>

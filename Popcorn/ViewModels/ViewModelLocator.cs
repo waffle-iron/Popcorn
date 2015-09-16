@@ -21,8 +21,8 @@ using Popcorn.ViewModels.Trailer;
 namespace Popcorn.ViewModels
 {
     /// <summary>
-    ///     This class contains static references to all the view models in the
-    ///     application and provides an entry point for the bindings.
+    /// This class contains static references to all the view models in the
+    /// application and provides an entry point for the bindings.
     /// </summary>
     public class ViewModelLocator
     {
@@ -48,7 +48,7 @@ namespace Popcorn.ViewModels
         }
 
         /// <summary>
-        ///     Gets the Main property.
+        /// Gets the Main property.
         /// </summary>
         [SuppressMessage("Microsoft.Performance",
             "CA1822:MarkMembersAsStatic",
@@ -56,7 +56,7 @@ namespace Popcorn.ViewModels
         public MainViewModel Main => ServiceLocator.Current.GetInstance<MainViewModel>();
 
         /// <summary>
-        ///     Gets the Movie property.
+        /// Gets the Movie property.
         /// </summary>
         [SuppressMessage("Microsoft.Performance",
             "CA1822:MarkMembersAsStatic",
@@ -64,7 +64,7 @@ namespace Popcorn.ViewModels
         public MovieViewModel MoviePage => ServiceLocator.Current.GetInstance<MovieViewModel>();
 
         /// <summary>
-        ///     Gets the Search property.
+        /// Gets the Search property.
         /// </summary>
         [SuppressMessage("Microsoft.Performance",
             "CA1822:MarkMembersAsStatic",
@@ -72,7 +72,7 @@ namespace Popcorn.ViewModels
         public SearchViewModel Search => ServiceLocator.Current.GetInstance<SearchViewModel>();
 
         /// <summary>
-        ///     Gets the Settings property.
+        /// Gets the Settings property.
         /// </summary>
         [SuppressMessage("Microsoft.Performance",
             "CA1822:MarkMembersAsStatic",
@@ -80,7 +80,7 @@ namespace Popcorn.ViewModels
         public ISettingsViewModel Settings => ServiceLocator.Current.GetInstance<ISettingsViewModel>();
 
         /// <summary>
-        ///     Cleans up all the resources.
+        /// Cleans up all the resources.
         /// </summary>
         public static void Cleanup()
         {

@@ -6,24 +6,24 @@ using System.Windows.Controls.Primitives;
 namespace Popcorn.Controls
 {
     /// <summary>
-    ///     Interaction logic for Rating.xaml
+    /// Interaction logic for Rating.xaml
     /// </summary>
     public partial class Rating
     {
         /// <summary>
-        ///     Max rating value
+        /// Max rating value
         /// </summary>
         private const int Max = 10;
 
         /// <summary>
-        ///     Rating property
+        /// Rating property
         /// </summary>
         public static readonly DependencyProperty RatingValueProperty = DependencyProperty.Register("RatingValue",
             typeof (int), typeof (Rating),
             new FrameworkPropertyMetadata(0, FrameworkPropertyMetadataOptions.BindsTwoWayByDefault, RatingChanged));
 
         /// <summary>
-        ///     Star buttons property
+        /// Star buttons property
         /// </summary>
         public static readonly DependencyProperty StarButtonsEnabledProperty =
             DependencyProperty.Register("StarButtonsEnabled",
@@ -31,7 +31,7 @@ namespace Popcorn.Controls
                 new FrameworkPropertyMetadata(false));
 
         /// <summary>
-        ///     Initialize a new instance of Rating
+        /// Initialize a new instance of Rating
         /// </summary>
         public Rating()
         {
@@ -39,7 +39,7 @@ namespace Popcorn.Controls
         }
 
         /// <summary>
-        ///     Are stars clickable
+        /// Are stars clickable
         /// </summary>
         public bool StarButtonsEnabled
         {
@@ -48,7 +48,7 @@ namespace Popcorn.Controls
         }
 
         /// <summary>
-        ///     Rating property
+        /// Rating property
         /// </summary>
         public int RatingValue
         {
@@ -64,7 +64,7 @@ namespace Popcorn.Controls
         }
 
         /// <summary>
-        ///     Set IsChecked for each star on rating changed
+        /// Set IsChecked for each star on rating changed
         /// </summary>
         /// <param name="sender">Object sender</param>
         /// <param name="e">Event args</param>
@@ -96,7 +96,7 @@ namespace Popcorn.Controls
         }
 
         /// <summary>
-        ///     Toggle star on click event
+        /// Toggle star on click event
         /// </summary>
         /// <param name="sender">Object sender</param>
         /// <param name="e">Event args</param>

@@ -18,42 +18,72 @@ using Popcorn.ViewModels.Settings;
 namespace Popcorn.ViewModels.DownloadMovie
 {
     /// <summary>
-    ///     Manage the download of a movie
+    /// Manage the download of a movie
     /// </summary>
     public sealed class DownloadMovieViewModel : ViewModelBase, IDownloadMovieViewModel
     {
         /// <summary>
-        ///     Logger of the class
+        /// Logger of the class
         /// </summary>
         private static readonly Logger Logger = LogManager.GetCurrentClassLogger();
 
+        /// <summary>
+        /// Used to interact with movies
+        /// </summary>
         private readonly IMovieService _movieService;
 
+        /// <summary>
+        /// Manage th application settings
+        /// </summary>
         private readonly ISettingsViewModel _settingsViewModel;
 
         /// <summary>
-        ///     Token to cancel the download
+        /// Token to cancel the download
         /// </summary>
         private CancellationTokenSource _cancellationDownloadingMovie;
 
+        /// <summary>
+        /// Specify if a movie is downloading
+        /// </summary>
         private bool _isDownloadingMovie;
 
+        /// <summary>
+        /// Specify if subtitles are downloading
+        /// </summary>
         private bool _isDownloadingSubtitles;
 
+        /// <summary>
+        /// Specify if a movie is buffered
+        /// </summary>
         private bool _isMovieBuffered;
 
+        /// <summary>
+        /// The movie to download
+        /// </summary>
         private MovieFull _movie;
 
+        /// <summary>
+        /// The movie download progress
+        /// </summary>
         private double _movieDownloadProgress;
 
+        /// <summary>
+        /// The movie download rate
+        /// </summary>
         private double _movieDownloadRate;
 
+        /// <summary>
+        /// Manage the movie's settings
+        /// </summary>
         private IMovieSettingsViewModel _movieSettings;
 
+        /// <summary>
+        /// The subtitles download progress
+        /// </summary>
         private long _subtitlesDownloadProgress;
 
         /// <summary>
-        ///     Initializes a new instance of the DownloadMovieViewModel class.
+        /// Initializes a new instance of the DownloadMovieViewModel class.
         /// </summary>
         /// <param name="movieService">Instance of MovieService</param>
         /// <param name="settingsViewModel">Instance of SettingsViewModel</param>
@@ -70,7 +100,7 @@ namespace Popcorn.ViewModels.DownloadMovie
         }
 
         /// <summary>
-        ///     The view model used to manage movie's settings
+        /// Manage the movie's settings
         /// </summary>
         public IMovieSettingsViewModel MovieSettings
         {
@@ -79,7 +109,7 @@ namespace Popcorn.ViewModels.DownloadMovie
         }
 
         /// <summary>
-        ///     Specify if a movie is downloading
+        /// Specify if a movie is downloading
         /// </summary>
         public bool IsDownloadingMovie
         {
@@ -88,7 +118,7 @@ namespace Popcorn.ViewModels.DownloadMovie
         }
 
         /// <summary>
-        ///     Specify if subtitles are downloading
+        /// Specify if subtitles are downloading
         /// </summary>
         public bool IsDownloadingSubtitles
         {
@@ -97,7 +127,7 @@ namespace Popcorn.ViewModels.DownloadMovie
         }
 
         /// <summary>
-        ///     Specify the movie download progress
+        /// Specify the movie download progress
         /// </summary>
         public double MovieDownloadProgress
         {
@@ -106,7 +136,7 @@ namespace Popcorn.ViewModels.DownloadMovie
         }
 
         /// <summary>
-        ///     Specify the movie download rate
+        /// Specify the movie download rate
         /// </summary>
         public double MovieDownloadRate
         {
@@ -115,7 +145,7 @@ namespace Popcorn.ViewModels.DownloadMovie
         }
 
         /// <summary>
-        ///     Specify the subtitles' progress download
+        /// Specify the subtitles' progress download
         /// </summary>
         public long SubtitlesDownloadProgress
         {
@@ -124,7 +154,7 @@ namespace Popcorn.ViewModels.DownloadMovie
         }
 
         /// <summary>
-        ///     The movie to download
+        /// The movie to download
         /// </summary>
         public MovieFull Movie
         {
@@ -133,12 +163,12 @@ namespace Popcorn.ViewModels.DownloadMovie
         }
 
         /// <summary>
-        ///     The command used to stop the download of a movie
+        /// The command used to stop the download of a movie
         /// </summary>
         public RelayCommand StopDownloadingMovieCommand { get; private set; }
 
         /// <summary>
-        ///     Load a movie
+        /// Load a movie
         /// </summary>
         /// <param name="movie">The movie to load</param>
         public void LoadMovie(MovieFull movie)
@@ -148,7 +178,7 @@ namespace Popcorn.ViewModels.DownloadMovie
         }
 
         /// <summary>
-        ///     Stop downloading a movie
+        /// Stop downloading a movie
         /// </summary>
         public void StopDownloadingMovie()
         {
@@ -162,7 +192,7 @@ namespace Popcorn.ViewModels.DownloadMovie
         }
 
         /// <summary>
-        ///     Cleanup resources
+        /// Cleanup resources
         /// </summary>
         public override void Cleanup()
         {
@@ -172,7 +202,7 @@ namespace Popcorn.ViewModels.DownloadMovie
         }
 
         /// <summary>
-        ///     Register messages
+        /// Register messages
         /// </summary>
         private void RegisterMessages() => Messenger.Default.Register<DownloadMovieMessage>(
             this,
@@ -193,26 +223,26 @@ namespace Popcorn.ViewModels.DownloadMovie
             });
 
         /// <summary>
-        ///     Register commands
+        /// Register commands
         /// </summary>
         private void RegisterCommands() => StopDownloadingMovieCommand = new RelayCommand(StopDownloadingMovie);
 
         /// <summary>
-        ///     Report the download progress
+        /// Report the download progress
         /// </summary>
-        /// <param name="value"></param>
+        /// <param name="value">Download rate</param>
         private void ReportMovieDownloadRate(double value) => MovieDownloadRate = value;
 
         /// <summary>
-        ///     Report the download progress of the subtitles
+        /// Report the download progress of the subtitles
         /// </summary>
-        /// <param name="value"></param>
+        /// <param name="value">Download progress</param>
         private void ReportSubtitlesDownloadProgress(long value) => SubtitlesDownloadProgress = value;
 
         /// <summary>
-        ///     Report the download progress
+        /// Report the download progress
         /// </summary>
-        /// <param name="value">The value to report</param>
+        /// <param name="value">The download progress to report</param>
         private void ReportMovieDownloadProgress(double value)
         {
             MovieDownloadProgress = value;
@@ -224,7 +254,7 @@ namespace Popcorn.ViewModels.DownloadMovie
         }
 
         /// <summary>
-        ///     Download a movie
+        /// Download a movie asynchronously
         /// </summary>
         /// <param name="movie">The movie to download</param>
         /// <param name="downloadProgress">Report download progress</param>

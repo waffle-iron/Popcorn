@@ -22,17 +22,17 @@ using TMDbLib.Objects.Movies;
 namespace Popcorn.Services.Movie
 {
     /// <summary>
-    ///     Services used to interact with movies
+    /// Services used to interact with movies
     /// </summary>
     public class MovieService : IMovieService
     {
         /// <summary>
-        ///     Logger of the class
+        /// Logger of the class
         /// </summary>
         private static readonly Logger Logger = LogManager.GetCurrentClassLogger();
 
         /// <summary>
-        ///     Initialize a new instance of MovieService class
+        /// Initialize a new instance of MovieService class
         /// </summary>
         public MovieService()
         {
@@ -44,18 +44,18 @@ namespace Popcorn.Services.Movie
         }
 
         /// <summary>
-        ///     TMDb client
+        /// TMDb client
         /// </summary>
         private TMDbClient TmdbClient { get; }
 
         /// <summary>
-        ///     Change the culture of TMDb
+        /// Change the culture of TMDb
         /// </summary>
         /// <param name="language">Language to set</param>
         public void ChangeTmdbLanguage(ILanguage language) => TmdbClient.DefaultLanguage = language.Culture;
 
         /// <summary>
-        ///     Get all movie's genres
+        /// Get all movie's genres
         /// </summary>
         /// <param name="ct">Used to cancel loading genres</param>
         /// <returns>Genres</returns>
@@ -100,7 +100,7 @@ namespace Popcorn.Services.Movie
         }
 
         /// <summary>
-        ///     Get popular movies by page
+        /// Get popular movies by page
         /// </summary>
         /// <param name="page">Page to return</param>
         /// <param name="limit">The maximum number of movies to return</param>
@@ -167,7 +167,7 @@ namespace Popcorn.Services.Movie
         }
 
         /// <summary>
-        ///     Get greatest movies by page
+        /// Get greatest movies by page
         /// </summary>
         /// <param name="page">Page to return</param>
         /// <param name="limit">The maximum number of movies to return</param>
@@ -234,7 +234,7 @@ namespace Popcorn.Services.Movie
         }
 
         /// <summary>
-        ///     Get recent movies by page
+        /// Get recent movies by page
         /// </summary>
         /// <param name="page">Page to return</param>
         /// <param name="limit">The maximum number of movies to return</param>
@@ -301,7 +301,7 @@ namespace Popcorn.Services.Movie
         }
 
         /// <summary>
-        ///     Search movies by criteria
+        /// Search movies by criteria
         /// </summary>
         /// <param name="criteria">Criteria used for search</param>
         /// <param name="page">Page to return</param>
@@ -370,7 +370,7 @@ namespace Popcorn.Services.Movie
         }
 
         /// <summary>
-        ///     Get TMDb movie informations
+        /// Get TMDb movie informations
         /// </summary>
         /// <param name="movieToLoad">Movie to load</param>
         /// <param name="ct">Used to cancel loading</param>
@@ -457,7 +457,7 @@ namespace Popcorn.Services.Movie
         }
 
         /// <summary>
-        ///     Translate movie informations (title, description, ...)
+        /// Translate movie informations (title, description, ...)
         /// </summary>
         /// <param name="movieToTranslate">Movie to translate</param>
         /// <param name="ct">Used to cancel translation</param>
@@ -497,7 +497,7 @@ namespace Popcorn.Services.Movie
         }
 
         /// <summary>
-        ///     Translate movie informations (title, description, ...)
+        /// Translate movie informations (title, description, ...)
         /// </summary>
         /// <param name="movieToTranslate">Movie to translate</param>
         /// <param name="ct">Used to cancel translation</param>
@@ -538,7 +538,7 @@ namespace Popcorn.Services.Movie
         }
 
         /// <summary>
-        ///     Get the link to the youtube trailer of a movie
+        /// Get the link to the youtube trailer of a movie
         /// </summary>
         /// <param name="movie">The movie</param>
         /// <param name="ct">Used to cancel loading trailer</param>
@@ -575,7 +575,7 @@ namespace Popcorn.Services.Movie
         }
 
         /// <summary>
-        ///     Get the movie's subtitles according to a language
+        /// Get the movie's subtitles according to a language
         /// </summary>
         /// <param name="movie">The movie of which to retrieve its subtitles</param>
         /// <param name="ct">Cancellation token</param>
@@ -643,7 +643,7 @@ namespace Popcorn.Services.Movie
         }
 
         /// <summary>
-        ///     Download a subtitle
+        /// Download a subtitle
         /// </summary>
         /// <param name="movie">The movie of which to retrieve its subtitles</param>
         /// <param name="progress">Report the progress of the download</param>
@@ -703,7 +703,7 @@ namespace Popcorn.Services.Movie
         }
 
         /// <summary>
-        ///     Download the movie's background image
+        /// Download the movie's background image
         /// </summary>
         /// <param name="movie">The movie to process</param>
         /// <param name="ct">Used to cancel downloading background image</param>
@@ -757,7 +757,7 @@ namespace Popcorn.Services.Movie
         }
 
         /// <summary>
-        ///     Download cover image for each of the movies provided
+        /// Download cover image for each of the movies provided
         /// </summary>
         /// <param name="movies">The movies to process</param>
         /// <param name="ct">Used to cancel task</param>
@@ -800,7 +800,7 @@ namespace Popcorn.Services.Movie
         }
 
         /// <summary>
-        ///     Download the movie's poster image
+        /// Download the movie's poster image
         /// </summary>
         /// <param name="movie">The movie to process</param>
         /// <param name="ct">Used to cancel downloading poster image</param>
@@ -850,7 +850,7 @@ namespace Popcorn.Services.Movie
         }
 
         /// <summary>
-        ///     Download directors' image for a movie
+        /// Download directors' image for a movie
         /// </summary>
         /// <param name="movie">The movie to process</param>
         /// <param name="ct">Used to cancel downloading director image</param>
@@ -895,7 +895,7 @@ namespace Popcorn.Services.Movie
         }
 
         /// <summary>
-        ///     Download actors' image for a movie
+        /// Download actors' image for a movie
         /// </summary>
         /// <param name="movie">The movie to process</param>
         /// <param name="ct">Used to cancel downloading actor image</param>
@@ -940,7 +940,7 @@ namespace Popcorn.Services.Movie
         }
 
         /// <summary>
-        ///     Get movies as a list from wrapped movies
+        /// Get movies as a list from wrapped movies
         /// </summary>
         /// <param name="wrapper">Wrapped movies</param>
         /// <returns>List of movies</returns>

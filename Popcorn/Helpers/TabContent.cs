@@ -8,16 +8,16 @@ using System.Windows.Markup;
 namespace Popcorn.Helpers
 {
     /// <summary>
-    ///     Attached properties for persistent tab control
+    /// Attached properties for persistent tab control
     /// </summary>
     /// <remarks>
-    ///     By default WPF TabControl bound to an ItemsSource destroys visual state of invisible tabs.
-    ///     Set Helpers:TabContent.IsCached="True" to preserve visual state of each tab.
+    /// By default WPF TabControl bound to an ItemsSource destroys visual state of invisible tabs.
+    /// Set Helpers:TabContent.IsCached="True" to preserve visual state of each tab.
     /// </remarks>
     public static class TabContent
     {
         /// <summary>
-        ///     Controls whether tab content is cached or not
+        /// Controls whether tab content is cached or not
         /// </summary>
         /// <remarks>When TabContent.IsCached is true, visual state of each tab is preserved (cached), even when the tab is hidden</remarks>
         public static readonly DependencyProperty IsCachedProperty =
@@ -25,14 +25,14 @@ namespace Popcorn.Helpers
                 new UIPropertyMetadata(false, OnIsCachedChanged));
 
         /// <summary>
-        ///     Used instead of TabControl.ContentTemplate for cached tabs
+        /// Used instead of TabControl.ContentTemplate for cached tabs
         /// </summary>
         public static readonly DependencyProperty TemplateProperty =
             DependencyProperty.RegisterAttached("Template", typeof (DataTemplate), typeof (TabContent),
                 new UIPropertyMetadata(null));
 
         /// <summary>
-        ///     Used instead of TabControl.ContentTemplateSelector for cached tabs
+        /// Used instead of TabControl.ContentTemplateSelector for cached tabs
         /// </summary>
         public static readonly DependencyProperty TemplateSelectorProperty =
             DependencyProperty.RegisterAttached("TemplateSelector", typeof (DataTemplateSelector), typeof (TabContent),

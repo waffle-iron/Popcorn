@@ -8,12 +8,12 @@ using Popcorn.Helpers;
 namespace Popcorn.Dialogs
 {
     /// <summary>
-    ///     Manage update settings
+    /// Manage update settings
     /// </summary>
     public class UpdateDialogSettings : MetroDialogSettings
     {
         /// <summary>
-        ///     Initialize a new instance of UpdateDialogSettings
+        /// Initialize a new instance of UpdateDialogSettings
         /// </summary>
         /// <param name="title">The dialog title</param>
         /// <param name="message">The dialog message</param>
@@ -26,65 +26,65 @@ namespace Popcorn.Dialogs
         }
 
         /// <summary>
-        ///     Dialog title
+        /// Dialog title
         /// </summary>
         public string Title { get; }
 
         /// <summary>
-        ///     Dialog message
+        /// Dialog message
         /// </summary>
         public string Message { get; }
 
         /// <summary>
-        ///     Releases notes to display
+        /// Releases notes to display
         /// </summary>
         public string ReleaseNotes { get; }
     }
 
     /// <summary>
-    ///     Data to return on dialog closing
+    /// Data to return on dialog closing
     /// </summary>
     public class UpdateDialogData
     {
         /// <summary>
-        ///     Specify if application should be restar
+        /// Specify if application should be restar
         /// </summary>
         public bool Restart { get; set; }
     }
 
     /// <summary>
-    ///     Manage update dialkog
+    /// Manage update dialkog
     /// </summary>
     public partial class UpdateDialog
     {
         /// <summary>
-        ///     Message property
+        /// Message property
         /// </summary>
         public static readonly DependencyProperty MessageProperty = DependencyProperty.Register("Message",
             typeof (string), typeof (UpdateDialog), new PropertyMetadata(default(string)));
 
         /// <summary>
-        ///     Releases notes property
+        /// Releases notes property
         /// </summary>
         public static readonly DependencyProperty ReleaseNotesProperty = DependencyProperty.Register("ReleaseNotes",
             typeof (string), typeof (UpdateDialog), new PropertyMetadata(default(string)));
 
         /// <summary>
-        ///     Restart button text property
+        /// Restart button text property
         /// </summary>
         public static readonly DependencyProperty RestartButtonTextProperty =
             DependencyProperty.Register("RestartButtonText", typeof (string), typeof (UpdateDialog),
                 new PropertyMetadata(LocalizationProviderHelper.GetLocalizedValue<string>("NowLabel")));
 
         /// <summary>
-        ///     Later button text property
+        /// Later button text property
         /// </summary>
         public static readonly DependencyProperty LaterButtonTextProperty =
             DependencyProperty.Register("LaterButtonText", typeof (string), typeof (UpdateDialog),
                 new PropertyMetadata(LocalizationProviderHelper.GetLocalizedValue<string>("LaterLabel")));
 
         /// <summary>
-        ///     Initialize a new instance of UpdateDialog
+        /// Initialize a new instance of UpdateDialog
         /// </summary>
         /// <param name="settings">The dialog settings</param>
         internal UpdateDialog(UpdateDialogSettings settings)
@@ -96,7 +96,7 @@ namespace Popcorn.Dialogs
         }
 
         /// <summary>
-        ///     Dialog message
+        /// Dialog message
         /// </summary>
         public string Message
         {
@@ -105,7 +105,7 @@ namespace Popcorn.Dialogs
         }
 
         /// <summary>
-        ///     Releases notes to display
+        /// Releases notes to display
         /// </summary>
         public string ReleaseNotes
         {
@@ -114,7 +114,7 @@ namespace Popcorn.Dialogs
         }
 
         /// <summary>
-        ///     Restart button text
+        /// Restart button text
         /// </summary>
         public string RestartButtonText
         {
@@ -123,7 +123,7 @@ namespace Popcorn.Dialogs
         }
 
         /// <summary>
-        ///     Later buttont text
+        /// Later buttont text
         /// </summary>
         public string LaterButtonText
         {
@@ -132,7 +132,7 @@ namespace Popcorn.Dialogs
         }
 
         /// <summary>
-        ///     Asynchronous task, waiting for button press event to complete
+        /// Asynchronous task, waiting for button press event to complete
         /// </summary>
         /// <returns></returns>
         internal Task<UpdateDialogData> WaitForButtonPressAsync()
@@ -238,7 +238,7 @@ namespace Popcorn.Dialogs
         }
 
         /// <summary>
-        ///     Set the color scheme on load
+        /// Set the color scheme on load
         /// </summary>
         protected override void OnLoaded()
         {

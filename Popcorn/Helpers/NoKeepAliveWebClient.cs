@@ -4,12 +4,12 @@ using System.Net;
 namespace Popcorn.Helpers
 {
     /// <summary>
-    ///     WebClient with NoKeepAlive option
+    /// WebClient with NoKeepAlive option
     /// </summary>
     public class NoKeepAliveWebClient : WebClient
     {
         /// <summary>
-        ///     Get a web request without the KeepAlive option
+        /// Get a web request without the KeepAlive option
         /// </summary>
         /// <param name="address">Address to request</param>
         /// <returns>Web request</returns>

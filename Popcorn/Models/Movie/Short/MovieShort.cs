@@ -5,7 +5,7 @@ using RestSharp.Deserializers;
 namespace Popcorn.Models.Movie.Short
 {
     /// <summary>
-    ///     Represents partial details of a movie
+    /// Represents partial details of a movie
     /// </summary>
     public class MovieShort : ObservableObject
     {
@@ -178,7 +178,7 @@ namespace Popcorn.Models.Movie.Short
         }
 
         /// <summary>
-        ///     Movie rating
+        /// Movie rating
         /// </summary>
         public double RatingValue
         {
@@ -187,7 +187,7 @@ namespace Popcorn.Models.Movie.Short
         }
 
         /// <summary>
-        ///     Local path of the downloaded movie's cover image
+        /// Local path of the downloaded movie's cover image
         /// </summary>
         public string CoverImagePath
         {
@@ -196,7 +196,7 @@ namespace Popcorn.Models.Movie.Short
         }
 
         /// <summary>
-        ///     Indicate if movie is favorite
+        /// Indicate if movie is favorite
         /// </summary>
         public bool IsFavorite
         {
@@ -205,7 +205,7 @@ namespace Popcorn.Models.Movie.Short
         }
 
         /// <summary>
-        ///     Indicate if movie has been seen by the user
+        /// Indicate if movie has been seen by the user
         /// </summary>
         public bool HasBeenSeen
         {

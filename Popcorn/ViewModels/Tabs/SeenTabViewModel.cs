@@ -19,12 +19,12 @@ namespace Popcorn.ViewModels.Tabs
     public class SeenTabViewModel : TabsViewModel
     {
         /// <summary>
-        ///     Logger of the class
+        /// Logger of the class
         /// </summary>
         private static readonly Logger Logger = LogManager.GetCurrentClassLogger();
 
         /// <summary>
-        ///     Initializes a new instance of the SeenTabViewModel class.
+        /// Initializes a new instance of the SeenTabViewModel class.
         /// </summary>
         /// <param name="applicationState">Application state</param>
         /// <param name="movieService">Movie service</param>
@@ -39,7 +39,7 @@ namespace Popcorn.ViewModels.Tabs
         }
 
         /// <summary>
-        ///     Load seen movies
+        /// Load movies asynchronously
         /// </summary>
         public override async Task LoadMoviesAsync()
         {
@@ -83,7 +83,7 @@ namespace Popcorn.ViewModels.Tabs
         }
 
         /// <summary>
-        ///     Register messages
+        /// Register messages
         /// </summary>
         private void RegisterMessages()
         {
@@ -115,7 +115,7 @@ namespace Popcorn.ViewModels.Tabs
         }
 
         /// <summary>
-        ///     Register commands
+        /// Register commands
         /// </summary>
         private void RegisterCommands()
         {

@@ -4,12 +4,12 @@ using Popcorn.ViewModels.Tabs;
 namespace Popcorn.UserControls.Tabs
 {
     /// <summary>
-    ///     Interaction logic for GreatestMovies.xaml
+    /// Interaction logic for GreatestMovies.xaml
     /// </summary>
     public partial class GreatestMovies
     {
         /// <summary>
-        ///     Initializes a new instance of the GreatestMovies class.
+        /// Initializes a new instance of the GreatestMovies class.
         /// </summary>
         public GreatestMovies()
         {
@@ -17,10 +17,10 @@ namespace Popcorn.UserControls.Tabs
         }
 
         /// <summary>
-        ///     Decide if we have to load next page regarding to the scroll position
+        /// Load movies if control has reached bottom position
         /// </summary>
-        /// <param name="sender">Sender object</param>
-        /// <param name="e">ScrollChangedEventArgs</param>
+        /// <param name="sender">Sender</param>
+        /// <param name="e">Event args</param>
         private async void ScrollViewerScrollChanged(object sender, ScrollChangedEventArgs e)
         {
             var totalHeight = e.VerticalOffset + e.ViewportHeight;

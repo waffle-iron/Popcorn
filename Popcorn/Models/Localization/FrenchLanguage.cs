@@ -3,12 +3,12 @@
 namespace Popcorn.Models.Localization
 {
     /// <summary>
-    ///     French language
+    /// French language
     /// </summary>
     public sealed class FrenchLanguage : ObservableObject, ILanguage
     {
         /// <summary>
-        ///     Initialize a new instance of FrenchLanguage
+        /// Initialize a new instance of FrenchLanguage
         /// </summary>
         public FrenchLanguage()
         {
@@ -18,22 +18,22 @@ namespace Popcorn.Models.Localization
         }
 
         /// <summary>
-        ///     Language's name
+        /// Language's name
         /// </summary>
         public string LocalizedName { get; }
 
         /// <summary>
-        ///     English language's name
+        /// English language's name
         /// </summary>
         public string EnglishName { get; }
 
         /// <summary>
-        ///     Language's culture
+        /// Language's culture
         /// </summary>
         public string Culture { get; }
 
         /// <summary>
-        ///     Check equality based on is localized name
+        /// Check equality based on is localized name
         /// </summary>
         /// <param name="obj"></param>
         /// <returns>True if equal, false otherwise</returns>
@@ -45,7 +45,7 @@ namespace Popcorn.Models.Localization
         }
 
         /// <summary>
-        ///     Get hash code based on it localized name
+        /// Get hash code based on it localized name
         /// </summary>
         /// <returns>Hash code</returns>
         public override int GetHashCode() => LocalizedName.GetHashCode();

@@ -20,17 +20,17 @@ using YoutubeExtractor;
 namespace Popcorn.ViewModels.Trailer
 {
     /// <summary>
-    ///     Manage trailer
+    /// Manage trailer
     /// </summary>
     public sealed class TrailerViewModel : ViewModelBase, ITrailerViewModel
     {
         /// <summary>
-        ///     Logger of the class
+        /// Logger of the class
         /// </summary>
         private static readonly Logger Logger = LogManager.GetCurrentClassLogger();
 
         /// <summary>
-        ///     Map for defining youtube video quality
+        /// Map for defining youtube video quality
         /// </summary>
         private static readonly IReadOnlyDictionary<Constants.YoutubeStreamingQuality, IEnumerable<int>>
             StreamingQualityMap =
@@ -41,19 +41,28 @@ namespace Popcorn.ViewModels.Trailer
                     {Constants.YoutubeStreamingQuality.Low, new HashSet<int> {360, 240}}
                 };
 
+        /// <summary>
+        /// Application state
+        /// </summary>
         private readonly IApplicationState _applicationState;
 
+        /// <summary>
+        /// Used to interact with movie history
+        /// </summary>
         private readonly IMovieHistoryService _movieHistoryService;
 
         /// <summary>
-        ///     The service used to interact with movies
+        /// The service used to interact with movies
         /// </summary>
         private readonly IMovieService _movieService;
 
+        /// <summary>
+        /// Manage the trailer player
+        /// </summary>
         private ITrailerPlayerViewModel _trailerPlayer;
 
         /// <summary>
-        ///     Initializes a new instance of the TrailerViewModel class.
+        /// Initializes a new instance of the TrailerViewModel class.
         /// </summary>
         /// <param name="movieService">Movie service</param>
         /// <param name="applicationState">Application state</param>
@@ -67,7 +76,7 @@ namespace Popcorn.ViewModels.Trailer
         }
 
         /// <summary>
-        ///     The trailer player
+        /// Manage the trailer player
         /// </summary>
         public ITrailerPlayerViewModel TrailerPlayer
         {
@@ -76,7 +85,7 @@ namespace Popcorn.ViewModels.Trailer
         }
 
         /// <summary>
-        ///     Get trailer of a movie
+        /// Load movie's trailer asynchronously
         /// </summary>
         /// <param name="movie">The movie</param>
         /// <param name="ct">Cancellation token</param>
@@ -153,7 +162,7 @@ namespace Popcorn.ViewModels.Trailer
         }
 
         /// <summary>
-        ///     Unload the trailer
+        /// Unload the trailer
         /// </summary>
         public void UnLoadTrailer()
         {
@@ -162,7 +171,7 @@ namespace Popcorn.ViewModels.Trailer
         }
 
         /// <summary>
-        ///     Cleanup resources
+        /// Cleanup resources
         /// </summary>
         public override void Cleanup()
         {
@@ -172,10 +181,11 @@ namespace Popcorn.ViewModels.Trailer
         }
 
         /// <summary>
-        ///     Get VideoInfo of a youtube video
+        /// Get VideoInfo of a youtube video
         /// </summary>
         /// <param name="youtubeLink">The youtube link of a movie</param>
         /// <param name="qualitySetting">The youtube quality settings</param>
+        /// <returns>The trailer's video info</returns>
         private async Task<VideoInfo> GetVideoInfoForStreamingAsync(string youtubeLink,
             Constants.YoutubeStreamingQuality qualitySetting)
         {
@@ -192,10 +202,11 @@ namespace Popcorn.ViewModels.Trailer
         }
 
         /// <summary>
-        ///     Get youtube video depending of choosen quality settings
+        /// Get youtube video depending of choosen quality settings
         /// </summary>
         /// <param name="videosToProcess">List of VideoInfo</param>
         /// <param name="quality">The youtube quality settings</param>
+        /// <returns>The trailer's video info</returns>
         private VideoInfo GetVideoByStreamingQuality(IEnumerable<VideoInfo> videosToProcess,
             Constants.YoutubeStreamingQuality quality)
         {

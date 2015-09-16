@@ -8,7 +8,7 @@ namespace Popcorn.Models.Genre
         private TMDbLib.Objects.General.Genre _tmdbGenre;
 
         /// <summary>
-        ///     Genre's english name
+        /// Genre's english name
         /// </summary>
         public string EnglishName
         {
@@ -17,7 +17,7 @@ namespace Popcorn.Models.Genre
         }
 
         /// <summary>
-        ///     Tmdb genre
+        /// Tmdb genre
         /// </summary>
         public TMDbLib.Objects.General.Genre TmdbGenre
         {

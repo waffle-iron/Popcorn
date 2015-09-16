@@ -2,6 +2,7 @@
 using System.IO;
 using GalaSoft.MvvmLight.Threading;
 using NLog;
+using Popcorn.Helpers;
 using WPFLocalizeExtension.Engine;
 
 namespace Popcorn
@@ -25,7 +26,7 @@ namespace Popcorn
                 "Popcorn starting...");
             var watchStart = Stopwatch.StartNew();
 
-            Directory.CreateDirectory(Helpers.Constants.Logging);
+            Directory.CreateDirectory(Constants.Logging);
 
             DispatcherHelper.Initialize();
 

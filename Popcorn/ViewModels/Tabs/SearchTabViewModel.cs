@@ -18,17 +18,17 @@ using Popcorn.Services.Movie;
 namespace Popcorn.ViewModels.Tabs
 {
     /// <summary>
-    ///     The search movies tab
+    /// The search movies tab
     /// </summary>
     public sealed class SearchTabViewModel : TabsViewModel
     {
         /// <summary>
-        ///     Logger of the class
+        /// Logger of the class
         /// </summary>
         private static readonly Logger Logger = LogManager.GetCurrentClassLogger();
 
         /// <summary>
-        ///     Initializes a new instance of the SearchTabViewModel class.
+        /// Initializes a new instance of the SearchTabViewModel class.
         /// </summary>
         /// <param name="applicationState">Application state</param>
         /// <param name="movieService">Movie service</param>
@@ -43,12 +43,12 @@ namespace Popcorn.ViewModels.Tabs
         }
 
         /// <summary>
-        ///     The search filter
+        /// The search filter
         /// </summary>
         public string SearchFilter { get; private set; }
 
         /// <summary>
-        ///     Search movies
+        /// Search movies asynchronously
         /// </summary>
         /// <param name="searchFilter">The parameter of the search</param>
         public async Task SearchMoviesAsync(string searchFilter)
@@ -91,7 +91,7 @@ namespace Popcorn.ViewModels.Tabs
                 CurrentNumberOfMovies = Movies.Count;
                 MaxNumberOfMovies = movies.Item2;
 
-                await MovieHistoryService.ComputeMovieHistoryAsync(movies.Item1);
+                await MovieHistoryService.SetMovieHistoryAsync(movies.Item1);
                 await MovieService.DownloadCoverImageAsync(movies.Item1, CancellationLoadingMovies);
             }
             catch (Exception exception)
@@ -112,7 +112,7 @@ namespace Popcorn.ViewModels.Tabs
         }
 
         /// <summary>
-        ///     Register messages
+        /// Register messages
         /// </summary>
         private void RegisterMessages()
         {
@@ -140,7 +140,7 @@ namespace Popcorn.ViewModels.Tabs
         }
 
         /// <summary>
-        ///     Register commands
+        /// Register commands
         /// </summary>
         private void RegisterCommands()
         {

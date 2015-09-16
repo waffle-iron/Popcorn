@@ -6,12 +6,12 @@ using System.Windows.Data;
 namespace Popcorn.Converters
 {
     /// <summary>
-    ///     Convert booleans to an OR boolean
+    /// Convert booleans to an OR boolean
     /// </summary>
     public class MultiBooleanToBoolConverter : IMultiValueConverter
     {
         /// <summary>
-        ///     Convert booleans to an OR boolean
+        /// Convert booleans to an OR boolean
         /// </summary>
         /// <param name="values">The value produced by the binding source.</param>
         /// <param name="targetType">The type of the binding target property.</param>
@@ -22,7 +22,7 @@ namespace Popcorn.Converters
             CultureInfo culture) => values.OfType<bool>().Aggregate(false, (current, value) => current || value);
 
         /// <summary>
-        ///     Not supported
+        /// Not supported
         /// </summary>
         /// <param name="value">The value produced by the binding source.</param>
         /// <param name="targetTypes">The type of the binding target property.</param>

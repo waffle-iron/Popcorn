@@ -7,12 +7,12 @@ using System.Windows.Data;
 namespace Popcorn.Converters
 {
     /// <summary>
-    ///     Convert booleans to a visibility property
+    /// Convert booleans to a visibility property
     /// </summary>
     public class MultiBooleanToVisibilityConverter : IMultiValueConverter
     {
         /// <summary>
-        ///     Convert booleans to a visibility property
+        /// Convert booleans to a visibility property
         /// </summary>
         /// <param name="values">The value produced by the binding source.</param>
         /// <param name="targetType">The type of the binding target property.</param>
@@ -44,7 +44,7 @@ namespace Popcorn.Converters
         }
 
         /// <summary>
-        ///     Not supported
+        /// Not supported
         /// </summary>
         /// <param name="value">The value produced by the binding source.</param>
         /// <param name="targetTypes">The type of the binding target property.</param>

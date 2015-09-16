@@ -40,7 +40,7 @@ namespace Popcorn.Models.Cast
         }
 
         /// <summary>
-        ///     Local path of the downloaded actor's small-sized image
+        /// Local path of the downloaded actor's small-sized image
         /// </summary>
         public string SmallImagePath
         {

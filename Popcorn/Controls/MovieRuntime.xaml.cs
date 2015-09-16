@@ -5,12 +5,12 @@ using System.Windows;
 namespace Popcorn.Controls
 {
     /// <summary>
-    ///     Interaction logic for MovieRuntime.xaml
+    /// Interaction logic for MovieRuntime.xaml
     /// </summary>
     public partial class MovieRuntime
     {
         /// <summary>
-        ///     Runtime property
+        /// Runtime property
         /// </summary>
         public static readonly DependencyProperty RuntimeProperty =
             DependencyProperty.Register("Runtime",
@@ -18,7 +18,7 @@ namespace Popcorn.Controls
                 new PropertyMetadata(0d, OnRuntimeChanged));
 
         /// <summary>
-        ///     Initialize a new instance of MovieRuntime
+        /// Initialize a new instance of MovieRuntime
         /// </summary>
         public MovieRuntime()
         {
@@ -26,7 +26,7 @@ namespace Popcorn.Controls
         }
 
         /// <summary>
-        ///     The movie runtime
+        /// The movie runtime
         /// </summary>
         public double Runtime
         {
@@ -35,7 +35,7 @@ namespace Popcorn.Controls
         }
 
         /// <summary>
-        ///     On movie runtime changed
+        /// On movie runtime changed
         /// </summary>
         /// <param name="d">Dependency object</param>
         /// <param name="e">Event args</param>
@@ -46,7 +46,7 @@ namespace Popcorn.Controls
         }
 
         /// <summary>
-        ///     Display movie runtime
+        /// Display movie runtime
         /// </summary>
         private void DisplayMovieRuntime()
         {

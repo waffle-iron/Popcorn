@@ -11,17 +11,17 @@ namespace Popcorn.Helpers
     public static class DownloadFileHelper
     {
         /// <summary>
-        ///     Logger of the class
+        /// Logger of the class
         /// </summary>
         private static readonly Logger Logger = LogManager.GetCurrentClassLogger();
 
         /// <summary>
-        ///     Downloads a file from a specified Internet address.
+        /// Downloads a file from a specified Internet address.
         /// </summary>
         /// <param name="remotePath">Internet address of the file to download.</param>
         /// <param name="localPath">
-        ///     Local file name where to store the content of the download, if null a temporary file name will
-        ///     be generated.
+        /// Local file name where to store the content of the download, if null a temporary file name will
+        /// be generated.
         /// </param>
         /// <param name="timeOut">Duration in miliseconds before cancelling the  operation.</param>
         /// <param name="progress">Report the progress of the download</param>

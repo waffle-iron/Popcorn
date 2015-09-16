@@ -14,6 +14,7 @@ namespace Popcorn.Helpers
         /// <typeparam name="T">Type of value to localize</typeparam>
         /// <param name="key">Resource key</param>
         /// <returns>Localized value</returns>
-        public static T GetLocalizedValue<T>(string key) => LocExtension.GetLocalizedValue<T>(Assembly.GetCallingAssembly().GetName().Name + ":Resources:" + key);
+        public static T GetLocalizedValue<T>(string key)
+            => LocExtension.GetLocalizedValue<T>(Assembly.GetCallingAssembly().GetName().Name + ":Resources:" + key);
     }
 }

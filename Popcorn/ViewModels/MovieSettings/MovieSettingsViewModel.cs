@@ -8,24 +8,42 @@ using Popcorn.ViewModels.Subtitles;
 namespace Popcorn.ViewModels.MovieSettings
 {
     /// <summary>
-    ///     Manage the movie's playing settings
+    /// Manage the movie's playing settings
     /// </summary>
     public sealed class MovieSettingsViewModel : ViewModelBase, IMovieSettingsViewModel
     {
+        /// <summary>
+        /// Command used to cancel the settings
+        /// </summary>
         private RelayCommand _cancelCommand;
 
+        /// <summary>
+        /// Command used to download the movie
+        /// </summary>
         private RelayCommand _downloadMovieCommand;
 
+        /// <summary>
+        /// The movie to manage
+        /// </summary>
         private MovieFull _movie;
 
+        /// <summary>
+        /// Command used to set the movie's subtitles
+        /// </summary>
         private RelayCommand _setSubtitlesCommand;
 
+        /// <summary>
+        /// Manage the movie's subtitles
+        /// </summary>
         private ISubtitlesViewModel _subtitles;
 
+        /// <summary>
+        /// Command used to unset the movie's subtitles
+        /// </summary>
         private RelayCommand _unSetSubtitlesCommand;
 
         /// <summary>
-        ///     Initializes a new instance of the MovieSettingsViewModel class.
+        /// Initializes a new instance of the MovieSettingsViewModel class.
         /// </summary>
         /// <param name="subtitles">The subtitles view model</param>
         public MovieSettingsViewModel(ISubtitlesViewModel subtitles)
@@ -34,7 +52,7 @@ namespace Popcorn.ViewModels.MovieSettings
         }
 
         /// <summary>
-        ///     The movie
+        /// The movie to manage
         /// </summary>
         public MovieFull Movie
         {
@@ -43,7 +61,7 @@ namespace Popcorn.ViewModels.MovieSettings
         }
 
         /// <summary>
-        ///     The view model used to manage subtitles
+        /// Manage the movie's subtitles
         /// </summary>
         public ISubtitlesViewModel Subtitles
         {
@@ -52,7 +70,7 @@ namespace Popcorn.ViewModels.MovieSettings
         }
 
         /// <summary>
-        ///     Used to enable or disable subtitles
+        /// Comand used to set the movie's subtitles
         /// </summary>
         public RelayCommand SetSubtitlesCommand => _setSubtitlesCommand ??
                                                    (_setSubtitlesCommand =
@@ -60,14 +78,14 @@ namespace Popcorn.ViewModels.MovieSettings
                                                            async () => { await Subtitles.LoadSubtitlesAsync(Movie); }));
 
         /// <summary>
-        ///     Used to enable or disable subtitles
+        /// Command used to unset the movie's subtitles
         /// </summary>
         public RelayCommand UnSetSubtitlesCommand
             => _unSetSubtitlesCommand ?? (_unSetSubtitlesCommand = new RelayCommand(
                 () => Subtitles.ClearSubtitles()));
 
         /// <summary>
-        ///     Command used to download the movie
+        /// Command used to download the movie
         /// </summary>
         public RelayCommand DownloadMovieCommand
             =>
@@ -76,7 +94,7 @@ namespace Popcorn.ViewModels.MovieSettings
                     new RelayCommand(() => { Messenger.Default.Send(new DownloadMovieMessage(Movie)); }));
 
         /// <summary>
-        ///     Command used to cancel the download of a movie
+        /// Command used to cancel the settings
         /// </summary>
         public RelayCommand CancelCommand
             =>
@@ -84,9 +102,9 @@ namespace Popcorn.ViewModels.MovieSettings
                 (_cancelCommand = new RelayCommand(() => { Messenger.Default.Send(new StopPlayingMovieMessage()); }));
 
         /// <summary>
-        ///     Load a movie
+        /// Load a movie
         /// </summary>
-        /// <param name="movie"></param>
+        /// <param name="movie">The movie to load</param>
         public void LoadMovie(MovieFull movie)
         {
             Movie = movie;
@@ -94,7 +112,7 @@ namespace Popcorn.ViewModels.MovieSettings
         }
 
         /// <summary>
-        ///     Cleanup resources
+        /// Cleanup resources
         /// </summary>
         public override void Cleanup()
         {

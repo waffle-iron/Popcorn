@@ -9,7 +9,7 @@ using RestSharp.Deserializers;
 namespace Popcorn.Models.Movie.Full
 {
     /// <summary>
-    ///     Represents all of the movie's details
+    /// Represents all of the movie's details
     /// </summary>
     public class MovieFull : ObservableObject
     {
@@ -17,6 +17,7 @@ namespace Popcorn.Models.Movie.Full
 
         private ObservableCollection<Subtitle.Subtitle> _availableSubtitles =
             new ObservableCollection<Subtitle.Subtitle>();
+
         private string _backgroundImagePath = string.Empty;
         private string _dateUploaded;
         private int _dateUploadedUnix;
@@ -235,7 +236,7 @@ namespace Popcorn.Models.Movie.Full
         }
 
         /// <summary>
-        ///     Movie rating
+        /// Movie rating
         /// </summary>
         public double RatingValue
         {
@@ -244,7 +245,7 @@ namespace Popcorn.Models.Movie.Full
         }
 
         /// <summary>
-        ///     Local path of the downloaded movie file
+        /// Local path of the downloaded movie file
         /// </summary>
         public Uri FilePath
         {
@@ -253,7 +254,7 @@ namespace Popcorn.Models.Movie.Full
         }
 
         /// <summary>
-        ///     Local path of the downloaded movie's background image
+        /// Local path of the downloaded movie's background image
         /// </summary>
         public string BackgroundImagePath
         {
@@ -262,7 +263,7 @@ namespace Popcorn.Models.Movie.Full
         }
 
         /// <summary>
-        ///     Local path of the downloaded movie's poster image
+        /// Local path of the downloaded movie's poster image
         /// </summary>
         public string PosterImagePath
         {
@@ -271,7 +272,7 @@ namespace Popcorn.Models.Movie.Full
         }
 
         /// <summary>
-        ///     Decide if movie has to be watched in full HQ or not
+        /// Decide if movie has to be watched in full HQ or not
         /// </summary>
         public bool WatchInFullHdQuality
         {
@@ -280,7 +281,7 @@ namespace Popcorn.Models.Movie.Full
         }
 
         /// <summary>
-        ///     Indicate if full HQ quality is available
+        /// Indicate if full HQ quality is available
         /// </summary>
         public bool FullHdAvailable
         {
@@ -289,7 +290,7 @@ namespace Popcorn.Models.Movie.Full
         }
 
         /// <summary>
-        ///     Available subtitles
+        /// Available subtitles
         /// </summary>
         public ObservableCollection<Subtitle.Subtitle> AvailableSubtitles
         {
@@ -298,7 +299,7 @@ namespace Popcorn.Models.Movie.Full
         }
 
         /// <summary>
-        ///     Selected subtitle
+        /// Selected subtitle
         /// </summary>
         public Subtitle.Subtitle SelectedSubtitle
         {
@@ -307,7 +308,7 @@ namespace Popcorn.Models.Movie.Full
         }
 
         /// <summary>
-        ///     Indicate if movie is favorite
+        /// Indicate if movie is favorite
         /// </summary>
         public bool IsFavorite
         {
@@ -316,7 +317,7 @@ namespace Popcorn.Models.Movie.Full
         }
 
         /// <summary>
-        ///     Indicate if movie has been seen by the user
+        /// Indicate if movie has been seen by the user
         /// </summary>
         public bool HasBeenSeen
         {

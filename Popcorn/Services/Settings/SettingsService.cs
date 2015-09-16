@@ -10,17 +10,17 @@ using Popcorn.Entity;
 namespace Popcorn.Services.Settings
 {
     /// <summary>
-    ///     Services used to interacts with application's settings
+    /// Services used to interacts with application's settings
     /// </summary>
     public class SettingsService : ISettingsService
     {
         /// <summary>
-        ///     Logger of the class
+        /// Logger of the class
         /// </summary>
         private static readonly Logger Logger = LogManager.GetCurrentClassLogger();
 
         /// <summary>
-        ///     Scaffold Settings table on database if empty
+        /// Scaffold application settings if empty
         /// </summary>
         public async Task CreateApplicationSettingsAsync()
         {

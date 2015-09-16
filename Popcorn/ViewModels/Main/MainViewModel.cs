@@ -27,64 +27,82 @@ using Squirrel;
 namespace Popcorn.ViewModels.Main
 {
     /// <summary>
-    ///     Main applcation's viewmodel
+    /// Main applcation's viewmodel
     /// </summary>
     public class MainViewModel : ViewModelBase
     {
         /// <summary>
-        ///     Logger of the class
+        /// Logger of the class
         /// </summary>
         private static readonly Logger Logger = LogManager.GetCurrentClassLogger();
 
         /// <summary>
-        ///     Used to define the dialog context
+        /// Used to define the dialog context
         /// </summary>
         private readonly IDialogCoordinator _dialogCoordinator;
 
         /// <summary>
-        ///     Used to interact with movie history
+        /// Used to interact with movie history
         /// </summary>
         private readonly IMovieHistoryService _movieHistoryService;
 
         /// <summary>
-        ///     Used to interact with movies
+        /// Used to interact with movies
         /// </summary>
         private readonly IMovieService _movieService;
 
         /// <summary>
-        ///     Used to manage application state
+        /// Application state
         /// </summary>
         private IApplicationState _applicationState;
 
         /// <summary>
-        ///     Used to manage genres
+        /// Manage movie's genres
         /// </summary>
         private IGenresViewModel _genresViewModel;
 
+        /// <summary>
+        /// Specify if an exception is curently managed
+        /// </summary>
         private bool _isManagingException;
 
+        /// <summary>
+        /// Specify if movie flyout is open
+        /// </summary>
         private bool _isMovieFlyoutOpen;
 
+        /// <summary>
+        /// Specify if a search is actually active
+        /// </summary>
         private bool _isMovieSearchActive;
 
+        /// <summary>
+        /// Specify if settings flyout is open
+        /// </summary>
         private bool _isSettingsFlyoutOpen;
 
         /// <summary>
-        ///     Movie player view model
+        /// Manage the movie player
         /// </summary>
         private MoviePlayerViewModel _moviePlayerViewModel;
 
+        /// <summary>
+        /// The selected tab
+        /// </summary>
         private TabsViewModel _selectedTab;
 
+        /// <summary>
+        /// The tabs
+        /// </summary>
         private ObservableCollection<TabsViewModel> _tabs = new ObservableCollection<TabsViewModel>();
 
         /// <summary>
-        ///     Used to update application
+        /// Used to update application
         /// </summary>
-        private UpdateManager _updateManager;
+        private readonly UpdateManager _updateManager;
 
         /// <summary>
-        ///     Initializes a new instance of the MainViewModel class.
+        /// Initializes a new instance of the MainViewModel class.
         /// </summary>
         /// <param name="genresViewModel">Instance of GenresViewModel</param>
         /// <param name="movieService">Instance of MovieService</param>
@@ -101,10 +119,15 @@ namespace Popcorn.ViewModels.Main
             RegisterMessages();
             RegisterCommands();
             AppDomain.CurrentDomain.UnhandledException += OnUnhandledException;
+            AppDomain.CurrentDomain.ProcessExit += (sender, args) => _updateManager.Dispose();
+            _updateManager = new UpdateManager(Constants.UpdateServerUrl, Constants.ApplicationName);
+#if !DEBUG
+            await StartUpdateProcessAsync();
+#endif
         }
 
         /// <summary>
-        ///     Tabs shown into the interface via TabControl
+        /// Tabs shown into the interface
         /// </summary>
         public ObservableCollection<TabsViewModel> Tabs
         {
@@ -113,7 +136,7 @@ namespace Popcorn.ViewModels.Main
         }
 
         /// <summary>
-        ///     The selected viewmodel tab via TabControl
+        /// The selected tab
         /// </summary>
         public TabsViewModel SelectedTab
         {
@@ -122,7 +145,7 @@ namespace Popcorn.ViewModels.Main
         }
 
         /// <summary>
-        ///     Indicates if a movie search is active
+        /// Specify if a movie search is active
         /// </summary>
         public bool IsMovieSearchActive
         {
@@ -131,7 +154,7 @@ namespace Popcorn.ViewModels.Main
         }
 
         /// <summary>
-        ///     Specify if settings flyout is open
+        /// Specify if settings flyout is open
         /// </summary>
         public bool IsSettingsFlyoutOpen
         {
@@ -140,7 +163,7 @@ namespace Popcorn.ViewModels.Main
         }
 
         /// <summary>
-        ///     Specify if movie flyout is open
+        /// Specify if movie flyout is open
         /// </summary>
         public bool IsMovieFlyoutOpen
         {
@@ -149,7 +172,7 @@ namespace Popcorn.ViewModels.Main
         }
 
         /// <summary>
-        ///     Genres ViewModel
+        /// Manage movie's genres
         /// </summary>
         public IGenresViewModel GenresViewModel
         {
@@ -158,7 +181,7 @@ namespace Popcorn.ViewModels.Main
         }
 
         /// <summary>
-        ///     Used to manage application state
+        /// Application state
         /// </summary>
         public IApplicationState ApplicationState
         {
@@ -167,66 +190,65 @@ namespace Popcorn.ViewModels.Main
         }
 
         /// <summary>
-        ///     Command used to select the greatest movies tab
+        /// Command used to select the greatest movies tab
         /// </summary>
         public RelayCommand SelectGreatestTab { get; private set; }
 
         /// <summary>
-        ///     Command used to select the popular movies tab
+        /// Command used to select the popular movies tab
         /// </summary>
         public RelayCommand SelectPopularTab { get; private set; }
 
         /// <summary>
-        ///     Command used to select the recent movies tab
+        /// Command used to select the recent movies tab
         /// </summary>
         public RelayCommand SelectRecentTab { get; private set; }
 
         /// <summary>
-        ///     Command used to select the search movies tab
+        /// Command used to select the search movies tab
         /// </summary>
         public RelayCommand SelectSearchTab { get; private set; }
 
         /// <summary>
-        ///     Command used to select the seen movies tab
+        /// Command used to select the seen movies tab
         /// </summary>
         public RelayCommand SelectSeenTab { get; private set; }
 
         /// <summary>
-        ///     Command used to select the favorites movies tab
+        /// Command used to select the favorites movies tab
         /// </summary>
         public RelayCommand SelectFavoritesTab { get; private set; }
 
         /// <summary>
-        ///     Command used to close movie page
+        /// Command used to close movie page
         /// </summary>
         public RelayCommand CloseMoviePageCommand { get; private set; }
 
         /// <summary>
-        ///     Command used to close the application
+        /// Command used to close the application
         /// </summary>
         public RelayCommand MainWindowClosingCommand { get; private set; }
 
         /// <summary>
-        ///     Command used to open application settings
+        /// Command used to open application settings
         /// </summary>
         public RelayCommand OpenSettingsCommand { get; private set; }
 
         /// <summary>
-        ///     Command used to load tabs
+        /// Command used to load tabs
         /// </summary>
         public RelayCommand InitializeAsyncCommand { get; private set; }
 
-        public event EventHandler<WindowStateChangedEventArgs> WindowStageChanged;
+        /// <summary>
+        /// Event raised when window state has changed
+        /// </summary>
+        public event EventHandler<WindowStateChangedEventArgs> WindowStateChanged;
 
         /// <summary>
-        ///     Load asynchronously an instance of MainViewModel
+        /// Load tabs asynchronously
         /// </summary>
-        /// <returns>Instance of MainViewModel</returns>
-        private async Task InitializeAsync()
+        private async Task LoadTabsAsync()
         {
-            AppDomain.CurrentDomain.ProcessExit += (sender, args) => _updateManager.Dispose();
-            _updateManager = new UpdateManager(Constants.UpdateServerUrl, Constants.ApplicationName);
-
             Tabs.Add(new PopularTabViewModel(ApplicationState, _movieService, _movieHistoryService));
             Tabs.Add(new GreatestTabViewModel(ApplicationState, _movieService, _movieHistoryService));
             Tabs.Add(new RecentTabViewModel(ApplicationState, _movieService, _movieHistoryService));
@@ -237,37 +259,30 @@ namespace Popcorn.ViewModels.Main
                 await tab.LoadMoviesAsync();
 
             await GenresViewModel.LoadGenresAsync();
-
-#if !DEBUG
-            await StartUpdateProcessAsync();
-#endif
         }
 
         /// <summary>
-        ///     Register messages
+        /// Register messages
         /// </summary>
         private void RegisterMessages()
         {
-            Messenger.Default.Register<ManageExceptionMessage>(this, e => { ManageException(e.UnHandledException); });
+            Messenger.Default.Register<ManageExceptionMessage>(this, e => ManageException(e.UnHandledException));
 
             Messenger.Default.Register<WindowStateChangeMessage>(this,
-                e => { OnWindowStateChanged(new WindowStateChangedEventArgs(e.IsMoviePlaying)); });
+                e => OnWindowStateChanged(new WindowStateChangedEventArgs(e.IsMoviePlaying)));
 
-            Messenger.Default.Register<LoadMovieMessage>(this, e => { IsMovieFlyoutOpen = true; });
+            Messenger.Default.Register<LoadMovieMessage>(this, e => IsMovieFlyoutOpen = true);
 
-            Messenger.Default.Register<PlayMovieMessage>(this, message =>
+            Messenger.Default.Register<PlayMovieMessage>(this, message => DispatcherHelper.CheckBeginInvokeOnUI(() =>
             {
-                DispatcherHelper.CheckBeginInvokeOnUI(() =>
-                {
-                    _moviePlayerViewModel = new MoviePlayerViewModel(ApplicationState, _movieService,
-                        _movieHistoryService);
-                    _moviePlayerViewModel.LoadMovie(message.Movie);
-                    Tabs.Add(_moviePlayerViewModel);
-                    SelectedTab = Tabs.Last();
-                    IsMovieFlyoutOpen = false;
-                    ApplicationState.IsMoviePlaying = true;
-                });
-            });
+                _moviePlayerViewModel = new MoviePlayerViewModel(ApplicationState, _movieService,
+                    _movieHistoryService);
+                _moviePlayerViewModel.LoadMovie(message.Movie);
+                Tabs.Add(_moviePlayerViewModel);
+                SelectedTab = Tabs.Last();
+                IsMovieFlyoutOpen = false;
+                ApplicationState.IsMoviePlaying = true;
+            }));
 
             Messenger.Default.Register<StopPlayingMovieMessage>(
                 this,
@@ -290,11 +305,11 @@ namespace Popcorn.ViewModels.Main
                 });
 
             Messenger.Default.Register<SearchMovieMessage>(this,
-                async message => { await SearchMovies(message.Filter); });
+                async message => await SearchMovies(message.Filter));
         }
 
         /// <summary>
-        ///     Register commands
+        /// Register commands
         /// </summary>
         private void RegisterCommands()
         {
@@ -346,7 +361,7 @@ namespace Popcorn.ViewModels.Main
                     SelectedTab = seenTab;
             });
 
-            CloseMoviePageCommand = new RelayCommand(() => { Messenger.Default.Send(new StopPlayingTrailerMessage()); });
+            CloseMoviePageCommand = new RelayCommand(() => Messenger.Default.Send(new StopPlayingTrailerMessage()));
 
             MainWindowClosingCommand = new RelayCommand(() =>
             {
@@ -373,16 +388,16 @@ namespace Popcorn.ViewModels.Main
                 }
             });
 
-            OpenSettingsCommand = new RelayCommand(() => { IsSettingsFlyoutOpen = true; });
+            OpenSettingsCommand = new RelayCommand(() => IsSettingsFlyoutOpen = true);
 
-            InitializeAsyncCommand = new RelayCommand(async () => await InitializeAsync());
+            InitializeAsyncCommand = new RelayCommand(async () => await LoadTabsAsync());
         }
 
         /// <summary>
-        ///     Display a dialog on unhandled exception
+        /// Display a dialog on unhandled exception
         /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
+        /// <param name="sender">Sender</param>
+        /// <param name="e">Event args</param>
         private void OnUnhandledException(object sender, UnhandledExceptionEventArgs e)
         {
             var ex = e.ExceptionObject as Exception;
@@ -391,9 +406,9 @@ namespace Popcorn.ViewModels.Main
         }
 
         /// <summary>
-        ///     Manage an exception
+        /// Manage an exception
         /// </summary>
-        /// <param name="exception">The exception</param>
+        /// <param name="exception">The exception to manage</param>
         private void ManageException(Exception exception)
         {
             if (_isManagingException)
@@ -420,7 +435,7 @@ namespace Popcorn.ViewModels.Main
         }
 
         /// <summary>
-        ///     Search for movie with a criteria
+        /// Search for movie with a criteria
         /// </summary>
         /// <param name="criteria">The criteria used for search</param>
         private async Task SearchMovies(string criteria)
@@ -447,7 +462,6 @@ namespace Popcorn.ViewModels.Main
                 foreach (var searchTab in Tabs.OfType<SearchTabViewModel>())
                 {
                     await searchTab.SearchMoviesAsync(criteria);
-
                     if (SelectedTab != searchTab)
                         SelectedTab = searchTab;
 
@@ -463,9 +477,8 @@ namespace Popcorn.ViewModels.Main
         }
 
         /// <summary>
-        ///     Look for update then download and apply if any
+        /// Look for update then download and apply if any
         /// </summary>
-        /// <returns></returns>
         private async Task StartUpdateProcessAsync()
         {
             var watchStart = Stopwatch.StartNew();
@@ -548,15 +561,15 @@ namespace Popcorn.ViewModels.Main
         }
 
         /// <summary>
-        ///     Fire when window state has changed
+        /// Fire when window state has changed
         /// </summary>
-        /// <param name="e">Event data</param>
+        /// <param name="e">Event args</param>
         private void OnWindowStateChanged(WindowStateChangedEventArgs e)
         {
             Logger.Debug(
                 "Window state changed");
 
-            var handler = WindowStageChanged;
+            var handler = WindowStateChanged;
             handler?.Invoke(this, e);
         }
     }

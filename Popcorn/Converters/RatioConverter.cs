@@ -6,7 +6,7 @@ using System.Windows.Markup;
 namespace Popcorn.Converters
 {
     /// <summary>
-    ///     Convert double to double using a ratio parameter
+    /// Convert double to double using a ratio parameter
     /// </summary>
     [ValueConversion(typeof (string), typeof (string))]
     public class RatioConverter : MarkupExtension, IValueConverter
@@ -14,7 +14,7 @@ namespace Popcorn.Converters
         private RatioConverter _instance;
 
         /// <summary>
-        ///     Modify value with a ratio parameter
+        /// Modify value with a ratio parameter
         /// </summary>
         /// <param name="value">The value produced by the binding source.</param>
         /// <param name="targetType">The type of the binding target property.</param>
@@ -32,7 +32,7 @@ namespace Popcorn.Converters
         }
 
         /// <summary>
-        ///     Not supported
+        /// Not supported
         /// </summary>
         /// <param name="value">The value produced by the binding source.</param>
         /// <param name="targetType">The type of the binding target property.</param>
@@ -43,6 +43,7 @@ namespace Popcorn.Converters
             throw new NotSupportedException();
         }
 
-        public override object ProvideValue(IServiceProvider serviceProvider) => _instance ?? (_instance = new RatioConverter());
+        public override object ProvideValue(IServiceProvider serviceProvider)
+            => _instance ?? (_instance = new RatioConverter());
     }
 }

@@ -11,12 +11,12 @@ using System.Windows.Media;
 namespace Popcorn.Helpers
 {
     /// <summary>
-    ///     Used to define extension methods
+    /// Used to define extension methods
     /// </summary>
     public static class Extensions
     {
         /// <summary>
-        ///     Sort an observable collection of an IComparable object
+        /// Sort an observable collection of an IComparable object
         /// </summary>
         /// <typeparam name="T">The type of the object</typeparam>
         /// <param name="collection">The observable collection to sort</param>
@@ -28,18 +28,18 @@ namespace Popcorn.Helpers
         }
 
         /// <summary>
-        ///     Finds a Child of a given item in the visual tree.
+        /// Finds a Child of a given item in the visual tree.
         /// </summary>
         /// <param name="parent">A direct parent of the queried item.</param>
         /// <typeparam name="T">The type of the queried item.</typeparam>
         /// <param name="childName">x:Name or Name of child. </param>
         /// <returns>
-        ///     The first parent item that matches the submitted type parameter.
-        ///     If not matching item can be found,
-        ///     a null parent is being returned.
+        /// The first parent item that matches the submitted type parameter.
+        /// If not matching item can be found,
+        /// a null parent is being returned.
         /// </returns>
         /// <remarks>
-        ///     http://stackoverflow.com/a/1759923/1188513
+        /// http://stackoverflow.com/a/1759923/1188513
         /// </remarks>
         public static T FindChild<T>(this DependencyObject parent, string childName)
             where T : DependencyObject
@@ -76,7 +76,7 @@ namespace Popcorn.Helpers
         }
 
         /// <summary>
-        ///     Execute synchronously an action on each item of an IEnumerable source
+        /// Execute synchronously an action on each item of an IEnumerable source
         /// </summary>
         /// <typeparam name="TSource">Type of the resource to process the task asynchronously</typeparam>
         /// <typeparam name="TResult">Type of the asynchronously computed result</typeparam>
@@ -95,7 +95,7 @@ namespace Popcorn.Helpers
         }
 
         /// <summary>
-        ///     Process asynchronously a task with a semaphore limit
+        /// Process asynchronously a task with a semaphore limit
         /// </summary>
         /// <typeparam name="TSource">Type of the resource to process the task asynchronously</typeparam>
         /// <typeparam name="TResult">Type of the asynchronously computed result</typeparam>
@@ -122,7 +122,7 @@ namespace Popcorn.Helpers
         }
 
         /// <summary>
-        ///     Download file asynchronously
+        /// Download file asynchronously
         /// </summary>
         /// <param name="wc">The WebClient instance</param>
         /// <param name="address">The address of the file</param>
