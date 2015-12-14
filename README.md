@@ -11,7 +11,7 @@ An application which aims to provide a simple interface to watch any movie.
 
 ![Screenshot3](https://cloud.githubusercontent.com/assets/8962802/9288481/dee26ee4-4348-11e5-972e-b7609bd07ca8.jpg)
 
-* Caution: I do not maintain this repo anymore, mainly due to the YTS API shutdown.*
+*Caution: I do not maintain this repo anymore, mainly due to the YTS API shutdown.*
 
 ## What does it use?
 .NET Framework 4.6 and C# for the backend. WPF/XAML for the interface.
