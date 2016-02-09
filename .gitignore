@@ -80,10 +80,6 @@ Popcorn.Tests/Obj
 *.suo
 *.user
 
-# Squirrel folder releases
-Releases
-Popcorn/Popcorn
-
 # Sonar folder
 .sonar
 
