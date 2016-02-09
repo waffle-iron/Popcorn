@@ -69,4 +69,4 @@ CI is hosted on [Appveyor](https://ci.appveyor.com/project/bbougot/popcorn).
 The solution is built using Visual Studio 2015.
 
 ## Installer
-Download full installer [here](https://github.com/bbougot/Popcorn/releases/download/1.0.14/Setup.exe)
+Download full installer [here](https://github.com/bbougot/Popcorn/releases/download/1.0.13/Setup.exe)
