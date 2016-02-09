@@ -457,32 +457,9 @@ namespace Popcorn.Services.History
                 Name = genre
             });
 
-            var images = new Images
-            {
-                BackgroundImage = movie.Images.BackgroundImage,
-                MediumCoverImage = movie.Images.MediumCoverImage,
-                SmallCoverImage = movie.Images.SmallCoverImage,
-                LargeCoverImage = movie.Images.LargeCoverImage,
-                LargeScreenshotImage1 = movie.Images.LargeScreenshotImage1,
-                LargeScreenshotImage2 = movie.Images.LargeScreenshotImage2,
-                LargeScreenshotImage3 = movie.Images.MediumScreenshotImage3,
-                MediumScreenshotImage3 = movie.Images.MediumScreenshotImage3,
-                MediumScreenshotImage1 = movie.Images.MediumScreenshotImage1,
-                MediumScreenshotImage2 = movie.Images.MediumScreenshotImage2
-            };
-
-            var actors = movie.Actors.Select(actor => new Actor
+            var cast = movie.Cast.Select(actor => new Cast
             {
                 CharacterName = actor.CharacterName,
-                MediumImage = actor.MediumImage,
-                Name = actor.Name,
-                SmallImage = actor.SmallImage,
-                SmallImagePath = actor.SmallImagePath
-            });
-
-            var directors = movie.Directors.Select(actor => new Director
-            {
-                MediumImage = actor.MediumImage,
                 Name = actor.Name,
                 SmallImage = actor.SmallImage,
                 SmallImagePath = actor.SmallImagePath
@@ -505,10 +482,8 @@ namespace Popcorn.Services.History
                 DateUploadedUnix = movie.DateUploadedUnix,
                 MpaRating = movie.MpaRating,
                 Rating = movie.RatingValue,
-                Images = images,
                 DescriptionFull = movie.DescriptionFull,
-                Actors = actors.ToList(),
-                Directors = directors.ToList(),
+                Cast = cast.ToList(),
                 DescriptionIntro = movie.DescriptionIntro,
                 DownloadCount = movie.DownloadCount,
                 LikeCount = movie.LikeCount,
@@ -518,7 +493,17 @@ namespace Popcorn.Services.History
                 RtCrtiticsScore = movie.RtCrtiticsScore,
                 YtTrailerCode = movie.YtTrailerCode,
                 HasBeenSeen = movie.HasBeenSeen,
-                IsFavorite = movie.IsFavorite
+                IsFavorite = movie.IsFavorite,
+                BackgroundImage = movie.BackgroundImage,
+                MediumCoverImage = movie.MediumCoverImage,
+                SmallCoverImage = movie.SmallCoverImage,
+                LargeCoverImage = movie.LargeCoverImage,
+                LargeScreenshotImage1 = movie.LargeScreenshotImage1,
+                LargeScreenshotImage2 = movie.LargeScreenshotImage2,
+                LargeScreenshotImage3 = movie.MediumScreenshotImage3,
+                MediumScreenshotImage3 = movie.MediumScreenshotImage3,
+                MediumScreenshotImage1 = movie.MediumScreenshotImage1,
+                MediumScreenshotImage2 = movie.MediumScreenshotImage2
             };
 
             return movieFull;

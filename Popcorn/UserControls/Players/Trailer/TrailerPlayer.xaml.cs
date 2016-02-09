@@ -351,19 +351,22 @@ namespace Popcorn.UserControls.Players.Trailer
             Player.VlcMediaPlayer.EndReached -= MediaPlayerEndReached;
             MediaPlayerIsPlaying = false;
 
-            DispatcherHelper.CheckBeginInvokeOnUI(async () =>
+            Task.Run(() =>
             {
-                await Player.StopAsync();
-                Player.Dispose();
+                Player.Stop();
+                //Player.Dispose();
 
-                var vm = DataContext as TrailerPlayerViewModel;
-                if (vm != null)
-                    vm.StoppedPlayingMedia -= OnStoppedPlayingMedia;
+                DispatcherHelper.CheckBeginInvokeOnUI(() =>
+                {
+                    var vm = DataContext as TrailerPlayerViewModel;
+                    if (vm != null)
+                        vm.StoppedPlayingMedia -= OnStoppedPlayingMedia;
 
-                Disposed = true;
+                    Disposed = true;
 
-                if (disposing)
-                    GC.SuppressFinalize(this);
+                    if (disposing)
+                        GC.SuppressFinalize(this);
+                });
             });
         }
     }

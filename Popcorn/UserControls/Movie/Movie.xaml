@@ -192,7 +192,7 @@
                             <StackPanel.OpacityMask>
                                 <VisualBrush Visual="{Binding ElementName=Mask}" />
                             </StackPanel.OpacityMask>
-                            <Image Source="{Binding Path=Movie.PosterImagePath, Converter={StaticResource UriToCachedImageConverter}}" />
+                            <Image Source="{Binding Path=Movie.LargeCoverImage, Converter={StaticResource UriToCachedImageConverter}}" />
                         </StackPanel>
                     </Grid>
                 </Border>
@@ -304,55 +304,8 @@
                                             <StackPanel>
                                                 <TextBlock FontSize="18"
                                                            FontWeight="Medium"
-                                                           Text="{lex:LocText DirectorsLabel}" />
-                                                <ItemsControl ItemsSource="{Binding Movie.Directors}" Padding="0,15,0,0">
-                                                    <ItemsControl.ItemsPanel>
-                                                        <ItemsPanelTemplate>
-                                                            <StackPanel Orientation="Horizontal" />
-                                                        </ItemsPanelTemplate>
-                                                    </ItemsControl.ItemsPanel>
-                                                    <ItemsControl.ItemTemplate>
-                                                        <DataTemplate>
-                                                            <StackPanel Margin="0,0,20,0" Orientation="Horizontal">
-                                                                <StackPanel Orientation="Vertical">
-                                                                    <TextBlock FontSize="14" Text="{Binding Name}" />
-                                                                    <Border HorizontalAlignment="Center"
-                                                                            VerticalAlignment="Top"
-                                                                            BorderThickness="1"
-                                                                            CornerRadius="40">
-                                                                        <Grid>
-                                                                            <Border x:Name="mask"
-                                                                                    Background="Black"
-                                                                                    CornerRadius="40" />
-                                                                            <StackPanel>
-                                                                                <StackPanel.OpacityMask>
-                                                                                    <VisualBrush Visual="{Binding ElementName=mask}" />
-                                                                                </StackPanel.OpacityMask>
-                                                                                <Image Width="60"
-                                                                                       Height="60"
-                                                                                       HorizontalAlignment="Left"
-                                                                                       Source="{Binding SmallImagePath,
-                                                                                                        Converter={StaticResource UriToCachedImageConverter}}" />
-                                                                            </StackPanel>
-                                                                        </Grid>
-                                                                    </Border>
-                                                                </StackPanel>
-                                                            </StackPanel>
-                                                        </DataTemplate>
-                                                    </ItemsControl.ItemTemplate>
-                                                </ItemsControl>
-                                            </StackPanel>
-                                            <StackPanel Margin="20,0,20,0" Orientation="Horizontal">
-                                                <Rectangle Width="1"
-                                                           Margin="2"
-                                                           VerticalAlignment="Stretch"
-                                                           Stroke="White" />
-                                            </StackPanel>
-                                            <StackPanel>
-                                                <TextBlock FontSize="18"
-                                                           FontWeight="Medium"
                                                            Text="{lex:LocText ActorsLabel}" />
-                                                <ItemsControl ItemsSource="{Binding Movie.Actors}" Padding="0,15,0,0">
+                                                <ItemsControl ItemsSource="{Binding Movie.Cast}" Padding="0,15,0,0">
                                                     <ItemsControl.ItemsPanel>
                                                         <ItemsPanelTemplate>
                                                             <StackPanel Orientation="Horizontal" />

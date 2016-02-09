@@ -22,7 +22,7 @@ namespace Popcorn.Helpers
         /// <summary>
         /// Endpoint to YTS
         /// </summary>
-        public const string YtsApiEndpoint = "http://yts.to/api/v2";
+        public const string YtsApiEndpoint = "http://yts.ag/api/v2";
 
         /// <summary>
         /// Endpoint to Yify Subtitles
@@ -95,14 +95,9 @@ namespace Popcorn.Helpers
         public static string BackgroundMovieDirectory { get; } = Path.GetTempPath() + "Popcorn\\Backgrounds\\";
 
         /// <summary>
-        /// Directory of directors images
-        /// </summary>
-        public static string DirectorMovieDirectory { get; } = Path.GetTempPath() + "Popcorn\\Directors\\";
-
-        /// <summary>
         /// Directory of actors images
         /// </summary>
-        public static string ActorMovieDirectory { get; } = Path.GetTempPath() + "Popcorn\\Actors\\";
+        public static string CastMovieDirectory { get; } = Path.GetTempPath() + "Popcorn\\Cast\\";
 
         /// <summary>
         /// Directory of downloaded movies

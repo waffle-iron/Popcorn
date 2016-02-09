@@ -6,7 +6,7 @@ namespace Popcorn.Entity.Cast
     /// <summary>
     /// Represents a movie actor
     /// </summary>
-    public class Actor
+    public class Cast
     {
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         [Key]
@@ -15,7 +15,6 @@ namespace Popcorn.Entity.Cast
         public string Name { get; set; }
         public string CharacterName { get; set; }
         public string SmallImage { get; set; }
-        public string MediumImage { get; set; }
         public string SmallImagePath { get; set; }
     }
 }

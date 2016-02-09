@@ -247,8 +247,7 @@ namespace Popcorn.ViewModels.Movie
             Movie = await _movieService.GetMovieFullDetailsAsync(movie, _cancellationLoadingToken.Token);
             IsMovieLoading = false;
             await _movieService.DownloadPosterImageAsync(Movie, _cancellationLoadingToken);
-            await _movieService.DownloadDirectorImageAsync(Movie, _cancellationLoadingToken);
-            await _movieService.DownloadActorImageAsync(Movie, _cancellationLoadingToken);
+            await _movieService.DownloadCastImageAsync(Movie, _cancellationLoadingToken);
             await _movieService.DownloadBackgroundImageAsync(Movie, _cancellationLoadingToken);
 
             watch.Stop();

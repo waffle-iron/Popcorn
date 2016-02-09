@@ -158,17 +158,10 @@ namespace Popcorn.Services.Movie
         Task DownloadPosterImageAsync(MovieFull movie, CancellationTokenSource ct);
 
         /// <summary>
-        /// Download directors' image for a movie
-        /// </summary>
-        /// <param name="movie">The movie to process</param>
-        /// <param name="ct">Used to cancel downloading director image</param>
-        Task DownloadDirectorImageAsync(MovieFull movie, CancellationTokenSource ct);
-
-        /// <summary>
         /// Download actors' image for a movie
         /// </summary>
         /// <param name="movie">The movie to process</param>
         /// <param name="ct">Used to cancel downloading actor image</param>
-        Task DownloadActorImageAsync(MovieFull movie, CancellationTokenSource ct);
+        Task DownloadCastImageAsync(MovieFull movie, CancellationTokenSource ct);
     }
 }

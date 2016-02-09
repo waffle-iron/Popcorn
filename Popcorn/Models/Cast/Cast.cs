@@ -3,7 +3,7 @@ using RestSharp.Deserializers;
 
 namespace Popcorn.Models.Cast
 {
-    public class Actor : ObservableObject
+    public class Cast : ObservableObject
     {
         private string _characterName;
         private string _mediumImage;
@@ -25,18 +25,11 @@ namespace Popcorn.Models.Cast
             set { Set(() => CharacterName, ref _characterName, value); }
         }
 
-        [DeserializeAs(Name = "small_image")]
+        [DeserializeAs(Name = "url_small_image")]
         public string SmallImage
         {
             get { return _smallImage; }
             set { Set(() => SmallImage, ref _smallImage, value); }
-        }
-
-        [DeserializeAs(Name = "medium_image")]
-        public string MediumImage
-        {
-            get { return _mediumImage; }
-            set { Set(() => MediumImage, ref _mediumImage, value); }
         }
 
         /// <summary>

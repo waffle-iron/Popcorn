@@ -51,21 +51,24 @@ packages/Microsoft.Web.Xdt.2.1.1
 packages/Mono.Cecil.0.9.6.1
 packages/MvvmLight.5.2.0.0
 packages/MvvmLightLibs.5.2.0.0
-packages/Newtonsoft.Json.7.0.1
+packages/Newtonsoft.Json.8.0.2
 packages/Nuget.Core.2.8.6
 packages/NUnit.2.6.4
 packages/RestSharp.105.2.3
 packages/Splat.1.6.2
-packages/squirrel.windows.1.0.2
+packages/squirrel.windows.1.2.3
 packages/TMDbLib.0.8.3
-packages/YoutubeExtractor.0.10.6
+packages/YoutubeExtractor.0.10.10
 packages/EntityFramework.6.1.3
 packages/repositories.config
 packages/EntityFramework.SqlServerCompact.6.1.3
 packages/Microsoft.SqlServer.Compact.4.0.8876.1
 packages/WpfLocalizeExtension.2.3.2
-packages/XAMLMarkupExtensions.1.2.1.3
-packages/NLog.4.1.1
+packages/XAMLMarkupExtensions.1.2.1.4
+packages/NLog.4.2.3
+packages/xZune.Vlc.16.01.17
+packages/xZune.Vlc.Wpf.16.01.17
+packages/xZune.Vlc.Lib.15.11.24
 
 # Bin and obj
 Popcorn/Bin

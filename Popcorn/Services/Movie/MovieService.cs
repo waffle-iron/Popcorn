@@ -385,8 +385,8 @@ namespace Popcorn.Services.Movie
             var request = new RestRequest("/{segment}", Method.GET);
             request.AddUrlSegment("segment", "movie_details.json");
             request.AddParameter("movie_id", movieToLoad.Id);
-            request.AddParameter("with_images", true);
-            request.AddParameter("with_cast", true);
+            request.AddParameter("with_images", "true");
+            request.AddParameter("with_cast", "true");
 
             try
             {
@@ -396,41 +396,40 @@ namespace Popcorn.Services.Movie
 
                 await Task.Run(() =>
                 {
-                    var tmdbInfos = TmdbClient.GetMovie(response.Data.Movie.ImdbCode,
+                    var tmdbInfos = TmdbClient.GetMovie(response.Data.Data.Movie.ImdbCode,
                         MovieMethods.Credits);
 
                     movie = new MovieFull
                     {
-                        Id = response.Data.Movie.Id,
-                        Actors = response.Data.Movie.Actors,
+                        Id = response.Data.Data.Movie.Id,
+                        Cast = response.Data.Data.Movie.Cast,
                         BackgroundImagePath = string.Empty,
-                        DateUploaded = response.Data.Movie.DateUploaded,
-                        DateUploadedUnix = response.Data.Movie.DateUploadedUnix,
+                        DateUploaded = response.Data.Data.Movie.DateUploaded,
+                        DateUploadedUnix = response.Data.Data.Movie.DateUploadedUnix,
                         DescriptionFull = tmdbInfos.Overview,
-                        DescriptionIntro = response.Data.Movie.DescriptionIntro,
-                        Directors = response.Data.Movie.Directors,
-                        DownloadCount = response.Data.Movie.DownloadCount,
-                        FullHdAvailable = response.Data.Movie.Torrents.Any(torrent => torrent.Quality == "1080p"),
+                        DescriptionIntro = response.Data.Data.Movie.DescriptionIntro,
+                        DownloadCount = response.Data.Data.Movie.DownloadCount,
+                        FullHdAvailable = response.Data.Data.Movie.Torrents.Any(torrent => torrent.Quality == "1080p"),
                         Genres = tmdbInfos.Genres.Select(a => a.Name).ToList(),
-                        Images = response.Data.Movie.Images,
-                        ImdbCode = response.Data.Movie.ImdbCode,
-                        Language = response.Data.Movie.Language,
-                        LikeCount = response.Data.Movie.LikeCount,
-                        MpaRating = response.Data.Movie.MpaRating,
+                        ImdbCode = response.Data.Data.Movie.ImdbCode,
+                        Language = response.Data.Data.Movie.Language,
+                        LikeCount = response.Data.Data.Movie.LikeCount,
+                        MpaRating = response.Data.Data.Movie.MpaRating,
+                        LargeCoverImage = response.Data.Data.Movie.LargeCoverImage,
                         PosterImagePath = string.Empty,
-                        RatingValue = response.Data.Movie.Rating,
-                        RtAudienceRating = response.Data.Movie.RtAudienceRating,
-                        RtAudienceScore = response.Data.Movie.RtAudienceScore,
-                        RtCriticsRating = response.Data.Movie.RtCriticsRating,
-                        RtCrtiticsScore = response.Data.Movie.RtCrtiticsScore,
-                        Runtime = response.Data.Movie.Runtime,
+                        RatingValue = response.Data.Data.Movie.Rating,
+                        RtAudienceRating = response.Data.Data.Movie.RtAudienceRating,
+                        RtAudienceScore = response.Data.Data.Movie.RtAudienceScore,
+                        RtCriticsRating = response.Data.Data.Movie.RtCriticsRating,
+                        RtCrtiticsScore = response.Data.Data.Movie.RtCrtiticsScore,
+                        Runtime = response.Data.Data.Movie.Runtime,
                         Title = tmdbInfos.Title,
-                        TitleLong = response.Data.Movie.TitleLong,
-                        Torrents = response.Data.Movie.Torrents,
-                        Url = response.Data.Movie.Url,
+                        TitleLong = response.Data.Data.Movie.TitleLong,
+                        Torrents = response.Data.Data.Movie.Torrents,
+                        Url = response.Data.Data.Movie.Url,
                         WatchInFullHdQuality = false,
-                        Year = response.Data.Movie.Year,
-                        YtTrailerCode = response.Data.Movie.YtTrailerCode
+                        Year = response.Data.Data.Movie.Year,
+                        YtTrailerCode = response.Data.Data.Movie.YtTrailerCode
                     };
                 }, ct);
             }
@@ -598,6 +597,11 @@ namespace Popcorn.Services.Movie
 
                 var subtitles = new ObservableCollection<Subtitle>();
                 Dictionary<string, List<Subtitle>> movieSubtitles;
+                if (wrapper.Subtitles == null)
+                {
+                    await Task.CompletedTask;
+                    return;
+                }
                 if (wrapper.Subtitles.TryGetValue(movie.ImdbCode, out movieSubtitles))
                 {
                     foreach (var subtitle in movieSubtitles)
@@ -806,14 +810,12 @@ namespace Popcorn.Services.Movie
         /// <param name="ct">Used to cancel downloading poster image</param>
         public async Task DownloadPosterImageAsync(MovieFull movie, CancellationTokenSource ct)
         {
-            if (movie.Images == null)
-                return;
 
             var watch = Stopwatch.StartNew();
 
             var posterPath = new List<string>
             {
-                movie.Images.LargeCoverImage
+                movie.LargeCoverImage
             };
 
             try
@@ -826,7 +828,7 @@ namespace Popcorn.Services.Movie
                         (poster, t) =>
                         {
                             if (t.Item3 == null && !string.IsNullOrEmpty(t.Item2))
-                                movie.PosterImagePath = t.Item2;
+                                movie.LargeCoverImage = t.Item2;
                         });
             }
             catch (Exception exception) when (exception is TaskCanceledException)
@@ -850,58 +852,13 @@ namespace Popcorn.Services.Movie
         }
 
         /// <summary>
-        /// Download directors' image for a movie
-        /// </summary>
-        /// <param name="movie">The movie to process</param>
-        /// <param name="ct">Used to cancel downloading director image</param>
-        public async Task DownloadDirectorImageAsync(MovieFull movie, CancellationTokenSource ct)
-        {
-            if (movie.Directors == null)
-                return;
-
-            var watch = Stopwatch.StartNew();
-
-            try
-            {
-                await
-                    movie.Directors.ForEachAsync(
-                        director =>
-                            DownloadFileHelper.DownloadFileTaskAsync(director.SmallImage,
-                                Constants.DirectorMovieDirectory + director.Name + Constants.ImageFileExtension, ct: ct),
-                        (director, t) =>
-                        {
-                            if (t.Item3 == null && !string.IsNullOrEmpty(t.Item2))
-                                director.SmallImagePath = t.Item2;
-                        });
-            }
-            catch (Exception exception) when (exception is TaskCanceledException)
-            {
-                Logger.Debug(
-                    "DownloadDirectorImageAsync cancelled.");
-            }
-            catch (Exception exception)
-            {
-                Logger.Error(
-                    $"DownloadDirectorImageAsync: {exception.Message}");
-                throw;
-            }
-            finally
-            {
-                watch.Stop();
-                var elapsedMs = watch.ElapsedMilliseconds;
-                Logger.Debug(
-                    $"DownloadDirectorImageAsync ({movie.ImdbCode}) in {elapsedMs} milliseconds.");
-            }
-        }
-
-        /// <summary>
         /// Download actors' image for a movie
         /// </summary>
         /// <param name="movie">The movie to process</param>
         /// <param name="ct">Used to cancel downloading actor image</param>
-        public async Task DownloadActorImageAsync(MovieFull movie, CancellationTokenSource ct)
+        public async Task DownloadCastImageAsync(MovieFull movie, CancellationTokenSource ct)
         {
-            if (movie.Actors == null)
+            if (movie.Cast == null)
                 return;
 
             var watch = Stopwatch.StartNew();
@@ -909,25 +866,25 @@ namespace Popcorn.Services.Movie
             try
             {
                 await
-                    movie.Actors.ForEachAsync(
-                        actor =>
-                            DownloadFileHelper.DownloadFileTaskAsync(actor.SmallImage,
-                                Constants.ActorMovieDirectory + actor.Name + Constants.ImageFileExtension, ct: ct),
-                        (actor, t) =>
+                    movie.Cast.ForEachAsync(
+                        cast =>
+                            DownloadFileHelper.DownloadFileTaskAsync(cast.SmallImage,
+                                Constants.CastMovieDirectory + cast.Name + Constants.ImageFileExtension, ct: ct),
+                        (cast, t) =>
                         {
                             if (t.Item3 == null && !string.IsNullOrEmpty(t.Item2))
-                                actor.SmallImagePath = t.Item2;
+                                cast.SmallImagePath = t.Item2;
                         });
             }
             catch (Exception exception) when (exception is TaskCanceledException)
             {
                 Logger.Debug(
-                    "DownloadActorImageAsync cancelled.");
+                    "DownloadCastImageAsync cancelled.");
             }
             catch (Exception exception)
             {
                 Logger.Error(
-                    $"DownloadActorImageAsync: {exception.Message}");
+                    $"DownloadCastImageAsync: {exception.Message}");
                 throw;
             }
             finally
@@ -935,7 +892,7 @@ namespace Popcorn.Services.Movie
                 watch.Stop();
                 var elapsedMs = watch.ElapsedMilliseconds;
                 Logger.Debug(
-                    $"DownloadActorImageAsync ({movie.ImdbCode}) in {elapsedMs} milliseconds.");
+                    $"DownloadCastImageAsync ({movie.ImdbCode}) in {elapsedMs} milliseconds.");
             }
         }
 

@@ -2,8 +2,6 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using GalaSoft.MvvmLight;
-using Popcorn.Models.Cast;
-using Popcorn.Models.Images;
 using RestSharp.Deserializers;
 
 namespace Popcorn.Models.Movie.Full
@@ -13,7 +11,7 @@ namespace Popcorn.Models.Movie.Full
     /// </summary>
     public class MovieFull : ObservableObject
     {
-        private List<Actor> _actors;
+        private List<Cast.Cast> _cast;
 
         private ObservableCollection<Subtitle.Subtitle> _availableSubtitles =
             new ObservableCollection<Subtitle.Subtitle>();
@@ -23,14 +21,22 @@ namespace Popcorn.Models.Movie.Full
         private int _dateUploadedUnix;
         private string _descriptionFull;
         private string _descriptionIntro;
-        private List<Director> _directors;
         private string _downloadCount;
         private Uri _filePath;
         private bool _fullHdAvailable;
         private List<string> _genres;
         private bool _hasBeenSeen;
         private int _id;
-        private MovieImages _images;
+        private string _backgroundImage;
+        private string _largeCoverImage;
+        private string _largeScreenshotImage1;
+        private string _largeScreenshotImage2;
+        private string _largeScreenshotImage3;
+        private string _mediumCoverImage;
+        private string _mediumScreenshotImage1;
+        private string _mediumScreenshotImage2;
+        private string _mediumScreenshotImage3;
+        private string _smallCoverImage;
         private string _imdbCode;
         private bool _isFavorite;
         private string _language;
@@ -193,25 +199,11 @@ namespace Popcorn.Models.Movie.Full
             set { Set(() => YtTrailerCode, ref _ytTrailerCode, value); }
         }
 
-        [DeserializeAs(Name = "images")]
-        public MovieImages Images
+        [DeserializeAs(Name = "cast")]
+        public List<Cast.Cast> Cast
         {
-            get { return _images; }
-            set { Set(() => Images, ref _images, value); }
-        }
-
-        [DeserializeAs(Name = "directors")]
-        public List<Director> Directors
-        {
-            get { return _directors; }
-            set { Set(() => Directors, ref _directors, value); }
-        }
-
-        [DeserializeAs(Name = "actors")]
-        public List<Actor> Actors
-        {
-            get { return _actors; }
-            set { Set(() => Actors, ref _actors, value); }
+            get { return _cast; }
+            set { Set(() => Cast, ref _cast, value); }
         }
 
         [DeserializeAs(Name = "torrents")]
@@ -233,6 +225,76 @@ namespace Popcorn.Models.Movie.Full
         {
             get { return _dateUploadedUnix; }
             set { Set(() => DateUploadedUnix, ref _dateUploadedUnix, value); }
+        }
+
+        [DeserializeAs(Name = "background_image")]
+        public string BackgroundImage
+        {
+            get { return _backgroundImage; }
+            set { Set(() => BackgroundImage, ref _backgroundImage, value); }
+        }
+
+        [DeserializeAs(Name = "small_cover_image")]
+        public string SmallCoverImage
+        {
+            get { return _smallCoverImage; }
+            set { Set(() => SmallCoverImage, ref _smallCoverImage, value); }
+        }
+
+        [DeserializeAs(Name = "medium_cover_image")]
+        public string MediumCoverImage
+        {
+            get { return _mediumCoverImage; }
+            set { Set(() => MediumCoverImage, ref _mediumCoverImage, value); }
+        }
+
+        [DeserializeAs(Name = "large_cover_image")]
+        public string LargeCoverImage
+        {
+            get { return _largeCoverImage; }
+            set { Set(() => LargeCoverImage, ref _largeCoverImage, value); }
+        }
+
+        [DeserializeAs(Name = "medium_screenshot_image1")]
+        public string MediumScreenshotImage1
+        {
+            get { return _mediumScreenshotImage1; }
+            set { Set(() => MediumScreenshotImage1, ref _mediumScreenshotImage1, value); }
+        }
+
+        [DeserializeAs(Name = "medium_screenshot_image2")]
+        public string MediumScreenshotImage2
+        {
+            get { return _mediumScreenshotImage2; }
+            set { Set(() => MediumScreenshotImage2, ref _mediumScreenshotImage2, value); }
+        }
+
+        [DeserializeAs(Name = "medium_screenshot_image3")]
+        public string MediumScreenshotImage3
+        {
+            get { return _mediumScreenshotImage3; }
+            set { Set(() => MediumScreenshotImage3, ref _mediumScreenshotImage3, value); }
+        }
+
+        [DeserializeAs(Name = "large_screenshot_image1")]
+        public string LargeScreenshotImage1
+        {
+            get { return _largeScreenshotImage1; }
+            set { Set(() => LargeScreenshotImage1, ref _largeScreenshotImage1, value); }
+        }
+
+        [DeserializeAs(Name = "large_screenshot_image2")]
+        public string LargeScreenshotImage2
+        {
+            get { return _largeScreenshotImage2; }
+            set { Set(() => LargeScreenshotImage2, ref _largeScreenshotImage2, value); }
+        }
+
+        [DeserializeAs(Name = "large_screenshot_image3")]
+        public string LargeScreenshotImage3
+        {
+            get { return _largeScreenshotImage3; }
+            set { Set(() => LargeScreenshotImage3, ref _largeScreenshotImage3, value); }
         }
 
         /// <summary>
