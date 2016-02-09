@@ -69,6 +69,8 @@ packages/NLog.4.2.3
 packages/xZune.Vlc.16.01.17
 packages/xZune.Vlc.Wpf.16.01.17
 packages/xZune.Vlc.Lib.15.11.24
+packages/MahApps.Metro.1.2.4.0
+packages/MahApps.Metro.Resources.0.4.0.0
 
 # Bin and obj
 Popcorn/Bin
