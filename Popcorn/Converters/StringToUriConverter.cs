@@ -8,7 +8,7 @@ namespace Popcorn.Converters
     /// <summary>
     /// Used to check if the path to the image file is empty or not
     /// </summary>
-    public class UriToCachedImageConverter : IValueConverter
+    public class StringToUriConverter : IValueConverter
     {
         /// <summary>
         /// Convert a path image to a bitmap-cached image
@@ -22,12 +22,7 @@ namespace Popcorn.Converters
         {
             if (string.IsNullOrEmpty(value?.ToString())) return null;
             var path = value.ToString();
-            var bi = new BitmapImage();
-            bi.BeginInit();
-            bi.UriSource = new Uri(path);
-            bi.CacheOption = BitmapCacheOption.OnLoad;
-            bi.EndInit();
-            return bi;
+            return new Uri(path, UriKind.Absolute);
         }
 
         /// <summary>
