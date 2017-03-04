@@ -27,8 +27,7 @@ An application which aims to provide a simple interface to watch any movie.
 * Localization: [WpfLocalizeExtension](https://github.com/SeriousM/WPFLocalizationExtension)
 
 ### API
-* Movies' torrent source from [YTS](http://yts.ag)
-* Movies' data from [TMDb](http://tmdb.org)
+* Using own private [API](https://popcornapi.azurewebsites.net/), hosted in Azure as a ASP.NET Core web app (source [here](https://github.com/bbougot/PopcornApi)).
 
 ## Supported platforms
 At this time, only Windows 7+ is supported (Windows 7, 8, 8.1, 10).
@@ -53,4 +52,4 @@ Of course yes! Any pull-request will be considered.
 - [x] Settings features : Language (English/French), Broadband limit
 
 ## Installer
-Download full installer [here](https://github.com/bbougot/Popcorn/releases/download/1.5.0/Setup.exe)
+Download full installer [here](https://github.com/bbougot/Popcorn/releases/download/1.6.0/Setup.exe)
