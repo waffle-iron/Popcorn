@@ -9,7 +9,7 @@ namespace Popcorn.ViewModels.Genres
         /// <summary>
         /// Movie genres
         /// </summary>
-        ObservableCollection<MovieGenre> MovieGenres { get; set; }
+        ObservableCollection<GenreJson> MovieGenres { get; set; }
 
         /// <summary>
         /// Load genres asynchronously

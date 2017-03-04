@@ -15,7 +15,6 @@ namespace Popcorn.Entity.Movie
         public int Id { get; set; }
 
         public DateTime Created { get; set; }
-        public virtual ICollection<MovieShort> MoviesShort { get; set; }
-        public virtual ICollection<MovieFull> MoviesFull { get; set; }
+        public virtual ICollection<MovieEntity> Movies { get; set; }
     }
 }

@@ -15,6 +15,6 @@ namespace Popcorn.Entity.Cast
         public string Name { get; set; }
         public string CharacterName { get; set; }
         public string SmallImage { get; set; }
-        public string SmallImagePath { get; set; }
+        public string ImdbCode { get; set; }
     }
 }

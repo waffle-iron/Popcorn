@@ -6,8 +6,7 @@ using GalaSoft.MvvmLight.CommandWpf;
 using GalaSoft.MvvmLight.Messaging;
 using NLog;
 using Popcorn.Messaging;
-using Popcorn.Models.Movie.Full;
-using Popcorn.Models.Movie.Short;
+using Popcorn.Models.Movie;
 using Popcorn.Services.Movie;
 using Popcorn.ViewModels.DownloadMovie;
 using Popcorn.ViewModels.Trailer;
@@ -67,7 +66,7 @@ namespace Popcorn.ViewModels.Movie
         /// <summary>
         /// The movie to manage
         /// </summary>
-        private MovieFull _movie = new MovieFull();
+        private MovieJson _movie = new MovieJson();
 
         /// <summary>
         /// Manage the movie's trailer
@@ -95,7 +94,7 @@ namespace Popcorn.ViewModels.Movie
         /// <summary>
         /// The selected movie to manage
         /// </summary>
-        public MovieFull Movie
+        public MovieJson Movie
         {
             get { return _movie; }
             set { Set(() => Movie, ref _movie, value); }
@@ -158,7 +157,7 @@ namespace Popcorn.ViewModels.Movie
         /// <summary>
         /// Command used to load the movie
         /// </summary>
-        public RelayCommand<MovieShort> LoadMovieCommand { get; private set; }
+        public RelayCommand<MovieJson> LoadMovieCommand { get; private set; }
 
         /// <summary>
         /// Command used to stop loading the trailer
@@ -205,7 +204,7 @@ namespace Popcorn.ViewModels.Movie
                 async message =>
                 {
                     if (!string.IsNullOrEmpty(Movie?.ImdbCode))
-                        await _movieService.TranslateMovieFullAsync(Movie, _cancellationLoadingToken.Token);
+                        await _movieService.TranslateMovieAsync(Movie, _cancellationLoadingToken.Token);
                 });
         }
 
@@ -214,7 +213,7 @@ namespace Popcorn.ViewModels.Movie
         /// </summary>
         private void RegisterCommands()
         {
-            LoadMovieCommand = new RelayCommand<MovieShort>(async movie => { await LoadMovieAsync(movie); });
+            LoadMovieCommand = new RelayCommand<MovieJson>(LoadMovie);
 
             PlayMovieCommand = new RelayCommand(() =>
             {
@@ -237,22 +236,19 @@ namespace Popcorn.ViewModels.Movie
         /// Load the requested movie
         /// </summary>
         /// <param name="movie">The movie to load</param>
-        private async Task LoadMovieAsync(MovieShort movie)
+        private void LoadMovie(MovieJson movie)
         {
             var watch = Stopwatch.StartNew();
 
             Messenger.Default.Send(new LoadMovieMessage());
             IsMovieLoading = true;
 
-            Movie = await _movieService.GetMovieFullDetailsAsync(movie, _cancellationLoadingToken.Token);
+            Movie = movie;
             IsMovieLoading = false;
-            await _movieService.DownloadPosterImageAsync(Movie, _cancellationLoadingToken);
-            await _movieService.DownloadCastImageAsync(Movie, _cancellationLoadingToken);
-            await _movieService.DownloadBackgroundImageAsync(Movie, _cancellationLoadingToken);
 
             watch.Stop();
             var elapsedMs = watch.ElapsedMilliseconds;
-            Logger.Debug($"LoadMovieAsync ({movie.ImdbCode}) in {elapsedMs} milliseconds.");
+            Logger.Debug($"LoadMovie ({movie.ImdbCode}) in {elapsedMs} milliseconds.");
         }
 
         /// <summary>

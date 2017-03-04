@@ -146,8 +146,9 @@
             <Image
                 Grid.Row="0"
                 Grid.RowSpan="3"
-                attachedProperties:ImageAsyncHelper.SourceUri="{Binding Movie.BackgroundImagePath, Converter={StaticResource StringToUriConverter}, IsAsync=True}"
+                attachedProperties:ImageAsyncHelper.SourceUri="{Binding Movie.BackdropImage, Converter={StaticResource StringToUriConverter}, IsAsync=True}"
                 Opacity="0.3"
+                RenderOptions.BitmapScalingMode="Fant"
                 Stretch="UniformToFill" />
             <TextBlock
                 Grid.Row="0"
@@ -199,7 +200,7 @@
                             <StackPanel.OpacityMask>
                                 <VisualBrush Visual="{Binding ElementName=Mask}" />
                             </StackPanel.OpacityMask>
-                            <Image attachedProperties:ImageAsyncHelper.SourceUri="{Binding Movie.LargeCoverImage, Converter={StaticResource StringToUriConverter}, IsAsync=True}" />
+                            <Image attachedProperties:ImageAsyncHelper.SourceUri="{Binding Movie.LargeCoverImage, Converter={StaticResource StringToUriConverter}, IsAsync=True}" RenderOptions.BitmapScalingMode="Fant" />
                         </StackPanel>
                     </Grid>
                 </Border>
@@ -271,7 +272,7 @@
                                     Width="60"
                                     Height="20"
                                     Margin="15,0,0,4"
-                                    RatingValue="{Binding Movie.RatingValue}" />
+                                    RatingValue="{Binding Movie.Rating}" />
                                 <Canvas
                                     Margin="10,0,0,5"
                                     VerticalAlignment="Center"
@@ -360,7 +361,8 @@
                                                                                     Width="60"
                                                                                     Height="60"
                                                                                     HorizontalAlignment="Left"
-                                                                                    attachedProperties:ImageAsyncHelper.SourceUri="{Binding SmallImagePath, Converter={StaticResource StringToUriConverter}, IsAsync=True}" />
+                                                                                    attachedProperties:ImageAsyncHelper.SourceUri="{Binding SmallImage, Converter={StaticResource StringToUriConverter}, IsAsync=True}"
+                                                                                    RenderOptions.BitmapScalingMode="Fant" />
                                                                             </StackPanel>
                                                                         </Grid>
                                                                     </Border>

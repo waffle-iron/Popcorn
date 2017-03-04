@@ -9,10 +9,10 @@ using NLog;
 using Popcorn.Entity;
 using Popcorn.Entity.Cast;
 using Popcorn.Entity.Movie;
+using Popcorn.Models.Cast;
 using Popcorn.Models.Genre;
-using MovieFull = Popcorn.Models.Movie.Full.MovieFull;
-using MovieShort = Popcorn.Models.Movie.Short.MovieShort;
-using Torrent = Popcorn.Models.Torrent.Torrent;
+using Popcorn.Models.Movie;
+using Popcorn.Models.Torrent;
 
 namespace Popcorn.Services.History
 {
@@ -30,7 +30,7 @@ namespace Popcorn.Services.History
         /// Set if movies have been seen or set as favorite
         /// </summary>
         /// <param name="movies">All movies to compute</param>
-        public async Task SetMovieHistoryAsync(IEnumerable<MovieShort> movies)
+        public async Task SetMovieHistoryAsync(IEnumerable<MovieJson> movies)
         {
             if (movies == null) throw new ArgumentNullException(nameof(movies));
             var watch = Stopwatch.StartNew();
@@ -48,7 +48,7 @@ namespace Popcorn.Services.History
 
                     foreach (var movie in movies)
                     {
-                        var entityMovie = history.MoviesShort.FirstOrDefault(p => p.MovieId == movie.Id);
+                        var entityMovie = history.Movies.FirstOrDefault(p => p.ImdbCode == movie.ImdbCode);
                         if (entityMovie == null) continue;
                         movie.IsFavorite = entityMovie.IsFavorite;
                         movie.HasBeenSeen = entityMovie.HasBeenSeen;
@@ -75,11 +75,11 @@ namespace Popcorn.Services.History
         /// <param name="genre">The genre of the movies</param>
         /// <param name="ratingFilter">Used to filter by rating</param>
         /// <returns>Favorites movies</returns>
-        public async Task<IEnumerable<MovieShort>> GetFavoritesMoviesAsync(MovieGenre genre, double ratingFilter)
+        public async Task<IEnumerable<MovieJson>> GetFavoritesMoviesAsync(GenreJson genre, double ratingFilter)
         {
             var watch = Stopwatch.StartNew();
 
-            var movies = new List<MovieShort>();
+            var movies = new List<MovieJson>();
 
             try
             {
@@ -88,17 +88,17 @@ namespace Popcorn.Services.History
                     var movieHistory = await context.MovieHistory.FirstOrDefaultAsync();
                     if (genre != null)
                     {
-                        movies.AddRange(movieHistory.MoviesShort.Where(
-                            p =>
-                                p.IsFavorite && p.Genres.Any(g => g.Name == genre.EnglishName) &&
-                                p.Rating >= ratingFilter)
-                            .Select(MovieShortFromEntityToModel));
+                        movies.AddRange(movieHistory.Movies.Where(
+                                p =>
+                                    p.IsFavorite && p.Genres.Any(g => g.Name == genre.EnglishName) &&
+                                    p.Rating >= ratingFilter)
+                            .Select(MovieEntityToMovieJson));
                     }
                     else
                     {
-                        movies.AddRange(movieHistory.MoviesShort.Where(
-                            p => p.IsFavorite)
-                            .Select(MovieShortFromEntityToModel));
+                        movies.AddRange(movieHistory.Movies.Where(
+                                p => p.IsFavorite)
+                            .Select(MovieEntityToMovieJson));
                     }
                 }
             }
@@ -125,11 +125,11 @@ namespace Popcorn.Services.History
         /// <param name="genre">The genre of the movies</param>
         /// <param name="ratingFilter">Used to filter by rating</param>
         /// <returns>Seen movies</returns>
-        public async Task<IEnumerable<MovieShort>> GetSeenMoviesAsync(MovieGenre genre, double ratingFilter)
+        public async Task<IEnumerable<MovieJson>> GetSeenMoviesAsync(GenreJson genre, double ratingFilter)
         {
             var watch = Stopwatch.StartNew();
 
-            var movies = new List<MovieShort>();
+            var movies = new List<MovieJson>();
 
             try
             {
@@ -138,17 +138,17 @@ namespace Popcorn.Services.History
                     var movieHistory = await context.MovieHistory.FirstOrDefaultAsync();
                     if (genre != null)
                     {
-                        movies.AddRange(movieHistory.MoviesShort.Where(
-                            p =>
-                                p.HasBeenSeen && p.Genres.Any(g => g.Name == genre.EnglishName) &&
-                                p.Rating >= ratingFilter)
-                            .Select(MovieShortFromEntityToModel));
+                        movies.AddRange(movieHistory.Movies.Where(
+                                p =>
+                                    p.HasBeenSeen && p.Genres.Any(g => g.Name == genre.EnglishName) &&
+                                    p.Rating >= ratingFilter)
+                            .Select(MovieEntityToMovieJson));
                     }
                     else
                     {
-                        movies.AddRange(movieHistory.MoviesShort.Where(
-                            p => p.HasBeenSeen)
-                            .Select(MovieShortFromEntityToModel));
+                        movies.AddRange(movieHistory.Movies.Where(
+                                p => p.HasBeenSeen)
+                            .Select(MovieEntityToMovieJson));
                     }
                 }
             }
@@ -172,7 +172,7 @@ namespace Popcorn.Services.History
         /// Set the movie as favorite
         /// </summary>
         /// <param name="movie">Favorite movie</param>
-        public async Task SetFavoriteMovieAsync(MovieShort movie)
+        public async Task SetFavoriteMovieAsync(MovieJson movie)
         {
             if (movie == null) throw new ArgumentNullException(nameof(movie));
             var watch = Stopwatch.StartNew();
@@ -188,20 +188,20 @@ namespace Popcorn.Services.History
                         movieHistory = await context.MovieHistory.FirstOrDefaultAsync();
                     }
 
-                    if (movieHistory.MoviesShort == null)
+                    if (movieHistory.Movies == null)
                     {
-                        movieHistory.MoviesShort = new List<Entity.Movie.MovieShort>
+                        movieHistory.Movies = new List<MovieEntity>
                         {
-                            MovieShortFromModelToEntity(movie)
+                            MovieJsonToEntity(movie)
                         };
 
                         context.MovieHistory.AddOrUpdate(movieHistory);
                     }
                     else
                     {
-                        var movieShort = movieHistory.MoviesShort.FirstOrDefault(p => p.MovieId == movie.Id);
+                        var movieShort = movieHistory.Movies.FirstOrDefault(p => p.ImdbCode == movie.ImdbCode);
                         if (movieShort == null)
-                            movieHistory.MoviesShort.Add(MovieShortFromModelToEntity(movie));
+                            movieHistory.Movies.Add(MovieJsonToEntity(movie));
                         else
                             movieShort.IsFavorite = movie.IsFavorite;
                     }
@@ -227,7 +227,7 @@ namespace Popcorn.Services.History
         /// Set a movie as seen
         /// </summary>
         /// <param name="movie">Seen movie</param>
-        public async Task SetHasBeenSeenMovieAsync(MovieFull movie)
+        public async Task SetHasBeenSeenMovieAsync(MovieJson movie)
         {
             if (movie == null) throw new ArgumentNullException(nameof(movie));
             var watch = Stopwatch.StartNew();
@@ -243,20 +243,20 @@ namespace Popcorn.Services.History
                         movieHistory = await context.MovieHistory.FirstOrDefaultAsync();
                     }
 
-                    if (movieHistory.MoviesFull == null)
+                    if (movieHistory.Movies == null)
                     {
-                        movieHistory.MoviesFull = new List<Entity.Movie.MovieFull>
+                        movieHistory.Movies = new List<Entity.Movie.MovieEntity>
                         {
-                            MovieFullFromModelToEntity(movie)
+                            MovieJsonToEntity(movie)
                         };
 
                         context.MovieHistory.AddOrUpdate(movieHistory);
                     }
                     else
                     {
-                        var movieFull = movieHistory.MoviesFull.FirstOrDefault(p => p.MovieId == movie.Id);
+                        var movieFull = movieHistory.Movies.FirstOrDefault(p => p.ImdbCode == movie.ImdbCode);
                         if (movieFull == null)
-                            movieHistory.MoviesFull.Add(MovieFullFromModelToEntity(movie));
+                            movieHistory.Movies.Add(MovieJsonToEntity(movie));
                         else
                             movieFull.HasBeenSeen = movie.HasBeenSeen;
                     }
@@ -295,8 +295,7 @@ namespace Popcorn.Services.History
                         context.MovieHistory.AddOrUpdate(new MovieHistory
                         {
                             Created = DateTime.Now,
-                            MoviesShort = new List<Entity.Movie.MovieShort>(),
-                            MoviesFull = new List<Entity.Movie.MovieFull>()
+                            Movies = new List<MovieEntity>()
                         });
 
                         await context.SaveChangesAsync();
@@ -318,11 +317,83 @@ namespace Popcorn.Services.History
         }
 
         /// <summary>
-        /// Convert a short movie entity to a short movie model
+        /// Convert a movie entity to a json movie
         /// </summary>
         /// <param name="movie">The movie to convert</param>
-        /// <returns>Short movie model</returns>
-        private static MovieShort MovieShortFromEntityToModel(Entity.Movie.MovieShort movie)
+        /// <returns>Json movie</returns>
+        private static MovieJson MovieEntityToMovieJson(MovieEntity movie)
+        {
+            if (movie == null) throw new ArgumentNullException(nameof(movie));
+            var torrents = movie.Torrents.Select(torrent => new TorrentJson
+            {
+                DateUploaded = torrent.DateUploaded,
+                Url = torrent.Url,
+                Quality = torrent.Quality,
+                DateUploadedUnix = torrent.DateUploadedUnix,
+                Hash = torrent.Hash,
+                Peers = torrent.Peers,
+                Seeds = torrent.Seeds,
+                Size = torrent.Size,
+                SizeBytes = torrent.SizeBytes
+            });
+
+            var genres = movie.Genres.Select(genre => genre.Name);
+
+            var cast = movie.Cast.Select(actor => new CastJson
+            {
+                CharacterName = actor.CharacterName,
+                Name = actor.Name,
+                SmallImage = actor.SmallImage,
+                ImdbCode = actor.ImdbCode
+            });
+
+            var movieFull = new MovieJson
+            {
+                Year = movie.Year,
+                Language = movie.Language,
+                ImdbCode = movie.ImdbCode,
+                Title = movie.Title,
+                DateUploaded = movie.DateUploaded,
+                Runtime = movie.Runtime,
+                Url = movie.Url,
+                TitleLong = movie.TitleLong,
+                Torrents = torrents.ToList(),
+                Genres = genres.ToList(),
+                DateUploadedUnix = movie.DateUploadedUnix,
+                MpaRating = movie.MpaRating,
+                Rating = movie.Rating,
+                DescriptionFull = movie.DescriptionFull,
+                Cast = cast.ToList(),
+                DescriptionIntro = movie.DescriptionIntro,
+                DownloadCount = movie.DownloadCount,
+                Slug = movie.Slug,
+                PosterImage = movie.PosterImage,
+                BackdropImage = movie.BackdropImage,
+                LikeCount = movie.LikeCount,
+                YtTrailerCode = movie.YtTrailerCode,
+                HasBeenSeen = movie.HasBeenSeen,
+                IsFavorite = movie.IsFavorite,
+                BackgroundImage = movie.BackgroundImage,
+                MediumCoverImage = movie.MediumCoverImage,
+                SmallCoverImage = movie.SmallCoverImage,
+                LargeCoverImage = movie.LargeCoverImage,
+                LargeScreenshotImage1 = movie.LargeScreenshotImage1,
+                LargeScreenshotImage2 = movie.LargeScreenshotImage2,
+                LargeScreenshotImage3 = movie.MediumScreenshotImage3,
+                MediumScreenshotImage3 = movie.MediumScreenshotImage3,
+                MediumScreenshotImage1 = movie.MediumScreenshotImage1,
+                MediumScreenshotImage2 = movie.MediumScreenshotImage2
+            };
+
+            return movieFull;
+        }
+
+        /// <summary>
+        /// Convert a json movie to an entity
+        /// </summary>
+        /// <param name="movie">The movie to convert</param>
+        /// <returns>Full movie entity</returns>
+        private static MovieEntity MovieJsonToEntity(MovieJson movie)
         {
             if (movie == null) throw new ArgumentNullException(nameof(movie));
             var torrents = movie.Torrents.Select(torrent => new Torrent
@@ -330,123 +401,9 @@ namespace Popcorn.Services.History
                 DateUploaded = torrent.DateUploaded,
                 Url = torrent.Url,
                 Quality = torrent.Quality,
-                DateUploadedUnix = torrent.DateUploadedMix,
-                Framerate = torrent.Framerate,
+                DateUploadedUnix = torrent.DateUploadedUnix,
                 Hash = torrent.Hash,
                 Peers = torrent.Peers,
-                Resolution = torrent.Resolution,
-                Seeds = torrent.Seeds,
-                Size = torrent.Size,
-                SizeBytes = torrent.SizeBytes
-            });
-
-            return new MovieShort
-            {
-                Language = movie.Language,
-                ApiVersion = movie.ApiVersion,
-                CoverImagePath = movie.CoverImagePath,
-                DateUploaded = movie.DateUploaded,
-                DateUploadedUnix = movie.DateUploadedUnix,
-                ExecutionTime = movie.ExecutionTime,
-                Genres = movie.Genres.Select(x => x.Name).ToList(),
-                HasBeenSeen = movie.HasBeenSeen,
-                Id = movie.MovieId,
-                ImdbCode = movie.ImdbCode,
-                IsFavorite = movie.IsFavorite,
-                Runtime = movie.Runtime,
-                RatingValue = movie.Rating,
-                MpaRating = movie.MpaRating,
-                Title = movie.Title,
-                TitleLong = movie.TitleLong,
-                Torrents = torrents.ToList(),
-                MediumCoverImage = movie.MediumCoverImage,
-                Url = movie.Url,
-                State = movie.State,
-                ServerTimezone = movie.ServerTimezone,
-                ServerTime = movie.ServerTime,
-                SmallCoverImage = movie.SmallCoverImage,
-                Year = movie.Year
-            };
-        }
-
-        /// <summary>
-        /// Convert a short movie model to a short movie entity
-        /// </summary>
-        /// <param name="movie">The movie to convert</param>
-        /// <returns>Short movie entity</returns>
-        private static Entity.Movie.MovieShort MovieShortFromModelToEntity(MovieShort movie)
-        {
-            if (movie == null) throw new ArgumentNullException(nameof(movie));
-            var torrents = movie.Torrents.Select(torrent => new Entity.Movie.Torrent
-            {
-                DateUploaded = torrent.DateUploaded,
-                Url = torrent.Url,
-                Quality = torrent.Quality,
-                DateUploadedMix = torrent.DateUploadedUnix,
-                Framerate = torrent.Framerate,
-                Hash = torrent.Hash,
-                Peers = torrent.Peers,
-                Resolution = torrent.Resolution,
-                Seeds = torrent.Seeds,
-                Size = torrent.Size,
-                SizeBytes = torrent.SizeBytes
-            });
-
-            var genres = movie.Genres.Select(genre => new Genre
-            {
-                Name = genre
-            });
-
-            var movieShort = new Entity.Movie.MovieShort
-            {
-                MovieId = movie.Id,
-                IsFavorite = movie.IsFavorite,
-                HasBeenSeen = movie.HasBeenSeen,
-                ServerTime = movie.ServerTime,
-                ServerTimezone = movie.ServerTimezone,
-                SmallCoverImage = movie.SmallCoverImage,
-                State = movie.State,
-                Year = movie.Year,
-                Language = movie.Language,
-                ImdbCode = movie.ImdbCode,
-                Title = movie.Title,
-                Id = movie.Id,
-                DateUploaded = movie.DateUploaded,
-                Runtime = movie.Runtime,
-                Url = movie.Url,
-                TitleLong = movie.TitleLong,
-                Torrents = torrents.ToList(),
-                MediumCoverImage = movie.MediumCoverImage,
-                Genres = genres.ToList(),
-                DateUploadedUnix = movie.DateUploadedUnix,
-                CoverImagePath = movie.CoverImagePath,
-                MpaRating = movie.MpaRating,
-                Rating = movie.RatingValue,
-                ExecutionTime = movie.ExecutionTime,
-                ApiVersion = movie.ApiVersion
-            };
-
-            return movieShort;
-        }
-
-        /// <summary>
-        /// Convert a full movie model to a full movie entity
-        /// </summary>
-        /// <param name="movie">The movie to convert</param>
-        /// <returns>Full movie entity</returns>
-        private static Entity.Movie.MovieFull MovieFullFromModelToEntity(MovieFull movie)
-        {
-            if (movie == null) throw new ArgumentNullException(nameof(movie));
-            var torrents = movie.Torrents.Select(torrent => new Entity.Movie.Torrent
-            {
-                DateUploaded = torrent.DateUploaded,
-                Url = torrent.Url,
-                Quality = torrent.Quality,
-                DateUploadedMix = torrent.DateUploadedUnix,
-                Framerate = torrent.Framerate,
-                Hash = torrent.Hash,
-                Peers = torrent.Peers,
-                Resolution = torrent.Resolution,
                 Seeds = torrent.Seeds,
                 Size = torrent.Size,
                 SizeBytes = torrent.SizeBytes
@@ -462,17 +419,15 @@ namespace Popcorn.Services.History
                 CharacterName = actor.CharacterName,
                 Name = actor.Name,
                 SmallImage = actor.SmallImage,
-                SmallImagePath = actor.SmallImagePath
+                ImdbCode = actor.ImdbCode
             });
 
-            var movieFull = new Entity.Movie.MovieFull
+            var movieFull = new MovieEntity
             {
-                MovieId = movie.Id,
                 Year = movie.Year,
                 Language = movie.Language,
                 ImdbCode = movie.ImdbCode,
                 Title = movie.Title,
-                Id = movie.Id,
                 DateUploaded = movie.DateUploaded,
                 Runtime = movie.Runtime,
                 Url = movie.Url,
@@ -481,16 +436,12 @@ namespace Popcorn.Services.History
                 Genres = genres.ToList(),
                 DateUploadedUnix = movie.DateUploadedUnix,
                 MpaRating = movie.MpaRating,
-                Rating = movie.RatingValue,
+                Rating = movie.Rating,
                 DescriptionFull = movie.DescriptionFull,
                 Cast = cast.ToList(),
                 DescriptionIntro = movie.DescriptionIntro,
                 DownloadCount = movie.DownloadCount,
                 LikeCount = movie.LikeCount,
-                RtAudienceRating = movie.RtAudienceRating,
-                RtAudienceScore = movie.RtAudienceScore,
-                RtCriticsRating = movie.RtCriticsRating,
-                RtCrtiticsScore = movie.RtCrtiticsScore,
                 YtTrailerCode = movie.YtTrailerCode,
                 HasBeenSeen = movie.HasBeenSeen,
                 IsFavorite = movie.IsFavorite,
@@ -503,7 +454,10 @@ namespace Popcorn.Services.History
                 LargeScreenshotImage3 = movie.MediumScreenshotImage3,
                 MediumScreenshotImage3 = movie.MediumScreenshotImage3,
                 MediumScreenshotImage1 = movie.MediumScreenshotImage1,
-                MediumScreenshotImage2 = movie.MediumScreenshotImage2
+                MediumScreenshotImage2 = movie.MediumScreenshotImage2,
+                Slug = movie.Slug,
+                BackdropImage = movie.BackdropImage,
+                PosterImage = movie.PosterImage
             };
 
             return movieFull;

@@ -1,4 +1,4 @@
-﻿using Popcorn.Models.Movie.Full;
+﻿using Popcorn.Models.Movie;
 
 namespace Popcorn.ViewModels.Players.Movie
 {
@@ -8,7 +8,7 @@ namespace Popcorn.ViewModels.Players.Movie
         /// Load a movie
         /// </summary>
         /// <param name="movie">Movie to load</param>
-        void LoadMovie(MovieFull movie);
+        void LoadMovie(MovieJson movie);
 
         /// <summary>
         /// Cleanup resources

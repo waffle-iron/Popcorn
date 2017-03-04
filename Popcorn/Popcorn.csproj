@@ -175,7 +175,7 @@
       <Private>True</Private>
     </Reference>
     <Reference Include="NLog, Version=4.0.0.0, Culture=neutral, PublicKeyToken=5120e14c03d0593c, processorArchitecture=MSIL">
-      <HintPath>..\packages\NLog.4.4.2\lib\net45\NLog.dll</HintPath>
+      <HintPath>..\packages\NLog.4.4.3\lib\net45\NLog.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="NuGet.Squirrel, Version=3.0.0.0, Culture=neutral, processorArchitecture=MSIL">
@@ -211,7 +211,7 @@
     <Reference Include="System.IO.Compression" />
     <Reference Include="System.IO.Compression.FileSystem" />
     <Reference Include="System.Net.Http, Version=4.1.1.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
-      <HintPath>..\packages\System.Net.Http.4.3.0\lib\net46\System.Net.Http.dll</HintPath>
+      <HintPath>..\packages\System.Net.Http.4.3.1\lib\net46\System.Net.Http.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="System.Security.Cryptography.Algorithms, Version=4.1.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
@@ -266,8 +266,7 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Compile Include="AttachedProperties\ImageAsyncHelper.cs" />
-    <Compile Include="Comparers\MovieFullComparer.cs" />
-    <Compile Include="Comparers\MovieShortComparer.cs" />
+    <Compile Include="Comparers\MovieComparer.cs" />
     <Compile Include="Converters\BoolToInverseBoolConverter.cs" />
     <Compile Include="Converters\BoolToInverseVisibilityConverter.cs" />
     <Compile Include="Converters\BoolToVisibilityConverter.cs" />
@@ -300,7 +299,7 @@
     </Compile>
     <Compile Include="Entity\Cast\Cast.cs" />
     <Compile Include="Entity\Movie\Genre.cs" />
-    <Compile Include="Entity\Movie\MovieFull.cs" />
+    <Compile Include="Entity\Movie\MovieEntity.cs" />
     <Compile Include="Entity\Movie\MovieHistory.cs" />
     <Compile Include="Entity\Movie\Torrent.cs" />
     <Compile Include="Helpers\AsyncSynchronizationContext.cs" />
@@ -311,18 +310,16 @@
     <Compile Include="Messaging\ChangeHasBeenSeenMovieMessage.cs" />
     <Compile Include="Messaging\UnhandledExceptionMessage.cs" />
     <Compile Include="Messaging\WindowStateChangeMessage.cs" />
-    <Compile Include="Migrations\201508192155425_Initial.cs" />
-    <Compile Include="Migrations\201508192155425_Initial.Designer.cs">
-      <DependentUpon>201508192155425_Initial.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\201602091409096_NewApi.cs" />
-    <Compile Include="Migrations\201602091409096_NewApi.Designer.cs">
-      <DependentUpon>201602091409096_NewApi.cs</DependentUpon>
+    <Compile Include="Migrations\201703041706307_Initial.cs" />
+    <Compile Include="Migrations\201703041706307_Initial.Designer.cs">
+      <DependentUpon>201703041706307_Initial.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\ApplicationState\ApplicationState.cs" />
     <Compile Include="Models\ApplicationState\IApplicationState.cs" />
-    <Compile Include="Models\Genre\MovieGenre.cs" />
+    <Compile Include="Models\Genre\GenreJson.cs" />
+    <Compile Include="Models\Movie\MovieJson.cs" />
+    <Compile Include="Models\Movie\MovieResponse.cs" />
     <Compile Include="Panels\ElasticWrapPanel.cs" />
     <Compile Include="Entity\Localization\Language.cs" />
     <Compile Include="Entity\Application\Settings.cs" />
@@ -337,7 +334,7 @@
     <Compile Include="Messaging\LoadMovieMessage.cs" />
     <Compile Include="Messaging\SearchMovieMessage.cs" />
     <Compile Include="Messaging\StopPlayingTrailerMessage.cs" />
-    <Compile Include="Models\Cast\Cast.cs" />
+    <Compile Include="Models\Cast\CastJson.cs" />
     <Compile Include="Models\Localization\CustomLanguage.cs" />
     <Compile Include="Models\Localization\EnglishLanguage.cs" />
     <Compile Include="Models\Localization\FrenchLanguage.cs" />
@@ -346,23 +343,16 @@
     <Compile Include="Messaging\PlayMovieMessage.cs" />
     <Compile Include="Messaging\StopPlayingMovieMessage.cs" />
     <Compile Include="Entity\ApplicationDbContext.cs" />
-    <Compile Include="Entity\Movie\MovieShort.cs" />
     <Compile Include="Models\Localization\Language.cs" />
-    <Compile Include="Models\Movie\Full\MovieFull.cs" />
-    <Compile Include="Models\Movie\Short\DataMovieShort.cs" />
-    <Compile Include="Models\Movie\Meta.cs" />
-    <Compile Include="Models\Movie\Short\MovieShort.cs" />
-    <Compile Include="Models\Movie\Full\WrapperMovieFull.cs" />
-    <Compile Include="Models\Movie\Short\WrapperMovieShort.cs" />
     <Compile Include="Models\Subtitle\SubtitlesWrapper.cs" />
-    <Compile Include="Models\Subtitle\Subtitle.cs" />
+    <Compile Include="Models\Subtitle\SubtitleJson.cs" />
     <Compile Include="Models\Trailer\Trailer.cs" />
     <Compile Include="Services\History\IMovieHistoryService.cs" />
     <Compile Include="Services\History\MovieHistoryService.cs" />
     <Compile Include="Services\Language\ILanguageService.cs" />
     <Compile Include="Services\Movie\IMovieService.cs" />
     <Compile Include="Services\Movie\MovieService.cs" />
-    <Compile Include="Models\Torrent\Torrent.cs" />
+    <Compile Include="Models\Torrent\TorrentJson.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Properties\Resources.fr.Designer.cs">
       <DependentUpon>Resources.fr.resx</DependentUpon>
@@ -597,11 +587,8 @@
     <Resource Include="Resources\Entypo.ttf" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Migrations\201508192155425_Initial.resx">
-      <DependentUpon>201508192155425_Initial.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201602091409096_NewApi.resx">
-      <DependentUpon>201602091409096_NewApi.cs</DependentUpon>
+    <EmbeddedResource Include="Migrations\201703041706307_Initial.resx">
+      <DependentUpon>201703041706307_Initial.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.fr.resx">
       <Generator>PublicResXFileCodeGenerator</Generator>

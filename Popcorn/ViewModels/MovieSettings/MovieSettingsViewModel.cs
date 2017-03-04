@@ -1,8 +1,9 @@
-﻿using GalaSoft.MvvmLight;
+﻿using System.Linq;
+using GalaSoft.MvvmLight;
 using GalaSoft.MvvmLight.CommandWpf;
 using GalaSoft.MvvmLight.Messaging;
 using Popcorn.Messaging;
-using Popcorn.Models.Movie.Full;
+using Popcorn.Models.Movie;
 using Popcorn.ViewModels.Subtitles;
 
 namespace Popcorn.ViewModels.MovieSettings
@@ -25,7 +26,7 @@ namespace Popcorn.ViewModels.MovieSettings
         /// <summary>
         /// The movie to manage
         /// </summary>
-        private MovieFull _movie;
+        private MovieJson _movie;
 
         /// <summary>
         /// Command used to set the movie's subtitles
@@ -54,7 +55,7 @@ namespace Popcorn.ViewModels.MovieSettings
         /// <summary>
         /// The movie to manage
         /// </summary>
-        public MovieFull Movie
+        public MovieJson Movie
         {
             get { return _movie; }
             set { Set(() => Movie, ref _movie, value); }
@@ -105,8 +106,9 @@ namespace Popcorn.ViewModels.MovieSettings
         /// Load a movie
         /// </summary>
         /// <param name="movie">The movie to load</param>
-        public void LoadMovie(MovieFull movie)
+        public void LoadMovie(MovieJson movie)
         {
+            movie.FullHdAvailable = movie.Torrents.Any(torrent => torrent.Quality == "1080p");
             Movie = movie;
             Subtitles.ClearSubtitles();
         }

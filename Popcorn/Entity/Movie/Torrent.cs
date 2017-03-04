@@ -15,13 +15,11 @@ namespace Popcorn.Entity.Movie
         public string Url { get; set; }
         public string Hash { get; set; }
         public string Quality { get; set; }
-        public string Framerate { get; set; }
-        public string Resolution { get; set; }
         public int Seeds { get; set; }
         public int Peers { get; set; }
         public string Size { get; set; }
-        public long SizeBytes { get; set; }
+        public long? SizeBytes { get; set; }
         public string DateUploaded { get; set; }
-        public int DateUploadedMix { get; set; }
+        public int DateUploadedUnix { get; set; }
     }
 }

@@ -11,7 +11,7 @@ using Popcorn.Helpers;
 using Popcorn.Messaging;
 using Popcorn.Models.ApplicationState;
 using Popcorn.Models.Genre;
-using Popcorn.Models.Movie.Short;
+using Popcorn.Models.Movie;
 using Popcorn.Services.History;
 using Popcorn.Services.Movie;
 
@@ -67,7 +67,7 @@ namespace Popcorn.ViewModels.Tabs
                         CancellationLoadingMovies.Token,
                         Genre);
 
-                Movies = new ObservableCollection<MovieShort>(Movies.Union(movies.Item1, new MovieShortComparer()));
+                Movies = new ObservableCollection<MovieJson>(Movies.Union(movies.Item1, new MovieComparer()));
 
                 IsLoadingMovies = false;
                 IsMovieFound = Movies.Any();
@@ -75,7 +75,6 @@ namespace Popcorn.ViewModels.Tabs
                 MaxNumberOfMovies = movies.Item2;
 
                 await MovieHistoryService.SetMovieHistoryAsync(movies.Item1);
-                await MovieService.DownloadCoverImageAsync(movies.Item1, CancellationLoadingMovies);
             }
             catch (Exception exception)
             {
@@ -103,7 +102,7 @@ namespace Popcorn.ViewModels.Tabs
                 this,
                 language => TabName = LocalizationProviderHelper.GetLocalizedValue<string>("PopularTitleTab"));
 
-            Messenger.Default.Register<PropertyChangedMessage<MovieGenre>>(this, async e =>
+            Messenger.Default.Register<PropertyChangedMessage<GenreJson>>(this, async e =>
             {
                 if (e.PropertyName != GetPropertyName(() => Genre) && Genre.Equals(e.NewValue)) return;
                 StopLoadingMovies();

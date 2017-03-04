@@ -33,7 +33,7 @@ namespace Popcorn.ViewModels.Genres
         /// <summary>
         /// Movie genres
         /// </summary>
-        private ObservableCollection<MovieGenre> _movieGenres = new ObservableCollection<MovieGenre>();
+        private ObservableCollection<GenreJson> _movieGenres = new ObservableCollection<GenreJson>();
 
         /// <summary>
         /// Initialize a new instance of GenresViewModel class
@@ -49,7 +49,7 @@ namespace Popcorn.ViewModels.Genres
         /// <summary>
         /// Movie genres
         /// </summary>
-        public ObservableCollection<MovieGenre> MovieGenres
+        public ObservableCollection<GenreJson> MovieGenres
         {
             get { return _movieGenres; }
             set { Set(() => MovieGenres, ref _movieGenres, value); }
@@ -61,12 +61,12 @@ namespace Popcorn.ViewModels.Genres
         public async Task LoadGenresAsync()
         {
             MovieGenres =
-                new ObservableCollection<MovieGenre>(
+                new ObservableCollection<GenreJson>(
                     await _movieService.GetGenresAsync(_cancellationLoadingGenres.Token));
             if (_cancellationLoadingGenres.IsCancellationRequested)
                 return;
 
-            MovieGenres?.Insert(0, new MovieGenre
+            MovieGenres?.Insert(0, new GenreJson
             {
                 TmdbGenre = new Genre
                 {

@@ -11,8 +11,7 @@ using NLog;
 using Popcorn.Helpers;
 using Popcorn.Models.Genre;
 using Popcorn.Models.Localization;
-using Popcorn.Models.Movie.Full;
-using Popcorn.Models.Movie.Short;
+using Popcorn.Models.Movie;
 using Popcorn.Models.Subtitle;
 using RestSharp;
 using TMDbLib.Client;
@@ -58,18 +57,18 @@ namespace Popcorn.Services.Movie
         /// </summary>
         /// <param name="ct">Used to cancel loading genres</param>
         /// <returns>Genres</returns>
-        public async Task<List<MovieGenre>> GetGenresAsync(CancellationToken ct)
+        public async Task<List<GenreJson>> GetGenresAsync(CancellationToken ct)
         {
             var watch = Stopwatch.StartNew();
 
-            var genres = new List<MovieGenre>();
+            var genres = new List<GenreJson>();
 
             try
             {
                 await Task.Run(async () =>
                 {
                     var englishGenre = await TmdbClient.GetMovieGenresAsync(new EnglishLanguage().Culture);
-                    genres.AddRange((await TmdbClient.GetMovieGenresAsync()).Select(genre => new MovieGenre
+                    genres.AddRange((await TmdbClient.GetMovieGenresAsync()).Select(genre => new GenreJson
                     {
                         EnglishName = englishGenre.FirstOrDefault(p => p.Id == genre.Id)?.Name,
                         TmdbGenre = genre
@@ -107,15 +106,15 @@ namespace Popcorn.Services.Movie
         /// <param name="genre">The genre to filter</param>
         /// <param name="ratingFilter">Used to filter by rating</param>
         /// <returns>Popular movies and the number of movies found</returns>
-        public async Task<Tuple<IEnumerable<MovieShort>, int>> GetPopularMoviesAsync(int page,
+        public async Task<Tuple<IEnumerable<MovieJson>, int>> GetPopularMoviesAsync(int page,
             int limit,
             double ratingFilter,
             CancellationToken ct,
-            MovieGenre genre = null)
+            GenreJson genre = null)
         {
             var watch = Stopwatch.StartNew();
 
-            var wrapper = new WrapperMovieShort();
+            var wrapper = new MovieResponse();
 
             if (limit < 1 || limit > 50)
                 limit = 20;
@@ -123,9 +122,9 @@ namespace Popcorn.Services.Movie
             if (page < 1)
                 page = 1;
 
-            var restClient = new RestClient(Constants.YtsApiEndpoint);
+            var restClient = new RestClient(Constants.PopcornApi);
             var request = new RestRequest("/{segment}", Method.GET);
-            request.AddUrlSegment("segment", "list_movies.json");
+            request.AddUrlSegment("segment", "movies");
             request.AddParameter("limit", limit);
             request.AddParameter("page", page);
             if (genre != null) request.AddParameter("genre", genre.EnglishName);
@@ -134,7 +133,7 @@ namespace Popcorn.Services.Movie
 
             try
             {
-                var response = await restClient.ExecuteGetTaskAsync<WrapperMovieShort>(request, ct);
+                var response = await restClient.ExecuteGetTaskAsync<MovieResponse>(request, ct);
                 if (response.ErrorException != null)
                     throw response.ErrorException;
 
@@ -159,10 +158,10 @@ namespace Popcorn.Services.Movie
                     $"GetPopularMoviesAsync ({page}, {limit}) in {elapsedMs} milliseconds.");
             }
 
-            var movies = GetMoviesListFromWrapper(wrapper) ?? new List<MovieShort>();
-            var nbMovies = wrapper?.Data?.MovieCount ?? 0;
+            var movies = wrapper.Movies ?? new List<MovieJson>();
+            var nbMovies = wrapper.TotalMovies;
 
-            return new Tuple<IEnumerable<MovieShort>, int>(movies, nbMovies);
+            return new Tuple<IEnumerable<MovieJson>, int>(movies, nbMovies);
         }
 
         /// <summary>
@@ -174,15 +173,15 @@ namespace Popcorn.Services.Movie
         /// <param name="genre">The genre to filter</param>
         /// <param name="ratingFilter">Used to filter by rating</param>
         /// <returns>Top rated movies and the number of movies found</returns>
-        public async Task<Tuple<IEnumerable<MovieShort>, int>> GetGreatestMoviesAsync(int page,
+        public async Task<Tuple<IEnumerable<MovieJson>, int>> GetGreatestMoviesAsync(int page,
             int limit,
             double ratingFilter,
             CancellationToken ct,
-            MovieGenre genre = null)
+            GenreJson genre = null)
         {
             var watch = Stopwatch.StartNew();
 
-            var wrapper = new WrapperMovieShort();
+            var wrapper = new MovieResponse();
 
             if (limit < 1 || limit > 50)
                 limit = 20;
@@ -190,9 +189,9 @@ namespace Popcorn.Services.Movie
             if (page < 1)
                 page = 1;
 
-            var restClient = new RestClient(Constants.YtsApiEndpoint);
+            var restClient = new RestClient(Constants.PopcornApi);
             var request = new RestRequest("/{segment}", Method.GET);
-            request.AddUrlSegment("segment", "list_movies.json");
+            request.AddUrlSegment("segment", "movies");
             request.AddParameter("limit", limit);
             request.AddParameter("page", page);
             if (genre != null) request.AddParameter("genre", genre.EnglishName);
@@ -201,7 +200,7 @@ namespace Popcorn.Services.Movie
 
             try
             {
-                var response = await restClient.ExecuteGetTaskAsync<WrapperMovieShort>(request, ct);
+                var response = await restClient.ExecuteGetTaskAsync<MovieResponse>(request, ct);
                 if (response.ErrorException != null)
                     throw response.ErrorException;
 
@@ -226,10 +225,10 @@ namespace Popcorn.Services.Movie
                     $"GetGreatestMoviesAsync ({page}, {limit}) in {elapsedMs} milliseconds.");
             }
 
-            var movies = GetMoviesListFromWrapper(wrapper) ?? new List<MovieShort>();
-            var nbMovies = wrapper?.Data?.MovieCount ?? 0;
+            var movies = wrapper.Movies ?? new List<MovieJson>();
+            var nbMovies = wrapper.TotalMovies;
 
-            return new Tuple<IEnumerable<MovieShort>, int>(movies, nbMovies);
+            return new Tuple<IEnumerable<MovieJson>, int>(movies, nbMovies);
         }
 
         /// <summary>
@@ -241,15 +240,15 @@ namespace Popcorn.Services.Movie
         /// <param name="genre">The genre to filter</param>
         /// <param name="ratingFilter">Used to filter by rating</param>
         /// <returns>Recent movies and the number of movies found</returns>
-        public async Task<Tuple<IEnumerable<MovieShort>, int>> GetRecentMoviesAsync(int page,
+        public async Task<Tuple<IEnumerable<MovieJson>, int>> GetRecentMoviesAsync(int page,
             int limit,
             double ratingFilter,
             CancellationToken ct,
-            MovieGenre genre = null)
+            GenreJson genre = null)
         {
             var watch = Stopwatch.StartNew();
 
-            var wrapper = new WrapperMovieShort();
+            var wrapper = new MovieResponse();
 
             if (limit < 1 || limit > 50)
                 limit = 20;
@@ -257,9 +256,9 @@ namespace Popcorn.Services.Movie
             if (page < 1)
                 page = 1;
 
-            var restClient = new RestClient(Constants.YtsApiEndpoint);
+            var restClient = new RestClient(Constants.PopcornApi);
             var request = new RestRequest("/{segment}", Method.GET);
-            request.AddUrlSegment("segment", "list_movies.json");
+            request.AddUrlSegment("segment", "movies");
             request.AddParameter("limit", limit);
             request.AddParameter("page", page);
             if (genre != null) request.AddParameter("genre", genre.EnglishName);
@@ -268,7 +267,7 @@ namespace Popcorn.Services.Movie
 
             try
             {
-                var response = await restClient.ExecuteGetTaskAsync<WrapperMovieShort>(request, ct);
+                var response = await restClient.ExecuteGetTaskAsync<MovieResponse>(request, ct);
                 if (response.ErrorException != null)
                     throw response.ErrorException;
 
@@ -293,10 +292,10 @@ namespace Popcorn.Services.Movie
                     $"GetRecentMoviesAsync ({page}, {limit}) in {elapsedMs} milliseconds.");
             }
 
-            var movies = GetMoviesListFromWrapper(wrapper) ?? new List<MovieShort>();
-            var nbMovies = wrapper?.Data?.MovieCount ?? 0;
+            var movies = wrapper.Movies ?? new List<MovieJson>();
+            var nbMovies = wrapper.TotalMovies;
 
-            return new Tuple<IEnumerable<MovieShort>, int>(movies, nbMovies);
+            return new Tuple<IEnumerable<MovieJson>, int>(movies, nbMovies);
         }
 
         /// <summary>
@@ -309,16 +308,16 @@ namespace Popcorn.Services.Movie
         /// <param name="ratingFilter">Used to filter by rating</param>
         /// <param name="ct">Cancellation token</param>
         /// <returns>Searched movies and the number of movies found</returns>
-        public async Task<Tuple<IEnumerable<MovieShort>, int>> SearchMoviesAsync(string criteria,
+        public async Task<Tuple<IEnumerable<MovieJson>, int>> SearchMoviesAsync(string criteria,
             int page,
             int limit,
-            MovieGenre genre,
+            GenreJson genre,
             double ratingFilter,
             CancellationToken ct)
         {
             var watch = Stopwatch.StartNew();
 
-            var wrapper = new WrapperMovieShort();
+            var wrapper = new MovieResponse();
 
             if (limit < 1 || limit > 50)
                 limit = 20;
@@ -326,9 +325,9 @@ namespace Popcorn.Services.Movie
             if (page < 1)
                 page = 1;
 
-            var restClient = new RestClient(Constants.YtsApiEndpoint);
+            var restClient = new RestClient(Constants.PopcornApi);
             var request = new RestRequest("/{segment}", Method.GET);
-            request.AddUrlSegment("segment", "list_movies.json");
+            request.AddUrlSegment("segment", "movies");
             request.AddParameter("limit", limit);
             request.AddParameter("page", page);
             if (genre != null) request.AddParameter("genre", genre.EnglishName);
@@ -337,7 +336,7 @@ namespace Popcorn.Services.Movie
 
             try
             {
-                var response = await restClient.ExecuteGetTaskAsync<WrapperMovieShort>(request, ct);
+                var response = await restClient.ExecuteGetTaskAsync<MovieResponse>(request, ct);
                 if (response.ErrorException != null)
                     throw response.ErrorException;
 
@@ -362,96 +361,10 @@ namespace Popcorn.Services.Movie
                     $"SearchMoviesAsync ({criteria}, {page}, {limit}) in {elapsedMs} milliseconds.");
             }
 
-            var movies = GetMoviesListFromWrapper(wrapper) ?? new List<MovieShort>();
-            var nbMovies = wrapper?.Data?.MovieCount ?? 0;
+            var movies = wrapper.Movies ?? new List<MovieJson>();
+            var nbMovies = wrapper.TotalMovies;
 
-            return new Tuple<IEnumerable<MovieShort>, int>(movies, nbMovies);
-        }
-
-        /// <summary>
-        /// Get TMDb movie informations
-        /// </summary>
-        /// <param name="movieToLoad">Movie to load</param>
-        /// <param name="ct">Used to cancel loading</param>
-        /// <returns>Movie's full details</returns>
-        public async Task<MovieFull> GetMovieFullDetailsAsync(MovieShort movieToLoad, CancellationToken ct)
-        {
-            var watch = Stopwatch.StartNew();
-
-            var movie = new MovieFull();
-
-            var restClient = new RestClient(Constants.YtsApiEndpoint);
-            var request = new RestRequest("/{segment}", Method.GET);
-            request.AddUrlSegment("segment", "movie_details.json");
-            request.AddParameter("movie_id", movieToLoad.Id);
-            request.AddParameter("with_images", "true");
-            request.AddParameter("with_cast", "true");
-
-            try
-            {
-                var response = await restClient.ExecuteGetTaskAsync<WrapperMovieFull>(request, ct);
-                if (response.ErrorException != null)
-                    throw response.ErrorException;
-
-                await Task.Run(async () =>
-                {
-                    var tmdbInfos = await TmdbClient.GetMovieAsync(response.Data.Data.Movie.ImdbCode,
-                        MovieMethods.Credits);
-
-                    movie = new MovieFull
-                    {
-                        Id = response.Data.Data.Movie.Id,
-                        Cast = response.Data.Data.Movie.Cast,
-                        BackgroundImagePath = string.Empty,
-                        DateUploaded = response.Data.Data.Movie.DateUploaded,
-                        DateUploadedUnix = response.Data.Data.Movie.DateUploadedUnix,
-                        DescriptionFull = tmdbInfos.Overview,
-                        DescriptionIntro = response.Data.Data.Movie.DescriptionIntro,
-                        DownloadCount = response.Data.Data.Movie.DownloadCount,
-                        FullHdAvailable = response.Data.Data.Movie.Torrents.Any(torrent => torrent.Quality == "1080p"),
-                        Genres = tmdbInfos.Genres.Select(a => a.Name).ToList(),
-                        ImdbCode = response.Data.Data.Movie.ImdbCode,
-                        Language = response.Data.Data.Movie.Language,
-                        LikeCount = response.Data.Data.Movie.LikeCount,
-                        MpaRating = response.Data.Data.Movie.MpaRating,
-                        LargeCoverImage = response.Data.Data.Movie.LargeCoverImage,
-                        PosterImagePath = string.Empty,
-                        RatingValue = response.Data.Data.Movie.Rating,
-                        RtAudienceRating = response.Data.Data.Movie.RtAudienceRating,
-                        RtAudienceScore = response.Data.Data.Movie.RtAudienceScore,
-                        RtCriticsRating = response.Data.Data.Movie.RtCriticsRating,
-                        RtCrtiticsScore = response.Data.Data.Movie.RtCrtiticsScore,
-                        Runtime = response.Data.Data.Movie.Runtime,
-                        Title = tmdbInfos.Title,
-                        TitleLong = response.Data.Data.Movie.TitleLong,
-                        Torrents = response.Data.Data.Movie.Torrents,
-                        Url = response.Data.Data.Movie.Url,
-                        WatchInFullHdQuality = false,
-                        Year = response.Data.Data.Movie.Year,
-                        YtTrailerCode = response.Data.Data.Movie.YtTrailerCode
-                    };
-                }, ct);
-            }
-            catch (Exception exception) when (exception is TaskCanceledException)
-            {
-                Logger.Debug(
-                    "GetMovieFullDetailsAsync cancelled.");
-            }
-            catch (Exception exception)
-            {
-                Logger.Error(
-                    $"GetMovieFullDetailsAsync: {exception.Message}");
-                throw;
-            }
-            finally
-            {
-                watch.Stop();
-                var elapsedMs = watch.ElapsedMilliseconds;
-                Logger.Debug(
-                    $"GetMovieFullDetailsAsync ({movie.ImdbCode}) in {elapsedMs} milliseconds.");
-            }
-
-            return movie;
+            return new Tuple<IEnumerable<MovieJson>, int>(movies, nbMovies);
         }
 
         /// <summary>
@@ -460,47 +373,7 @@ namespace Popcorn.Services.Movie
         /// <param name="movieToTranslate">Movie to translate</param>
         /// <param name="ct">Used to cancel translation</param>
         /// <returns>Task</returns>
-        public async Task TranslateMovieShortAsync(MovieShort movieToTranslate, CancellationToken ct)
-        {
-            var watch = Stopwatch.StartNew();
-
-            try
-            {
-                await Task.Run(async () =>
-                {
-                    var movie = await TmdbClient.GetMovieAsync(movieToTranslate.ImdbCode,
-                        MovieMethods.Credits);
-                    movieToTranslate.Title = movie?.Title;
-                    movieToTranslate.Genres = movie?.Genres?.Select(a => a.Name).ToList();
-                }, ct);
-            }
-            catch (Exception exception) when (exception is TaskCanceledException)
-            {
-                Logger.Debug(
-                    "TranslateMovieShortAsync cancelled.");
-            }
-            catch (Exception exception)
-            {
-                Logger.Error(
-                    $"TranslateMovieShortAsync: {exception.Message}");
-                throw;
-            }
-            finally
-            {
-                watch.Stop();
-                var elapsedMs = watch.ElapsedMilliseconds;
-                Logger.Debug(
-                    $"TranslateMovieShortAsync ({movieToTranslate.ImdbCode}) in {elapsedMs} milliseconds.");
-            }
-        }
-
-        /// <summary>
-        /// Translate movie informations (title, description, ...)
-        /// </summary>
-        /// <param name="movieToTranslate">Movie to translate</param>
-        /// <param name="ct">Used to cancel translation</param>
-        /// <returns>Task</returns>
-        public async Task TranslateMovieFullAsync(MovieFull movieToTranslate, CancellationToken ct)
+        public async Task TranslateMovieAsync(MovieJson movieToTranslate, CancellationToken ct)
         {
             var watch = Stopwatch.StartNew();
 
@@ -518,12 +391,12 @@ namespace Popcorn.Services.Movie
             catch (Exception exception) when (exception is TaskCanceledException)
             {
                 Logger.Debug(
-                    "TranslateMovieFull cancelled.");
+                    "TranslateMovieAsync cancelled.");
             }
             catch (Exception exception)
             {
                 Logger.Error(
-                    $"TranslateMovieFull: {exception.Message}");
+                    $"TranslateMovieAsync: {exception.Message}");
                 throw;
             }
             finally
@@ -531,7 +404,7 @@ namespace Popcorn.Services.Movie
                 watch.Stop();
                 var elapsedMs = watch.ElapsedMilliseconds;
                 Logger.Debug(
-                    $"TranslateMovieFull ({movieToTranslate.ImdbCode}) in {elapsedMs} milliseconds.");
+                    $"TranslateMovieAsync ({movieToTranslate.ImdbCode}) in {elapsedMs} milliseconds.");
             }
         }
 
@@ -541,14 +414,16 @@ namespace Popcorn.Services.Movie
         /// <param name="movie">The movie</param>
         /// <param name="ct">Used to cancel loading trailer</param>
         /// <returns>Video trailer</returns>
-        public async Task<ResultContainer<Video>> GetMovieTrailerAsync(MovieFull movie, CancellationToken ct)
+        public async Task<ResultContainer<Video>> GetMovieTrailerAsync(MovieJson movie, CancellationToken ct)
         {
             var watch = Stopwatch.StartNew();
 
             var trailers = new ResultContainer<Video>();
             try
             {
-                await Task.Run(async () => trailers = (await TmdbClient.GetMovieAsync(movie.ImdbCode, MovieMethods.Videos))?.Videos, ct);
+                await Task.Run(
+                    async () => trailers = (await TmdbClient.GetMovieAsync(movie.ImdbCode, MovieMethods.Videos))?.Videos,
+                    ct);
             }
             catch (Exception exception) when (exception is TaskCanceledException)
             {
@@ -577,7 +452,7 @@ namespace Popcorn.Services.Movie
         /// </summary>
         /// <param name="movie">The movie of which to retrieve its subtitles</param>
         /// <param name="ct">Cancellation token</param>
-        public async Task LoadSubtitlesAsync(MovieFull movie,
+        public async Task LoadSubtitlesAsync(MovieJson movie,
             CancellationToken ct)
         {
             var watch = Stopwatch.StartNew();
@@ -594,8 +469,8 @@ namespace Popcorn.Services.Movie
 
                 var wrapper = response.Data;
 
-                var subtitles = new ObservableCollection<Subtitle>();
-                Dictionary<string, List<Subtitle>> movieSubtitles;
+                var subtitles = new ObservableCollection<SubtitleJson>();
+                Dictionary<string, List<SubtitleJson>> movieSubtitles;
                 if (wrapper.Subtitles == null)
                 {
                     await Task.CompletedTask;
@@ -606,7 +481,7 @@ namespace Popcorn.Services.Movie
                     foreach (var subtitle in movieSubtitles)
                     {
                         var sub = subtitle.Value.Aggregate((sub1, sub2) => sub1.Rating > sub2.Rating ? sub1 : sub2);
-                        subtitles.Add(new Subtitle
+                        subtitles.Add(new SubtitleJson
                         {
                             Id = sub.Id,
                             Language = new CustomLanguage
@@ -651,7 +526,7 @@ namespace Popcorn.Services.Movie
         /// <param name="movie">The movie of which to retrieve its subtitles</param>
         /// <param name="progress">Report the progress of the download</param>
         /// <param name="ct">Cancellation token</param>
-        public async Task DownloadSubtitleAsync(MovieFull movie, IProgress<long> progress, CancellationTokenSource ct)
+        public async Task DownloadSubtitleAsync(MovieJson movie, IProgress<long> progress, CancellationTokenSource ct)
         {
             if (movie.SelectedSubtitle == null)
                 return;
@@ -704,229 +579,5 @@ namespace Popcorn.Services.Movie
                     $"DownloadSubtitleAsync ({movie.ImdbCode}) in {elapsedMs} milliseconds.");
             }
         }
-
-        /// <summary>
-        /// Download the movie's background image
-        /// </summary>
-        /// <param name="movie">The movie to process</param>
-        /// <param name="ct">Used to cancel downloading background image</param>
-        public async Task DownloadBackgroundImageAsync(MovieFull movie, CancellationTokenSource ct)
-        {
-            var watch = Stopwatch.StartNew();
-
-            try
-            {
-                await Task.Run(async () =>
-                {
-                    TmdbClient.GetConfig();
-                    var tmdbMovie = await TmdbClient.GetMovieAsync(movie.ImdbCode, MovieMethods.Images);
-                    var remotePath = new List<string>
-                    {
-                        TmdbClient.GetImageUrl(Constants.BackgroundImageSizeTmDb,
-                            tmdbMovie.BackdropPath).AbsoluteUri
-                    };
-
-                    await
-                        remotePath.ForEachAsync(
-                            background =>
-                                DownloadFileHelper.DownloadFileTaskAsync(background,
-                                    Constants.BackgroundMovieDirectory + movie.ImdbCode + Constants.ImageFileExtension,
-                                    ct: ct),
-                            (background, t) =>
-                            {
-                                if (t.Item3 == null && !string.IsNullOrEmpty(t.Item2))
-                                    movie.BackgroundImagePath = t.Item2;
-                            });
-                }, ct.Token);
-            }
-            catch (Exception exception) when (exception is TaskCanceledException)
-            {
-                Logger.Debug(
-                    "DownloadBackgroundImageAsync cancelled.");
-            }
-            catch (Exception exception)
-            {
-                Logger.Error(
-                    $"DownloadBackgroundImageAsync: {exception.Message}");
-                throw;
-            }
-            finally
-            {
-                watch.Stop();
-                var elapsedMs = watch.ElapsedMilliseconds;
-                Logger.Debug(
-                    $"DownloadBackgroundImageAsync ({movie.ImdbCode}) in {elapsedMs} milliseconds.");
-            }
-        }
-
-        /// <summary>
-        /// Download cover image for each of the movies provided
-        /// </summary>
-        /// <param name="movies">The movies to process</param>
-        /// <param name="ct">Used to cancel task</param>
-        public async Task DownloadCoverImageAsync(IEnumerable<MovieShort> movies, CancellationTokenSource ct)
-        {
-            var watch = Stopwatch.StartNew();
-
-            var moviesToProcess = movies.ToList();
-            try
-            {
-                await
-                    moviesToProcess.ForEachAsync(
-                        movie =>
-                            DownloadFileHelper.DownloadFileTaskAsync(movie.MediumCoverImage,
-                                Constants.CoverMoviesDirectory + movie.ImdbCode + Constants.ImageFileExtension, ct: ct),
-                        (movie, t) =>
-                        {
-                            if (t.Item3 == null && !string.IsNullOrEmpty(t.Item2))
-                                movie.CoverImagePath = t.Item2;
-                        });
-            }
-            catch (Exception exception) when (exception is TaskCanceledException)
-            {
-                Logger.Debug(
-                    "DownloadCoverImageAsync cancelled.");
-            }
-            catch (Exception exception)
-            {
-                Logger.Error(
-                    $"DownloadCoverImageAsync: {exception.Message}");
-                throw;
-            }
-            finally
-            {
-                watch.Stop();
-                var elapsedMs = watch.ElapsedMilliseconds;
-                Logger.Debug(
-                    $"DownloadCoverImageAsync ({string.Join(";", moviesToProcess.Select(movie => movie.ImdbCode))}) in {elapsedMs} milliseconds.");
-            }
-        }
-
-        /// <summary>
-        /// Download the movie's poster image
-        /// </summary>
-        /// <param name="movie">The movie to process</param>
-        /// <param name="ct">Used to cancel downloading poster image</param>
-        public async Task DownloadPosterImageAsync(MovieFull movie, CancellationTokenSource ct)
-        {
-
-            var watch = Stopwatch.StartNew();
-
-            var posterPath = new List<string>
-            {
-                movie.LargeCoverImage
-            };
-
-            try
-            {
-                await
-                    posterPath.ForEachAsync(
-                        poster =>
-                            DownloadFileHelper.DownloadFileTaskAsync(poster,
-                                Constants.PosterMovieDirectory + movie.ImdbCode + Constants.ImageFileExtension, ct: ct),
-                        (poster, t) =>
-                        {
-                            if (t.Item3 == null && !string.IsNullOrEmpty(t.Item2))
-                                movie.LargeCoverImage = t.Item2;
-                        });
-            }
-            catch (Exception exception) when (exception is TaskCanceledException)
-            {
-                Logger.Debug(
-                    "DownloadPosterImageAsync cancelled.");
-            }
-            catch (Exception exception)
-            {
-                Logger.Error(
-                    $"DownloadPosterImageAsync: {exception.Message}");
-                throw;
-            }
-            finally
-            {
-                watch.Stop();
-                var elapsedMs = watch.ElapsedMilliseconds;
-                Logger.Debug(
-                    $"DownloadPosterImageAsync ({movie.ImdbCode}) in {elapsedMs} milliseconds.");
-            }
-        }
-
-        /// <summary>
-        /// Download actors' image for a movie
-        /// </summary>
-        /// <param name="movie">The movie to process</param>
-        /// <param name="ct">Used to cancel downloading actor image</param>
-        public async Task DownloadCastImageAsync(MovieFull movie, CancellationTokenSource ct)
-        {
-            if (movie.Cast == null)
-                return;
-
-            var watch = Stopwatch.StartNew();
-
-            try
-            {
-                await
-                    movie.Cast.ForEachAsync(
-                        cast =>
-                            DownloadFileHelper.DownloadFileTaskAsync(cast.SmallImage,
-                                Constants.CastMovieDirectory + cast.Name + Constants.ImageFileExtension, ct: ct),
-                        (cast, t) =>
-                        {
-                            if (t.Item3 == null && !string.IsNullOrEmpty(t.Item2))
-                                cast.SmallImagePath = t.Item2;
-                        });
-            }
-            catch (Exception exception) when (exception is TaskCanceledException)
-            {
-                Logger.Debug(
-                    "DownloadCastImageAsync cancelled.");
-            }
-            catch (Exception exception)
-            {
-                Logger.Error(
-                    $"DownloadCastImageAsync: {exception.Message}");
-                throw;
-            }
-            finally
-            {
-                watch.Stop();
-                var elapsedMs = watch.ElapsedMilliseconds;
-                Logger.Debug(
-                    $"DownloadCastImageAsync ({movie.ImdbCode}) in {elapsedMs} milliseconds.");
-            }
-        }
-
-        /// <summary>
-        /// Get movies as a list from wrapped movies
-        /// </summary>
-        /// <param name="wrapper">Wrapped movies</param>
-        /// <returns>List of movies</returns>
-        private static IEnumerable<MovieShort> GetMoviesListFromWrapper(WrapperMovieShort wrapper)
-            => wrapper?.Data?.Movies?.Select(movie => new MovieShort
-            {
-                ApiVersion = movie.ApiVersion,
-                DateUploaded = movie.DateUploaded,
-                DateUploadedUnix = movie.DateUploadedUnix,
-                ExecutionTime = movie.ExecutionTime,
-                Genres = movie.Genres,
-                Id = movie.Id,
-                ImdbCode = movie.ImdbCode,
-                IsFavorite = false,
-                HasBeenSeen = false,
-                Language = movie.Language,
-                MediumCoverImage = movie.MediumCoverImage,
-                CoverImagePath = string.Empty,
-                MpaRating = movie.MpaRating,
-                RatingValue = movie.Rating,
-                Runtime = movie.Runtime,
-                ServerTime = movie.ServerTime,
-                ServerTimezone = movie.ServerTimezone,
-                SmallCoverImage = movie.SmallCoverImage,
-                State = movie.State,
-                Title = movie.Title,
-                TitleLong = movie.TitleLong,
-                Torrents = movie.Torrents,
-                Url = movie.Url,
-                Year = movie.Year
-            }).ToList();
     }
 }

@@ -1,5 +1,5 @@
 ﻿using GalaSoft.MvvmLight.Messaging;
-using Popcorn.Models.Movie.Full;
+using Popcorn.Models.Movie;
 
 namespace Popcorn.Messaging
 {
@@ -11,13 +11,13 @@ namespace Popcorn.Messaging
         /// <summary>
         /// The movie to download
         /// </summary>
-        public readonly MovieFull Movie;
+        public readonly MovieJson Movie;
 
         /// <summary>
         /// Initialize a new instance of DownloadMovieMessage class
         /// </summary>
         /// <param name="movie">The movie to download</param>
-        public DownloadMovieMessage(MovieFull movie)
+        public DownloadMovieMessage(MovieJson movie)
         {
             Movie = movie;
         }

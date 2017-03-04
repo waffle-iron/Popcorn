@@ -106,8 +106,7 @@
     <Otherwise />
   </Choose>
   <ItemGroup>
-    <Compile Include="Comparers\MovieFullComparerTest.cs" />
-    <Compile Include="Comparers\MovieShortComparerTest.cs" />
+    <Compile Include="Comparers\MovieComparerTest.cs" />
     <Compile Include="Converters\BoolToInverseBoolConverterTest.cs" />
     <Compile Include="Converters\MultiBooleanToBoolConverterTest.cs" />
     <Compile Include="Converters\MultiBooleanToVisibilityConverterTest.cs" />

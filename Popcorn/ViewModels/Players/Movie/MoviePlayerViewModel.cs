@@ -5,7 +5,7 @@ using GalaSoft.MvvmLight.Messaging;
 using NLog;
 using Popcorn.Messaging;
 using Popcorn.Models.ApplicationState;
-using Popcorn.Models.Movie.Full;
+using Popcorn.Models.Movie;
 using Popcorn.Properties;
 using Popcorn.Services.History;
 using Popcorn.Services.Movie;
@@ -25,7 +25,7 @@ namespace Popcorn.ViewModels.Players.Movie
         /// <summary>
         /// The movie to manage
         /// </summary>
-        public MovieFull Movie;
+        public MovieJson Movie;
 
         /// <summary>
         /// Initializes a new instance of the MoviePlayerViewModel class.
@@ -45,7 +45,7 @@ namespace Popcorn.ViewModels.Players.Movie
         /// Load a movie
         /// </summary>
         /// <param name="movie">Movie to load</param>
-        public void LoadMovie(MovieFull movie)
+        public void LoadMovie(MovieJson movie)
         {
             Logger.Info(
                 $"Loading movie: {movie.Title}.");

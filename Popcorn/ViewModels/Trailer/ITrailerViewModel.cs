@@ -1,6 +1,6 @@
 ﻿using System.Threading;
 using System.Threading.Tasks;
-using Popcorn.Models.Movie.Full;
+using Popcorn.Models.Movie;
 
 namespace Popcorn.ViewModels.Trailer
 {
@@ -11,7 +11,7 @@ namespace Popcorn.ViewModels.Trailer
         /// </summary>
         /// <param name="movie">The movie</param>
         /// <param name="ct">Cancellation token</param>
-        Task LoadTrailerAsync(MovieFull movie, CancellationToken ct);
+        Task LoadTrailerAsync(MovieJson movie, CancellationToken ct);
 
         /// <summary>
         /// Unload the trailer

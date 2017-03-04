@@ -19,8 +19,8 @@ namespace Popcorn.Controls
         /// Rating property
         /// </summary>
         public static readonly DependencyProperty RatingValueProperty = DependencyProperty.Register("RatingValue",
-            typeof (int), typeof (Rating),
-            new FrameworkPropertyMetadata(0, FrameworkPropertyMetadataOptions.BindsTwoWayByDefault, RatingChanged));
+            typeof (double), typeof (Rating),
+            new FrameworkPropertyMetadata(0d, FrameworkPropertyMetadataOptions.BindsTwoWayByDefault, RatingChanged));
 
         /// <summary>
         /// Star buttons property
@@ -50,7 +50,7 @@ namespace Popcorn.Controls
         /// <summary>
         /// Rating property
         /// </summary>
-        public int RatingValue
+        public double RatingValue
         {
             set
             {
@@ -74,7 +74,7 @@ namespace Popcorn.Controls
             if (rating == null)
                 return;
 
-            var newval = (int) e.NewValue;
+            var newval = Convert.ToInt32((double) e.NewValue);
             newval /= 2;
             var childs = ((Grid) (rating.Content)).Children;
 

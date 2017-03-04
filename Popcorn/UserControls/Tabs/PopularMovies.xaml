@@ -227,7 +227,8 @@
                                         Grid.ColumnSpan="3"
                                         HorizontalAlignment="Center"
                                         VerticalAlignment="Center"
-                                        attachedProperties:ImageAsyncHelper.SourceUri="{Binding CoverImagePath, Converter={StaticResource StringToUriConverter}, IsAsync=True}" />
+                                        attachedProperties:ImageAsyncHelper.SourceUri="{Binding MediumCoverImage, Converter={StaticResource StringToUriConverter}, IsAsync=True}"
+                                        RenderOptions.BitmapScalingMode="Fant" />
                                     <Grid
                                         x:Name="PlayCanvas"
                                         Grid.Row="0"
@@ -276,7 +277,7 @@
                                         HorizontalAlignment="Left"
                                         VerticalAlignment="Center"
                                         Opacity="0.0"
-                                        RatingValue="{Binding RatingValue}"
+                                        RatingValue="{Binding Rating}"
                                         StarButtonsEnabled="False" />
 
                                     <ToggleButton

@@ -10,7 +10,7 @@ using Popcorn.Helpers;
 using Popcorn.Messaging;
 using Popcorn.Models.ApplicationState;
 using Popcorn.Models.Genre;
-using Popcorn.Models.Movie.Short;
+using Popcorn.Models.Movie;
 using Popcorn.Services.History;
 using Popcorn.Services.Movie;
 
@@ -57,14 +57,12 @@ namespace Popcorn.ViewModels.Tabs
                 var movies =
                     await MovieHistoryService.GetSeenMoviesAsync(Genre, Rating);
 
-                Movies = new ObservableCollection<MovieShort>(movies);
+                Movies = new ObservableCollection<MovieJson>(movies);
 
                 IsLoadingMovies = false;
                 IsMovieFound = Movies.Any();
                 CurrentNumberOfMovies = Movies.Count;
                 MaxNumberOfMovies = Movies.Count;
-
-                await MovieService.DownloadCoverImageAsync(Movies, CancellationLoadingMovies);
             }
             catch (Exception exception)
             {
@@ -99,7 +97,7 @@ namespace Popcorn.ViewModels.Tabs
                     await LoadMoviesAsync();
                 });
 
-            Messenger.Default.Register<PropertyChangedMessage<MovieGenre>>(this, async e =>
+            Messenger.Default.Register<PropertyChangedMessage<GenreJson>>(this, async e =>
             {
                 if (e.PropertyName != GetPropertyName(() => Genre) && Genre.Equals(e.NewValue)) return;
                 StopLoadingMovies();

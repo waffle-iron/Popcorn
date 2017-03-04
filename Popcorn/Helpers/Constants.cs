@@ -10,7 +10,7 @@ namespace Popcorn.Helpers
         /// <summary>
         /// App version
         /// </summary>
-        public const string AppVersion = "1.5.0.0";
+        public const string AppVersion = "1.6.0.0";
 
         /// <summary>
         /// Youtube quality
@@ -30,7 +30,7 @@ namespace Popcorn.Helpers
         /// <summary>
         /// Endpoint to YTS
         /// </summary>
-        public const string YtsApiEndpoint = "http://yts.ag/api/v2";
+        public const string PopcornApi = "https://popcornapi.azurewebsites.net/api";
 
         /// <summary>
         /// Endpoint to Yify Subtitles
@@ -48,11 +48,6 @@ namespace Popcorn.Helpers
         public const string TmDbClientId = "a21fe922d3bac6654e93450e9a18af1c";
 
         /// <summary>
-        /// Background image size for movie, retrieved from TMDb
-        /// </summary>
-        public const string BackgroundImageSizeTmDb = "original";
-
-        /// <summary>
         /// Generic path to youtube video
         /// </summary>
         public const string YoutubePath = "http://www.youtube.com/watch?v=";
@@ -68,11 +63,6 @@ namespace Popcorn.Helpers
         public const int MaxMoviesPerPage = 20;
 
         /// <summary>
-        /// Extension of image file
-        /// </summary>
-        public const string ImageFileExtension = ".jpg";
-
-        /// <summary>
         /// Extension of video file
         /// </summary>
         public const string VideoFileExtension = ".mp4";
@@ -81,26 +71,6 @@ namespace Popcorn.Helpers
         /// Url of the server updates
         /// </summary>
         public const string GithubRepository = "https://github.com/bbougot/Popcorn";
-
-        /// <summary>
-        /// Directory of covers images
-        /// </summary>
-        public static string CoverMoviesDirectory { get; } = Path.GetTempPath() + "Popcorn\\Covers\\";
-
-        /// <summary>
-        /// Directory of poster images
-        /// </summary>
-        public static string PosterMovieDirectory { get; } = Path.GetTempPath() + "Popcorn\\Posters\\";
-
-        /// <summary>
-        /// Directory of background images
-        /// </summary>
-        public static string BackgroundMovieDirectory { get; } = Path.GetTempPath() + "Popcorn\\Backgrounds\\";
-
-        /// <summary>
-        /// Directory of actors images
-        /// </summary>
-        public static string CastMovieDirectory { get; } = Path.GetTempPath() + "Popcorn\\Cast\\";
 
         /// <summary>
         /// Directory of downloaded movies

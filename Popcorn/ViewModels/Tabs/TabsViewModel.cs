@@ -11,7 +11,7 @@ using Popcorn.Helpers;
 using Popcorn.Messaging;
 using Popcorn.Models.ApplicationState;
 using Popcorn.Models.Genre;
-using Popcorn.Models.Movie.Short;
+using Popcorn.Models.Movie;
 using Popcorn.Services.History;
 using Popcorn.Services.Movie;
 
@@ -30,7 +30,7 @@ namespace Popcorn.ViewModels.Tabs
         /// <summary>
         /// The genre used to filter movies
         /// </summary>
-        private static MovieGenre _genre;
+        private static GenreJson _genre;
 
         /// <summary>
         /// The rating used to filter movies
@@ -75,7 +75,7 @@ namespace Popcorn.ViewModels.Tabs
         /// <summary>
         /// The tab's movies
         /// </summary>
-        private ObservableCollection<MovieShort> _movies = new ObservableCollection<MovieShort>();
+        private ObservableCollection<MovieJson> _movies = new ObservableCollection<MovieJson>();
 
         /// <summary>
         /// The tab's name
@@ -110,7 +110,7 @@ namespace Popcorn.ViewModels.Tabs
         /// <summary>
         /// Tab's movies
         /// </summary>
-        public ObservableCollection<MovieShort> Movies
+        public ObservableCollection<MovieJson> Movies
         {
             get { return _movies; }
             set { Set(() => Movies, ref _movies, value); }
@@ -178,12 +178,12 @@ namespace Popcorn.ViewModels.Tabs
         /// <summary>
         /// Command used to set a movie as favorite
         /// </summary>
-        public RelayCommand<MovieShort> SetFavoriteMovieCommand { get; private set; }
+        public RelayCommand<MovieJson> SetFavoriteMovieCommand { get; private set; }
 
         /// <summary>
         /// Command used to change movie's genres
         /// </summary>
-        public RelayCommand<MovieGenre> ChangeMovieGenreCommand { get; set; }
+        public RelayCommand<GenreJson> ChangeMovieGenreCommand { get; set; }
 
         /// <summary>
         /// Specify if a movie loading has failed
@@ -197,7 +197,7 @@ namespace Popcorn.ViewModels.Tabs
         /// <summary>
         /// The genre used to filter movies
         /// </summary>
-        protected MovieGenre Genre
+        protected GenreJson Genre
         {
             get { return _genre; }
             private set { Set(() => Genre, ref _genre, value, true); }
@@ -269,7 +269,7 @@ namespace Popcorn.ViewModels.Tabs
                             return;
                         }
 
-                        await MovieService.TranslateMovieShortAsync(movie, CancellationLoadingMovies.Token);
+                        await MovieService.TranslateMovieAsync(movie, CancellationLoadingMovies.Token);
                     }
                 });
 
@@ -285,14 +285,14 @@ namespace Popcorn.ViewModels.Tabs
         private void RegisterCommands()
         {
             SetFavoriteMovieCommand =
-                new RelayCommand<MovieShort>(async movie =>
+                new RelayCommand<MovieJson>(async movie =>
                 {
                     await MovieHistoryService.SetFavoriteMovieAsync(movie);
                     Messenger.Default.Send(new ChangeFavoriteMovieMessage());
                 });
 
             ChangeMovieGenreCommand =
-                new RelayCommand<MovieGenre>(genre => Genre = genre.TmdbGenre.Name ==
+                new RelayCommand<GenreJson>(genre => Genre = genre.TmdbGenre.Name ==
                                                               LocalizationProviderHelper.GetLocalizedValue<string>(
                                                                   "AllLabel")
                     ? null

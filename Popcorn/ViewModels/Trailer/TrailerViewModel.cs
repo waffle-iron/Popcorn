@@ -11,7 +11,7 @@ using NLog;
 using Popcorn.Helpers;
 using Popcorn.Messaging;
 using Popcorn.Models.ApplicationState;
-using Popcorn.Models.Movie.Full;
+using Popcorn.Models.Movie;
 using Popcorn.Services.History;
 using Popcorn.Services.Movie;
 using Popcorn.ViewModels.Players.Trailer;
@@ -89,7 +89,7 @@ namespace Popcorn.ViewModels.Trailer
         /// </summary>
         /// <param name="movie">The movie</param>
         /// <param name="ct">Cancellation token</param>
-        public async Task LoadTrailerAsync(MovieFull movie, CancellationToken ct)
+        public async Task LoadTrailerAsync(MovieJson movie, CancellationToken ct)
         {
             try
             {

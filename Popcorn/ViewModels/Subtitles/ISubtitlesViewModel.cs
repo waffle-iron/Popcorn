@@ -1,5 +1,5 @@
 ﻿using System.Threading.Tasks;
-using Popcorn.Models.Movie.Full;
+using Popcorn.Models.Movie;
 
 namespace Popcorn.ViewModels.Subtitles
 {
@@ -14,7 +14,7 @@ namespace Popcorn.ViewModels.Subtitles
         /// Load the movie's subtitles asynchronously
         /// </summary>
         /// <param name="movie">The movie</param>
-        Task LoadSubtitlesAsync(MovieFull movie);
+        Task LoadSubtitlesAsync(MovieJson movie);
 
         /// <summary>
         /// Stop downloading subtitles and clear movie

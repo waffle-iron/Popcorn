@@ -10,7 +10,7 @@ using lt;
 using NLog;
 using Popcorn.Helpers;
 using Popcorn.Messaging;
-using Popcorn.Models.Movie.Full;
+using Popcorn.Models.Movie;
 using Popcorn.Services.Movie;
 using Popcorn.ViewModels.MovieSettings;
 using Popcorn.ViewModels.Settings;
@@ -60,7 +60,7 @@ namespace Popcorn.ViewModels.DownloadMovie
         /// <summary>
         /// The movie to download
         /// </summary>
-        private MovieFull _movie;
+        private MovieJson _movie;
 
         /// <summary>
         /// The movie download progress
@@ -156,7 +156,7 @@ namespace Popcorn.ViewModels.DownloadMovie
         /// <summary>
         /// The movie to download
         /// </summary>
-        public MovieFull Movie
+        public MovieJson Movie
         {
             get { return _movie; }
             set { Set(() => Movie, ref _movie, value); }
@@ -171,7 +171,7 @@ namespace Popcorn.ViewModels.DownloadMovie
         /// Load a movie
         /// </summary>
         /// <param name="movie">The movie to load</param>
-        public void LoadMovie(MovieFull movie)
+        public void LoadMovie(MovieJson movie)
         {
             MovieDownloadProgress = 0d;
             MovieDownloadRate = 0d;
@@ -262,7 +262,7 @@ namespace Popcorn.ViewModels.DownloadMovie
         /// <param name="downloadProgress">Report download progress</param>
         /// <param name="downloadRate">Report download rate</param>
         /// <param name="ct">Cancellation token</param>
-        private async Task DownloadMovieAsync(MovieFull movie, IProgress<double> downloadProgress,
+        private async Task DownloadMovieAsync(MovieJson movie, IProgress<double> downloadProgress,
             IProgress<double> downloadRate,
             CancellationTokenSource ct)
         {

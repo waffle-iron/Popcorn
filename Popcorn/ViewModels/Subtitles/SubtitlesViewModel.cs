@@ -2,7 +2,7 @@
 using System.Threading.Tasks;
 using GalaSoft.MvvmLight;
 using NLog;
-using Popcorn.Models.Movie.Full;
+using Popcorn.Models.Movie;
 using Popcorn.Services.Movie;
 
 namespace Popcorn.ViewModels.Subtitles
@@ -32,7 +32,7 @@ namespace Popcorn.ViewModels.Subtitles
         /// <summary>
         /// The movie to manage
         /// </summary>
-        private MovieFull _movie;
+        private MovieJson _movie;
 
         /// <summary>
         /// Initializes a new instance of the SubtitlesViewModel class.
@@ -47,7 +47,7 @@ namespace Popcorn.ViewModels.Subtitles
         /// <summary>
         /// The movie to manage
         /// </summary>
-        public MovieFull Movie
+        public MovieJson Movie
         {
             get { return _movie; }
             set { Set(() => Movie, ref _movie, value); }
@@ -66,7 +66,7 @@ namespace Popcorn.ViewModels.Subtitles
         /// Load the movie's subtitles asynchronously
         /// </summary>
         /// <param name="movie">The movie</param>
-        public async Task LoadSubtitlesAsync(MovieFull movie)
+        public async Task LoadSubtitlesAsync(MovieJson movie)
         {
             Logger.Debug(
                 $"Load subtitles for movie: {movie.Title}");
