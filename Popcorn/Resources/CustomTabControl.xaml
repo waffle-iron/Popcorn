@@ -62,7 +62,7 @@
         </Setter>
     </Style>
 
-    <Style x:Key="CustomTabControlStyle" TargetType="{x:Type TabControl}">
+    <Style x:Key="CustomTabControlStyle" TargetType="{x:Type controls:MetroAnimatedSingleRowTabControl}">
         <Setter Property="Background" Value="{StaticResource TabControlBackgroundBrush}" />
         <Setter Property="TabStripPlacement" Value="Top" />
         <Setter Property="BorderThickness" Value="0" />

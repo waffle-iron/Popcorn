@@ -91,7 +91,9 @@
             </controls:Flyout>
         </controls:FlyoutsControl>
     </controls:MetroWindow.Flyouts>
-    <TabControl
+    <controls:MetroAnimatedSingleRowTabControl
+        controls:TabControlHelper.Transition="LeftReplace"
+        helpers:TabContent.IsCached="True"
         DisplayMemberPath="Caption"
         ItemsSource="{Binding Pages, Mode=OneWay}"
         SelectedIndex="0"
@@ -107,5 +109,5 @@
                 <pages:AnimeShowControlTab />
             </DataTemplate>
         </TabControl.Resources>
-    </TabControl>
+    </controls:MetroAnimatedSingleRowTabControl>
 </controls:MetroWindow>
