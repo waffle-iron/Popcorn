@@ -15,7 +15,7 @@ An application which aims to provide a simple interface to watch any movie.
 * MVVM framework: [MVVM Light](https://mvvmlight.codeplex.com) 
 * UI framework: [MahApps](https://github.com/MahApps/MahApps.Metro)
 * Media Player: [Meta.Vlc](https://github.com/higankanshi/Meta.Vlc)
-* libtorrent wrapper: [Libtorrent.NET](https://github.com/bbougot/Libtorrent.NET)
+* libtorrent wrapper: [torrent.NET](https://github.com/bbougot/torrent.NET) **Self made**
 * ORM: [Entity Framework](https://github.com/aspnet/EntityFramework)
 * Database storage: [SqlServer Compact](https://www.nuget.org/packages/Microsoft.SqlServer.Compact/)
 * JSON Deserialization: [Json.NET](https://github.com/JamesNK/Newtonsoft.Json)
