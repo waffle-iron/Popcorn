@@ -8,6 +8,7 @@
     xmlns:customControls="clr-namespace:Popcorn.Controls"
     xmlns:custompanels="clr-namespace:Popcorn.Panels"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:helpers="clr-namespace:Popcorn.Helpers"
     xmlns:lex="http://wpflocalizeextension.codeplex.com"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:tabs="clr-namespace:Popcorn.UserControls.Tabs"
@@ -77,7 +78,7 @@
                 </MultiBinding>
             </TextBlock.Visibility>
         </TextBlock>
-        <ScrollViewer
+        <helpers:AnimatedScrollViewer
             Grid.Row="1"
             Grid.RowSpan="2"
             VerticalScrollBarVisibility="Auto"
@@ -85,12 +86,13 @@
             <ItemsControl
                 VerticalAlignment="Top"
                 ItemsSource="{Binding Movies}"
+                ScrollViewer.CanContentScroll="True"
                 VirtualizingStackPanel.IsVirtualizing="True"
                 VirtualizingStackPanel.VirtualizationMode="Recycling">
                 <ItemsControl.ItemTemplate>
                     <DataTemplate>
                         <StackPanel
-                            Margin="0,0,0,30"
+                            Margin="0,15,0,15"
                             HorizontalAlignment="Left"
                             Orientation="Vertical">
                             <controls:Tile
@@ -350,7 +352,7 @@
                     </ItemsPanelTemplate>
                 </ItemsControl.ItemsPanel>
             </ItemsControl>
-        </ScrollViewer>
+        </helpers:AnimatedScrollViewer>
         <Button
             Grid.Row="2"
             Width="140"

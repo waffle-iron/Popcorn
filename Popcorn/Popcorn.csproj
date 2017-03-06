@@ -138,6 +138,10 @@
       <HintPath>..\packages\MahApps.Metro.1.4.3\lib\net45\MahApps.Metro.dll</HintPath>
       <Private>True</Private>
     </Reference>
+    <Reference Include="MahApps.Metro.IconPacks, Version=1.7.1.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\MahApps.Metro.IconPacks.1.7.1\lib\net46\MahApps.Metro.IconPacks.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="Meta.Vlc, Version=16.5.1.0, Culture=neutral, PublicKeyToken=721a8c5379fa4056, processorArchitecture=x86">
       <HintPath>..\packages\Meta.Vlc.16.11.19\lib\net45\x86\Meta.Vlc.dll</HintPath>
       <Private>True</Private>
@@ -266,6 +270,7 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Compile Include="AttachedProperties\ImageAsyncHelper.cs" />
+    <Compile Include="Behaviors\ScrollAnimationBehavior.cs" />
     <Compile Include="Comparers\MovieComparer.cs" />
     <Compile Include="Converters\BoolToInverseBoolConverter.cs" />
     <Compile Include="Converters\BoolToInverseVisibilityConverter.cs" />
@@ -302,10 +307,14 @@
     <Compile Include="Entity\Movie\MovieEntity.cs" />
     <Compile Include="Entity\Movie\MovieHistory.cs" />
     <Compile Include="Entity\Movie\Torrent.cs" />
+    <Compile Include="Helpers\AnimatedScrollViewer.cs" />
     <Compile Include="Helpers\AsyncSynchronizationContext.cs" />
     <Compile Include="Helpers\CookieAwareContainer.cs">
       <SubType>Component</SubType>
     </Compile>
+    <Compile Include="Helpers\EnableDragHelper.cs" />
+    <Compile Include="Helpers\FindVisualChildHelper.cs" />
+    <Compile Include="Helpers\MaximizeDoubleClickHelper.cs" />
     <Compile Include="Messaging\ChangeFavoriteMovieMessage.cs" />
     <Compile Include="Messaging\ChangeHasBeenSeenMovieMessage.cs" />
     <Compile Include="Messaging\UnhandledExceptionMessage.cs" />
@@ -389,6 +398,15 @@
     <Compile Include="UserControls\Movie\Movie.xaml.cs">
       <DependentUpon>Movie.xaml</DependentUpon>
     </Compile>
+    <Compile Include="UserControls\Pages\AnimeShowControlTab.xaml.cs">
+      <DependentUpon>AnimeShowControlTab.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="UserControls\Pages\MovieControlTab.xaml.cs">
+      <DependentUpon>MovieControlTab.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="UserControls\Pages\ShowControlTab.xaml.cs">
+      <DependentUpon>ShowControlTab.xaml</DependentUpon>
+    </Compile>
     <Compile Include="UserControls\Players\MediaPlayer.cs" />
     <Compile Include="UserControls\Players\Movie\MoviePlayer.xaml.cs">
       <DependentUpon>MoviePlayer.xaml</DependentUpon>
@@ -433,6 +451,10 @@
     <Compile Include="ViewModels\Main\MainViewModel.cs" />
     <Compile Include="ViewModels\MovieSettings\IMovieSettingsViewModel.cs" />
     <Compile Include="ViewModels\MovieSettings\MovieSettingsViewModel.cs" />
+    <Compile Include="ViewModels\Pages\AnimePageViewModel.cs" />
+    <Compile Include="ViewModels\Pages\MoviePageViewModel.cs" />
+    <Compile Include="ViewModels\Pages\PageViewModel.cs" />
+    <Compile Include="ViewModels\Pages\ShowPageViewModel.cs" />
     <Compile Include="ViewModels\Players\MediaPlayerViewModel.cs" />
     <Compile Include="ViewModels\Players\Movie\IMoviePlayerViewModel.cs" />
     <Compile Include="ViewModels\Players\Trailer\ITrailerPlayerViewModel.cs" />
@@ -482,6 +504,14 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="Resources\AnimatedScrollViewer.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Resources\CustomTabControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Resources\Icons.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -489,6 +519,22 @@
     <Page Include="Resources\IconsNonShared.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Resources\Shadows.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="UserControls\Pages\AnimeShowControlTab.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="UserControls\Pages\MovieControlTab.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="UserControls\Pages\ShowControlTab.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="UserControls\Tabs\FavoritesMovies.xaml">
       <SubType>Designer</SubType>
@@ -1356,12 +1402,6 @@
     <Resource Include="Resources\Images\Flags\ZW.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Resource>
-  </ItemGroup>
-  <ItemGroup>
-    <Resource Include="Resources\WindowsIcons-license.txt" />
-  </ItemGroup>
-  <ItemGroup>
-    <Resource Include="Resources\Entypo-license.txt" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="$(SolutionDir)\.nuget\NuGet.targets" Condition="Exists('$(SolutionDir)\.nuget\NuGet.targets')" />

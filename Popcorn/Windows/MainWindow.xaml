@@ -5,20 +5,16 @@
     xmlns:command="http://www.galasoft.ch/mvvmlight"
     xmlns:controls="clr-namespace:MahApps.Metro.Controls;assembly=MahApps.Metro"
     xmlns:converters="clr-namespace:Popcorn.Converters"
-    xmlns:customControls="clr-namespace:Popcorn.Controls"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:dialog="clr-namespace:MahApps.Metro.Controls.Dialogs;assembly=MahApps.Metro"
     xmlns:helpers="clr-namespace:Popcorn.Helpers"
     xmlns:i="clr-namespace:System.Windows.Interactivity;assembly=System.Windows.Interactivity"
     xmlns:lex="http://wpflocalizeextension.codeplex.com"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    xmlns:movieUc="clr-namespace:Popcorn.UserControls.Players.Movie"
     xmlns:movieUserControl="clr-namespace:Popcorn.UserControls.Movie"
-    xmlns:movieVm="clr-namespace:Popcorn.ViewModels.Players.Movie"
-    xmlns:searchUserControl="clr-namespace:Popcorn.UserControls.Search"
+    xmlns:pages="clr-namespace:Popcorn.UserControls.Pages"
     xmlns:settingsUserControl="clr-namespace:Popcorn.UserControls.Settings"
-    xmlns:tabsUserControl="clr-namespace:Popcorn.UserControls.Tabs"
-    xmlns:tabsViewModel="clr-namespace:Popcorn.ViewModels.Tabs"
+    xmlns:tabs="clr-namespace:Popcorn.ViewModels.Pages"
     xmlns:viewModel="clr-namespace:Popcorn.ViewModels.Main"
     Title="Popcorn"
     Width="{Binding Source={x:Static SystemParameters.PrimaryScreenWidth}, Converter={converters:RatioConverter}, ConverterParameter='0.8'}"
@@ -41,61 +37,9 @@
     <Window.Resources>
         <ResourceDictionary>
             <converters:BoolToVisibilityConverter x:Key="BoolToVisibilityConverter" />
-            <converters:RatioConverter x:Key="RatioConverter" />
-            <converters:BoolToInverseVisibilityConverter x:Key="BoolToInverseVisibilityConverter" />
-            <converters:BoolToInverseBoolConverter x:Key="BoolToInverseBoolConverter" />
-            <converters:NullAsBoolConverter x:Key="NullAsBoolConverter" />
 
-            <Style
-                x:Key="ListBoxButtons"
-                BasedOn="{StaticResource MetroListBox}"
-                TargetType="{x:Type ListBox}">
-                <Setter Property="Background" Value="#11171c" />
-                <Setter Property="BorderThickness" Value="0" />
-            </Style>
-
-            <Style x:Key="FlatButton" TargetType="{x:Type RadioButton}">
-                <Setter Property="Background" Value="#11171c" />
-                <Setter Property="Foreground" Value="White" />
-                <Setter Property="FontSize" Value="{DynamicResource FlatButtonFontSize}" />
-                <Setter Property="Padding" Value="10,5,10,5" />
-                <Setter Property="BorderThickness" Value="0" />
-                <Setter Property="Template">
-                    <Setter.Value>
-                        <ControlTemplate TargetType="{x:Type RadioButton}">
-                            <Border
-                                x:Name="Border"
-                                Margin="0"
-                                Background="{TemplateBinding Background}"
-                                BorderBrush="{TemplateBinding BorderBrush}"
-                                BorderThickness="{TemplateBinding BorderThickness}">
-                                <ContentPresenter
-                                    Margin="{TemplateBinding Padding}"
-                                    HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
-                                    VerticalAlignment="{TemplateBinding VerticalContentAlignment}"
-                                    RecognizesAccessKey="True" />
-                            </Border>
-                            <ControlTemplate.Triggers>
-                                <Trigger Property="IsPressed" Value="True">
-                                    <Setter TargetName="Border" Property="Background" Value="#3c4c55" />
-                                    <Setter Property="Foreground" Value="White" />
-                                </Trigger>
-                                <Trigger Property="IsChecked" Value="True">
-                                    <Setter TargetName="Border" Property="Background" Value="#3c4c55" />
-                                    <Setter Property="Foreground" Value="White" />
-                                </Trigger>
-                                <Trigger Property="IsEnabled" Value="False">
-                                    <Setter Property="Foreground" Value="{DynamicResource GrayBrush2}" />
-                                </Trigger>
-                                <Trigger Property="IsMouseOver" Value="True">
-                                    <Setter Property="Background" Value="#1c242b" />
-                                </Trigger>
-                            </ControlTemplate.Triggers>
-                        </ControlTemplate>
-                    </Setter.Value>
-                </Setter>
-            </Style>
             <Style TargetType="{x:Type controls:WindowButtonCommands}">
+                <Setter Property="Foreground" Value="White" />
                 <Style.Triggers>
                     <DataTrigger Binding="{Binding ShowTitleBar, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type controls:MetroWindow}}}" Value="False">
                         <Setter Property="Background" Value="White" />
@@ -120,6 +64,7 @@
             <Button
                 Command="{Binding OpenSettingsCommand}"
                 Content="{lex:LocText SettingsMenuTitle}"
+                Foreground="White"
                 ToolTip="{lex:LocText SettingsMenuTitle}" />
         </controls:WindowCommands>
     </controls:MetroWindow.RightWindowCommands>
@@ -146,337 +91,21 @@
             </controls:Flyout>
         </controls:FlyoutsControl>
     </controls:MetroWindow.Flyouts>
-
-    <Grid>
-        <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="Auto" MinWidth="220" />
-            <ColumnDefinition Width="*" />
-        </Grid.ColumnDefinitions>
-        <Grid.RowDefinitions>
-            <RowDefinition Height="Auto" MinHeight="80" />
-            <RowDefinition Height="80" />
-            <RowDefinition Height="*" />
-            <RowDefinition Height="80" />
-        </Grid.RowDefinitions>
-        <Grid
-            x:Name="SearchBar"
-            Grid.Row="0"
-            Grid.Column="0"
-            Background="#cc4d4d">
-            <searchUserControl:Search Width="{Binding ElementName=SearchBar, Path=ActualWidth, Converter={StaticResource RatioConverter}, ConverterParameter=0.8}" />
-        </Grid>
-        <Grid Grid.Row="0" Grid.Column="1">
-            <StackPanel Orientation="Horizontal">
-                <TextBlock
-                    Margin="16,0,0,10"
-                    HorizontalAlignment="Left"
-                    VerticalAlignment="Center"
-                    FontSize="28"
-                    Foreground="#484b4e"
-                    Text="{Binding SelectedTab.TabName}" />
-                <Label
-                    Margin="5,0,0,0"
-                    VerticalAlignment="Center"
-                    FontSize="18"
-                    FontStyle="Italic"
-                    Foreground="#484b4e">
-                    <customControls:MoviesNumberSummary CurrentNumberOfMovies="{Binding SelectedTab.CurrentNumberOfMovies}" MaxNumberOfMovies="{Binding SelectedTab.MaxNumberOfMovies}" />
-                </Label>
-            </StackPanel>
-        </Grid>
-        <Grid
-            x:Name="MenuBar"
-            Grid.Row="1"
-            Grid.RowSpan="3"
-            Grid.Column="0"
-            Background="#11171c">
-            <Grid>
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="20" />
-                    <ColumnDefinition Width="5" />
-                    <ColumnDefinition Width="*" />
-                    <ColumnDefinition Width="25" />
-                </Grid.ColumnDefinitions>
-                <Grid.RowDefinitions>
-                    <RowDefinition Height="20" />
-                    <RowDefinition Height="Auto" />
-                    <RowDefinition Height="2.5" />
-                    <RowDefinition Height="Auto" />
-                    <RowDefinition Height="2.5" />
-                    <RowDefinition Height="Auto" />
-                    <RowDefinition Height="2.5" />
-                    <RowDefinition Height="Auto" />
-                    <RowDefinition Height="2.5" />
-                    <RowDefinition Height="Auto" />
-                    <RowDefinition Height="2.5" />
-                    <RowDefinition Height="Auto" />
-                    <RowDefinition Height="2.5" />
-                    <RowDefinition Height="Auto" />
-                    <RowDefinition Height="2.5" />
-                    <RowDefinition Height="*" />
-                </Grid.RowDefinitions>
-                <TextBlock
-                    Grid.Row="1"
-                    Grid.Column="1"
-                    Grid.ColumnSpan="2"
-                    FontSize="14"
-                    Foreground="#3c4c55"
-                    Text="{lex:LocText MoviesLabel}" />
-                <ListBox
-                    Grid.Row="3"
-                    Grid.Column="2"
-                    Style="{StaticResource ListBoxButtons}">
-                    <ListBoxItem>
-                        <RadioButton
-                            Height="40"
-                            HorizontalContentAlignment="Left"
-                            VerticalContentAlignment="Center"
-                            Command="{Binding SelectPopularTab}"
-                            GroupName="Movies"
-                            IsChecked="{Binding IsMovieSearchActive, Converter={StaticResource BoolToInverseBoolConverter}, Mode=OneWay}"
-                            Style="{StaticResource FlatButton}">
-                            <StackPanel Orientation="Horizontal">
-                                <Rectangle
-                                    Width="20"
-                                    Height="18"
-                                    Fill="White">
-                                    <Rectangle.OpacityMask>
-                                        <VisualBrush Stretch="Fill" Visual="{DynamicResource appbar_medical_pulse}" />
-                                    </Rectangle.OpacityMask>
-                                </Rectangle>
-                                <TextBlock
-                                    Margin="10,0,0,0"
-                                    FontSize="16"
-                                    Text="{lex:LocText PopularTitleTab}" />
-                            </StackPanel>
-                        </RadioButton>
-                    </ListBoxItem>
-                    <ListBoxItem>
-                        <RadioButton
-                            Height="40"
-                            HorizontalContentAlignment="Left"
-                            VerticalContentAlignment="Center"
-                            Command="{Binding SelectGreatestTab}"
-                            GroupName="Movies"
-                            Style="{StaticResource FlatButton}">
-                            <StackPanel Orientation="Horizontal">
-                                <Rectangle
-                                    Width="20"
-                                    Height="19"
-                                    Fill="White">
-                                    <Rectangle.OpacityMask>
-                                        <VisualBrush Stretch="Fill" Visual="{DynamicResource appbar_star}" />
-                                    </Rectangle.OpacityMask>
-                                </Rectangle>
-                                <TextBlock
-                                    Margin="10,0,0,0"
-                                    FontSize="16"
-                                    Text="{lex:LocText GreatestTitleTab}" />
-                            </StackPanel>
-                        </RadioButton>
-                    </ListBoxItem>
-                    <ListBoxItem>
-                        <RadioButton
-                            Height="40"
-                            HorizontalContentAlignment="Left"
-                            VerticalContentAlignment="Center"
-                            Command="{Binding SelectRecentTab}"
-                            GroupName="Movies"
-                            Style="{StaticResource FlatButton}">
-                            <StackPanel Orientation="Horizontal">
-                                <Rectangle
-                                    Width="20"
-                                    Height="20"
-                                    VerticalAlignment="Center"
-                                    Fill="White">
-                                    <Rectangle.OpacityMask>
-                                        <VisualBrush Stretch="Fill" Visual="{DynamicResource appbar_calendar}" />
-                                    </Rectangle.OpacityMask>
-                                </Rectangle>
-                                <TextBlock
-                                    Margin="10,0,0,0"
-                                    VerticalAlignment="Center"
-                                    FontSize="16"
-                                    Text="{lex:LocText RecentTitleTab}" />
-                            </StackPanel>
-                        </RadioButton>
-                    </ListBoxItem>
-                    <ListBoxItem Visibility="{Binding IsMovieSearchActive, Converter={StaticResource BoolToInverseVisibilityConverter}, Mode=OneWay}">
-                        <RadioButton
-                            Height="40"
-                            HorizontalContentAlignment="Left"
-                            VerticalContentAlignment="Center"
-                            Command="{Binding SelectSearchTab}"
-                            GroupName="Movies"
-                            IsChecked="{Binding IsMovieSearchActive, Mode=OneWay}"
-                            Style="{StaticResource FlatButton}">
-                            <StackPanel Orientation="Horizontal">
-                                <Rectangle
-                                    Width="20"
-                                    Height="25"
-                                    VerticalAlignment="Center"
-                                    Fill="White">
-                                    <Rectangle.OpacityMask>
-                                        <VisualBrush Stretch="Fill" Visual="{DynamicResource appbar_page_search}" />
-                                    </Rectangle.OpacityMask>
-                                </Rectangle>
-                                <TextBlock
-                                    Margin="10,0,0,0"
-                                    FontSize="16"
-                                    Text="{lex:LocText SearchTitleTab}" />
-                            </StackPanel>
-                        </RadioButton>
-                    </ListBoxItem>
-                </ListBox>
-                <TextBlock
-                    Grid.Row="5"
-                    Grid.Column="1"
-                    Grid.ColumnSpan="2"
-                    FontSize="14"
-                    Foreground="#3c4c55"
-                    Text="{lex:LocText CollectionsLabel}" />
-                <ListBox
-                    Grid.Row="7"
-                    Grid.Column="2"
-                    Style="{StaticResource ListBoxButtons}">
-                    <ListBoxItem>
-                        <RadioButton
-                            Height="40"
-                            HorizontalContentAlignment="Left"
-                            VerticalContentAlignment="Center"
-                            Command="{Binding SelectFavoritesTab}"
-                            GroupName="Movies"
-                            Style="{StaticResource FlatButton}">
-                            <StackPanel Orientation="Horizontal">
-                                <Rectangle
-                                    Width="20"
-                                    Height="18"
-                                    Fill="White">
-                                    <Rectangle.OpacityMask>
-                                        <VisualBrush Stretch="Fill" Visual="{DynamicResource appbar_heart}" />
-                                    </Rectangle.OpacityMask>
-                                </Rectangle>
-                                <TextBlock
-                                    Margin="10,0,0,0"
-                                    FontSize="16"
-                                    Text="{lex:LocText FavoritesTitleTab}" />
-                            </StackPanel>
-                        </RadioButton>
-                    </ListBoxItem>
-                    <ListBoxItem>
-                        <RadioButton
-                            Height="40"
-                            HorizontalAlignment="Stretch"
-                            HorizontalContentAlignment="Left"
-                            VerticalContentAlignment="Center"
-                            Command="{Binding SelectSeenTab}"
-                            GroupName="Movies"
-                            Style="{StaticResource FlatButton}">
-                            <StackPanel Orientation="Horizontal">
-                                <Rectangle
-                                    Width="20"
-                                    Height="12"
-                                    Fill="White">
-                                    <Rectangle.OpacityMask>
-                                        <VisualBrush Stretch="Fill" Visual="{DynamicResource appbar_eye}" />
-                                    </Rectangle.OpacityMask>
-                                </Rectangle>
-                                <TextBlock
-                                    Margin="10,0,0,0"
-                                    FontSize="16"
-                                    Text="{lex:LocText SeenTitleTab}" />
-                            </StackPanel>
-                        </RadioButton>
-                    </ListBoxItem>
-                </ListBox>
-                <TextBlock
-                    Grid.Row="9"
-                    Grid.Column="1"
-                    Grid.ColumnSpan="2"
-                    FontSize="14"
-                    Foreground="#3c4c55"
-                    Text="{lex:LocText RatingLabel}" />
-                <customControls:Rating
-                    Grid.Row="11"
-                    Grid.Column="2"
-                    Width="125"
-                    RatingValue="{Binding SelectedTab.Rating, Mode=TwoWay}"
-                    StarButtonsEnabled="True" />
-                <TextBlock
-                    Grid.Row="13"
-                    Grid.Column="1"
-                    Grid.ColumnSpan="2"
-                    FontSize="14"
-                    Foreground="#3c4c55"
-                    Text="{lex:LocText GenresLabel}" />
-                <ListBox
-                    Grid.Row="15"
-                    Grid.Column="2"
-                    ItemsSource="{Binding GenresViewModel.MovieGenres}"
-                    ScrollViewer.VerticalScrollBarVisibility="Auto"
-                    Style="{StaticResource ListBoxButtons}">
-                    <ListBox.ItemTemplate>
-                        <DataTemplate>
-                            <RadioButton
-                                Height="40"
-                                HorizontalAlignment="Stretch"
-                                HorizontalContentAlignment="Left"
-                                VerticalContentAlignment="Center"
-                                Command="{Binding DataContext.SelectedTab.ChangeMovieGenreCommand, ElementName=MenuBar}"
-                                CommandParameter="{Binding}"
-                                GroupName="Genres"
-                                IsChecked="{Binding RelativeSource={RelativeSource PreviousData}, Converter={StaticResource NullAsBoolConverter}, ConverterParameter=True, Mode=OneWay}"
-                                Style="{StaticResource FlatButton}">
-                                <TextBlock
-                                    x:Name="GenreText"
-                                    Margin="10,0,0,0"
-                                    FontSize="16"
-                                    Text="{Binding TmdbGenre.Name}" />
-                            </RadioButton>
-                        </DataTemplate>
-                    </ListBox.ItemTemplate>
-                </ListBox>
-            </Grid>
-        </Grid>
-        <controls:MetroAnimatedSingleRowTabControl
-            x:Name="MainTabControl"
-            Grid.Row="1"
-            Grid.RowSpan="3"
-            Grid.Column="1"
-            controls:TabControlHelper.Transition="LeftReplace"
-            helpers:TabContent.IsCached="True"
-            ItemsSource="{Binding Tabs}"
-            SelectedItem="{Binding SelectedTab}">
-
-            <controls:MetroAnimatedSingleRowTabControl.Resources>
-                <DataTemplate DataType="{x:Type tabsViewModel:GreatestTabViewModel}">
-                    <tabsUserControl:GreatestMovies Margin="20,0,0,0" />
-                </DataTemplate>
-                <DataTemplate DataType="{x:Type tabsViewModel:PopularTabViewModel}">
-                    <tabsUserControl:PopularMovies Margin="20,0,0,0" />
-                </DataTemplate>
-                <DataTemplate DataType="{x:Type tabsViewModel:RecentTabViewModel}">
-                    <tabsUserControl:RecentMovies Margin="20,0,0,0" />
-                </DataTemplate>
-                <DataTemplate DataType="{x:Type tabsViewModel:SearchTabViewModel}">
-                    <tabsUserControl:SearchMovies Margin="20,0,0,0" />
-                </DataTemplate>
-                <DataTemplate DataType="{x:Type tabsViewModel:FavoritesTabViewModel}">
-                    <tabsUserControl:FavoritesMovies Margin="20,0,0,0" />
-                </DataTemplate>
-                <DataTemplate DataType="{x:Type tabsViewModel:SeenTabViewModel}">
-                    <tabsUserControl:SeenMovies Margin="20,0,0,0" />
-                </DataTemplate>
-                <DataTemplate DataType="{x:Type movieVm:MoviePlayerViewModel}">
-                    <movieUc:MoviePlayer />
-                </DataTemplate>
-            </controls:MetroAnimatedSingleRowTabControl.Resources>
-
-            <controls:MetroAnimatedSingleRowTabControl.ItemContainerStyle>
-                <Style TargetType="{x:Type TabItem}">
-                    <Setter Property="Visibility" Value="Collapsed" />
-                </Style>
-            </controls:MetroAnimatedSingleRowTabControl.ItemContainerStyle>
-        </controls:MetroAnimatedSingleRowTabControl>
-    </Grid>
+    <TabControl
+        DisplayMemberPath="Caption"
+        ItemsSource="{Binding Pages, Mode=OneWay}"
+        SelectedIndex="0"
+        Style="{StaticResource CustomTabControlStyle}">
+        <TabControl.Resources>
+            <DataTemplate DataType="{x:Type tabs:MoviePageViewModel}">
+                <pages:MovieControlTab />
+            </DataTemplate>
+            <DataTemplate DataType="{x:Type tabs:ShowPageViewModel}">
+                <pages:ShowControlTab />
+            </DataTemplate>
+            <DataTemplate DataType="{x:Type tabs:AnimePageViewModel}">
+                <pages:AnimeShowControlTab />
+            </DataTemplate>
+        </TabControl.Resources>
+    </TabControl>
 </controls:MetroWindow>
