@@ -2,11 +2,11 @@
 
 An application which aims to provide a simple interface to watch any movie.
 
-![Screenshot1](https://cloud.githubusercontent.com/assets/8962802/9643432/2d85a3a4-51c2-11e5-87bf-55ee81d5cc7a.jpg)
+![Screenshot1](https://github.com/bbougot/Popcorn/blob/master/Screenshots/Screen1.png)
 
-![Screenshot2](https://cloud.githubusercontent.com/assets/8962802/9288484/e6f0a25e-4348-11e5-9317-f8c0dee12729.jpg)
+![Screenshot2](https://github.com/bbougot/Popcorn/blob/master/Screenshots/Screen2.png)
 
-![Screenshot3](https://cloud.githubusercontent.com/assets/8962802/9288481/dee26ee4-4348-11e5-972e-b7609bd07ca8.jpg)
+![Screenshot3](https://github.com/bbougot/Popcorn/blob/master/Screenshots/Screen3.jpg)
 
 ## What does it use?
 .NET Framework 4.6.2 and C# for the backend. WPF/XAML for the interface.
@@ -40,7 +40,6 @@ Of course yes! Any pull-request will be considered.
 - [ ] Add series/anime
 - [ ] Add cast page (actor, director,...)
 - [ ] DLNA broadcasting
-- [ ] User account with movie chatrooms (like Jabbr)
 - [x] Subtitles support
 - [x] List movies (Popular, Greatest, Recent)
 - [x] Search (Movie Title/IMDb Code, Actor Name/IMDb Code, Director Name/IMDb Code)
