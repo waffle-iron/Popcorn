@@ -441,7 +441,7 @@ namespace Popcorn.ViewModels.Main
                         await updateManager.DownloadReleases(updateInfo.ReleasesToApply, x => Logger.Info(
                             $"Downloading new update... {x}%"));
 
-                        await updateManager.ApplyReleases(updateInfo, x => Logger.Info(
+                        var latestExe = await updateManager.ApplyReleases(updateInfo, x => Logger.Info(
                             $"Applying... {x}%"));
 
                         Logger.Info(
@@ -473,7 +473,7 @@ namespace Popcorn.ViewModels.Main
 
                         Logger.Info(
                             "Restarting...");
-                        UpdateManager.RestartApp();
+                        UpdateManager.RestartApp(Path.Combine(latestExe, "Popcorn.exe"));
                     }
                     else
                     {
