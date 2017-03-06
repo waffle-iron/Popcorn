@@ -11,6 +11,7 @@ using Popcorn.ViewModels.Genres;
 using Popcorn.ViewModels.Main;
 using Popcorn.ViewModels.Movie;
 using Popcorn.ViewModels.MovieSettings;
+using Popcorn.ViewModels.Pages;
 using Popcorn.ViewModels.Players.Movie;
 using Popcorn.ViewModels.Players.Trailer;
 using Popcorn.ViewModels.Search;
@@ -35,6 +36,7 @@ namespace Popcorn.ViewModels
             SimpleIoc.Default.Register<IGenresViewModel, GenresViewModel>();
             SimpleIoc.Default.Register<IMovieHistoryService, MovieHistoryService>();
             SimpleIoc.Default.Register<MoviePlayerViewModel>();
+            SimpleIoc.Default.Register<MoviePageViewModel>();
             SimpleIoc.Default.Register<IApplicationState, ApplicationState>();
             SimpleIoc.Default.Register<MainViewModel>();
             SimpleIoc.Default.Register<ISettingsViewModel, SettingsViewModel>();
@@ -70,6 +72,14 @@ namespace Popcorn.ViewModels
             "CA1822:MarkMembersAsStatic",
             Justification = "This non-static member is needed for data binding purposes.")]
         public SearchViewModel Search => ServiceLocator.Current.GetInstance<SearchViewModel>();
+
+        /// <summary>
+        /// Gets the MovieTab property.
+        /// </summary>
+        [SuppressMessage("Microsoft.Performance",
+            "CA1822:MarkMembersAsStatic",
+            Justification = "This non-static member is needed for data binding purposes.")]
+        public MoviePageViewModel MovieTab => ServiceLocator.Current.GetInstance<MoviePageViewModel>();
 
         /// <summary>
         /// Gets the Settings property.

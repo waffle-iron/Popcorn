@@ -82,7 +82,7 @@ namespace Popcorn.ViewModels.Pages
                 Tabs.Add(new FavoritesTabViewModel(ApplicationState, _movieService, _movieHistoryService));
                 Tabs.Add(new SeenTabViewModel(ApplicationState, _movieService, _movieHistoryService));
                 SelectedTab = Tabs.First();
-                foreach (var tab in Tabs)
+                foreach (var tab in Tabs.ToList())
                     await tab.LoadMoviesAsync();
 
                 await GenresViewModel.LoadGenresAsync();

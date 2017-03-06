@@ -140,15 +140,11 @@ namespace Popcorn.ViewModels.Main
         /// </summary>
         private void Load()
         {
+            var movieTab = SimpleIoc.Default.GetInstance<MoviePageViewModel>();
+            movieTab.Caption = "Movies";
             Pages = new ObservableCollection<PageViewModel>
             {
-                new MoviePageViewModel(SimpleIoc.Default.GetInstance<IGenresViewModel>(),
-                    SimpleIoc.Default.GetInstance<IMovieService>(),
-                    SimpleIoc.Default.GetInstance<IMovieHistoryService>(),
-                    SimpleIoc.Default.GetInstance<IApplicationState>())
-                {
-                    Caption = "Movies"
-                },
+                movieTab,
                 new ShowPageViewModel
                 {
                     Caption = "Shows"

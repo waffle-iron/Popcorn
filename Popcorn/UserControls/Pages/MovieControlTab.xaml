@@ -23,6 +23,7 @@
             <converters:BoolToInverseVisibilityConverter x:Key="BoolToInverseVisibilityConverter" />
             <converters:BoolToInverseBoolConverter x:Key="BoolToInverseBoolConverter" />
             <converters:NullAsBoolConverter x:Key="NullAsBoolConverter" />
+            <converters:MultiBooleanToVisibilityConverter x:Key="MultiBooleanToVisibilityConverter" />
 
             <Style
                 x:Key="ListBoxButtons"
@@ -114,6 +115,28 @@
                     Foreground="#484b4e">
                     <controls:MoviesNumberSummary CurrentNumberOfMovies="{Binding SelectedTab.CurrentNumberOfMovies}" MaxNumberOfMovies="{Binding SelectedTab.MaxNumberOfMovies}" />
                 </Label>
+                <controls1:MetroProgressBar
+                    Width="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType=Grid}, Path=ActualWidth, Mode=OneWay}"
+                    Margin="10,10,0,10"
+                    EllipseDiameter="5"
+                    Foreground="{DynamicResource AccentColorBrush}"
+                    IsIndeterminate="True"
+                    Maximum="100"
+                    Minimum="0">
+                    <controls1:MetroProgressBar.Visibility>
+                        <MultiBinding Converter="{StaticResource MultiBooleanToVisibilityConverter}" ConverterParameter="AND">
+                            <Binding
+                                Converter="{StaticResource BoolToInverseBoolConverter}"
+                                Path="Main.ApplicationState.IsConnectionInError"
+                                Source="{StaticResource Locator}" />
+                            <Binding
+                                Converter="{StaticResource BoolToInverseBoolConverter}"
+                                Path="MovieTab.SelectedTab.HasLoadingFailed"
+                                Source="{StaticResource Locator}" />
+                            <Binding Path="MovieTab.SelectedTab.IsLoadingMovies" Source="{StaticResource Locator}" />
+                        </MultiBinding>
+                    </controls1:MetroProgressBar.Visibility>
+                </controls1:MetroProgressBar>
             </StackPanel>
         </Border>
         <Grid
