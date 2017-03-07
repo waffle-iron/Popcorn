@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections.Async;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Threading.Tasks;
@@ -90,10 +92,19 @@ namespace Popcorn.ViewModels.Pages.Home.Movie
                 Tabs.Add(new FavoritesTabViewModel(ApplicationService, _movieService, _movieHistoryService));
                 Tabs.Add(new SeenTabViewModel(ApplicationService, _movieService, _movieHistoryService));
                 SelectedTab = Tabs.First();
-                foreach (var tab in Tabs.ToList())
+                
+                var loadMoviesTask = Tabs.ParallelForEachAsync(async tab =>
+                {
                     await tab.LoadMoviesAsync();
+                });
 
-                await GenresMovie.LoadGenresAsync();
+                var loadGenreTask = GenresMovie.LoadGenresAsync();
+
+                await Task.WhenAll(new List<Task>
+                {
+                    loadMoviesTask,
+                    loadGenreTask
+                });
             });
         }
 
