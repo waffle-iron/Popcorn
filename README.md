@@ -2,7 +2,7 @@
 
 <a href="https://popcorn-slack.azurewebsites.net" target="_blank">
   <img alt="Slack" src="http://popcorn-slack.azurewebsites.net/badge.svg">
-</a> [![Build status](https://ci.appveyor.com/api/projects/status/mjnfwck6otg9c5wj?svg=true)](https://ci.appveyor.com/project/bbougot/popcorn)
+</a> [![Build status](https://ci.appveyor.com/api/projects/status/mjnfwck6otg9c5wj?svg=true)](https://ci.appveyor.com/project/bbougot/popcorn) [![Coverage Status](https://coveralls.io/repos/github/bbougot/Popcorn/badge.svg?branch=master)](https://coveralls.io/github/bbougot/Popcorn?branch=master)
 
 An application which aims to provide a simple interface to watch any movie.
 
