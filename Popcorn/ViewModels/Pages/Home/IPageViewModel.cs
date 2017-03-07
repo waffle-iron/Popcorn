@@ -9,6 +9,6 @@ namespace Popcorn.ViewModels.Pages.Home
 {
     public interface IPageViewModel
     {
-        string Caption { get; }
+        string Caption { get; set; }
     }
 }

@@ -279,4 +279,10 @@
   <data name="FatalError" xml:space="preserve">
     <value>A critical error has occured. You should restart the app immediately.</value>
   </data>
+  <data name="AnimesLabel" xml:space="preserve">
+    <value>Animes</value>
+  </data>
+  <data name="ShowsLabel" xml:space="preserve">
+    <value>Shows</value>
+  </data>
 </root>

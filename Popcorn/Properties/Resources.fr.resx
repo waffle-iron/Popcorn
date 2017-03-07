@@ -279,4 +279,10 @@
   <data name="FatalError" xml:space="preserve">
     <value>Une erreur fatale vient de se produire. Vous devriez relancer l'application immédiatement.</value>
   </data>
+  <data name="AnimesLabel" xml:space="preserve">
+    <value>Animes</value>
+  </data>
+  <data name="ShowsLabel" xml:space="preserve">
+    <value>Séries TV</value>
+  </data>
 </root>

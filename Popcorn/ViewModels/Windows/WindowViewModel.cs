@@ -7,6 +7,7 @@ using System.Net.Sockets;
 using System.Threading.Tasks;
 using GalaSoft.MvvmLight;
 using GalaSoft.MvvmLight.CommandWpf;
+using GalaSoft.MvvmLight.Ioc;
 using GalaSoft.MvvmLight.Messaging;
 using GalaSoft.MvvmLight.Threading;
 using MahApps.Metro.Controls.Dialogs;
@@ -16,6 +17,10 @@ using Popcorn.Helpers;
 using Popcorn.Messaging;
 using Popcorn.Models.ApplicationState;
 using Popcorn.Services.History;
+using Popcorn.ViewModels.Pages.Home;
+using Popcorn.ViewModels.Pages.Home.Anime;
+using Popcorn.ViewModels.Pages.Home.Movie;
+using Popcorn.ViewModels.Pages.Home.Show;
 using Popcorn.ViewModels.Pages.Player;
 using Squirrel;
 
@@ -188,6 +193,28 @@ namespace Popcorn.ViewModels.Windows
                     ApplicationService.IsMoviePlaying = false;
                     IsMovieFlyoutOpen = true;
                     PageUri = "/Pages/HomePage.xaml";
+                });
+
+            Messenger.Default.Register<ChangeLanguageMessage>(
+                this,
+                message =>
+                {
+                    var pages = SimpleIoc.Default.GetInstance<PagesViewModel>();
+                    foreach (var page in pages.Pages)
+                    {
+                        if (page is MoviePageViewModel)
+                        {
+                            page.Caption = LocalizationProviderHelper.GetLocalizedValue<string>("MoviesLabel");
+                        }
+                        else if (page is AnimePageViewModel)
+                        {
+                            page.Caption = LocalizationProviderHelper.GetLocalizedValue<string>("AnimesLabel");
+                        }
+                        else if (page is ShowPageViewModel)
+                        {
+                            page.Caption = LocalizationProviderHelper.GetLocalizedValue<string>("ShowsLabel");
+                        }
+                    }
                 });
 
             Messenger.Default.Register<UnhandledExceptionMessage>(this, message => ManageException(message.Exception));

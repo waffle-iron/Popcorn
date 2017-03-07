@@ -79,6 +79,15 @@ namespace Popcorn.Properties {
         }
         
         /// <summary>
+        ///   Recherche une chaîne localisée semblable à Animes.
+        /// </summary>
+        public static string AnimesLabel {
+            get {
+                return ResourceManager.GetString("AnimesLabel", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Recherche une chaîne localisée semblable à Buffering.
         /// </summary>
         public static string BufferingLabel {
@@ -196,11 +205,11 @@ namespace Popcorn.Properties {
         }
         
         /// <summary>
-        ///   Recherche une chaîne localisée semblable à .
+        ///   Recherche une chaîne localisée semblable à A critical error has occured. You should restart the app immediately..
         /// </summary>
-        public static string FataError {
+        public static string FatalError {
             get {
-                return ResourceManager.GetString("FataError", resourceCulture);
+                return ResourceManager.GetString("FatalError", resourceCulture);
             }
         }
         
@@ -480,6 +489,15 @@ namespace Popcorn.Properties {
         public static string SettingsMenuTitle {
             get {
                 return ResourceManager.GetString("SettingsMenuTitle", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Recherche une chaîne localisée semblable à Shows.
+        /// </summary>
+        public static string ShowsLabel {
+            get {
+                return ResourceManager.GetString("ShowsLabel", resourceCulture);
             }
         }
         
