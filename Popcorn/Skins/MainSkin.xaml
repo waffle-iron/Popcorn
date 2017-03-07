@@ -11,5 +11,6 @@
         <ResourceDictionary Source="../Resources/CustomTabControl.xaml" />
         <ResourceDictionary Source="../Resources/Shadows.xaml" />
         <ResourceDictionary Source="../Resources/AnimatedScrollViewer.xaml" />
+        <ResourceDictionary Source="../Resources/Ripple.xaml" />
     </ResourceDictionary.MergedDictionaries>
 </ResourceDictionary>

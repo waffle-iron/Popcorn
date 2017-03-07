@@ -270,8 +270,10 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Compile Include="AttachedProperties\ImageAsyncHelper.cs" />
+    <Compile Include="AttachedProperties\RippleAssist.cs" />
     <Compile Include="Behaviors\ScrollAnimationBehavior.cs" />
     <Compile Include="Comparers\MovieComparer.cs" />
+    <Compile Include="Controls\Ripple.cs" />
     <Compile Include="Converters\BoolToInverseBoolConverter.cs" />
     <Compile Include="Converters\BoolToInverseVisibilityConverter.cs" />
     <Compile Include="Converters\BoolToVisibilityConverter.cs" />
@@ -519,6 +521,10 @@
     <Page Include="Resources\IconsNonShared.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Resources\Ripple.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Resources\Shadows.xaml">
       <SubType>Designer</SubType>
