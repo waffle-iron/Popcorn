@@ -6,9 +6,9 @@
 
 An application which aims to provide a simple interface to watch any movie.
 
-![Screenshot1](https://github.com/bbougot/Popcorn/blob/master/Screenshots/Screen1.png)
+![Screenshot1](https://github.com/bbougot/Popcorn/blob/master/Screenshots/Screen1.jpg)
 
-![Screenshot2](https://github.com/bbougot/Popcorn/blob/master/Screenshots/Screen2.png)
+![Screenshot2](https://github.com/bbougot/Popcorn/blob/master/Screenshots/Screen2.jpg)
 
 ![Screenshot3](https://github.com/bbougot/Popcorn/blob/master/Screenshots/Screen3.jpg)
 
