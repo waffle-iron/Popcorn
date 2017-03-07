@@ -39,20 +39,5 @@ At this time, only Windows 7+ is supported (Windows 7, 8, 8.1, 10).
 ## Can I help you?
 Of course yes! Any pull-request will be considered.
 
-## Tasks
-- [ ] Seekable movie stream
-- [ ] Add series/anime
-- [ ] Add cast page (actor, director,...)
-- [ ] DLNA broadcasting
-- [x] Subtitles support
-- [x] List movies (Popular, Greatest, Recent)
-- [x] Search (Movie Title/IMDb Code, Actor Name/IMDb Code, Director Name/IMDb Code)
-- [x] Trailer support
-- [x] Streaming movies
-- [x] Quality selection (720p/1080p)
-- [x] Favorites/Seen movies history
-- [x] Player features : Play, Pause, Stop, Volume, Fullscreen
-- [x] Settings features : Language (English/French), Broadband limit
-
 ## Installer
 Download full installer [here](https://github.com/bbougot/Popcorn/releases/download/v1.7.0/Setup.exe)
