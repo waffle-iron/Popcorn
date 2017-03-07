@@ -360,33 +360,33 @@
                     FontSize="14"
                     Foreground="#3c4c55"
                     Text="{lex:LocText GenresLabel}" />
-                <ListBox
+                <controls:AnimatedScrollViewer
                     Grid.Row="15"
                     Grid.Column="2"
-                    ItemsSource="{Binding GenresMovie.MovieGenres}"
-                    ScrollViewer.VerticalScrollBarVisibility="Auto"
-                    Style="{StaticResource ListBoxButtons}">
-                    <ListBox.ItemTemplate>
-                        <DataTemplate>
-                            <RadioButton
-                                Height="40"
-                                HorizontalAlignment="Stretch"
-                                HorizontalContentAlignment="Left"
-                                VerticalContentAlignment="Center"
-                                Command="{Binding DataContext.SelectedTab.ChangeMovieGenreCommand, ElementName=MenuBar}"
-                                CommandParameter="{Binding}"
-                                GroupName="Genres"
-                                IsChecked="{Binding RelativeSource={RelativeSource PreviousData}, Converter={StaticResource NullAsBoolConverter}, ConverterParameter=True, Mode=OneWay}"
-                                Style="{StaticResource FlatButton}">
-                                <TextBlock
-                                    x:Name="GenreText"
-                                    Margin="10,0,0,0"
-                                    FontSize="16"
-                                    Text="{Binding TmdbGenre.Name}" />
-                            </RadioButton>
-                        </DataTemplate>
-                    </ListBox.ItemTemplate>
-                </ListBox>
+                    VerticalScrollBarVisibility="Auto">
+                    <ListBox ItemsSource="{Binding GenresMovie.MovieGenres}" Style="{StaticResource ListBoxButtons}">
+                        <ListBox.ItemTemplate>
+                            <DataTemplate>
+                                <RadioButton
+                                    Height="40"
+                                    HorizontalAlignment="Stretch"
+                                    HorizontalContentAlignment="Left"
+                                    VerticalContentAlignment="Center"
+                                    Command="{Binding DataContext.SelectedTab.ChangeMovieGenreCommand, ElementName=MenuBar}"
+                                    CommandParameter="{Binding}"
+                                    GroupName="Genres"
+                                    IsChecked="{Binding RelativeSource={RelativeSource PreviousData}, Converter={StaticResource NullAsBoolConverter}, ConverterParameter=True, Mode=OneWay}"
+                                    Style="{StaticResource FlatButton}">
+                                    <TextBlock
+                                        x:Name="GenreText"
+                                        Margin="10,0,0,0"
+                                        FontSize="16"
+                                        Text="{Binding TmdbGenre.Name}" />
+                                </RadioButton>
+                            </DataTemplate>
+                        </ListBox.ItemTemplate>
+                    </ListBox>
+                </controls:AnimatedScrollViewer>
             </Grid>
         </Grid>
         <controls1:MetroAnimatedSingleRowTabControl
