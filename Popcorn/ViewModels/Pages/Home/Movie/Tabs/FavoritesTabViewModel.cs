@@ -62,6 +62,7 @@ namespace Popcorn.ViewModels.Pages.Home.Movie.Tabs
 
                 DispatcherHelper.CheckBeginInvokeOnUI(() =>
                 {
+                    Movies.Clear();
                     Movies.AddRange(movies);
                     IsLoadingMovies = false;
                     IsMovieFound = Movies.Any();
