@@ -406,14 +406,14 @@
     <Compile Include="UserControls\Home\Movie\Details\MovieDetailsUserControl.xaml.cs">
       <DependentUpon>MovieDetailsUserControl.xaml</DependentUpon>
     </Compile>
-    <Compile Include="UserControls\Home\Tabs\AnimeTabUserControl.xaml.cs">
-      <DependentUpon>AnimeTabUserControl.xaml</DependentUpon>
+    <Compile Include="UserControls\Home\Anime\AnimeUserControl.xaml.cs">
+      <DependentUpon>AnimeUserControl.xaml</DependentUpon>
     </Compile>
-    <Compile Include="UserControls\Home\Tabs\MovieTabUserControl.xaml.cs">
-      <DependentUpon>MovieTabUserControl.xaml</DependentUpon>
+    <Compile Include="UserControls\Home\Movie\MovieUserControl.xaml.cs">
+      <DependentUpon>MovieUserControl.xaml</DependentUpon>
     </Compile>
-    <Compile Include="UserControls\Home\Tabs\ShowTabUserControl.xaml.cs">
-      <DependentUpon>ShowTabUserControl.xaml</DependentUpon>
+    <Compile Include="UserControls\Home\Show\ShowUserControl.xaml.cs">
+      <DependentUpon>ShowUserControl.xaml</DependentUpon>
     </Compile>
     <Compile Include="UserControls\Player\MediaPlayer.cs" />
     <Compile Include="UserControls\Player\PlayerUserControl.xaml.cs">
@@ -532,15 +532,15 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="UserControls\Home\Tabs\AnimeTabUserControl.xaml">
+    <Page Include="UserControls\Home\Anime\AnimeUserControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="UserControls\Home\Tabs\MovieTabUserControl.xaml">
+    <Page Include="UserControls\Home\Movie\MovieUserControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="UserControls\Home\Tabs\ShowTabUserControl.xaml">
+    <Page Include="UserControls\Home\Show\ShowUserControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -1407,10 +1407,7 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Resource>
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="UserControls\Home\Anime\" />
-    <Folder Include="UserControls\Home\Show\" />
-  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="$(SolutionDir)\.nuget\NuGet.targets" Condition="Exists('$(SolutionDir)\.nuget\NuGet.targets')" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">

@@ -4,14 +4,14 @@ using Popcorn.Events;
 using Popcorn.Helpers;
 using Popcorn.ViewModels.Pages.Home.Movie;
 
-namespace Popcorn.UserControls.Home.Tabs
+namespace Popcorn.UserControls.Home.Movie
 {
     /// <summary>
-    /// Logique d'interaction pour MovieTabUserControl.xaml
+    /// Logique d'interaction pour MovieUserControl.xaml
     /// </summary>
-    public partial class MovieTabUserControl
+    public partial class MovieUserControl
     {
-        public MovieTabUserControl()
+        public MovieUserControl()
         {
             InitializeComponent();
 
