@@ -7,11 +7,11 @@ using Popcorn.Helpers;
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
 [assembly: AssemblyTitle("Popcorn")]
-[assembly: AssemblyDescription("Watch movies easier")]
+[assembly: AssemblyDescription("Popcorn Windows native app made in .NET/WPF ")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("")]
 [assembly: AssemblyProduct("Popcorn")]
-[assembly: AssemblyCopyright("Copyright ©  2016")]
+[assembly: AssemblyCopyright("Copyright ©  2017")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 
