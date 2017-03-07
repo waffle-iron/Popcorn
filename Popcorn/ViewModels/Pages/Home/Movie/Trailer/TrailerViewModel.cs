@@ -107,15 +107,14 @@ namespace Popcorn.ViewModels.Pages.Home.Movie.Trailer
                 {
                     Logger.Debug(
                         $"Movie's trailer loaded: {movie.Title}");
-                    TrailerPlayer = new MediaPlayerViewModel(video.DownloadUrl, movie.Title,
-                        () =>
+                    Messenger.Default.Send(new PlayTrailerMessage(video.DownloadUrl, movie.Title, () =>
                         {
                             Messenger.Default.Send(new StopPlayingTrailerMessage());
                         },
                         () =>
                         {
                             Messenger.Default.Send(new StopPlayingTrailerMessage());
-                        });
+                        }));
                 }
             }
             catch (Exception exception) when (exception is TaskCanceledException)

@@ -302,8 +302,7 @@
                                 Width="200"
                                 HorizontalAlignment="Left"
                                 FontSize="12"
-                                Foreground="Gray"
-                                TextTrimming="CharacterEllipsis">
+                                Foreground="Gray">
                                 <customControls:MovieGenres Genres="{Binding Genres}" />
                             </TextBlock>
                             <TextBlock

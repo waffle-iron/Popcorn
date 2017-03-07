@@ -181,16 +181,32 @@ namespace Popcorn.ViewModels.Windows
                     },
                     message.Movie.SelectedSubtitle?.FilePath);
 
-                ApplicationService.IsMoviePlaying = true;
+                ApplicationService.IsMediaPlaying = true;
                 IsMovieFlyoutOpen = false;
                 PageUri = "/Pages/PlayerPage.xaml";
             }));
+
+            Messenger.Default.Register<PlayTrailerMessage>(this, message => DispatcherHelper.CheckBeginInvokeOnUI(() =>
+            {
+                MediaPlayer = new MediaPlayerViewModel(message.TrailerUrl, message.MovieTitle,
+                    message.TrailerStoppedAction, message.TrailerEndedAction);
+                ApplicationService.IsMediaPlaying = true;
+                IsMovieFlyoutOpen = false;
+                PageUri = "/Pages/PlayerPage.xaml";
+            }));
+
+            Messenger.Default.Register<StopPlayingTrailerMessage>(this, message =>
+            {
+                ApplicationService.IsMediaPlaying = false;
+                IsMovieFlyoutOpen = true;
+                PageUri = "/Pages/HomePage.xaml";
+            });
 
             Messenger.Default.Register<StopPlayingMovieMessage>(
                 this,
                 message =>
                 {
-                    ApplicationService.IsMoviePlaying = false;
+                    ApplicationService.IsMediaPlaying = false;
                     IsMovieFlyoutOpen = true;
                     PageUri = "/Pages/HomePage.xaml";
                 });

@@ -143,10 +143,9 @@
             Background="#11171c">
             <Grid>
                 <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="20" />
-                    <ColumnDefinition Width="5" />
+                    <ColumnDefinition Width="15" />
                     <ColumnDefinition Width="*" />
-                    <ColumnDefinition Width="25" />
+                    <ColumnDefinition Width="15" />
                 </Grid.ColumnDefinitions>
                 <Grid.RowDefinitions>
                     <RowDefinition Height="20" />
@@ -169,13 +168,13 @@
                 <TextBlock
                     Grid.Row="1"
                     Grid.Column="1"
-                    Grid.ColumnSpan="2"
                     FontSize="14"
-                    Foreground="#3c4c55"
+                    Foreground="#637D8C"
                     Text="{lex:LocText MoviesLabel}" />
                 <ListBox
                     Grid.Row="3"
-                    Grid.Column="2"
+                    Grid.Column="1"
+                    SelectedIndex="0"
                     Style="{StaticResource ListBoxButtons}">
                     <ListBoxItem>
                         <RadioButton
@@ -184,7 +183,7 @@
                             VerticalContentAlignment="Center"
                             Command="{Binding SelectPopularTab}"
                             GroupName="Movies"
-                            IsChecked="{Binding IsMovieSearchActive, Converter={StaticResource BoolToInverseBoolConverter}, Mode=OneWay}"
+                            IsChecked="{Binding RelativeSource={RelativeSource AncestorType={x:Type ListBoxItem}}, Path=IsSelected}"
                             Style="{StaticResource FlatButton}">
                             <StackPanel Orientation="Horizontal">
                                 <Rectangle
@@ -282,13 +281,12 @@
                 <TextBlock
                     Grid.Row="5"
                     Grid.Column="1"
-                    Grid.ColumnSpan="2"
                     FontSize="14"
-                    Foreground="#3c4c55"
+                    Foreground="#637D8C"
                     Text="{lex:LocText CollectionsLabel}" />
                 <ListBox
                     Grid.Row="7"
-                    Grid.Column="2"
+                    Grid.Column="1"
                     Style="{StaticResource ListBoxButtons}">
                     <ListBoxItem>
                         <RadioButton
@@ -343,28 +341,29 @@
                 <TextBlock
                     Grid.Row="9"
                     Grid.Column="1"
-                    Grid.ColumnSpan="2"
                     FontSize="14"
-                    Foreground="#3c4c55"
+                    Foreground="#637D8C"
                     Text="{lex:LocText RatingLabel}" />
                 <controls:Rating
                     Grid.Row="11"
-                    Grid.Column="2"
+                    Grid.Column="1"
                     Width="125"
                     RatingValue="{Binding SelectedTab.Rating, Mode=TwoWay}"
                     StarButtonsEnabled="True" />
                 <TextBlock
                     Grid.Row="13"
                     Grid.Column="1"
-                    Grid.ColumnSpan="2"
                     FontSize="14"
-                    Foreground="#3c4c55"
+                    Foreground="#637D8C"
                     Text="{lex:LocText GenresLabel}" />
                 <controls:AnimatedScrollViewer
                     Grid.Row="15"
-                    Grid.Column="2"
+                    Grid.Column="1"
                     VerticalScrollBarVisibility="Auto">
-                    <ListBox ItemsSource="{Binding GenresMovie.MovieGenres}" Style="{StaticResource ListBoxButtons}">
+                    <ListBox
+                        ItemsSource="{Binding GenresMovie.MovieGenres}"
+                        SelectedItem="{Binding GenresMovie.SelectedGenre}"
+                        Style="{StaticResource ListBoxButtons}">
                         <ListBox.ItemTemplate>
                             <DataTemplate>
                                 <RadioButton
@@ -375,7 +374,7 @@
                                     Command="{Binding DataContext.SelectedTab.ChangeMovieGenreCommand, ElementName=MenuBar}"
                                     CommandParameter="{Binding}"
                                     GroupName="Genres"
-                                    IsChecked="{Binding RelativeSource={RelativeSource PreviousData}, Converter={StaticResource NullAsBoolConverter}, ConverterParameter=True, Mode=OneWay}"
+                                    IsChecked="{Binding RelativeSource={RelativeSource AncestorType={x:Type ListBoxItem}}, Path=IsSelected}"
                                     Style="{StaticResource FlatButton}">
                                     <TextBlock
                                         x:Name="GenreText"

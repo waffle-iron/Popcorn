@@ -56,8 +56,12 @@
         </i:EventTrigger>
     </i:Interaction.Triggers>
 
+    <controls:MetroWindow.WindowButtonCommands>
+        <controls:WindowButtonCommands Visibility="{Binding ApplicationService.IsMediaPlaying, Converter={StaticResource BoolToVisibilityConverter}}" />
+    </controls:MetroWindow.WindowButtonCommands>
+
     <controls:MetroWindow.RightWindowCommands>
-        <controls:WindowCommands>
+        <controls:WindowCommands Visibility="{Binding ApplicationService.IsMediaPlaying, Converter={StaticResource BoolToVisibilityConverter}}">
             <Button
                 Command="{Binding OpenSettingsCommand}"
                 Content="{lex:LocText SettingsMenuTitle}"

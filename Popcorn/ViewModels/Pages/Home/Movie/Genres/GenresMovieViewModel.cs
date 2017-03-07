@@ -1,4 +1,5 @@
 ﻿using System.Collections.ObjectModel;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using GalaSoft.MvvmLight;
@@ -36,6 +37,11 @@ namespace Popcorn.ViewModels.Pages.Home.Movie.Genres
         private ObservableCollection<GenreJson> _movieGenres = new ObservableCollection<GenreJson>();
 
         /// <summary>
+        /// Selected genre
+        /// </summary>
+        private GenreJson _selectedGenre = new GenreJson();
+
+        /// <summary>
         /// Initialize a new instance of GenresMovieViewModel class
         /// </summary>
         /// <param name="movieService">The movie service</param>
@@ -56,17 +62,26 @@ namespace Popcorn.ViewModels.Pages.Home.Movie.Genres
         }
 
         /// <summary>
+        /// Selected genre
+        /// </summary>
+        public GenreJson SelectedGenre
+        {
+            get { return _selectedGenre; }
+            set { Set(() => SelectedGenre, ref _selectedGenre, value); }
+        }
+
+        /// <summary>
         /// Load genres asynchronously
         /// </summary>
         public async Task LoadGenresAsync()
         {
-            MovieGenres =
+            var genres =
                 new ObservableCollection<GenreJson>(
                     await _movieService.GetGenresAsync(_cancellationLoadingGenres.Token));
             if (_cancellationLoadingGenres.IsCancellationRequested)
                 return;
 
-            MovieGenres?.Insert(0, new GenreJson
+            genres.Insert(0, new GenreJson
             {
                 TmdbGenre = new Genre
                 {
@@ -75,6 +90,9 @@ namespace Popcorn.ViewModels.Pages.Home.Movie.Genres
                 },
                 EnglishName = string.Empty
             });
+
+            MovieGenres = genres;
+            SelectedGenre = genres.ElementAt(0);
         }
 
         /// <summary>

@@ -323,6 +323,7 @@
     <Compile Include="AttachedProperties\MaximizeDoubleClickHelper.cs" />
     <Compile Include="Messaging\ChangeFavoriteMovieMessage.cs" />
     <Compile Include="Messaging\ChangeHasBeenSeenMovieMessage.cs" />
+    <Compile Include="Messaging\PlayTrailerMessage.cs" />
     <Compile Include="Messaging\UnhandledExceptionMessage.cs" />
     <Compile Include="Messaging\WindowStateChangeMessage.cs" />
     <Compile Include="Migrations\201703041706307_Initial.cs" />

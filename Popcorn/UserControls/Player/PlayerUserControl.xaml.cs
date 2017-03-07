@@ -120,16 +120,20 @@ namespace Popcorn.UserControls.Player
             
             Player.VlcMediaPlayer.EndReached += MediaPlayerEndReached;
 
-            if (!string.IsNullOrEmpty(vm.SubtitleFilePath))
+            DispatcherHelper.CheckBeginInvokeOnUI(() =>
             {
-                Player.LoadMediaWithOptions(vm.MediaPath, $@":sub-file={vm.SubtitleFilePath}");
-            }
-            else
-            {
-                Player.LoadMedia(vm.MediaPath);
-            }
+                if (!string.IsNullOrEmpty(vm.SubtitleFilePath))
+                {
+                    Player.LoadMediaWithOptions(vm.MediaPath, $@":sub-file={vm.SubtitleFilePath}");
+                }
+                else
+                {
+                    Player.LoadMedia(vm.MediaPath);
+                }
 
-            PlayMedia();
+                PlayMedia();
+            });
+
         }
 
         /// <summary>
@@ -312,6 +316,11 @@ namespace Popcorn.UserControls.Player
         private void OnInactivity(object sender, EventArgs e)
         {
             InactiveMousePosition = Mouse.GetPosition(Container);
+            var window = System.Windows.Window.GetWindow(this);
+            if (window != null)
+            {
+                window.Cursor = Cursors.None;
+            }
 
             var opacityAnimation = new DoubleAnimationUsingKeyFrames
             {
@@ -373,6 +382,11 @@ namespace Popcorn.UserControls.Player
             };
 
             PlayerStatusBar.BeginAnimation(OpacityProperty, opacityAnimation);
+            var window = System.Windows.Window.GetWindow(this);
+            if (window != null)
+            {
+                window.Cursor = Cursors.Arrow;
+            }
 
             await Task.Delay(TimeSpan.FromSeconds(1));
             _isMouseActivityCaptured = false;
@@ -401,6 +415,12 @@ namespace Popcorn.UserControls.Player
             MediaPlayerIsPlaying = false;
             Player.Stop();
             Player.Dispose();
+
+            var window = System.Windows.Window.GetWindow(this);
+            if (window != null)
+            {
+                window.Cursor = Cursors.Arrow;
+            }
 
             var vm = DataContext as MediaPlayerViewModel;
             if (vm != null)

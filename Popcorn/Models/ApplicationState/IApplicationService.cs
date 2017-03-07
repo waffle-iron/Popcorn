@@ -15,6 +15,6 @@
         /// <summary>
         /// Specify if a movie is playing
         /// </summary>
-        bool IsMoviePlaying { get; set; }
+        bool IsMediaPlaying { get; set; }
     }
 }
