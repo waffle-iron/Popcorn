@@ -12,10 +12,48 @@ using Popcorn.ViewModels.Pages.Player;
 namespace Popcorn.UserControls.Player
 {
     /// <summary>
-    /// Interaction logic for MoviePlayerUserControl.xaml
+    /// Interaction logic for PlayerUserControl.xaml
     /// </summary>
     public partial class PlayerUserControl : IDisposable
     {
+        /// <summary>
+        /// If control is disposed
+        /// </summary>
+        private bool _disposed;
+
+        /// <summary>
+        /// Indicates if a media is playing
+        /// </summary>
+        private bool MediaPlayerIsPlaying { get; set; }
+
+        /// <summary>
+        /// Used to update the activity mouse and mouse position.
+        /// </summary>
+        private DispatcherTimer ActivityTimer { get; set; }
+
+        /// <summary>
+        /// Get or set the mouse position when inactive
+        /// </summary>
+        private Point InactiveMousePosition { get; set; } = new Point(0, 0);
+
+        /// <summary>
+        /// Indicate if user is manipulating the timeline player
+        /// </summary>
+        private bool UserIsDraggingMediaPlayerSlider { get; set; }
+
+        /// <summary>
+        /// Timer used for report time on the timeline
+        /// </summary>
+        private DispatcherTimer MediaPlayerTimer { get; set; }
+
+        /// <summary>
+        /// Report when dragging is used on media player
+        /// </summary>
+        /// <param name="sender">Sender object</param>
+        /// <param name="e">DragStartedEventArgs</param>
+        private void MediaSliderProgressDragStarted(object sender, DragStartedEventArgs e)
+            => UserIsDraggingMediaPlayerSlider = true;
+
         /// <summary>
         /// Identifies the <see cref="Volume" /> dependency property.
         /// </summary>
@@ -346,7 +384,7 @@ namespace Popcorn.UserControls.Player
         /// <param name="disposing">If a disposing is already processing</param>
         private void Dispose(bool disposing)
         {
-            if (Disposed)
+            if (_disposed)
                 return;
 
             Loaded -= OnLoaded;
@@ -368,7 +406,7 @@ namespace Popcorn.UserControls.Player
             if (vm != null)
                 vm.StoppedPlayingMedia -= OnStoppedPlayingMedia;
 
-            Disposed = true;
+            _disposed = true;
 
             if (disposing)
                 GC.SuppressFinalize(this);

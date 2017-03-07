@@ -415,7 +415,6 @@
     <Compile Include="UserControls\Home\Show\ShowUserControl.xaml.cs">
       <DependentUpon>ShowUserControl.xaml</DependentUpon>
     </Compile>
-    <Compile Include="UserControls\Player\MediaPlayer.cs" />
     <Compile Include="UserControls\Player\PlayerUserControl.xaml.cs">
       <DependentUpon>PlayerUserControl.xaml</DependentUpon>
     </Compile>
