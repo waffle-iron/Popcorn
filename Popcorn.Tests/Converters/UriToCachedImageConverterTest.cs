@@ -1,4 +1,5 @@
-﻿using System.Windows.Media.Imaging;
+﻿using System;
+using System.Windows.Media.Imaging;
 using NUnit.Framework;
 using Popcorn.Converters;
 
@@ -21,10 +22,10 @@ namespace Popcorn.Tests.Converters
             var value = "http://www.google.com/";
 
             var result = _converter.Convert(value, null, null, null);
-            Assert.That(result, Is.TypeOf<BitmapImage>());
+            Assert.That(result, Is.TypeOf<Uri>());
 
-            var image = (BitmapImage) result;
-            Assert.AreEqual(image.UriSource.ToString(), value);
+            var image = result as Uri;
+            Assert.AreEqual(image.OriginalString, value);
         }
     }
 }
