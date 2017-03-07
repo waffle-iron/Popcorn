@@ -14,7 +14,6 @@ using Popcorn.Services.Movie;
 using Popcorn.ViewModels.Pages.Home.Movie.Genres;
 using Popcorn.ViewModels.Pages.Home.Movie.Search;
 using Popcorn.ViewModels.Pages.Home.Movie.Tabs;
-using Popcorn.ViewModels.Pages.Player;
 
 namespace Popcorn.ViewModels.Pages.Home.Movie
 {
@@ -49,11 +48,6 @@ namespace Popcorn.ViewModels.Pages.Home.Movie
         /// Specify if a search is actually active
         /// </summary>
         private bool _isMovieSearchActive;
-
-        /// <summary>
-        /// Manage the movie player
-        /// </summary>
-        private MediaPlayerViewModel _moviePlayer;
 
         /// <summary>
         /// The selected tab
