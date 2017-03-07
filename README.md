@@ -1,6 +1,6 @@
 # Popcorn
 
-<img src="http://popcorn-slack.azurewebsites.net/badge.svg">
+[<img src="http://popcorn-slack.azurewebsites.net/badge.svg">](https://popcorn-slack.azurewebsites.net)
 
 An application which aims to provide a simple interface to watch any movie.
 
