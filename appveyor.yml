@@ -17,7 +17,7 @@ build:
   verbosity: minimal
 test_script:
 - ps: >-
-    .\packages\OpenCover.4.6.519\tools\OpenCover.Console.exe -register:user -target:nunit3-console.exe "-targetargs:""Popcorn.Tests\bin\$env:CONFIGURATION\Popcorn.Tests.dll"" /noshadow" -filter:"+[Popcorn*]*" -output:opencoverCoverage.xml
+    .\packages\OpenCover.4.6.519\tools\OpenCover.Console.exe -register:user -target:nunit3-console.exe "-targetargs:""Popcorn.Tests\bin\$env:CONFIGURATION\Popcorn.Tests.dll""" -filter:"+[Popcorn*]*" -output:opencoverCoverage.xml
 
     $coveralls = (Resolve-Path "packages/coveralls.net.*/tools/csmacnz.coveralls.exe").ToString()
     
