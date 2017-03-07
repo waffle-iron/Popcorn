@@ -1,0 +1,39 @@
+﻿<Page
+    x:Class="Popcorn.Pages.HomePage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:anime="clr-namespace:Popcorn.ViewModels.Pages.Home.Anime"
+    xmlns:controls="http://metro.mahapps.com/winfx/xaml/controls"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:helpers="clr-namespace:Popcorn.Helpers"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:movie="clr-namespace:Popcorn.ViewModels.Pages.Home.Movie"
+    xmlns:show="clr-namespace:Popcorn.ViewModels.Pages.Home.Show"
+    xmlns:tabs="clr-namespace:Popcorn.UserControls.Home.Tabs"
+    Title="HomePage"
+    d:DesignHeight="300"
+    d:DesignWidth="300"
+    mc:Ignorable="d">
+
+    <Grid>
+        <controls:MetroAnimatedSingleRowTabControl
+            controls:TabControlHelper.Transition="LeftReplace"
+            helpers:TabContent.IsCached="True"
+            DisplayMemberPath="Caption"
+            ItemsSource="{Binding Pages.Pages, Mode=OneWay, Source={StaticResource Locator}}"
+            SelectedIndex="0"
+            Style="{StaticResource CustomTabControlStyle}">
+            <TabControl.Resources>
+                <DataTemplate DataType="{x:Type movie:MoviePageViewModel}">
+                    <tabs:MovieTabUserControl />
+                </DataTemplate>
+                <DataTemplate DataType="{x:Type show:ShowPageViewModel}">
+                    <tabs:ShowTabUserControl />
+                </DataTemplate>
+                <DataTemplate DataType="{x:Type anime:AnimePageViewModel}">
+                    <tabs:AnimeTabUserControl />
+                </DataTemplate>
+            </TabControl.Resources>
+        </controls:MetroAnimatedSingleRowTabControl>
+    </Grid>
+</Page>

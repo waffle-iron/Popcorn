@@ -6,33 +6,30 @@
     xmlns:controls="clr-namespace:MahApps.Metro.Controls;assembly=MahApps.Metro"
     xmlns:converters="clr-namespace:Popcorn.Converters"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:details="clr-namespace:Popcorn.UserControls.Home.Movie.Details"
     xmlns:dialog="clr-namespace:MahApps.Metro.Controls.Dialogs;assembly=MahApps.Metro"
-    xmlns:helpers="clr-namespace:Popcorn.Helpers"
     xmlns:i="clr-namespace:System.Windows.Interactivity;assembly=System.Windows.Interactivity"
     xmlns:lex="http://wpflocalizeextension.codeplex.com"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    xmlns:movieUserControl="clr-namespace:Popcorn.UserControls.Movie"
-    xmlns:pages="clr-namespace:Popcorn.UserControls.Pages"
-    xmlns:settingsUserControl="clr-namespace:Popcorn.UserControls.Settings"
-    xmlns:tabs="clr-namespace:Popcorn.ViewModels.Pages"
-    xmlns:viewModel="clr-namespace:Popcorn.ViewModels.Main"
+    xmlns:settings="clr-namespace:Popcorn.UserControls.Window.Settings"
+    xmlns:windows="clr-namespace:Popcorn.ViewModels.Windows"
     Title="Popcorn"
     Width="{Binding Source={x:Static SystemParameters.PrimaryScreenWidth}, Converter={converters:RatioConverter}, ConverterParameter='0.8'}"
     Height="{Binding Source={x:Static SystemParameters.PrimaryScreenHeight}, Converter={converters:RatioConverter}, ConverterParameter='0.7'}"
     MinWidth="{Binding Source={x:Static SystemParameters.PrimaryScreenWidth}, Converter={converters:RatioConverter}, ConverterParameter='0.5'}"
     MinHeight="{Binding Source={x:Static SystemParameters.PrimaryScreenHeight}, Converter={converters:RatioConverter}, ConverterParameter='0.5'}"
-    d:DataContext="{d:DesignInstance viewModel:MainViewModel}"
+    d:DataContext="{d:DesignInstance windows:WindowViewModel}"
     dialog:DialogParticipation.Register="{Binding}"
     lex:LocalizeDictionary.DesignCulture="en"
     lex:ResxLocalizationProvider.DefaultAssembly="Popcorn"
     lex:ResxLocalizationProvider.DefaultDictionary="Resources"
     AllowsTransparency="True"
-    DataContext="{Binding Main, Source={StaticResource Locator}}"
+    DataContext="{Binding Window, Source={StaticResource Locator}}"
     Icon="../Resources/Images/icon.ico"
     IgnoreTaskbarOnMaximize="True"
     ShowTitleBar="False"
     WindowStartupLocation="CenterScreen"
-    WindowState="{Binding ApplicationState.IsFullScreen, Converter={converters:WindowStateToBooleanConverter}, Mode=TwoWay}"
+    WindowState="{Binding ApplicationService.IsFullScreen, Converter={converters:WindowStateToBooleanConverter}, Mode=TwoWay}"
     mc:Ignorable="d">
     <Window.Resources>
         <ResourceDictionary>
@@ -74,12 +71,12 @@
             <controls:Flyout
                 Width="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType=controls:MetroWindow}, Path=ActualWidth, Mode=OneWay}"
                 AnimateOpacity="True"
-                CloseButtonVisibility="{Binding MoviePage.IsDownloadingMovie, Converter={StaticResource BoolToVisibilityConverter}, Source={StaticResource Locator}}"
+                CloseButtonVisibility="{Binding MovieDetails.IsDownloadingMovie, Converter={StaticResource BoolToVisibilityConverter}, Source={StaticResource Locator}}"
                 CloseCommand="{Binding CloseMoviePageCommand}"
-                Header="{Binding MoviePage.Movie.Title, Source={StaticResource Locator}}"
+                Header="{Binding MovieDetails.Movie.Title, Source={StaticResource Locator}}"
                 IsOpen="{Binding IsMovieFlyoutOpen}"
                 Position="Right">
-                <movieUserControl:Movie />
+                <details:MovieDetailsUserControl />
             </controls:Flyout>
             <controls:Flyout
                 Header="{lex:LocText SettingsMenuTitle}"
@@ -87,27 +84,12 @@
                 IsOpen="{Binding IsSettingsFlyoutOpen}"
                 Position="Right"
                 Theme="Dark">
-                <settingsUserControl:Settings />
+                <settings:WindowSettingsUserControl />
             </controls:Flyout>
         </controls:FlyoutsControl>
     </controls:MetroWindow.Flyouts>
-    <controls:MetroAnimatedSingleRowTabControl
-        controls:TabControlHelper.Transition="LeftReplace"
-        helpers:TabContent.IsCached="True"
-        DisplayMemberPath="Caption"
-        ItemsSource="{Binding Pages, Mode=OneWay}"
-        SelectedIndex="0"
-        Style="{StaticResource CustomTabControlStyle}">
-        <TabControl.Resources>
-            <DataTemplate DataType="{x:Type tabs:MoviePageViewModel}">
-                <pages:MovieControlTab />
-            </DataTemplate>
-            <DataTemplate DataType="{x:Type tabs:ShowPageViewModel}">
-                <pages:ShowControlTab />
-            </DataTemplate>
-            <DataTemplate DataType="{x:Type tabs:AnimePageViewModel}">
-                <pages:AnimeShowControlTab />
-            </DataTemplate>
-        </TabControl.Resources>
-    </controls:MetroAnimatedSingleRowTabControl>
+    <Frame
+        x:Name="MainFrame"
+        NavigationUIVisibility="Hidden"
+        Source="/Pages/HomePage.xaml" />
 </controls:MetroWindow>
