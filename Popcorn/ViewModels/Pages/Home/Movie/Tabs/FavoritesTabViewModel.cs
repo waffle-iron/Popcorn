@@ -5,7 +5,9 @@ using System.Linq;
 using System.Threading.Tasks;
 using GalaSoft.MvvmLight.CommandWpf;
 using GalaSoft.MvvmLight.Messaging;
+using GalaSoft.MvvmLight.Threading;
 using NLog;
+using NuGet;
 using Popcorn.Helpers;
 using Popcorn.Messaging;
 using Popcorn.Models.ApplicationState;
@@ -56,14 +58,16 @@ namespace Popcorn.ViewModels.Pages.Home.Movie.Tabs
 
                 var movies =
                     await
-                        MovieHistoryService.GetFavoritesMoviesAsync(Genre, Rating);
+                        MovieHistoryService.GetFavoritesMoviesAsync(Genre, Rating).ConfigureAwait(false);
 
-                Movies = new ObservableCollection<MovieJson>(movies);
-
-                IsLoadingMovies = false;
-                IsMovieFound = Movies.Any();
-                CurrentNumberOfMovies = Movies.Count;
-                MaxNumberOfMovies = Movies.Count;
+                DispatcherHelper.CheckBeginInvokeOnUI(() =>
+                {
+                    Movies.AddRange(movies);
+                    IsLoadingMovies = false;
+                    IsMovieFound = Movies.Any();
+                    CurrentNumberOfMovies = Movies.Count;
+                    MaxNumberOfMovies = Movies.Count;
+                });
             }
             catch (Exception exception)
             {

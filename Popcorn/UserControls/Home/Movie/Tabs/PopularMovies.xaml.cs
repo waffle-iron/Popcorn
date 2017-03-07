@@ -24,7 +24,7 @@ namespace Popcorn.UserControls.Home.Movie.Tabs
         private async void ScrollViewerScrollChanged(object sender, ScrollChangedEventArgs e)
         {
             var totalHeight = e.VerticalOffset + e.ViewportHeight;
-            if (!totalHeight.Equals(e.ExtentHeight)) return;
+            if (totalHeight < 2d / 3d * e.ExtentHeight) return;
             var vm = DataContext as PopularTabViewModel;
             if (vm != null && !vm.IsLoadingMovies)
                 await vm.LoadMoviesAsync();

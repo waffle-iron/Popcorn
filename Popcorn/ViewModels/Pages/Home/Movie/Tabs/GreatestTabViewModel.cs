@@ -5,7 +5,9 @@ using System.Linq;
 using System.Threading.Tasks;
 using GalaSoft.MvvmLight.CommandWpf;
 using GalaSoft.MvvmLight.Messaging;
+using GalaSoft.MvvmLight.Threading;
 using NLog;
+using NuGet;
 using Popcorn.Comparers;
 using Popcorn.Helpers;
 using Popcorn.Messaging;
@@ -65,16 +67,18 @@ namespace Popcorn.ViewModels.Pages.Home.Movie.Tabs
                         MaxMoviesPerPage,
                         Rating,
                         CancellationLoadingMovies.Token,
-                        Genre);
+                        Genre).ConfigureAwait(false);
 
-                Movies = new ObservableCollection<MovieJson>(Movies.Union(movies.Item1, new MovieComparer()));
+                DispatcherHelper.CheckBeginInvokeOnUI(() =>
+                {
+                    Movies.AddRange(movies.Item1);
+                    IsLoadingMovies = false;
+                    IsMovieFound = Movies.Any();
+                    CurrentNumberOfMovies = Movies.Count;
+                    MaxNumberOfMovies = movies.Item2;
+                });
 
-                IsLoadingMovies = false;
-                IsMovieFound = Movies.Any();
-                CurrentNumberOfMovies = Movies.Count;
-                MaxNumberOfMovies = movies.Item2;
-
-                await MovieHistoryService.SetMovieHistoryAsync(movies.Item1);
+                await MovieHistoryService.SetMovieHistoryAsync(movies.Item1).ConfigureAwait(false);
             }
             catch (Exception exception)
             {

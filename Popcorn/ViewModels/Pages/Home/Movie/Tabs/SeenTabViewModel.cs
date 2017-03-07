@@ -1,16 +1,16 @@
 ﻿using System;
-using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
 using GalaSoft.MvvmLight.CommandWpf;
 using GalaSoft.MvvmLight.Messaging;
+using GalaSoft.MvvmLight.Threading;
 using NLog;
+using NuGet;
 using Popcorn.Helpers;
 using Popcorn.Messaging;
 using Popcorn.Models.ApplicationState;
 using Popcorn.Models.Genre;
-using Popcorn.Models.Movie;
 using Popcorn.Services.History;
 using Popcorn.Services.Movie;
 
@@ -55,14 +55,16 @@ namespace Popcorn.ViewModels.Pages.Home.Movie.Tabs
                 IsLoadingMovies = true;
 
                 var movies =
-                    await MovieHistoryService.GetSeenMoviesAsync(Genre, Rating);
+                    await MovieHistoryService.GetSeenMoviesAsync(Genre, Rating).ConfigureAwait(false);
 
-                Movies = new ObservableCollection<MovieJson>(movies);
-
-                IsLoadingMovies = false;
-                IsMovieFound = Movies.Any();
-                CurrentNumberOfMovies = Movies.Count;
-                MaxNumberOfMovies = Movies.Count;
+                DispatcherHelper.CheckBeginInvokeOnUI(() =>
+                {
+                    Movies.AddRange(movies);
+                    IsLoadingMovies = false;
+                    IsMovieFound = Movies.Any();
+                    CurrentNumberOfMovies = Movies.Count;
+                    MaxNumberOfMovies = Movies.Count;
+                });
             }
             catch (Exception exception)
             {
