@@ -2,8 +2,11 @@
 using System.Windows.Input;
 using System.Windows.Media;
 
-namespace Popcorn.Helpers
+namespace Popcorn.AttachedProperties
 {
+    /// <summary>
+    /// Enable drag for a control
+    /// </summary>
     public class EnableDragHelper
     {
         public static readonly DependencyProperty EnableDragProperty = DependencyProperty.RegisterAttached(

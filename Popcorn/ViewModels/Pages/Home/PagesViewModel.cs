@@ -1,13 +1,7 @@
 ﻿using System.Collections.ObjectModel;
-using System.Threading.Tasks;
 using GalaSoft.MvvmLight;
-using GalaSoft.MvvmLight.Ioc;
-using Popcorn.Models.ApplicationState;
-using Popcorn.Services.History;
-using Popcorn.Services.Movie;
 using Popcorn.ViewModels.Pages.Home.Anime;
 using Popcorn.ViewModels.Pages.Home.Movie;
-using Popcorn.ViewModels.Pages.Home.Movie.Genres;
 using Popcorn.ViewModels.Pages.Home.Show;
 
 namespace Popcorn.ViewModels.Pages.Home
@@ -31,20 +25,22 @@ namespace Popcorn.ViewModels.Pages.Home
             set { Set(() => Pages, ref _pages, value); }
         }
 
-        public PagesViewModel(MoviePageViewModel moviePage)
+        /// <summary>
+        /// Create an instance of <see cref="PagesViewModel"/>
+        /// </summary>
+        /// <param name="moviePage">Movie page</param>
+        /// <param name="animePage">Anime page</param>
+        /// <param name="showPage">Show page</param>
+        public PagesViewModel(MoviePageViewModel moviePage, AnimePageViewModel animePage, ShowPageViewModel showPage)
         {
             moviePage.Caption = "Movies";
+            animePage.Caption = "Animes";
+            showPage.Caption = "Shows";
             Pages = new ObservableCollection<IPageViewModel>
             {
                 moviePage,
-                new ShowPageViewModel
-                {
-                    Caption = "Shows"
-                },
-                new AnimePageViewModel
-                {
-                    Caption = "Animes"
-                }
+                showPage,
+                animePage
             };
         }
     }

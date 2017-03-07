@@ -5,7 +5,7 @@ using System.Windows.Controls;
 using System.Windows.Data;
 using System.Windows.Markup;
 
-namespace Popcorn.Helpers
+namespace Popcorn.AttachedProperties
 {
     /// <summary>
     /// Attached properties for persistent tab control

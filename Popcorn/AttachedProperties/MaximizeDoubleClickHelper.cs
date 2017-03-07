@@ -1,14 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows;
+﻿using System.Windows;
 using System.Windows.Input;
-using System.Windows.Media;
 
-namespace Popcorn.Helpers
+namespace Popcorn.AttachedProperties
 {
+    /// <summary>
+    /// Enable maximizing the window on double click for a control
+    /// </summary>
     public class MaximizeDoubleClickHelper
     {
         public static readonly DependencyProperty MaximizeDoubleClickProperty = DependencyProperty.RegisterAttached(

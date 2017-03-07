@@ -309,14 +309,14 @@
     <Compile Include="Entity\Movie\MovieEntity.cs" />
     <Compile Include="Entity\Movie\MovieHistory.cs" />
     <Compile Include="Entity\Movie\Torrent.cs" />
-    <Compile Include="Helpers\AnimatedScrollViewer.cs" />
+    <Compile Include="Controls\AnimatedScrollViewer.cs" />
     <Compile Include="Helpers\AsyncSynchronizationContext.cs" />
     <Compile Include="Helpers\CookieAwareContainer.cs">
       <SubType>Component</SubType>
     </Compile>
-    <Compile Include="Helpers\EnableDragHelper.cs" />
+    <Compile Include="AttachedProperties\EnableDragHelper.cs" />
     <Compile Include="Helpers\FindVisualChildHelper.cs" />
-    <Compile Include="Helpers\MaximizeDoubleClickHelper.cs" />
+    <Compile Include="AttachedProperties\MaximizeDoubleClickHelper.cs" />
     <Compile Include="Messaging\ChangeFavoriteMovieMessage.cs" />
     <Compile Include="Messaging\ChangeHasBeenSeenMovieMessage.cs" />
     <Compile Include="Messaging\UnhandledExceptionMessage.cs" />
@@ -356,7 +356,7 @@
     <Compile Include="Models\Localization\EnglishLanguage.cs" />
     <Compile Include="Models\Localization\FrenchLanguage.cs" />
     <Compile Include="Models\Localization\ILanguage.cs" />
-    <Compile Include="Helpers\TabContent.cs" />
+    <Compile Include="AttachedProperties\TabContent.cs" />
     <Compile Include="Messaging\PlayMovieMessage.cs" />
     <Compile Include="Messaging\StopPlayingMovieMessage.cs" />
     <Compile Include="Entity\ApplicationDbContext.cs" />
@@ -416,11 +416,8 @@
       <DependentUpon>ShowTabUserControl.xaml</DependentUpon>
     </Compile>
     <Compile Include="UserControls\Player\MediaPlayer.cs" />
-    <Compile Include="UserControls\Home\Movie\Player\Movie\MoviePlayerUserControl.xaml.cs">
-      <DependentUpon>MoviePlayerUserControl.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="UserControls\Home\Movie\Player\Trailer\TrailerPlayerUserControl.xaml.cs">
-      <DependentUpon>TrailerPlayerUserControl.xaml</DependentUpon>
+    <Compile Include="UserControls\Player\PlayerUserControl.xaml.cs">
+      <DependentUpon>PlayerUserControl.xaml</DependentUpon>
     </Compile>
     <Compile Include="UserControls\Home\Movie\Search\SearchMovieUserControl.xaml.cs">
       <DependentUpon>SearchMovieUserControl.xaml</DependentUpon>
@@ -465,11 +462,9 @@
     <Compile Include="ViewModels\Pages\Home\Movie\Subtitles\SubtitlesViewModel.cs" />
     <Compile Include="ViewModels\Pages\Home\Movie\Tabs\FavoritesTabViewModel.cs" />
     <Compile Include="ViewModels\Pages\Home\Movie\Tabs\GreatestTabViewModel.cs" />
-    <Compile Include="ViewModels\Pages\Home\Movie\Player\Movie\MoviePlayerViewModel.cs" />
     <Compile Include="ViewModels\Pages\Home\Movie\Tabs\SearchTabViewModel.cs" />
     <Compile Include="ViewModels\Pages\Home\Movie\Tabs\PopularTabViewModel.cs" />
     <Compile Include="ViewModels\Pages\Home\Movie\Tabs\RecentTabViewModel.cs" />
-    <Compile Include="ViewModels\Pages\Home\Movie\Player\Trailer\MovieTrailerPlayerViewModel.cs" />
     <Compile Include="ViewModels\Pages\Home\Movie\Details\MovieDetailsViewModel.cs" />
     <Compile Include="ViewModels\Pages\Home\Movie\Search\SearchMovieViewModel.cs" />
     <Compile Include="ViewModels\Windows\Settings\ApplicationSettingsViewModel.cs" />
@@ -589,11 +584,7 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="UserControls\Home\Movie\Player\Movie\MoviePlayerUserControl.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="UserControls\Home\Movie\Player\Trailer\TrailerPlayerUserControl.xaml">
+    <Page Include="UserControls\Player\PlayerUserControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

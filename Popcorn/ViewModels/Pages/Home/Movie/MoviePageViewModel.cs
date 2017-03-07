@@ -12,9 +12,9 @@ using Popcorn.Models.ApplicationState;
 using Popcorn.Services.History;
 using Popcorn.Services.Movie;
 using Popcorn.ViewModels.Pages.Home.Movie.Genres;
-using Popcorn.ViewModels.Pages.Home.Movie.Player.Movie;
 using Popcorn.ViewModels.Pages.Home.Movie.Search;
 using Popcorn.ViewModels.Pages.Home.Movie.Tabs;
+using Popcorn.ViewModels.Pages.Player;
 
 namespace Popcorn.ViewModels.Pages.Home.Movie
 {
@@ -53,7 +53,7 @@ namespace Popcorn.ViewModels.Pages.Home.Movie
         /// <summary>
         /// Manage the movie player
         /// </summary>
-        private MoviePlayerViewModel _moviePlayerViewModel;
+        private MediaPlayerViewModel _moviePlayer;
 
         /// <summary>
         /// The selected tab
@@ -153,8 +153,6 @@ namespace Popcorn.ViewModels.Pages.Home.Movie
             set { Set(() => SelectedTab, ref _selectedTab, value); }
         }
 
-
-
         /// <summary>
         /// Register messages
         /// </summary>
@@ -162,35 +160,6 @@ namespace Popcorn.ViewModels.Pages.Home.Movie
         {
             Messenger.Default.Register<WindowStateChangeMessage>(this,
                 e => OnWindowStateChanged(new WindowStateChangedEventArgs(e.IsMoviePlaying)));
-
-            Messenger.Default.Register<PlayMovieMessage>(this, message => DispatcherHelper.CheckBeginInvokeOnUI(() =>
-            {
-                _moviePlayerViewModel = new MoviePlayerViewModel(ApplicationService, _movieService,
-                    _movieHistoryService);
-                _moviePlayerViewModel.LoadMovie(message.Movie);
-                Tabs.Add(_moviePlayerViewModel);
-                SelectedTab = Tabs.Last();
-                ApplicationService.IsMoviePlaying = true;
-            }));
-
-            Messenger.Default.Register<StopPlayingMovieMessage>(
-                this,
-                message =>
-                {
-                    // Remove the movie tab
-                    MoviePlayerViewModel moviePlayer = null;
-                    foreach (var mediaViewModel in Tabs.OfType<MoviePlayerViewModel>())
-                        moviePlayer = mediaViewModel;
-
-                    if (moviePlayer != null)
-                    {
-                        Tabs.Remove(moviePlayer);
-                        moviePlayer.Cleanup();
-                        SelectedTab = Tabs.FirstOrDefault();
-                    }
-
-                    ApplicationService.IsMoviePlaying = false;
-                });
 
             Messenger.Default.Register<SearchMovieMessage>(this,
                 async message => await SearchMovies(message.Filter));

@@ -91,5 +91,5 @@
     <Frame
         x:Name="MainFrame"
         NavigationUIVisibility="Hidden"
-        Source="/Pages/HomePage.xaml" />
+        Source="{Binding PageUri}" />
 </controls:MetroWindow>

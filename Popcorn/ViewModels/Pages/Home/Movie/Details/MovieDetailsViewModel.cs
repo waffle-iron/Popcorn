@@ -5,9 +5,7 @@ using GalaSoft.MvvmLight.CommandWpf;
 using GalaSoft.MvvmLight.Messaging;
 using NLog;
 using Popcorn.Messaging;
-using Popcorn.Models.ApplicationState;
 using Popcorn.Models.Movie;
-using Popcorn.Services.History;
 using Popcorn.Services.Language;
 using Popcorn.Services.Movie;
 using Popcorn.ViewModels.Pages.Home.Movie.Download;
@@ -80,16 +78,13 @@ namespace Popcorn.ViewModels.Pages.Home.Movie.Details
         /// </summary>
         /// <param name="movieService">Service used to interact with movies</param>
         /// <param name="languageService">Language service</param>
-        /// <param name="applicationService">Application service</param>
-        /// <param name="movieHistoryService">Movie history service</param>
-        public MovieDetailsViewModel(IMovieService movieService, ILanguageService languageService,
-            IApplicationService applicationService, IMovieHistoryService movieHistoryService)
+        public MovieDetailsViewModel(IMovieService movieService, ILanguageService languageService)
         {
             _movieService = movieService;
             _cancellationLoadingToken = new CancellationTokenSource();
             _cancellationLoadingTrailerToken = new CancellationTokenSource();
             DownloadMovie = new DownloadMovieViewModel(movieService, languageService);
-            Trailer = new TrailerViewModel(movieService, applicationService, movieHistoryService);
+            Trailer = new TrailerViewModel(movieService);
             RegisterMessages();
             RegisterCommands();
         }

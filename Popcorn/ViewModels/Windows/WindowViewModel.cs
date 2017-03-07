@@ -15,6 +15,8 @@ using Popcorn.Dialogs;
 using Popcorn.Helpers;
 using Popcorn.Messaging;
 using Popcorn.Models.ApplicationState;
+using Popcorn.Services.History;
+using Popcorn.ViewModels.Pages.Player;
 using Squirrel;
 
 namespace Popcorn.ViewModels.Windows
@@ -55,16 +57,43 @@ namespace Popcorn.ViewModels.Windows
         private IApplicationService _applicationService;
 
         /// <summary>
+        /// The movie history service
+        /// </summary>
+        private readonly IMovieHistoryService _movieHistoryService;
+
+        /// <summary>
+        /// <see cref="MediaPlayer"/>
+        /// </summary>
+        private MediaPlayerViewModel _mediaPlayer;
+
+        /// <summary>
+        /// <see cref="PageUri"/>
+        /// </summary>
+        private string _pageUri;
+
+        /// <summary>
         /// Initializes a new instance of the WindowViewModel class.
         /// </summary>
         /// <param name="applicationService">Instance of Application state</param>
-        public WindowViewModel(IApplicationService applicationService)
+        /// <param name="movieHistoryService">Instance of movie history service</param>
+        public WindowViewModel(IApplicationService applicationService, IMovieHistoryService movieHistoryService)
         {
+            _movieHistoryService = movieHistoryService;
             _dialogCoordinator = DialogCoordinator.Instance;
             _applicationService = applicationService;
             RegisterMessages();
             RegisterCommands();
             AppDomain.CurrentDomain.UnhandledException += OnUnhandledException;
+            PageUri = "/Pages/HomePage.xaml";
+        }
+
+        /// <summary>
+        /// Current page uri
+        /// </summary>
+        public string PageUri
+        {
+            get { return _pageUri; }
+            set { Set(() => PageUri, ref _pageUri, value); }
         }
 
         /// <summary>
@@ -92,6 +121,15 @@ namespace Popcorn.ViewModels.Windows
         {
             get { return _isMovieFlyoutOpen; }
             set { Set(() => IsMovieFlyoutOpen, ref _isMovieFlyoutOpen, value); }
+        }
+
+        /// <summary>
+        /// Media player
+        /// </summary>
+        public MediaPlayerViewModel MediaPlayer
+        {
+            get { return _mediaPlayer; }
+            set { Set(() => MediaPlayer, ref _mediaPlayer, value); }
         }
 
         /// <summary>
@@ -125,14 +163,31 @@ namespace Popcorn.ViewModels.Windows
 
             Messenger.Default.Register<PlayMovieMessage>(this, message => DispatcherHelper.CheckBeginInvokeOnUI(() =>
             {
+                MediaPlayer = new MediaPlayerViewModel(message.Movie.FilePath.AbsolutePath, message.Movie.Title,
+                    () =>
+                    {
+                        Messenger.Default.Send(new StopPlayingMovieMessage());
+                    },
+                    async () =>
+                    {
+                        await _movieHistoryService.SetHasBeenSeenMovieAsync(message.Movie);
+                        Messenger.Default.Send(new ChangeHasBeenSeenMovieMessage());
+                        Messenger.Default.Send(new StopPlayingMovieMessage());
+                    },
+                    message.Movie.SelectedSubtitle?.FilePath);
+
+                ApplicationService.IsMoviePlaying = true;
                 IsMovieFlyoutOpen = false;
+                PageUri = "/Pages/PlayerPage.xaml";
             }));
 
             Messenger.Default.Register<StopPlayingMovieMessage>(
                 this,
                 message =>
                 {
+                    ApplicationService.IsMoviePlaying = false;
                     IsMovieFlyoutOpen = true;
+                    PageUri = "/Pages/HomePage.xaml";
                 });
 
             Messenger.Default.Register<UnhandledExceptionMessage>(this, message => ManageException(message.Exception));

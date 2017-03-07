@@ -10,11 +10,9 @@ using GalaSoft.MvvmLight.Messaging;
 using NLog;
 using Popcorn.Helpers;
 using Popcorn.Messaging;
-using Popcorn.Models.ApplicationState;
 using Popcorn.Models.Movie;
-using Popcorn.Services.History;
 using Popcorn.Services.Movie;
-using Popcorn.ViewModels.Pages.Home.Movie.Player.Trailer;
+using Popcorn.ViewModels.Pages.Player;
 using YoutubeExtractor;
 
 namespace Popcorn.ViewModels.Pages.Home.Movie.Trailer
@@ -42,16 +40,6 @@ namespace Popcorn.ViewModels.Pages.Home.Movie.Trailer
                 };
 
         /// <summary>
-        /// Application state
-        /// </summary>
-        private readonly IApplicationService _applicationService;
-
-        /// <summary>
-        /// Used to interact with movie history
-        /// </summary>
-        private readonly IMovieHistoryService _movieHistoryService;
-
-        /// <summary>
         /// The service used to interact with movies
         /// </summary>
         private readonly IMovieService _movieService;
@@ -59,29 +47,24 @@ namespace Popcorn.ViewModels.Pages.Home.Movie.Trailer
         /// <summary>
         /// Manage the trailer player
         /// </summary>
-        private MovieTrailerPlayerViewModel _movieTrailerPlayer;
+        private MediaPlayerViewModel _trailerPlayer;
 
         /// <summary>
         /// Initializes a new instance of the TrailerViewModel class.
         /// </summary>
         /// <param name="movieService">Movie service</param>
-        /// <param name="applicationService">Application state</param>
-        /// <param name="movieHistoryService">Movie history service</param>
-        public TrailerViewModel(IMovieService movieService, IApplicationService applicationService,
-            IMovieHistoryService movieHistoryService)
+        public TrailerViewModel(IMovieService movieService)
         {
             _movieService = movieService;
-            _applicationService = applicationService;
-            _movieHistoryService = movieHistoryService;
         }
 
         /// <summary>
         /// Manage the trailer player
         /// </summary>
-        public MovieTrailerPlayerViewModel MovieTrailerPlayer
+        public MediaPlayerViewModel TrailerPlayer
         {
-            get { return _movieTrailerPlayer; }
-            set { Set(() => MovieTrailerPlayer, ref _movieTrailerPlayer, value); }
+            get { return _trailerPlayer; }
+            set { Set(() => TrailerPlayer, ref _trailerPlayer, value); }
         }
 
         /// <summary>
@@ -124,8 +107,15 @@ namespace Popcorn.ViewModels.Pages.Home.Movie.Trailer
                 {
                     Logger.Debug(
                         $"Movie's trailer loaded: {movie.Title}");
-                    MovieTrailerPlayer = new MovieTrailerPlayerViewModel(_applicationService, _movieService, _movieHistoryService);
-                    MovieTrailerPlayer.LoadTrailer(new Models.Trailer.Trailer(new Uri(video.DownloadUrl)));
+                    TrailerPlayer = new MediaPlayerViewModel(video.DownloadUrl, movie.Title,
+                        () =>
+                        {
+                            Messenger.Default.Send(new StopPlayingTrailerMessage());
+                        },
+                        () =>
+                        {
+                            Messenger.Default.Send(new StopPlayingTrailerMessage());
+                        });
                 }
             }
             catch (Exception exception) when (exception is TaskCanceledException)
@@ -166,8 +156,7 @@ namespace Popcorn.ViewModels.Pages.Home.Movie.Trailer
         /// </summary>
         public void UnLoadTrailer()
         {
-            MovieTrailerPlayer?.Cleanup();
-            MovieTrailerPlayer = null;
+            TrailerPlayer = null;
         }
 
         /// <summary>
@@ -175,8 +164,7 @@ namespace Popcorn.ViewModels.Pages.Home.Movie.Trailer
         /// </summary>
         public override void Cleanup()
         {
-            MovieTrailerPlayer?.Cleanup();
-            MovieTrailerPlayer = null;
+            TrailerPlayer = null;
             base.Cleanup();
         }
 

@@ -1,13 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows;
+﻿using System.Windows;
 using System.Windows.Media;
 
 namespace Popcorn.Helpers
 {
+    /// <summary>
+    /// Find visual child
+    /// </summary>
     public static class FindVisualChildHelper
     {
         public static T GetFirstChildOfType<T>(DependencyObject dependencyObject) where T : DependencyObject

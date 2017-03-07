@@ -6,8 +6,8 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:lex="http://wpflocalizeextension.codeplex.com"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    xmlns:trailer="clr-namespace:Popcorn.ViewModels.Pages.Home.Movie.Player.Trailer"
-    xmlns:trailer2="clr-namespace:Popcorn.UserControls.Home.Movie.Player.Trailer"
+    xmlns:player="clr-namespace:Popcorn.ViewModels.Pages.Player"
+    xmlns:player1="clr-namespace:Popcorn.UserControls.Player"
     lex:LocalizeDictionary.DesignCulture="en"
     lex:ResxLocalizationProvider.DefaultAssembly="Popcorn"
     lex:ResxLocalizationProvider.DefaultDictionary="Resources"
@@ -16,8 +16,8 @@
         <ResourceDictionary>
             <converters:RatioConverter x:Key="RatioConverter" />
 
-            <DataTemplate DataType="{x:Type trailer:MovieTrailerPlayerViewModel}">
-                <trailer2:TrailerPlayerUserControl />
+            <DataTemplate DataType="{x:Type player:MediaPlayerViewModel}">
+                <player1:PlayerUserControl />
             </DataTemplate>
         </ResourceDictionary>
     </UserControl.Resources>
@@ -51,7 +51,7 @@
             <ContentControl
                 Width="{Binding ElementName=LayoutRoot, Path=ActualWidth, Converter={StaticResource RatioConverter}, ConverterParameter=1.0}"
                 Height="{Binding ElementName=LayoutRoot, Path=ActualHeight, Converter={StaticResource RatioConverter}, ConverterParameter=1.0}"
-                Content="{Binding MovieTrailerPlayer}" />
+                Content="{Binding TrailerPlayer}" />
         </Grid>
     </Grid>
 </UserControl>

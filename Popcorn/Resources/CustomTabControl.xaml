@@ -87,8 +87,8 @@
                     <DockPanel LastChildFill="True">
                         <Grid
                             x:Name="HeaderGrid"
-                            helpers:EnableDragHelper.EnableDrag="True"
-                            helpers:MaximizeDoubleClickHelper.MaximizeDoubleClick="True"
+                            attachedProperties:EnableDragHelper.EnableDrag="True"
+                            attachedProperties:MaximizeDoubleClickHelper.MaximizeDoubleClick="True"
                             Background="{StaticResource TabItemPanelBackgroundBrush}"
                             DockPanel.Dock="Left">
                             <StackPanel

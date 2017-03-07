@@ -8,6 +8,9 @@ using System.Windows.Media;
 
 namespace Popcorn.AttachedProperties
 {
+    /// <summary>
+    /// Create a ripple effect on controls
+    /// </summary>
     public static class RippleAssist
     {
         #region ClipToBound

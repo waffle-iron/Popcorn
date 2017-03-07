@@ -7,28 +7,28 @@ using System.Windows.Input;
 using System.Windows.Media.Animation;
 using System.Windows.Threading;
 using GalaSoft.MvvmLight.Threading;
-using Popcorn.ViewModels.Pages.Home.Movie.Player.Movie;
+using Popcorn.ViewModels.Pages.Player;
 
-namespace Popcorn.UserControls.Home.Movie.Player.Movie
+namespace Popcorn.UserControls.Player
 {
     /// <summary>
     /// Interaction logic for MoviePlayerUserControl.xaml
     /// </summary>
-    public partial class MoviePlayerUserControl : IDisposable
+    public partial class PlayerUserControl : IDisposable
     {
         /// <summary>
         /// Identifies the <see cref="Volume" /> dependency property.
         /// </summary>
         internal static readonly DependencyProperty VolumeProperty = DependencyProperty.Register("Volume",
             typeof(int),
-            typeof(MoviePlayerUserControl), new PropertyMetadata(100, OnVolumeChanged));
+            typeof(PlayerUserControl), new PropertyMetadata(100, OnVolumeChanged));
 
         private bool _isMouseActivityCaptured;
 
         /// <summary>
         /// Initializes a new instance of the MoviePlayer class.
         /// </summary>
-        public MoviePlayerUserControl()
+        public PlayerUserControl()
         {
             InitializeComponent();
 
@@ -61,9 +61,9 @@ namespace Popcorn.UserControls.Home.Movie.Player.Movie
             if (window != null)
                 window.Closing += (s1, e1) => Dispose();
 
-            var vm = DataContext as MoviePlayerViewModel;
+            var vm = DataContext as MediaPlayerViewModel;
             if (vm == null) return;
-            if (vm.Movie.FilePath == null)
+            if (vm.MediaPath == null)
                 return;
 
             // start the timer used to report time on MediaPlayerSliderProgress
@@ -82,13 +82,13 @@ namespace Popcorn.UserControls.Home.Movie.Player.Movie
             
             Player.VlcMediaPlayer.EndReached += MediaPlayerEndReached;
 
-            if (!string.IsNullOrEmpty(vm.Movie.SelectedSubtitle?.FilePath))
+            if (!string.IsNullOrEmpty(vm.SubtitleFilePath))
             {
-                Player.LoadMediaWithOptions(vm.Movie.FilePath, $@":sub-file={vm.Movie.SelectedSubtitle?.FilePath}");
+                Player.LoadMediaWithOptions(vm.MediaPath, $@":sub-file={vm.SubtitleFilePath}");
             }
             else
             {
-                Player.LoadMedia(vm.Movie.FilePath);
+                Player.LoadMedia(vm.MediaPath);
             }
 
             PlayMedia();
@@ -101,7 +101,7 @@ namespace Popcorn.UserControls.Home.Movie.Player.Movie
         /// <param name="obj">obj</param>
         private static void OnVolumeChanged(DependencyObject obj, DependencyPropertyChangedEventArgs e)
         {
-            var moviePlayer = obj as MoviePlayerUserControl;
+            var moviePlayer = obj as PlayerUserControl;
             if (moviePlayer == null)
                 return;
 
@@ -132,13 +132,13 @@ namespace Popcorn.UserControls.Home.Movie.Player.Movie
         /// <param name="sender">Sender object</param>
         /// <param name="e">EventArgs</param>
         private void MediaPlayerEndReached(object sender, EventArgs e)
-            => DispatcherHelper.CheckBeginInvokeOnUI(async () =>
+            => DispatcherHelper.CheckBeginInvokeOnUI(() =>
             {
-                var vm = DataContext as MoviePlayerViewModel;
+                var vm = DataContext as MediaPlayerViewModel;
                 if (vm == null)
                     return;
 
-                await vm.HasSeenMovie();
+                vm.MediaEnded();
             });
 
         /// <summary>
@@ -364,7 +364,7 @@ namespace Popcorn.UserControls.Home.Movie.Player.Movie
             Player.Stop();
             Player.Dispose();
 
-            var vm = DataContext as MoviePlayerViewModel;
+            var vm = DataContext as MediaPlayerViewModel;
             if (vm != null)
                 vm.StoppedPlayingMedia -= OnStoppedPlayingMedia;
 

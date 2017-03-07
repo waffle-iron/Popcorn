@@ -7,8 +7,10 @@ using Popcorn.Services.Language;
 using Popcorn.Services.Movie;
 using Popcorn.Services.Settings;
 using Popcorn.ViewModels.Pages.Home;
+using Popcorn.ViewModels.Pages.Home.Anime;
 using Popcorn.ViewModels.Pages.Home.Movie;
 using Popcorn.ViewModels.Pages.Home.Movie.Details;
+using Popcorn.ViewModels.Pages.Home.Show;
 using Popcorn.ViewModels.Windows;
 using Popcorn.ViewModels.Windows.Settings;
 
@@ -28,7 +30,6 @@ namespace Popcorn.ViewModels
 
             SimpleIoc.Default.Register<ISettingsService, SettingsService>();
             SimpleIoc.Default.Register<IMovieService, MovieService>();
-            SimpleIoc.Default.Register<IMovieService, MovieService>();
             SimpleIoc.Default.Register<ILanguageService, LanguageService>();
             SimpleIoc.Default.Register<IMovieHistoryService, MovieHistoryService>();
             SimpleIoc.Default.Register<IApplicationService, ApplicationService>();
@@ -39,9 +40,13 @@ namespace Popcorn.ViewModels
 
             SimpleIoc.Default.Register<WindowViewModel>();
             SimpleIoc.Default.Register<PagesViewModel>();
+
             SimpleIoc.Default.Register<MoviePageViewModel>();
             SimpleIoc.Default.Register<MovieDetailsViewModel>();
-            SimpleIoc.Default.Register<MovieDetailsViewModel>();
+
+            SimpleIoc.Default.Register<AnimePageViewModel>();
+
+            SimpleIoc.Default.Register<ShowPageViewModel>();
 
             SimpleIoc.Default.Register<ApplicationSettingsViewModel>();
 
