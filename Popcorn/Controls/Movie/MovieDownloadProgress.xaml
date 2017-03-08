@@ -1,5 +1,5 @@
 ﻿<UserControl
-    x:Class="Popcorn.Controls.MovieGenres"
+    x:Class="Popcorn.Controls.Movie.MovieDownloadProgress"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
@@ -8,6 +8,6 @@
     d:DesignWidth="300"
     mc:Ignorable="d">
     <Grid>
-        <TextBlock x:Name="DisplayText" TextTrimming="CharacterEllipsis" />
+        <TextBlock x:Name="DisplayText" />
     </Grid>
 </UserControl>

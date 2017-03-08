@@ -2,19 +2,19 @@
 using System.Windows;
 using Popcorn.Helpers;
 
-namespace Popcorn.Controls
+namespace Popcorn.Controls.Movie
 {
     /// <summary>
-    /// Interaction logic for DownloadMovieProgress.xaml
+    /// Interaction logic for MovieDownloadProgress.xaml
     /// </summary>
-    public partial class DownloadMovieProgress
+    public partial class MovieDownloadProgress
     {
         /// <summary>
         /// Download progress property
         /// </summary>
         public static readonly DependencyProperty DownloadProgressProperty =
             DependencyProperty.Register("DownloadProgress",
-                typeof (double), typeof (DownloadMovieProgress),
+                typeof (double), typeof (MovieDownloadProgress),
                 new PropertyMetadata(0d, OnDownloadProgressChanged));
 
         /// <summary>
@@ -22,7 +22,7 @@ namespace Popcorn.Controls
         /// </summary>
         public static readonly DependencyProperty DownloadRateProperty =
             DependencyProperty.Register("DownloadRate",
-                typeof (double), typeof (DownloadMovieProgress),
+                typeof (double), typeof (MovieDownloadProgress),
                 new PropertyMetadata(0d));
 
         /// <summary>
@@ -30,13 +30,13 @@ namespace Popcorn.Controls
         /// </summary>
         public static readonly DependencyProperty MovieTitleProperty =
             DependencyProperty.Register("MovieTitle",
-                typeof (string), typeof (DownloadMovieProgress),
+                typeof (string), typeof (MovieDownloadProgress),
                 new PropertyMetadata(string.Empty));
 
         /// <summary>
-        /// Initialize a new instance of DownloadMovieProgress
+        /// Initialize a new instance of MovieDownloadProgress
         /// </summary>
-        public DownloadMovieProgress()
+        public MovieDownloadProgress()
         {
             InitializeComponent();
             DisplayText.Text =
@@ -77,7 +77,7 @@ namespace Popcorn.Controls
         /// <param name="e">Event args</param>
         private static void OnDownloadProgressChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
-            var downloadMovieProgress = d as DownloadMovieProgress;
+            var downloadMovieProgress = d as MovieDownloadProgress;
             downloadMovieProgress?.DisplayDownloadProgress();
         }
 

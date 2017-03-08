@@ -1,18 +1,18 @@
 ﻿using System.Windows;
 
-namespace Popcorn.Controls
+namespace Popcorn.Controls.Movie
 {
     /// <summary>
-    /// Interaction logic for MoviesNumberSummary.xaml
+    /// Interaction logic for MovieNumberSummary.xaml
     /// </summary>
-    public partial class MoviesNumberSummary
+    public partial class MovieNumberSummary
     {
         /// <summary>
         /// Max number property
         /// </summary>
         public static readonly DependencyProperty MaxNumberOfMoviesProperty =
             DependencyProperty.Register("MaxNumberOfMovies",
-                typeof (double), typeof (MoviesNumberSummary),
+                typeof (double), typeof (MovieNumberSummary),
                 new PropertyMetadata(0d, OnNumberOfMoviesChanged));
 
         /// <summary>
@@ -20,13 +20,13 @@ namespace Popcorn.Controls
         /// </summary>
         public static readonly DependencyProperty CurrentNumberOfMoviesProperty =
             DependencyProperty.Register("CurrentNumberOfMovies",
-                typeof (double), typeof (MoviesNumberSummary),
+                typeof (double), typeof (MovieNumberSummary),
                 new PropertyMetadata(0d, OnNumberOfMoviesChanged));
 
         /// <summary>
-        /// Initialize a new instance of MoviesNumberSummary
+        /// Initialize a new instance of MovieNumberSummary
         /// </summary>
-        public MoviesNumberSummary()
+        public MovieNumberSummary()
         {
             InitializeComponent();
         }
@@ -56,8 +56,8 @@ namespace Popcorn.Controls
         /// <param name="e">Event args</param>
         private static void OnNumberOfMoviesChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
-            var moviesNumberSummary = d as MoviesNumberSummary;
-            moviesNumberSummary?.DisplayMoviesNumberSummary();
+            var movieNumberSummary = d as MovieNumberSummary;
+            movieNumberSummary?.DisplayMoviesNumberSummary();
         }
 
         /// <summary>

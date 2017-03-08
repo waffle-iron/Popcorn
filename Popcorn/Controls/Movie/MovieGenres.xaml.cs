@@ -2,7 +2,7 @@
 using System.Linq;
 using System.Windows;
 
-namespace Popcorn.Controls
+namespace Popcorn.Controls.Movie
 {
     /// <summary>
     /// Interaction logic for MovieGenres.xaml

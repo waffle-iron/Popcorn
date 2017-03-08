@@ -10,6 +10,7 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:lex="http://wpflocalizeextension.codeplex.com"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:movie="clr-namespace:Popcorn.Controls.Movie"
     xmlns:tabs1="clr-namespace:Popcorn.ViewModels.Pages.Home.Movie.Tabs"
     xmlns:tabs2="clr-namespace:Popcorn.UserControls.Home.Movie.Tabs"
     d:DataContext="{d:DesignInstance tabs1:GreatestTabViewModel}"
@@ -242,7 +243,7 @@
                                             <VisualBrush Stretch="Fill" Visual="{DynamicResource appbar_eye}" />
                                         </Rectangle.OpacityMask>
                                     </Rectangle>
-                                    <customControls:Rating
+                                    <movie:MovieRating
                                         x:Name="Rating"
                                         Grid.Row="2"
                                         Grid.Column="1"
@@ -250,8 +251,7 @@
                                         HorizontalAlignment="Left"
                                         VerticalAlignment="Center"
                                         Opacity="0.0"
-                                        RatingValue="{Binding Rating}"
-                                        StarButtonsEnabled="False" />
+                                        RatingValue="{Binding Rating}" />
 
                                     <ToggleButton
                                         x:Name="Like"
@@ -306,7 +306,7 @@
                                 HorizontalAlignment="Left"
                                 FontSize="12"
                                 Foreground="Gray">
-                                <customControls:MovieGenres Genres="{Binding Genres}" />
+                                <movie:MovieGenres Genres="{Binding Genres}" />
                             </TextBlock>
                             <TextBlock
                                 Width="200"

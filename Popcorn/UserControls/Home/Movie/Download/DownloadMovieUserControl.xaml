@@ -9,6 +9,7 @@
     xmlns:download="clr-namespace:Popcorn.ViewModels.Pages.Home.Movie.Download"
     xmlns:lex="http://wpflocalizeextension.codeplex.com"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:movie="clr-namespace:Popcorn.Controls.Movie"
     xmlns:movieSettingsViewModel="clr-namespace:Popcorn.ViewModels.Pages.Home.Movie.Settings"
     xmlns:settings="clr-namespace:Popcorn.UserControls.Home.Movie.Settings"
     d:DataContext="{d:DesignInstance download:DownloadMovieViewModel}"
@@ -215,7 +216,7 @@
                 HorizontalAlignment="Center"
                 VerticalAlignment="Center"
                 FontSize="18">
-                <customControls:DownloadMovieProgress
+                <movie:MovieDownloadProgress
                     DownloadProgress="{Binding MovieDownloadProgress}"
                     DownloadRate="{Binding MovieDownloadRate}"
                     MovieTitle="{Binding Movie.Title}" />

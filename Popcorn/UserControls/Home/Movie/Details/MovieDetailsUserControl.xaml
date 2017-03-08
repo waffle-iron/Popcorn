@@ -11,6 +11,7 @@
     xmlns:downloadViewModel="clr-namespace:Popcorn.ViewModels.Pages.Home.Movie.Download"
     xmlns:lex="http://wpflocalizeextension.codeplex.com"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:movie="clr-namespace:Popcorn.Controls.Movie"
     d:DesignHeight="300"
     d:DesignWidth="300"
     lex:LocalizeDictionary.DesignCulture="en"
@@ -227,7 +228,7 @@
                                     Margin="15,0,0,0"
                                     VerticalAlignment="Center"
                                     FontSize="16">
-                                    <customControls:MovieRuntime Runtime="{Binding Movie.Runtime}" />
+                                    <movie:MovieRuntime Runtime="{Binding Movie.Runtime}" />
                                 </Label>
                                 <Canvas
                                     Margin="10,0,0,5"
@@ -244,7 +245,7 @@
                                     Margin="15,0,0,0"
                                     VerticalAlignment="Center"
                                     FontSize="16">
-                                    <customControls:MovieGenres Genres="{Binding Movie.Genres}" />
+                                    <movie:MovieGenres Genres="{Binding Movie.Genres}" />
                                 </TextBlock>
                                 <Canvas
                                     Margin="10,0,0,5"
@@ -257,7 +258,7 @@
                                         Stroke="#FFFFFF"
                                         StrokeThickness="5" />
                                 </Canvas>
-                                <customControls:Rating
+                                <movie:MovieRating
                                     Width="60"
                                     Height="20"
                                     Margin="15,0,0,4"

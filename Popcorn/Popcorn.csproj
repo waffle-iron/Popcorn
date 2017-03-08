@@ -277,6 +277,9 @@
     <Compile Include="AttachedProperties\RippleAssist.cs" />
     <Compile Include="Behaviors\ScrollAnimationBehavior.cs" />
     <Compile Include="Comparers\MovieComparer.cs" />
+    <Compile Include="Controls\Movie\MovieRating.xaml.cs">
+      <DependentUpon>MovieRating.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Controls\Ripple.cs" />
     <Compile Include="Converters\BoolToInverseBoolConverter.cs" />
     <Compile Include="Converters\BoolToInverseVisibilityConverter.cs" />
@@ -290,17 +293,17 @@
     <Compile Include="Controls\CapitalizeText.xaml.cs">
       <DependentUpon>CapitalizeText.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Controls\DownloadMovieProgress.xaml.cs">
-      <DependentUpon>DownloadMovieProgress.xaml</DependentUpon>
+    <Compile Include="Controls\Movie\MovieDownloadProgress.xaml.cs">
+      <DependentUpon>MovieDownloadProgress.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Controls\MovieGenres.xaml.cs">
+    <Compile Include="Controls\Movie\MovieGenres.xaml.cs">
       <DependentUpon>MovieGenres.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Controls\MovieRuntime.xaml.cs">
+    <Compile Include="Controls\Movie\MovieRuntime.xaml.cs">
       <DependentUpon>MovieRuntime.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Controls\MoviesNumberSummary.xaml.cs">
-      <DependentUpon>MoviesNumberSummary.xaml</DependentUpon>
+    <Compile Include="Controls\Movie\MovieNumberSummary.xaml.cs">
+      <DependentUpon>MovieNumberSummary.xaml</DependentUpon>
     </Compile>
     <Compile Include="Dialogs\ExceptionDialog.xaml.cs">
       <DependentUpon>ExceptionDialog.xaml</DependentUpon>
@@ -391,8 +394,8 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
-    <Compile Include="Controls\Rating.xaml.cs">
-      <DependentUpon>Rating.xaml</DependentUpon>
+    <Compile Include="Controls\Movie\MovieRatingFiltering.xaml.cs">
+      <DependentUpon>MovieRatingFiltering.xaml</DependentUpon>
     </Compile>
     <Compile Include="Properties\Settings.Designer.cs">
       <AutoGen>True</AutoGen>
@@ -481,19 +484,23 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Controls\DownloadMovieProgress.xaml">
+    <Page Include="Controls\Movie\MovieDownloadProgress.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Controls\MovieGenres.xaml">
+    <Page Include="Controls\Movie\MovieGenres.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Controls\MovieRuntime.xaml">
+    <Page Include="Controls\Movie\MovieRating.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Controls\MoviesNumberSummary.xaml">
+    <Page Include="Controls\Movie\MovieRuntime.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\Movie\MovieNumberSummary.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -569,7 +576,7 @@
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
-    <Page Include="Controls\Rating.xaml">
+    <Page Include="Controls\Movie\MovieRatingFiltering.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

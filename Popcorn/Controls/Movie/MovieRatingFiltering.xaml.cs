@@ -5,15 +5,14 @@ using System.Windows.Controls.Primitives;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Shapes;
-using MahApps.Metro.Controls;
 using Extensions = Popcorn.Helpers.Extensions;
 
-namespace Popcorn.Controls
+namespace Popcorn.Controls.Movie
 {
     /// <summary>
     /// Interaction logic for Rating.xaml
     /// </summary>
-    public partial class Rating
+    public partial class MovieRatingFiltering
     {
         /// <summary>
         /// Max rating value
@@ -24,32 +23,15 @@ namespace Popcorn.Controls
         /// Rating property
         /// </summary>
         public static readonly DependencyProperty RatingValueProperty = DependencyProperty.Register("RatingValue",
-            typeof(double), typeof(Rating),
+            typeof(double), typeof(MovieRatingFiltering),
             new FrameworkPropertyMetadata(0d, FrameworkPropertyMetadataOptions.BindsTwoWayByDefault, RatingChanged));
 
         /// <summary>
-        /// Star buttons property
+        /// Initialize a new instance of MovieRatingFiltering
         /// </summary>
-        public static readonly DependencyProperty StarButtonsEnabledProperty =
-            DependencyProperty.Register("StarButtonsEnabled",
-                typeof(bool), typeof(Rating),
-                new FrameworkPropertyMetadata(false));
-
-        /// <summary>
-        /// Initialize a new instance of Rating
-        /// </summary>
-        public Rating()
+        public MovieRatingFiltering()
         {
             InitializeComponent();
-        }
-
-        /// <summary>
-        /// Are stars clickable
-        /// </summary>
-        public bool StarButtonsEnabled
-        {
-            get { return (bool)GetValue(StarButtonsEnabledProperty); }
-            set { SetValue(StarButtonsEnabledProperty, value); }
         }
 
         /// <summary>
@@ -75,7 +57,7 @@ namespace Popcorn.Controls
         /// <param name="e">Event args</param>
         private static void RatingChanged(DependencyObject sender, DependencyPropertyChangedEventArgs e)
         {
-            var rating = sender as Rating;
+            var rating = sender as MovieRatingFiltering;
             if (rating == null)
                 return;
 
