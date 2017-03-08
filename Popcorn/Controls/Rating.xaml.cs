@@ -6,7 +6,6 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Shapes;
 using Popcorn.Helpers;
-using Brush = System.Drawing.Brush;
 
 namespace Popcorn.Controls
 {
@@ -24,7 +23,7 @@ namespace Popcorn.Controls
         /// Rating property
         /// </summary>
         public static readonly DependencyProperty RatingValueProperty = DependencyProperty.Register("RatingValue",
-            typeof (double), typeof (Rating),
+            typeof(double), typeof(Rating),
             new FrameworkPropertyMetadata(0d, FrameworkPropertyMetadataOptions.BindsTwoWayByDefault, RatingChanged));
 
         /// <summary>
@@ -32,7 +31,7 @@ namespace Popcorn.Controls
         /// </summary>
         public static readonly DependencyProperty StarButtonsEnabledProperty =
             DependencyProperty.Register("StarButtonsEnabled",
-                typeof (bool), typeof (Rating),
+                typeof(bool), typeof(Rating),
                 new FrameworkPropertyMetadata(false));
 
         /// <summary>
@@ -48,7 +47,7 @@ namespace Popcorn.Controls
         /// </summary>
         public bool StarButtonsEnabled
         {
-            get { return (bool) GetValue(StarButtonsEnabledProperty); }
+            get { return (bool)GetValue(StarButtonsEnabledProperty); }
             set { SetValue(StarButtonsEnabledProperty, value); }
         }
 
@@ -79,9 +78,9 @@ namespace Popcorn.Controls
             if (rating == null)
                 return;
 
-            var newval = Convert.ToInt32((double) e.NewValue);
+            var newval = Convert.ToInt32((double)e.NewValue);
             newval /= 2;
-            var childs = ((Grid) (rating.Content)).Children;
+            var childs = ((Grid)(rating.Content)).Children;
 
             ToggleButton button;
 
@@ -113,7 +112,7 @@ namespace Popcorn.Controls
 
             if (button.Name == "StarOne")
             {
-                if(!StarOne.IsChecked.HasValue || !StarOne.IsChecked.Value)
+                if (!StarOne.IsChecked.HasValue || !StarOne.IsChecked.Value)
                 {
                     if (!StarTwo.IsChecked.Value)
                     {
@@ -143,7 +142,7 @@ namespace Popcorn.Controls
                     StarThree.IsChecked = false;
                     StarFour.IsChecked = false;
                     StarFive.IsChecked = false;
-                }            
+                }
             }
             else if (button.Name == "StarTwo")
             {
@@ -166,7 +165,7 @@ namespace Popcorn.Controls
                         OnMouseLeaveStarThree(null, null);
                         OnMouseLeaveStarFour(null, null);
                         OnMouseLeaveStarFive(null, null);
-                    }              
+                    }
                 }
                 else
                 {
@@ -199,7 +198,7 @@ namespace Popcorn.Controls
                     }
                 }
                 else
-                {                    
+                {
                     StarOne.IsChecked = true;
                     StarTwo.IsChecked = true;
                     StarFour.IsChecked = false;
@@ -227,12 +226,12 @@ namespace Popcorn.Controls
                     }
                 }
                 else
-                {     
+                {
                     StarOne.IsChecked = true;
                     StarTwo.IsChecked = true;
                     StarThree.IsChecked = true;
                     StarFive.IsChecked = false;
-                    RatingValue = 8;                    
+                    RatingValue = 8;
                 }
             }
             else if (button.Name == "StarFive")
@@ -246,7 +245,7 @@ namespace Popcorn.Controls
                     RatingValue = 0;
                 }
                 else
-                {      
+                {
                     StarOne.IsChecked = true;
                     StarTwo.IsChecked = true;
                     StarThree.IsChecked = true;
