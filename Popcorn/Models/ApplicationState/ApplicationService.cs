@@ -27,11 +27,7 @@ namespace Popcorn.Models.ApplicationState
         public bool IsMediaPlaying
         {
             get { return _isMoviePlaying; }
-            set
-            {
-                Set(() => IsMediaPlaying, ref _isMoviePlaying, value);
-                Messenger.Default.Send(new WindowStateChangeMessage(value));
-            }
+            set { Set(() => IsMediaPlaying, ref _isMoviePlaying, value); }
         }
 
         /// <summary>
@@ -49,11 +45,7 @@ namespace Popcorn.Models.ApplicationState
         public bool IsFullScreen
         {
             get { return _isFullScreen; }
-            set
-            {
-                Set(() => IsFullScreen, ref _isFullScreen, value);
-                Messenger.Default.Send(new WindowStateChangeMessage(IsMediaPlaying));
-            }
+            set { Set(() => IsFullScreen, ref _isFullScreen, value); }
         }
     }
 }

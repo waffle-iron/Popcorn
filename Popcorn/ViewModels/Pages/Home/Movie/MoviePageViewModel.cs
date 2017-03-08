@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Async;
+﻿using System.Collections.Async;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
@@ -8,7 +7,6 @@ using GalaSoft.MvvmLight;
 using GalaSoft.MvvmLight.CommandWpf;
 using GalaSoft.MvvmLight.Messaging;
 using GalaSoft.MvvmLight.Threading;
-using Popcorn.Events;
 using Popcorn.Messaging;
 using Popcorn.Models.ApplicationState;
 using Popcorn.Services.Movies.History;
@@ -52,6 +50,11 @@ namespace Popcorn.ViewModels.Pages.Home.Movie
         private bool _isMovieSearchActive;
 
         /// <summary>
+        /// <see cref="SelectedMoviesIndexMenuTab"/>
+        /// </summary>
+        private int _selectedMoviesIndexMenuTab;
+
+        /// <summary>
         /// The selected tab
         /// </summary>
         private TabsViewModel _selectedTab;
@@ -92,7 +95,7 @@ namespace Popcorn.ViewModels.Pages.Home.Movie
                 Tabs.Add(new FavoritesTabViewModel(ApplicationService, _movieService, _movieHistoryService));
                 Tabs.Add(new SeenTabViewModel(ApplicationService, _movieService, _movieHistoryService));
                 SelectedTab = Tabs.First();
-                
+                SelectedMoviesIndexMenuTab = 0;
                 var loadMoviesTask = Tabs.ParallelForEachAsync(async tab =>
                 {
                     await tab.LoadMoviesAsync();
@@ -136,11 +139,6 @@ namespace Popcorn.ViewModels.Pages.Home.Movie
         }
 
         /// <summary>
-        /// Event raised when window state has changed
-        /// </summary>
-        public event EventHandler<WindowStateChangedEventArgs> WindowStateChanged;
-
-        /// <summary>
         /// Tabs shown into the interface
         /// </summary>
         public ObservableCollection<TabsViewModel> Tabs
@@ -163,9 +161,6 @@ namespace Popcorn.ViewModels.Pages.Home.Movie
         /// </summary>
         private void RegisterMessages()
         {
-            Messenger.Default.Register<WindowStateChangeMessage>(this,
-                e => OnWindowStateChanged(new WindowStateChangedEventArgs(e.IsMoviePlaying)));
-
             Messenger.Default.Register<SearchMovieMessage>(this,
                 async message => await SearchMovies(message.Filter));
         }
@@ -273,6 +268,15 @@ namespace Popcorn.ViewModels.Pages.Home.Movie
         public RelayCommand SelectFavoritesTab { get; private set; }
 
         /// <summary>
+        /// Selected index for movies menu
+        /// </summary>
+        public int SelectedMoviesIndexMenuTab
+        {
+            get { return _selectedMoviesIndexMenuTab; }
+            set { Set(() => SelectedMoviesIndexMenuTab, ref _selectedMoviesIndexMenuTab, value); }
+        }
+
+        /// <summary>
         /// Search for movie with a criteria
         /// </summary>
         /// <param name="criteria">The criteria used for search</param>
@@ -290,13 +294,14 @@ namespace Popcorn.ViewModels.Pages.Home.Movie
                     Tabs.Remove(searchTabToRemove);
                     searchTabToRemove.Cleanup();
                     IsMovieSearchActive = false;
+                    SelectedMoviesIndexMenuTab = 0;
                     return;
                 }
             }
             else
             {
                 IsMovieSearchActive = true;
-
+                SelectedMoviesIndexMenuTab = 3;
                 foreach (var searchTab in Tabs.OfType<SearchTabViewModel>())
                 {
                     await searchTab.SearchMoviesAsync(criteria);
@@ -312,16 +317,6 @@ namespace Popcorn.ViewModels.Pages.Home.Movie
                 if (searchMovieTab != null)
                     await searchMovieTab.SearchMoviesAsync(criteria);
             }
-        }
-
-        /// <summary>
-        /// Fire when window state has changed
-        /// </summary>
-        /// <param name="e">Event args</param>
-        private void OnWindowStateChanged(WindowStateChangedEventArgs e)
-        {
-            var handler = WindowStateChanged;
-            handler?.Invoke(this, e);
         }
     }
 }
