@@ -39,7 +39,6 @@
             IsEnabled="{Binding StarButtonsEnabled, RelativeSource={RelativeSource AncestorType=controls:Rating}, Mode=TwoWay}"
             MouseEnter="OnMouseEnterStarOne"
             MouseLeave="OnMouseLeaveStarOne"
-            Tag="1"
             Template="{StaticResource Ratingtemplate}" />
         <ToggleButton
             x:Name="StarTwo"
@@ -48,7 +47,6 @@
             IsEnabled="{Binding StarButtonsEnabled, RelativeSource={RelativeSource AncestorType=controls:Rating}, Mode=TwoWay}"
             MouseEnter="OnMouseEnterStarTwo"
             MouseLeave="OnMouseLeaveStarTwo"
-            Tag="2"
             Template="{StaticResource Ratingtemplate}" />
         <ToggleButton
             x:Name="StarThree"
@@ -57,7 +55,6 @@
             IsEnabled="{Binding StarButtonsEnabled, RelativeSource={RelativeSource AncestorType=controls:Rating}, Mode=TwoWay}"
             MouseEnter="OnMouseEnterStarThree"
             MouseLeave="OnMouseLeaveStarThree"
-            Tag="3"
             Template="{StaticResource Ratingtemplate}" />
         <ToggleButton
             x:Name="StarFour"
@@ -66,7 +63,6 @@
             IsEnabled="{Binding StarButtonsEnabled, RelativeSource={RelativeSource AncestorType=controls:Rating}, Mode=TwoWay}"
             MouseEnter="OnMouseEnterStarFour"
             MouseLeave="OnMouseLeaveStarFour"
-            Tag="4"
             Template="{StaticResource Ratingtemplate}" />
         <ToggleButton
             x:Name="StarFive"
@@ -75,8 +71,6 @@
             IsEnabled="{Binding StarButtonsEnabled, RelativeSource={RelativeSource AncestorType=controls:Rating}, Mode=TwoWay}"
             MouseEnter="OnMouseEnterStarFive"
             MouseLeave="OnMouseLeaveStarFive"
-            Tag="5"
             Template="{StaticResource Ratingtemplate}" />
-
     </Grid>
 </UserControl>

@@ -111,33 +111,148 @@ namespace Popcorn.Controls
             if (button == null)
                 return;
 
-            switch (button.Name)
+            if (button.Name == "StarOne")
             {
-                case null:
-                    return;
-                case "StarOne":
-                    StarOne.IsChecked = !StarOne.IsChecked;
+                if(!StarOne.IsChecked.HasValue || !StarOne.IsChecked.Value)
+                {
+                    if (!StarTwo.IsChecked.Value)
+                    {
+                        RatingValue = 0;
+                        StarTwo.IsChecked = false;
+                        StarThree.IsChecked = false;
+                        StarFour.IsChecked = false;
+                        StarFive.IsChecked = false;
+                    }
+                    else
+                    {
+                        StarTwo.IsChecked = false;
+                        StarThree.IsChecked = false;
+                        StarFour.IsChecked = false;
+                        StarFive.IsChecked = false;
+                        RatingValue = 2;
+                        OnMouseLeaveStarTwo(null, null);
+                        OnMouseLeaveStarThree(null, null);
+                        OnMouseLeaveStarFour(null, null);
+                        OnMouseLeaveStarFive(null, null);
+                    }
+                }
+                else
+                {
                     RatingValue = 2;
-                    break;
-                case "StarTwo":
-                    StarOne.IsChecked = !StarOne.IsChecked;
-                    StarTwo.IsChecked = !StarTwo.IsChecked;
+                    StarTwo.IsChecked = false;
+                    StarThree.IsChecked = false;
+                    StarFour.IsChecked = false;
+                    StarFive.IsChecked = false;
+                }            
+            }
+            else if (button.Name == "StarTwo")
+            {
+                if (!StarTwo.IsChecked.HasValue || !StarTwo.IsChecked.Value)
+                {
+                    if (!StarThree.IsChecked.Value)
+                    {
+                        StarOne.IsChecked = false;
+                        StarThree.IsChecked = false;
+                        StarFour.IsChecked = false;
+                        StarFive.IsChecked = false;
+                        RatingValue = 0;
+                    }
+                    else
+                    {
+                        StarThree.IsChecked = false;
+                        StarFour.IsChecked = false;
+                        StarFive.IsChecked = false;
+                        RatingValue = 4;
+                        OnMouseLeaveStarThree(null, null);
+                        OnMouseLeaveStarFour(null, null);
+                        OnMouseLeaveStarFive(null, null);
+                    }              
+                }
+                else
+                {
+                    StarOne.IsChecked = true;
+                    StarThree.IsChecked = false;
+                    StarFour.IsChecked = false;
+                    StarFive.IsChecked = false;
                     RatingValue = 4;
-                    break;
-                case "StarThree":
-                    button.IsChecked = true;
+                }
+            }
+            else if (button.Name == "StarThree")
+            {
+                if (!StarThree.IsChecked.HasValue || !StarThree.IsChecked.Value)
+                {
+                    if (!StarFour.IsChecked.Value)
+                    {
+                        StarOne.IsChecked = false;
+                        StarTwo.IsChecked = false;
+                        StarFour.IsChecked = false;
+                        StarFive.IsChecked = false;
+                        RatingValue = 0;
+                    }
+                    else
+                    {
+                        StarFour.IsChecked = false;
+                        StarFive.IsChecked = false;
+                        RatingValue = 6;
+                        OnMouseLeaveStarFour(null, null);
+                        OnMouseLeaveStarFive(null, null);
+                    }
+                }
+                else
+                {                    
+                    StarOne.IsChecked = true;
+                    StarTwo.IsChecked = true;
+                    StarFour.IsChecked = false;
+                    StarFive.IsChecked = false;
                     RatingValue = 6;
-                    break;
-                case "StarFour":
-                    button.IsChecked = true;
-                    RatingValue = 8;
-                    break;
-                case "StarFive":
-                    button.IsChecked = true;
+                }
+            }
+            else if (button.Name == "StarFour")
+            {
+                if (!StarFour.IsChecked.HasValue || !StarFour.IsChecked.Value)
+                {
+                    if (!StarFive.IsChecked.Value)
+                    {
+                        StarOne.IsChecked = false;
+                        StarTwo.IsChecked = false;
+                        StarThree.IsChecked = false;
+                        StarFive.IsChecked = false;
+                        RatingValue = 0;
+                    }
+                    else
+                    {
+                        StarFive.IsChecked = false;
+                        RatingValue = 6;
+                        OnMouseLeaveStarFive(null, null);
+                    }
+                }
+                else
+                {     
+                    StarOne.IsChecked = true;
+                    StarTwo.IsChecked = true;
+                    StarThree.IsChecked = true;
+                    StarFive.IsChecked = false;
+                    RatingValue = 8;                    
+                }
+            }
+            else if (button.Name == "StarFive")
+            {
+                if (!StarFive.IsChecked.HasValue || !StarFive.IsChecked.Value)
+                {
+                    StarOne.IsChecked = false;
+                    StarTwo.IsChecked = false;
+                    StarThree.IsChecked = false;
+                    StarFour.IsChecked = false;
+                    RatingValue = 0;
+                }
+                else
+                {      
+                    StarOne.IsChecked = true;
+                    StarTwo.IsChecked = true;
+                    StarThree.IsChecked = true;
+                    StarFour.IsChecked = true;
                     RatingValue = 10;
-                    break;
-                default:
-                    throw new ArgumentOutOfRangeException();
+                }
             }
         }
 
