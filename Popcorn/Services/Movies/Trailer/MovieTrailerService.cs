@@ -5,22 +5,20 @@ using System.Net;
 using System.Net.Sockets;
 using System.Threading;
 using System.Threading.Tasks;
-using GalaSoft.MvvmLight;
 using GalaSoft.MvvmLight.Messaging;
 using NLog;
 using Popcorn.Helpers;
 using Popcorn.Messaging;
 using Popcorn.Models.Movie;
-using Popcorn.Services.Movie;
-using Popcorn.ViewModels.Pages.Player;
+using Popcorn.Services.Movies.Movie;
 using YoutubeExtractor;
 
-namespace Popcorn.ViewModels.Pages.Home.Movie.Trailer
+namespace Popcorn.Services.Movies.Trailer
 {
     /// <summary>
     /// Manage trailer
     /// </summary>
-    public sealed class TrailerViewModel : ViewModelBase
+    public sealed class MovieTrailerService : IMovieTrailerService
     {
         /// <summary>
         /// Logger of the class
@@ -45,26 +43,12 @@ namespace Popcorn.ViewModels.Pages.Home.Movie.Trailer
         private readonly IMovieService _movieService;
 
         /// <summary>
-        /// Manage the trailer player
-        /// </summary>
-        private MediaPlayerViewModel _trailerPlayer;
-
-        /// <summary>
         /// Initializes a new instance of the TrailerViewModel class.
         /// </summary>
         /// <param name="movieService">Movie service</param>
-        public TrailerViewModel(IMovieService movieService)
+        public MovieTrailerService(IMovieService movieService)
         {
             _movieService = movieService;
-        }
-
-        /// <summary>
-        /// Manage the trailer player
-        /// </summary>
-        public MediaPlayerViewModel TrailerPlayer
-        {
-            get { return _trailerPlayer; }
-            set { Set(() => TrailerPlayer, ref _trailerPlayer, value); }
         }
 
         /// <summary>
@@ -148,23 +132,6 @@ namespace Popcorn.ViewModels.Pages.Home.Movie.Trailer
                     $"GetMovieTrailerAsync: {exception.Message}");
                 Messenger.Default.Send(new StopPlayingTrailerMessage());
             }
-        }
-
-        /// <summary>
-        /// Unload the trailer
-        /// </summary>
-        public void UnLoadTrailer()
-        {
-            TrailerPlayer = null;
-        }
-
-        /// <summary>
-        /// Cleanup resources
-        /// </summary>
-        public override void Cleanup()
-        {
-            TrailerPlayer = null;
-            base.Cleanup();
         }
 
         /// <summary>

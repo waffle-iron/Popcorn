@@ -7,9 +7,9 @@ using NLog;
 using Popcorn.Messaging;
 using Popcorn.Models.Movie;
 using Popcorn.Services.Language;
-using Popcorn.Services.Movie;
+using Popcorn.Services.Movies.Movie;
+using Popcorn.Services.Movies.Trailer;
 using Popcorn.ViewModels.Pages.Home.Movie.Download;
-using Popcorn.ViewModels.Pages.Home.Movie.Trailer;
 
 namespace Popcorn.ViewModels.Pages.Home.Movie.Details
 {
@@ -69,22 +69,23 @@ namespace Popcorn.ViewModels.Pages.Home.Movie.Details
         private MovieJson _movie = new MovieJson();
 
         /// <summary>
-        /// Manage the movie's trailer
+        /// The movie trailer service
         /// </summary>
-        private TrailerViewModel _trailer;
+        private readonly IMovieTrailerService _movieTrailerService;
 
         /// <summary>
         /// Initializes a new instance of the MovieDetailsViewModel class.
         /// </summary>
         /// <param name="movieService">Service used to interact with movies</param>
         /// <param name="languageService">Language service</param>
-        public MovieDetailsViewModel(IMovieService movieService, ILanguageService languageService)
+        /// <param name="movieTrailerService">The movie trailer service</param>
+        public MovieDetailsViewModel(IMovieService movieService, ILanguageService languageService, IMovieTrailerService movieTrailerService)
         {
+            _movieTrailerService = movieTrailerService;
             _movieService = movieService;
             _cancellationLoadingToken = new CancellationTokenSource();
             _cancellationLoadingTrailerToken = new CancellationTokenSource();
             DownloadMovie = new DownloadMovieViewModel(movieService, languageService);
-            Trailer = new TrailerViewModel(movieService);
             RegisterMessages();
             RegisterCommands();
         }
@@ -114,15 +115,6 @@ namespace Popcorn.ViewModels.Pages.Home.Movie.Details
         {
             get { return _downloadMovie; }
             set { Set(() => DownloadMovie, ref _downloadMovie, value); }
-        }
-
-        /// <summary>
-        /// Manage the movie's trailer
-        /// </summary>
-        public TrailerViewModel Trailer
-        {
-            get { return _trailer; }
-            set { Set(() => Trailer, ref _trailer, value); }
         }
 
         /// <summary>
@@ -223,7 +215,7 @@ namespace Popcorn.ViewModels.Pages.Home.Movie.Details
             {
                 IsPlayingTrailer = true;
                 IsTrailerLoading = true;
-                await Trailer.LoadTrailerAsync(Movie, _cancellationLoadingTrailerToken.Token);
+                await _movieTrailerService.LoadTrailerAsync(Movie, _cancellationLoadingTrailerToken.Token);
                 IsTrailerLoading = false;
             });
 
@@ -285,7 +277,6 @@ namespace Popcorn.ViewModels.Pages.Home.Movie.Details
                 $"Stop playing movie's trailer: {Movie.Title}.");
 
             IsPlayingTrailer = false;
-            Trailer.UnLoadTrailer();
         }
 
         /// <summary>

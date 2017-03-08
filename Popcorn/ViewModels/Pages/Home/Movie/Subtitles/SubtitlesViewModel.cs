@@ -3,7 +3,7 @@ using System.Threading.Tasks;
 using GalaSoft.MvvmLight;
 using NLog;
 using Popcorn.Models.Movie;
-using Popcorn.Services.Movie;
+using Popcorn.Services.Movies.Movie;
 
 namespace Popcorn.ViewModels.Pages.Home.Movie.Subtitles
 {

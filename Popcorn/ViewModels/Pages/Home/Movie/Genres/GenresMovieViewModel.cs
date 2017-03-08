@@ -9,7 +9,7 @@ using NLog;
 using Popcorn.Helpers;
 using Popcorn.Messaging;
 using Popcorn.Models.Genre;
-using Popcorn.Services.Movie;
+using Popcorn.Services.Movies.Movie;
 using TMDbLib.Objects.General;
 
 namespace Popcorn.ViewModels.Pages.Home.Movie.Genres

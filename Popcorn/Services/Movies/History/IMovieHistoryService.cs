@@ -3,7 +3,7 @@ using System.Threading.Tasks;
 using Popcorn.Models.Genre;
 using Popcorn.Models.Movie;
 
-namespace Popcorn.Services.History
+namespace Popcorn.Services.Movies.History
 {
     public interface IMovieHistoryService
     {

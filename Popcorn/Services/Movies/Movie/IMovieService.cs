@@ -7,7 +7,7 @@ using Popcorn.Models.Localization;
 using Popcorn.Models.Movie;
 using TMDbLib.Objects.General;
 
-namespace Popcorn.Services.Movie
+namespace Popcorn.Services.Movies.Movie
 {
     public interface IMovieService
     {

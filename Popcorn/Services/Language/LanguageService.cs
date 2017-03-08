@@ -11,7 +11,7 @@ using NLog;
 using Popcorn.Entity;
 using Popcorn.Messaging;
 using Popcorn.Models.Localization;
-using Popcorn.Services.Movie;
+using Popcorn.Services.Movies.Movie;
 using Popcorn.Services.Settings;
 using WPFLocalizeExtension.Engine;
 

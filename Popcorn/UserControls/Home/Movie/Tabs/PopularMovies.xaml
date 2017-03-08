@@ -75,9 +75,9 @@
                                 Style="{StaticResource LargeTileStyle}">
                                 <Grid>
                                     <Grid.RowDefinitions>
-                                        <RowDefinition Height="50" />
-                                        <RowDefinition Height="200" />
-                                        <RowDefinition Height="50" />
+                                        <RowDefinition Height="65" />
+                                        <RowDefinition Height="170" />
+                                        <RowDefinition Height="65" />
                                     </Grid.RowDefinitions>
                                     <Grid.ColumnDefinitions>
                                         <ColumnDefinition Width="10" />

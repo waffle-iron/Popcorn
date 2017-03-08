@@ -12,7 +12,7 @@ using Popcorn.Helpers;
 using Popcorn.Messaging;
 using Popcorn.Models.Movie;
 using Popcorn.Services.Language;
-using Popcorn.Services.Movie;
+using Popcorn.Services.Movies.Movie;
 using Popcorn.ViewModels.Pages.Home.Movie.Settings;
 using Popcorn.ViewModels.Pages.Home.Movie.Subtitles;
 using Popcorn.ViewModels.Windows.Settings;

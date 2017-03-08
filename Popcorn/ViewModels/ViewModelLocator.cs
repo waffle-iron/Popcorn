@@ -2,9 +2,10 @@
 using GalaSoft.MvvmLight.Ioc;
 using Microsoft.Practices.ServiceLocation;
 using Popcorn.Models.ApplicationState;
-using Popcorn.Services.History;
 using Popcorn.Services.Language;
-using Popcorn.Services.Movie;
+using Popcorn.Services.Movies.History;
+using Popcorn.Services.Movies.Movie;
+using Popcorn.Services.Movies.Trailer;
 using Popcorn.Services.Settings;
 using Popcorn.ViewModels.Pages.Home;
 using Popcorn.ViewModels.Pages.Home.Anime;
@@ -32,6 +33,7 @@ namespace Popcorn.ViewModels
             SimpleIoc.Default.Register<IMovieService, MovieService>();
             SimpleIoc.Default.Register<ILanguageService, LanguageService>();
             SimpleIoc.Default.Register<IMovieHistoryService, MovieHistoryService>();
+            SimpleIoc.Default.Register<IMovieTrailerService, MovieTrailerService>();
             SimpleIoc.Default.Register<IApplicationService, ApplicationService>();
 
             #endregion

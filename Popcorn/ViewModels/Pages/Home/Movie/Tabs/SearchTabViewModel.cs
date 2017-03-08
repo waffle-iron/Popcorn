@@ -11,8 +11,8 @@ using Popcorn.Helpers;
 using Popcorn.Messaging;
 using Popcorn.Models.ApplicationState;
 using Popcorn.Models.Genre;
-using Popcorn.Services.History;
-using Popcorn.Services.Movie;
+using Popcorn.Services.Movies.History;
+using Popcorn.Services.Movies.Movie;
 
 namespace Popcorn.ViewModels.Pages.Home.Movie.Tabs
 {

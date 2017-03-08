@@ -2,6 +2,11 @@
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Controls.Primitives;
+using System.Windows.Input;
+using System.Windows.Media;
+using System.Windows.Shapes;
+using Popcorn.Helpers;
+using Brush = System.Drawing.Brush;
 
 namespace Popcorn.Controls
 {
@@ -106,33 +111,149 @@ namespace Popcorn.Controls
             if (button == null)
                 return;
 
-            var tag = button.Tag as string;
-            switch (tag)
+            switch (button.Name)
             {
                 case null:
                     return;
-                case "1":
+                case "StarOne":
+                    StarOne.IsChecked = !StarOne.IsChecked;
                     RatingValue = 2;
-                    button.IsChecked = true;
                     break;
-                case "2":
+                case "StarTwo":
+                    StarOne.IsChecked = !StarOne.IsChecked;
+                    StarTwo.IsChecked = !StarTwo.IsChecked;
                     RatingValue = 4;
-                    button.IsChecked = true;
                     break;
-                case "3":
+                case "StarThree":
+                    button.IsChecked = true;
                     RatingValue = 6;
-                    button.IsChecked = true;
                     break;
-                case "4":
+                case "StarFour":
+                    button.IsChecked = true;
                     RatingValue = 8;
-                    button.IsChecked = true;
                     break;
-                case "5":
-                    RatingValue = 10;
+                case "StarFive":
                     button.IsChecked = true;
+                    RatingValue = 10;
                     break;
                 default:
                     throw new ArgumentOutOfRangeException();
+            }
+        }
+
+        private void OnMouseEnterStarOne(object sender, MouseEventArgs e)
+        {
+            if (!StarOne.IsChecked.HasValue || !StarOne.IsChecked.Value)
+            {
+                var star = StarOne.FindChild<Path>("star");
+                star.Fill = Brushes.DarkOrange;
+                star.Opacity = 0.8;
+            }
+        }
+
+        private void OnMouseLeaveStarOne(object sender, MouseEventArgs e)
+        {
+            if (!StarOne.IsChecked.HasValue || !StarOne.IsChecked.Value)
+            {
+                var star = StarOne.FindChild<Path>("star");
+                star.Fill = Brushes.White;
+                star.Opacity = 1.0;
+            }
+        }
+
+        private void OnMouseEnterStarTwo(object sender, MouseEventArgs e)
+        {
+            OnMouseEnterStarOne(null, null);
+
+            if (!StarTwo.IsChecked.HasValue || !StarTwo.IsChecked.Value)
+            {
+                var star = StarTwo.FindChild<Path>("star");
+                star.Fill = Brushes.DarkOrange;
+                star.Opacity = 0.8;
+            }
+        }
+
+        private void OnMouseLeaveStarTwo(object sender, MouseEventArgs e)
+        {
+            OnMouseLeaveStarOne(null, null);
+
+            if (!StarTwo.IsChecked.HasValue || !StarTwo.IsChecked.Value)
+            {
+                var star = StarTwo.FindChild<Path>("star");
+                star.Fill = Brushes.White;
+                star.Opacity = 1.0;
+            }
+        }
+
+        private void OnMouseEnterStarThree(object sender, MouseEventArgs e)
+        {
+            OnMouseEnterStarTwo(null, null);
+
+            if (!StarThree.IsChecked.HasValue || !StarThree.IsChecked.Value)
+            {
+                var star = StarThree.FindChild<Path>("star");
+                star.Fill = Brushes.DarkOrange;
+                star.Opacity = 0.8;
+            }
+        }
+
+        private void OnMouseLeaveStarThree(object sender, MouseEventArgs e)
+        {
+            OnMouseLeaveStarTwo(null, null);
+
+            if (!StarThree.IsChecked.HasValue || !StarThree.IsChecked.Value)
+            {
+                var star = StarThree.FindChild<Path>("star");
+                star.Fill = Brushes.White;
+                star.Opacity = 1.0;
+            }
+        }
+
+        private void OnMouseEnterStarFour(object sender, MouseEventArgs e)
+        {
+            OnMouseEnterStarThree(null, null);
+
+            if (!StarFour.IsChecked.HasValue || !StarFour.IsChecked.Value)
+            {
+                var star = StarFour.FindChild<Path>("star");
+                star.Fill = Brushes.DarkOrange;
+                star.Opacity = 0.8;
+            }
+        }
+
+        private void OnMouseLeaveStarFour(object sender, MouseEventArgs e)
+        {
+            OnMouseLeaveStarThree(null, null);
+
+            if (!StarFour.IsChecked.HasValue || !StarFour.IsChecked.Value)
+            {
+                var star = StarFour.FindChild<Path>("star");
+                star.Fill = Brushes.White;
+                star.Opacity = 1.0;
+            }
+        }
+
+        private void OnMouseEnterStarFive(object sender, MouseEventArgs e)
+        {
+            OnMouseEnterStarFour(null, null);
+
+            if (!StarFive.IsChecked.HasValue || !StarFive.IsChecked.Value)
+            {
+                var star = StarFive.FindChild<Path>("star");
+                star.Fill = Brushes.DarkOrange;
+                star.Opacity = 0.8;
+            }
+        }
+
+        private void OnMouseLeaveStarFive(object sender, MouseEventArgs e)
+        {
+            OnMouseLeaveStarFour(null, null);
+
+            if (!StarFive.IsChecked.HasValue || !StarFive.IsChecked.Value)
+            {
+                var star = StarFive.FindChild<Path>("star");
+                star.Fill = Brushes.White;
+                star.Opacity = 1.0;
             }
         }
     }

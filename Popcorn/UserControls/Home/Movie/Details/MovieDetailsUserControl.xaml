@@ -11,8 +11,6 @@
     xmlns:downloadViewModel="clr-namespace:Popcorn.ViewModels.Pages.Home.Movie.Download"
     xmlns:lex="http://wpflocalizeextension.codeplex.com"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    xmlns:trailer="clr-namespace:Popcorn.UserControls.Home.Movie.Trailer"
-    xmlns:trailerViewModel="clr-namespace:Popcorn.ViewModels.Pages.Home.Movie.Trailer"
     d:DesignHeight="300"
     d:DesignWidth="300"
     lex:LocalizeDictionary.DesignCulture="en"
@@ -29,10 +27,6 @@
 
             <DataTemplate DataType="{x:Type downloadViewModel:DownloadMovieViewModel}">
                 <download:DownloadMovieUserControl />
-            </DataTemplate>
-
-            <DataTemplate DataType="{x:Type trailerViewModel:TrailerViewModel}">
-                <trailer:Trailer />
             </DataTemplate>
 
             <Style x:Key="AnimationContentOnMovieLoading" TargetType="{x:Type Grid}">
@@ -164,11 +158,6 @@
                 Grid.RowSpan="3"
                 Content="{Binding DownloadMovie}"
                 Visibility="{Binding IsDownloadingMovie, Converter={StaticResource BoolToInverseVisibilityConverter}}" />
-            <ContentControl
-                Grid.Row="0"
-                Grid.RowSpan="3"
-                Content="{Binding Trailer}"
-                Visibility="{Binding IsPlayingTrailer, Converter={StaticResource BoolToInverseVisibilityConverter}}" />
             <Grid
                 Grid.Row="0"
                 Grid.RowSpan="3"

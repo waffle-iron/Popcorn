@@ -18,7 +18,7 @@ using TMDbLib.Client;
 using TMDbLib.Objects.General;
 using TMDbLib.Objects.Movies;
 
-namespace Popcorn.Services.Movie
+namespace Popcorn.Services.Movies.Movie
 {
     /// <summary>
     /// Services used to interact with movies

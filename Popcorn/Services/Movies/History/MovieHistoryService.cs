@@ -14,7 +14,7 @@ using Popcorn.Models.Genre;
 using Popcorn.Models.Movie;
 using Popcorn.Models.Torrent;
 
-namespace Popcorn.Services.History
+namespace Popcorn.Services.Movies.History
 {
     /// <summary>
     /// Services used to interact with movie history
