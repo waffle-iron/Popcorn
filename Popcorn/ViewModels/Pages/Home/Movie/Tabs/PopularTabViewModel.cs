@@ -69,16 +69,15 @@ namespace Popcorn.ViewModels.Pages.Home.Movie.Tabs
                         CancellationLoadingMovies.Token,
                         Genre).ConfigureAwait(false);
 
-                DispatcherHelper.CheckBeginInvokeOnUI(() =>
+                DispatcherHelper.CheckBeginInvokeOnUI(async () =>
                 {
                     Movies.AddRange(movies.Item1);
                     IsLoadingMovies = false;
                     IsMovieFound = Movies.Any();
                     CurrentNumberOfMovies = Movies.Count;
                     MaxNumberOfMovies = movies.Item2;
+                    await MovieHistoryService.SetMovieHistoryAsync(movies.Item1).ConfigureAwait(false);
                 });
-
-                await MovieHistoryService.SetMovieHistoryAsync(movies.Item1).ConfigureAwait(false);
             }
             catch (Exception exception)
             {
