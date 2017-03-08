@@ -5,7 +5,8 @@ using System.Windows.Controls.Primitives;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Shapes;
-using Popcorn.Helpers;
+using MahApps.Metro.Controls;
+using Extensions = Popcorn.Helpers.Extensions;
 
 namespace Popcorn.Controls
 {
@@ -259,9 +260,12 @@ namespace Popcorn.Controls
         {
             if (!StarOne.IsChecked.HasValue || !StarOne.IsChecked.Value)
             {
-                var star = StarOne.FindChild<Path>("star");
-                star.Fill = Brushes.DarkOrange;
-                star.Opacity = 0.8;
+                var star = Extensions.FindChild<Rectangle>(StarOne, "star");
+                var brush = star.OpacityMask as VisualBrush;
+                var visual = brush.Visual as Canvas;
+                var path = visual.Children[0] as Path;
+                path.Fill = Brushes.DarkOrange;
+                path.Opacity = 0.8;
             }
         }
 
@@ -269,9 +273,12 @@ namespace Popcorn.Controls
         {
             if (!StarOne.IsChecked.HasValue || !StarOne.IsChecked.Value)
             {
-                var star = StarOne.FindChild<Path>("star");
-                star.Fill = Brushes.White;
-                star.Opacity = 1.0;
+                var star = Extensions.FindChild<Rectangle>(StarOne, "star");
+                var brush = star.OpacityMask as VisualBrush;
+                var visual = brush.Visual as Canvas;
+                var path = visual.Children[0] as Path;
+                path.Fill = Brushes.White;
+                path.Opacity = 1.0;
             }
         }
 
@@ -281,9 +288,12 @@ namespace Popcorn.Controls
 
             if (!StarTwo.IsChecked.HasValue || !StarTwo.IsChecked.Value)
             {
-                var star = StarTwo.FindChild<Path>("star");
-                star.Fill = Brushes.DarkOrange;
-                star.Opacity = 0.8;
+                var star = Extensions.FindChild<Rectangle>(StarTwo, "star");
+                var brush = star.OpacityMask as VisualBrush;
+                var visual = brush.Visual as Canvas;
+                var path = visual.Children[0] as Path;
+                path.Fill = Brushes.DarkOrange;
+                path.Opacity = 0.8;
             }
         }
 
@@ -293,9 +303,12 @@ namespace Popcorn.Controls
 
             if (!StarTwo.IsChecked.HasValue || !StarTwo.IsChecked.Value)
             {
-                var star = StarTwo.FindChild<Path>("star");
-                star.Fill = Brushes.White;
-                star.Opacity = 1.0;
+                var star = Extensions.FindChild<Rectangle>(StarTwo, "star");
+                var brush = star.OpacityMask as VisualBrush;
+                var visual = brush.Visual as Canvas;
+                var path = visual.Children[0] as Path;
+                path.Fill = Brushes.White;
+                path.Opacity = 1.0;
             }
         }
 
@@ -305,9 +318,12 @@ namespace Popcorn.Controls
 
             if (!StarThree.IsChecked.HasValue || !StarThree.IsChecked.Value)
             {
-                var star = StarThree.FindChild<Path>("star");
-                star.Fill = Brushes.DarkOrange;
-                star.Opacity = 0.8;
+                var star = Extensions.FindChild<Rectangle>(StarThree, "star");
+                var brush = star.OpacityMask as VisualBrush;
+                var visual = brush.Visual as Canvas;
+                var path = visual.Children[0] as Path;
+                path.Fill = Brushes.DarkOrange;
+                path.Opacity = 0.8;
             }
         }
 
@@ -317,9 +333,12 @@ namespace Popcorn.Controls
 
             if (!StarThree.IsChecked.HasValue || !StarThree.IsChecked.Value)
             {
-                var star = StarThree.FindChild<Path>("star");
-                star.Fill = Brushes.White;
-                star.Opacity = 1.0;
+                var star = Extensions.FindChild<Rectangle>(StarThree, "star");
+                var brush = star.OpacityMask as VisualBrush;
+                var visual = brush.Visual as Canvas;
+                var path = visual.Children[0] as Path;
+                path.Fill = Brushes.White;
+                path.Opacity = 1.0;
             }
         }
 
@@ -329,9 +348,12 @@ namespace Popcorn.Controls
 
             if (!StarFour.IsChecked.HasValue || !StarFour.IsChecked.Value)
             {
-                var star = StarFour.FindChild<Path>("star");
-                star.Fill = Brushes.DarkOrange;
-                star.Opacity = 0.8;
+                var star = Extensions.FindChild<Rectangle>(StarFour, "star");
+                var brush = star.OpacityMask as VisualBrush;
+                var visual = brush.Visual as Canvas;
+                var path = visual.Children[0] as Path;
+                path.Fill = Brushes.DarkOrange;
+                path.Opacity = 0.8;
             }
         }
 
@@ -341,9 +363,12 @@ namespace Popcorn.Controls
 
             if (!StarFour.IsChecked.HasValue || !StarFour.IsChecked.Value)
             {
-                var star = StarFour.FindChild<Path>("star");
-                star.Fill = Brushes.White;
-                star.Opacity = 1.0;
+                var star = Extensions.FindChild<Rectangle>(StarFour, "star");
+                var brush = star.OpacityMask as VisualBrush;
+                var visual = brush.Visual as Canvas;
+                var path = visual.Children[0] as Path;
+                path.Fill = Brushes.White;
+                path.Opacity = 1.0;
             }
         }
 
@@ -353,9 +378,12 @@ namespace Popcorn.Controls
 
             if (!StarFive.IsChecked.HasValue || !StarFive.IsChecked.Value)
             {
-                var star = StarFive.FindChild<Path>("star");
-                star.Fill = Brushes.DarkOrange;
-                star.Opacity = 0.8;
+                var star = Extensions.FindChild<Rectangle>(StarFive, "star");
+                var brush = star.OpacityMask as VisualBrush;
+                var visual = brush.Visual as Canvas;
+                var path = visual.Children[0] as Path;
+                path.Fill = Brushes.DarkOrange;
+                path.Opacity = 0.8;
             }
         }
 
@@ -365,9 +393,12 @@ namespace Popcorn.Controls
 
             if (!StarFive.IsChecked.HasValue || !StarFive.IsChecked.Value)
             {
-                var star = StarFive.FindChild<Path>("star");
-                star.Fill = Brushes.White;
-                star.Opacity = 1.0;
+                var star = Extensions.FindChild<Rectangle>(StarFive, "star");
+                var brush = star.OpacityMask as VisualBrush;
+                var visual = brush.Visual as Canvas;
+                var path = visual.Children[0] as Path;
+                path.Fill = Brushes.White;
+                path.Opacity = 1.0;
             }
         }
     }

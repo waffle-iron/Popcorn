@@ -12,5 +12,6 @@
         <ResourceDictionary Source="../Resources/Shadows.xaml" />
         <ResourceDictionary Source="../Resources/AnimatedScrollViewer.xaml" />
         <ResourceDictionary Source="../Resources/Ripple.xaml" />
+        <ResourceDictionary Source="../Resources/SplitView.xaml" />
     </ResourceDictionary.MergedDictionaries>
 </ResourceDictionary>

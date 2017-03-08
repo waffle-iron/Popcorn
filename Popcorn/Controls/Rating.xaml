@@ -11,12 +11,32 @@
     <Grid>
         <Grid.Resources>
             <ControlTemplate x:Key="Ratingtemplate" TargetType="{x:Type ToggleButton}">
-                <Viewbox>
-                    <Path
-                        Name="star"
-                        Data="F1 M 145.637,174.227L 127.619,110.39L 180.809,70.7577L 114.528,68.1664L 93.2725,5.33333L 70.3262,67.569L 4,68.3681L 56.0988,109.423L 36.3629,172.75L 91.508,135.888L 145.637,174.227 Z"
-                        Fill="White" />
-                </Viewbox>
+                <Rectangle
+                    x:Name="star"
+                    Width="20"
+                    Height="20"
+                    Fill="White">
+                    <Rectangle.OpacityMask>
+                        <VisualBrush Stretch="Fill">
+                            <VisualBrush.Visual>
+                                <Canvas
+                                    x:Name="appbar_heart"
+                                    Width="76"
+                                    Height="76"
+                                    Clip="F1 M 0,0L 76,0L 76,76L 0,76L 0,0">
+                                    <Path
+                                        Canvas.Left="21.2717"
+                                        Canvas.Top="25.733"
+                                        Width="33.4542"
+                                        Height="28.4779"
+                                        Data="M12,15.39L8.24,17.66L9.23,13.38L5.91,10.5L10.29,10.13L12,6.09L13.71,10.13L18.09,10.5L14.77,13.38L15.76,17.66M22,9.24L14.81,8.63L12,2L9.19,8.63L2,9.24L7.45,13.97L5.82,21L12,17.27L18.18,21L16.54,13.97L22,9.24Z"
+                                        Fill="White"
+                                        Stretch="Fill" />
+                                </Canvas>
+                            </VisualBrush.Visual>
+                        </VisualBrush>
+                    </Rectangle.OpacityMask>
+                </Rectangle>
                 <ControlTemplate.Triggers>
                     <Trigger Property="IsChecked" Value="True">
                         <Setter TargetName="star" Property="Fill" Value="Orange" />
