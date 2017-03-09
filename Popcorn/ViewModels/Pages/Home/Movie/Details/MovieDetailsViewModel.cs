@@ -234,17 +234,18 @@ namespace Popcorn.ViewModels.Pages.Home.Movie.Details
                         DispatcherHelper.CheckBeginInvokeOnUI(() =>
                         {
                             movie.AvailableSubtitles =
-                                new ObservableCollection<Subtitle>(subtitles.Select(sub => new Subtitle
-                                {
-                                    Sub = sub
-                                }).GroupBy(x => x.Sub.LanguageName,
-                                    (k, g) =>
-                                        g.Aggregate(
-                                            (a, x) =>
-                                                (Convert.ToDouble(x.Sub.Rating, CultureInfo.InvariantCulture) >=
-                                                 Convert.ToDouble(a.Sub.Rating, CultureInfo.InvariantCulture))
-                                                    ? x
-                                                    : a)));
+                                new ObservableCollection<Subtitle>(subtitles.OrderBy(a => a.LanguageName)
+                                    .Select(sub => new Subtitle
+                                    {
+                                        Sub = sub
+                                    }).GroupBy(x => x.Sub.LanguageName,
+                                        (k, g) =>
+                                            g.Aggregate(
+                                                (a, x) =>
+                                                    (Convert.ToDouble(x.Sub.Rating, CultureInfo.InvariantCulture) >=
+                                                     Convert.ToDouble(a.Sub.Rating, CultureInfo.InvariantCulture))
+                                                        ? x
+                                                        : a)));
                             movie.AvailableSubtitles.Insert(0, new Subtitle
                             {
                                 Sub = new OSDBnet.Subtitle
