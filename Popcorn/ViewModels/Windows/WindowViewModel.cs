@@ -168,7 +168,7 @@ namespace Popcorn.ViewModels.Windows
 
             Messenger.Default.Register<PlayMovieMessage>(this, message => DispatcherHelper.CheckBeginInvokeOnUI(() =>
             {
-                MediaPlayer = new MediaPlayerViewModel(message.Movie.FilePath.AbsolutePath, message.Movie.Title,
+                MediaPlayer = new MediaPlayerViewModel(message.Movie.FilePath, message.Movie.Title,
                     () =>
                     {
                         Messenger.Default.Send(new StopPlayingMovieMessage());

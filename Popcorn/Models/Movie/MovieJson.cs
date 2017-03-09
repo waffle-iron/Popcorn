@@ -23,7 +23,7 @@ namespace Popcorn.Models.Movie
         private string _descriptionFull;
         private string _descriptionIntro;
         private int _downloadCount;
-        private Uri _filePath;
+        private string _filePath;
         private bool _fullHdAvailable;
         private List<string> _genres;
         private bool _hasBeenSeen;
@@ -281,7 +281,7 @@ namespace Popcorn.Models.Movie
         /// <summary>
         /// Local path of the downloaded movie file
         /// </summary>
-        public Uri FilePath
+        public string FilePath
         {
             get { return _filePath; }
             set { Set(() => FilePath, ref _filePath, value); }

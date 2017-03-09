@@ -290,7 +290,7 @@ namespace Popcorn.ViewModels.Pages.Home.Movie.Download
                             )
                             {
                                 alreadyBuffered = true;
-                                movie.FilePath = new Uri(filePath);
+                                movie.FilePath = filePath;
                                 Messenger.Default.Send(new PlayMovieMessage(movie));
                             }
                         }
