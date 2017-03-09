@@ -1,3 +1,4 @@
+[![Stories in Ready](https://badge.waffle.io/bbougot/Popcorn.png?label=ready&title=Ready)](https://waffle.io/bbougot/Popcorn)
 # Popcorn
 
 <a href="https://popcorn-slack.azurewebsites.net" target="_blank">
