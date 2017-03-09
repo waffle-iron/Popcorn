@@ -254,23 +254,12 @@ namespace Popcorn.ViewModels.Pages.Home.Movie.Tabs
         {
             Messenger.Default.Register<ChangeLanguageMessage>(
                 this,
-                async message =>
+                message =>
                 {
-                    foreach (var movie in Movies.ToList())
+                    Parallel.ForEach(Movies, async movie =>
                     {
-                        try
-                        {
-                            await Task.Delay(1000, CancellationLoadingMovies.Token);
-                        }
-                        catch (TaskCanceledException)
-                        {
-                            Logger.Info(
-                                $"Stopped translating movie : {movie.Title}");
-                            return;
-                        }
-
-                        await MovieService.TranslateMovieAsync(movie, CancellationLoadingMovies.Token);
-                    }
+                        await MovieService.TranslateMovieAsync(movie);
+                    });
                 });
 
             Messenger.Default.Register<ChangeFavoriteMovieMessage>(

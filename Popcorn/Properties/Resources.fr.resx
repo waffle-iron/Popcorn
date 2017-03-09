@@ -285,4 +285,7 @@
   <data name="ShowsLabel" xml:space="preserve">
     <value>Séries TV</value>
   </data>
+  <data name="NoneLabel" xml:space="preserve">
+    <value>Aucun</value>
+  </data>
 </root>

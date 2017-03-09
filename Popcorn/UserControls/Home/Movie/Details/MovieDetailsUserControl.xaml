@@ -5,10 +5,10 @@
     xmlns:attachedProperties="clr-namespace:Popcorn.AttachedProperties"
     xmlns:controls="clr-namespace:MahApps.Metro.Controls;assembly=MahApps.Metro"
     xmlns:converters="clr-namespace:Popcorn.Converters"
-    xmlns:customControls="clr-namespace:Popcorn.Controls"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:download="clr-namespace:Popcorn.UserControls.Home.Movie.Download"
     xmlns:downloadViewModel="clr-namespace:Popcorn.ViewModels.Pages.Home.Movie.Download"
+    xmlns:iconPacks="http://metro.mahapps.com/winfx/xaml/iconpacks"
     xmlns:lex="http://wpflocalizeextension.codeplex.com"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:movie="clr-namespace:Popcorn.Controls.Movie"
@@ -314,8 +314,16 @@
                                     Text="{Binding Movie.DescriptionFull}"
                                     TextAlignment="Justify"
                                     TextWrapping="Wrap" />
-                                <StackPanel Margin="0,20,0,0">
-                                    <ScrollViewer HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Hidden">
+                                <Grid Margin="0,20,0,0" HorizontalAlignment="Stretch">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="Auto" />
+                                        <ColumnDefinition Width="*" />
+                                        <ColumnDefinition Width="Auto" />
+                                    </Grid.ColumnDefinitions>
+                                    <ScrollViewer
+                                        Grid.Column="0"
+                                        HorizontalScrollBarVisibility="Auto"
+                                        VerticalScrollBarVisibility="Hidden">
                                         <StackPanel Orientation="Horizontal">
                                             <StackPanel>
                                                 <TextBlock
@@ -364,7 +372,33 @@
                                             </StackPanel>
                                         </StackPanel>
                                     </ScrollViewer>
-                                </StackPanel>
+                                    <StackPanel Grid.Column="2" Orientation="Horizontal">
+                                        <controls:ToggleSwitch
+                                            HorizontalAlignment="Right"
+                                            VerticalAlignment="Top"
+                                            Header="{lex:LocText MovieQualityLabel}"
+                                            IsChecked="{Binding Movie.WatchInFullHdQuality}"
+                                            IsEnabled="{Binding Movie.FullHdAvailable}"
+                                            OffLabel="720"
+                                            OnLabel="1080"
+                                            Style="{StaticResource MahApps.Metro.Styles.ToggleSwitch.Win10}" />
+                                        <controls:SplitButton
+                                            Width="130"
+                                            Height="35"
+                                            Margin="20,10,0,0"
+                                            HorizontalAlignment="Right"
+                                            VerticalAlignment="Top"
+                                            HorizontalContentAlignment="Left"
+                                            DisplayMemberPath="Sub.LanguageName"
+                                            ItemsSource="{Binding Movie.AvailableSubtitles}"
+                                            SelectedIndex="0"
+                                            SelectedItem="{Binding Movie.SelectedSubtitle}">
+                                            <controls:SplitButton.Icon>
+                                                <iconPacks:PackIconMaterial Margin="6" Kind="Translate" />
+                                            </controls:SplitButton.Icon>
+                                        </controls:SplitButton>
+                                    </StackPanel>
+                                </Grid>
                             </StackPanel>
                         </ScrollViewer>
                     </Grid>

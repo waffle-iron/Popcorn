@@ -14,8 +14,6 @@ using Popcorn.Messaging;
 using Popcorn.Models.Movie;
 using Popcorn.Services.Language;
 using Popcorn.Services.Subtitles;
-using Popcorn.ViewModels.Pages.Home.Movie.Settings;
-using Popcorn.ViewModels.Pages.Home.Movie.Subtitles;
 using Popcorn.ViewModels.Windows.Settings;
 
 namespace Popcorn.ViewModels.Pages.Home.Movie.Download
@@ -51,11 +49,6 @@ namespace Popcorn.ViewModels.Pages.Home.Movie.Download
         private bool _isDownloadingMovie;
 
         /// <summary>
-        /// Specify if subtitles are downloading
-        /// </summary>
-        private bool _isDownloadingSubtitles;
-
-        /// <summary>
         /// Specify if a movie is buffered
         /// </summary>
         private bool _isMovieBuffered;
@@ -76,11 +69,6 @@ namespace Popcorn.ViewModels.Pages.Home.Movie.Download
         private double _movieDownloadRate;
 
         /// <summary>
-        /// Manage the movie's settings
-        /// </summary>
-        private MovieSettingsViewModel _movieSettings;
-
-        /// <summary>
         /// Initializes a new instance of the DownloadMovieViewModel class.
         /// </summary>
         /// <param name="subtitlesService">Instance of SubtitlesService</param>
@@ -90,18 +78,8 @@ namespace Popcorn.ViewModels.Pages.Home.Movie.Download
             _subtitlesService = subtitlesService;
             _applicationSettingsViewModel = new ApplicationSettingsViewModel(languageService);
             _cancellationDownloadingMovie = new CancellationTokenSource();
-            MovieSettings = new MovieSettingsViewModel(new SubtitlesViewModel(_subtitlesService));
             RegisterMessages();
             RegisterCommands();
-        }
-
-        /// <summary>
-        /// Manage the movie's settings
-        /// </summary>
-        public MovieSettingsViewModel MovieSettings
-        {
-            get { return _movieSettings; }
-            set { Set(() => MovieSettings, ref _movieSettings, value); }
         }
 
         /// <summary>
@@ -111,15 +89,6 @@ namespace Popcorn.ViewModels.Pages.Home.Movie.Download
         {
             get { return _isDownloadingMovie; }
             set { Set(() => IsDownloadingMovie, ref _isDownloadingMovie, value); }
-        }
-
-        /// <summary>
-        /// Specify if subtitles are downloading
-        /// </summary>
-        public bool IsDownloadingSubtitles
-        {
-            get { return _isDownloadingSubtitles; }
-            set { Set(() => IsDownloadingSubtitles, ref _isDownloadingSubtitles, value); }
         }
 
         /// <summary>
@@ -155,18 +124,6 @@ namespace Popcorn.ViewModels.Pages.Home.Movie.Download
         public RelayCommand StopDownloadingMovieCommand { get; private set; }
 
         /// <summary>
-        /// Load a movie
-        /// </summary>
-        /// <param name="movie">The movie to load</param>
-        public void LoadMovie(MovieJson movie)
-        {
-            MovieDownloadProgress = 0d;
-            MovieDownloadRate = 0d;
-            Movie = movie;
-            MovieSettings.LoadMovie(Movie);
-        }
-
-        /// <summary>
         /// Stop downloading a movie
         /// </summary>
         public void StopDownloadingMovie()
@@ -186,7 +143,6 @@ namespace Popcorn.ViewModels.Pages.Home.Movie.Download
         public override void Cleanup()
         {
             StopDownloadingMovie();
-            MovieSettings?.Cleanup();
             base.Cleanup();
         }
 
@@ -200,37 +156,33 @@ namespace Popcorn.ViewModels.Pages.Home.Movie.Download
                 var reportDownloadProgress = new Progress<double>(ReportMovieDownloadProgress);
                 var reportDownloadRate = new Progress<double>(ReportMovieDownloadRate);
 
-                IsDownloadingSubtitles = true;
                 Task.Run(() =>
                 {
                     try
                     {
-                        var path = Path.Combine(Constants.Subtitles + message.Movie.ImdbCode);
-                        Directory.CreateDirectory(path);
-                        var subtitlePath =
-                            _subtitlesService.DownloadSubtitleToPath(path,
-                                message.Movie.SelectedSubtitle.Sub);
+                        if (message.Movie.SelectedSubtitle != null &&
+                            message.Movie.SelectedSubtitle.Sub.LanguageName !=
+                            LocalizationProviderHelper.GetLocalizedValue<string>("NoneLabel"))
+                        {
+                            var path = Path.Combine(Constants.Subtitles + message.Movie.ImdbCode);
+                            Directory.CreateDirectory(path);
+                            var subtitlePath =
+                                _subtitlesService.DownloadSubtitleToPath(path,
+                                    message.Movie.SelectedSubtitle.Sub);
 
-                        DispatcherHelper.CheckBeginInvokeOnUI(() =>
-                        {
-                            message.Movie.SelectedSubtitle.FilePath = subtitlePath;
-                            IsDownloadingSubtitles = false;
-                        });
-                    }
-                    catch (Exception)
-                    {
-                        DispatcherHelper.CheckBeginInvokeOnUI(() =>
-                        {
-                            IsDownloadingSubtitles = false;
-                        });
+                            DispatcherHelper.CheckBeginInvokeOnUI(() =>
+                            {
+                                message.Movie.SelectedSubtitle.FilePath = subtitlePath;
+                            });
+                        }
                     }
                     finally
                     {
                         DispatcherHelper.CheckBeginInvokeOnUI(async () =>
                         {
                             await
-                            DownloadMovieAsync(message.Movie,
-                                reportDownloadProgress, reportDownloadRate, _cancellationDownloadingMovie);
+                                DownloadMovieAsync(message.Movie,
+                                    reportDownloadProgress, reportDownloadRate, _cancellationDownloadingMovie);
                         });
                     }
                 });
@@ -239,7 +191,10 @@ namespace Popcorn.ViewModels.Pages.Home.Movie.Download
         /// <summary>
         /// Register commands
         /// </summary>
-        private void RegisterCommands() => StopDownloadingMovieCommand = new RelayCommand(StopDownloadingMovie);
+        private void RegisterCommands() => StopDownloadingMovieCommand = new RelayCommand(() =>
+        {
+            Messenger.Default.Send(new StopPlayingMovieMessage());
+        });
 
         /// <summary>
         /// Report the download progress
@@ -274,6 +229,9 @@ namespace Popcorn.ViewModels.Pages.Home.Movie.Download
         {
             await Task.Run(async () =>
             {
+                MovieDownloadProgress = 0d;
+                MovieDownloadRate = 0d;
+
                 using (var session = new session())
                 {
                     Logger.Info(

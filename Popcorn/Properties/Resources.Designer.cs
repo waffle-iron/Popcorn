@@ -349,6 +349,15 @@ namespace Popcorn.Properties {
         }
         
         /// <summary>
+        ///   Recherche une chaîne localisée semblable à None.
+        /// </summary>
+        public static string NoneLabel {
+            get {
+                return ResourceManager.GetString("NoneLabel", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Recherche une chaîne localisée semblable à Now.
         /// </summary>
         public static string NowLabel {

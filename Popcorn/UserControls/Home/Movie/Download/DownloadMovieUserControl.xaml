@@ -3,15 +3,11 @@
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:controls="clr-namespace:MahApps.Metro.Controls;assembly=MahApps.Metro"
-    xmlns:converters="clr-namespace:Popcorn.Converters"
-    xmlns:customControls="clr-namespace:Popcorn.Controls"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:download="clr-namespace:Popcorn.ViewModels.Pages.Home.Movie.Download"
     xmlns:lex="http://wpflocalizeextension.codeplex.com"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:movie="clr-namespace:Popcorn.Controls.Movie"
-    xmlns:movieSettingsViewModel="clr-namespace:Popcorn.ViewModels.Pages.Home.Movie.Settings"
-    xmlns:settings="clr-namespace:Popcorn.UserControls.Home.Movie.Settings"
     d:DataContext="{d:DesignInstance download:DownloadMovieViewModel}"
     d:DesignHeight="600"
     d:DesignWidth="900"
@@ -21,13 +17,6 @@
     mc:Ignorable="d">
     <UserControl.Resources>
         <ResourceDictionary>
-            <converters:MultiBooleanToBoolConverter x:Key="MultiBooleanToBoolConverter" />
-            <converters:BoolToVisibilityConverter x:Key="BoolToVisibilityConverter" />
-
-            <DataTemplate DataType="{x:Type movieSettingsViewModel:MovieSettingsViewModel}">
-                <settings:MovieSettingsUserControl />
-            </DataTemplate>
-
             <Style x:Key="AnimationContentOnMovieDownloading" TargetType="{x:Type Grid}">
                 <Style.Triggers>
                     <DataTrigger Binding="{Binding Path=IsDownloadingMovie}" Value="False">
@@ -60,132 +49,9 @@
                     </DataTrigger>
                 </Style.Triggers>
             </Style>
-
-            <Style x:Key="AnimationSettingsOnMovieDownloading" TargetType="{x:Type ContentControl}">
-                <Style.Triggers>
-                    <DataTrigger Value="True">
-                        <DataTrigger.Binding>
-                            <MultiBinding Converter="{StaticResource MultiBooleanToBoolConverter}">
-                                <Binding Path="IsDownloadingMovie" />
-                                <Binding Path="IsDownloadingSubtitles" />
-                            </MultiBinding>
-                        </DataTrigger.Binding>
-                        <DataTrigger.EnterActions>
-                            <BeginStoryboard>
-                                <Storyboard>
-                                    <DoubleAnimation
-                                        Storyboard.TargetProperty="Opacity"
-                                        To="0.0"
-                                        Duration="0:0:0.5" />
-                                    <ObjectAnimationUsingKeyFrames BeginTime="0:0:0.5" Storyboard.TargetProperty="Visibility">
-                                        <DiscreteObjectKeyFrame KeyTime="0:0:0" Value="{x:Static Visibility.Collapsed}" />
-                                    </ObjectAnimationUsingKeyFrames>
-                                </Storyboard>
-                            </BeginStoryboard>
-                        </DataTrigger.EnterActions>
-                        <DataTrigger.ExitActions>
-                            <BeginStoryboard>
-                                <Storyboard>
-                                    <DoubleAnimation
-                                        Storyboard.TargetProperty="Opacity"
-                                        To="1.0"
-                                        Duration="0:0:0.5" />
-                                    <ObjectAnimationUsingKeyFrames BeginTime="0:0:0.5" Storyboard.TargetProperty="Visibility">
-                                        <DiscreteObjectKeyFrame KeyTime="0:0:0" Value="{x:Static Visibility.Visible}" />
-                                    </ObjectAnimationUsingKeyFrames>
-                                </Storyboard>
-                            </BeginStoryboard>
-                        </DataTrigger.ExitActions>
-                    </DataTrigger>
-                </Style.Triggers>
-            </Style>
-
-            <Style x:Key="AnimationContentOnSubtitlesDownloading" TargetType="{x:Type Grid}">
-                <Style.Triggers>
-                    <DataTrigger Binding="{Binding Path=IsDownloadingSubtitles}" Value="True">
-                        <DataTrigger.EnterActions>
-                            <BeginStoryboard>
-                                <Storyboard>
-                                    <DoubleAnimation
-                                        Storyboard.TargetProperty="Opacity"
-                                        To="1.0"
-                                        Duration="0:0:0.5" />
-                                    <ObjectAnimationUsingKeyFrames BeginTime="0:0:0.5" Storyboard.TargetProperty="Visibility">
-                                        <DiscreteObjectKeyFrame KeyTime="0:0:0" Value="{x:Static Visibility.Visible}" />
-                                    </ObjectAnimationUsingKeyFrames>
-                                </Storyboard>
-                            </BeginStoryboard>
-                        </DataTrigger.EnterActions>
-                        <DataTrigger.ExitActions>
-                            <BeginStoryboard>
-                                <Storyboard>
-                                    <DoubleAnimation
-                                        Storyboard.TargetProperty="Opacity"
-                                        To="0.0"
-                                        Duration="0:0:0.5" />
-                                    <ObjectAnimationUsingKeyFrames BeginTime="0:0:0.5" Storyboard.TargetProperty="Visibility">
-                                        <DiscreteObjectKeyFrame KeyTime="0:0:0" Value="{x:Static Visibility.Collapsed}" />
-                                    </ObjectAnimationUsingKeyFrames>
-                                </Storyboard>
-                            </BeginStoryboard>
-                        </DataTrigger.ExitActions>
-                    </DataTrigger>
-                </Style.Triggers>
-            </Style>
         </ResourceDictionary>
     </UserControl.Resources>
     <Grid>
-        <ContentControl
-            Content="{Binding MovieSettings}"
-            Style="{StaticResource AnimationSettingsOnMovieDownloading}"
-            Visibility="{Binding IsDownloadingMovie, Converter={StaticResource BoolToVisibilityConverter}}" />
-        <Grid Opacity="0.0" Style="{StaticResource AnimationContentOnSubtitlesDownloading}">
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="37*" />
-                <ColumnDefinition Width="36*" />
-                <ColumnDefinition Width="20*" />
-                <ColumnDefinition Width="36*" />
-                <ColumnDefinition Width="37*" />
-            </Grid.ColumnDefinitions>
-            <Grid.RowDefinitions>
-                <RowDefinition Height="128*" />
-                <RowDefinition Height="114*" />
-                <RowDefinition Height="92*" />
-                <RowDefinition Height="Auto" />
-                <RowDefinition Height="Auto" />
-                <RowDefinition Height="Auto" />
-                <RowDefinition Height="29*" />
-                <RowDefinition Height="Auto" />
-                <RowDefinition Height="114*" />
-                <RowDefinition Height="128*" />
-            </Grid.RowDefinitions>
-            <TextBlock
-                Grid.Row="2"
-                Grid.Column="1"
-                Grid.ColumnSpan="3"
-                HorizontalAlignment="Center"
-                VerticalAlignment="Center"
-                FontSize="18"
-                Text="{lex:LocText DownloadingSubtitlesLabel}" />
-            <controls:ProgressRing
-                Grid.Row="3"
-                Grid.Column="1"
-                Grid.ColumnSpan="3"
-                Height="7"
-                Margin="0"
-                VerticalAlignment="Center"
-                Foreground="{DynamicResource AccentColorBrush}" />
-            <Button
-                Grid.Row="7"
-                Grid.Column="2"
-                Width="100"
-                Height="30"
-                Margin="0"
-                HorizontalAlignment="Center"
-                VerticalAlignment="Center"
-                Command="{Binding StopDownloadingMovieCommand}"
-                Content="{lex:LocText CancelButton}" />
-        </Grid>
         <Grid Opacity="0.0" Style="{StaticResource AnimationContentOnMovieDownloading}">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="37*" />

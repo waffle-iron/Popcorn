@@ -1,11 +1,19 @@
-﻿using System.Diagnostics;
+﻿using System;
+using System.Collections.ObjectModel;
+using System.Diagnostics;
+using System.Globalization;
+using System.Linq;
 using System.Threading;
+using System.Threading.Tasks;
 using GalaSoft.MvvmLight;
 using GalaSoft.MvvmLight.CommandWpf;
 using GalaSoft.MvvmLight.Messaging;
+using GalaSoft.MvvmLight.Threading;
 using NLog;
+using Popcorn.Helpers;
 using Popcorn.Messaging;
 using Popcorn.Models.Movie;
+using Popcorn.Models.Subtitles;
 using Popcorn.Services.Language;
 using Popcorn.Services.Movies.Movie;
 using Popcorn.Services.Movies.Trailer;
@@ -75,6 +83,16 @@ namespace Popcorn.ViewModels.Pages.Home.Movie.Details
         private readonly IMovieTrailerService _movieTrailerService;
 
         /// <summary>
+        /// The service used to interact with subtitles
+        /// </summary>
+        private readonly ISubtitlesService _subtitlesService;
+
+        /// <summary>
+        /// True if subtitles are loading
+        /// </summary>
+        private bool _loadingSubtitles;
+
+        /// <summary>
         /// Initializes a new instance of the MovieDetailsViewModel class.
         /// </summary>
         /// <param name="movieService">Service used to interact with movies</param>
@@ -85,6 +103,7 @@ namespace Popcorn.ViewModels.Pages.Home.Movie.Details
         {
             _movieTrailerService = movieTrailerService;
             _movieService = movieService;
+            _subtitlesService = subtitlesService;
             _cancellationLoadingToken = new CancellationTokenSource();
             _cancellationLoadingTrailerToken = new CancellationTokenSource();
             DownloadMovie = new DownloadMovieViewModel(subtitlesService, languageService);
@@ -99,6 +118,15 @@ namespace Popcorn.ViewModels.Pages.Home.Movie.Details
         {
             get { return _movie; }
             set { Set(() => Movie, ref _movie, value); }
+        }
+
+        /// <summary>
+        /// True if subtitles are loading
+        /// </summary>
+        public bool LoadingSubtitles
+        {
+            get { return _loadingSubtitles; }
+            set { Set(() => LoadingSubtitles, ref _loadingSubtitles, value); }
         }
 
         /// <summary>
@@ -179,6 +207,68 @@ namespace Popcorn.ViewModels.Pages.Home.Movie.Details
         }
 
         /// <summary>
+        /// Load the movie's subtitles asynchronously
+        /// </summary>
+        /// <param name="movie">The movie</param>
+        private void LoadSubtitles(MovieJson movie)
+        {
+            Logger.Debug(
+                $"Load subtitles for movie: {movie.Title}");
+            Movie = movie;
+            LoadingSubtitles = true;
+            Task.Run(() =>
+            {
+                try
+                {
+                    var languages = _subtitlesService.GetSubLanguages().ToList();
+
+                    var imdbId = 0;
+                    if (int.TryParse(new string(movie.ImdbCode
+                        .SkipWhile(x => !char.IsDigit(x))
+                        .TakeWhile(char.IsDigit)
+                        .ToArray()), out imdbId))
+                    {
+                        var subtitles = _subtitlesService.SearchSubtitlesFromImdb(
+                            languages.Select(lang => lang.SubLanguageID).Aggregate((a, b) => a + "," + b),
+                            imdbId.ToString());
+                        DispatcherHelper.CheckBeginInvokeOnUI(() =>
+                        {
+                            movie.AvailableSubtitles =
+                                new ObservableCollection<Subtitle>(subtitles.Select(sub => new Subtitle
+                                {
+                                    Sub = sub
+                                }).GroupBy(x => x.Sub.LanguageName,
+                                    (k, g) =>
+                                        g.Aggregate(
+                                            (a, x) =>
+                                                (Convert.ToDouble(x.Sub.Rating, CultureInfo.InvariantCulture) >=
+                                                 Convert.ToDouble(a.Sub.Rating, CultureInfo.InvariantCulture))
+                                                    ? x
+                                                    : a)));
+                            movie.AvailableSubtitles.Insert(0, new Subtitle
+                            {
+                                Sub = new OSDBnet.Subtitle
+                                {
+                                    LanguageName = LocalizationProviderHelper.GetLocalizedValue<string>("NoneLabel")
+                                }
+                            });
+
+                            movie.SelectedSubtitle = movie.AvailableSubtitles.FirstOrDefault();
+                            LoadingSubtitles = false;
+                        });
+                    }
+                }
+                catch (Exception)
+                {
+                    DispatcherHelper.CheckBeginInvokeOnUI(() =>
+                    {
+                        LoadingSubtitles = false;
+                    });
+                }
+            });
+        }
+
+        /// <summary>
         /// Register messages
         /// </summary>
         private void RegisterMessages()
@@ -196,7 +286,7 @@ namespace Popcorn.ViewModels.Pages.Home.Movie.Details
                 async message =>
                 {
                     if (!string.IsNullOrEmpty(Movie?.ImdbCode))
-                        await _movieService.TranslateMovieAsync(Movie, _cancellationLoadingToken.Token);
+                        await _movieService.TranslateMovieAsync(Movie);
                 });
         }
 
@@ -210,7 +300,7 @@ namespace Popcorn.ViewModels.Pages.Home.Movie.Details
             PlayMovieCommand = new RelayCommand(() =>
             {
                 IsDownloadingMovie = true;
-                DownloadMovie.LoadMovie(Movie);
+                Messenger.Default.Send(new DownloadMovieMessage(Movie));
             });
 
             PlayTrailerCommand = new RelayCommand(async () =>
@@ -237,6 +327,8 @@ namespace Popcorn.ViewModels.Pages.Home.Movie.Details
 
             Movie = movie;
             IsMovieLoading = false;
+            Movie.FullHdAvailable = movie.Torrents.Any(torrent => torrent.Quality == "1080p");
+            LoadSubtitles(Movie);
 
             watch.Stop();
             var elapsedMs = watch.ElapsedMilliseconds;

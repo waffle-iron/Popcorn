@@ -155,6 +155,11 @@ namespace Popcorn.Services.Movies.Movie
             }
 
             var movies = wrapper.Movies ?? new List<MovieJson>();
+            Parallel.ForEach(movies, async movie =>
+            {
+                await TranslateMovieAsync(movie);
+            });
+
             var nbMovies = wrapper.TotalMovies;
 
             return new Tuple<IEnumerable<MovieJson>, int>(movies, nbMovies);
@@ -222,6 +227,11 @@ namespace Popcorn.Services.Movies.Movie
             }
 
             var movies = wrapper.Movies ?? new List<MovieJson>();
+            Parallel.ForEach(movies, async movie =>
+            {
+                await TranslateMovieAsync(movie);
+            });
+
             var nbMovies = wrapper.TotalMovies;
 
             return new Tuple<IEnumerable<MovieJson>, int>(movies, nbMovies);
@@ -289,6 +299,11 @@ namespace Popcorn.Services.Movies.Movie
             }
 
             var movies = wrapper.Movies ?? new List<MovieJson>();
+            Parallel.ForEach(movies, async movie =>
+            {
+                await TranslateMovieAsync(movie);
+            });
+
             var nbMovies = wrapper.TotalMovies;
 
             return new Tuple<IEnumerable<MovieJson>, int>(movies, nbMovies);
@@ -358,6 +373,11 @@ namespace Popcorn.Services.Movies.Movie
             }
 
             var movies = wrapper.Movies ?? new List<MovieJson>();
+            Parallel.ForEach(movies, async movie =>
+            {
+                await TranslateMovieAsync(movie);
+            });
+
             var nbMovies = wrapper.TotalMovies;
 
             return new Tuple<IEnumerable<MovieJson>, int>(movies, nbMovies);
@@ -369,20 +389,17 @@ namespace Popcorn.Services.Movies.Movie
         /// <param name="movieToTranslate">Movie to translate</param>
         /// <param name="ct">Used to cancel translation</param>
         /// <returns>Task</returns>
-        public async Task TranslateMovieAsync(MovieJson movieToTranslate, CancellationToken ct)
+        public async Task TranslateMovieAsync(MovieJson movieToTranslate)
         {
             var watch = Stopwatch.StartNew();
 
             try
             {
-                await Task.Run(async () =>
-                {
-                    var movie = await TmdbClient.GetMovieAsync(movieToTranslate.ImdbCode,
-                        MovieMethods.Credits);
-                    movieToTranslate.Title = movie?.Title;
-                    movieToTranslate.Genres = movie?.Genres?.Select(a => a.Name).ToList();
-                    movieToTranslate.DescriptionFull = movie?.Overview;
-                }, ct);
+                var movie = await TmdbClient.GetMovieAsync(movieToTranslate.ImdbCode,
+                    MovieMethods.Credits);
+                movieToTranslate.Title = movie?.Title;
+                movieToTranslate.Genres = movie?.Genres?.Select(a => a.Name).ToList();
+                movieToTranslate.DescriptionFull = movie?.Overview;
             }
             catch (Exception exception) when (exception is TaskCanceledException)
             {
@@ -393,7 +410,6 @@ namespace Popcorn.Services.Movies.Movie
             {
                 Logger.Error(
                     $"TranslateMovieAsync: {exception.Message}");
-                throw;
             }
             finally
             {
