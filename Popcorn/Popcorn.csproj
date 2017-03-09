@@ -94,6 +94,10 @@
       <HintPath>..\packages\AsyncEnumerator.2.0.1\lib\net45\AsyncEnumerable.dll</HintPath>
       <Private>True</Private>
     </Reference>
+    <Reference Include="CookComputing.XmlRpcV2, Version=2.5.0.0, Culture=neutral, PublicKeyToken=a7d6e17aa302004d, processorArchitecture=MSIL">
+      <HintPath>..\packages\xmlrpcnet.2.5.0\lib\net20\CookComputing.XmlRpcV2.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="DeltaCompressionDotNet, Version=1.1.0.0, Culture=neutral, PublicKeyToken=1d14d6e5194e7f4a, processorArchitecture=MSIL">
       <HintPath>..\packages\DeltaCompressionDotNet.1.1.0\lib\net20\DeltaCompressionDotNet.dll</HintPath>
       <Private>True</Private>
@@ -188,6 +192,10 @@
     </Reference>
     <Reference Include="NuGet.Squirrel, Version=3.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\squirrel.windows.1.5.2\lib\Net45\NuGet.Squirrel.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="OSDBnet, Version=0.4.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\OSDBnet.0.4.0.0\lib\net40\OSDBnet.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="RestSharp, Version=105.2.3.0, Culture=neutral, processorArchitecture=MSIL">
@@ -368,8 +376,7 @@
     <Compile Include="Messaging\StopPlayingMovieMessage.cs" />
     <Compile Include="Entity\ApplicationDbContext.cs" />
     <Compile Include="Models\Localization\Language.cs" />
-    <Compile Include="Models\Subtitle\SubtitlesWrapper.cs" />
-    <Compile Include="Models\Subtitle\SubtitleJson.cs" />
+    <Compile Include="Models\Subtitles\Subtitle.cs" />
     <Compile Include="Models\Trailer\Trailer.cs" />
     <Compile Include="Services\Movies\History\IMovieHistoryService.cs" />
     <Compile Include="Services\Movies\History\MovieHistoryService.cs" />
@@ -405,6 +412,8 @@
     <Compile Include="Services\Movies\Trailer\IMovieTrailerService.cs" />
     <Compile Include="Services\Settings\SettingsService.cs" />
     <Compile Include="Services\Settings\ISettingsService.cs" />
+    <Compile Include="Services\Subtitles\ISubtitlesService.cs" />
+    <Compile Include="Services\Subtitles\SubtitlesService.cs" />
     <Compile Include="UserControls\Home\Movie\Download\DownloadMovieUserControl.xaml.cs">
       <DependentUpon>DownloadMovieUserControl.xaml</DependentUpon>
     </Compile>

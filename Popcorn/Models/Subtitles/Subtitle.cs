@@ -1,58 +1,23 @@
-﻿using System;
-using GalaSoft.MvvmLight;
+﻿using GalaSoft.MvvmLight;
 using Popcorn.Helpers;
-using Popcorn.Models.Localization;
-using RestSharp.Deserializers;
 
-namespace Popcorn.Models.Subtitle
+namespace Popcorn.Models.Subtitles
 {
-    public class SubtitleJson : ObservableObject, IComparable<SubtitleJson>
+    public class Subtitle : ObservableObject
     {
         private string _filePath;
         private string _flagImagePath;
-        private int _hi;
-        private int _id;
-        private ILanguage _language;
-        private int _rating;
-        private string _url;
-
-        [DeserializeAs(Name = "id")]
-        public int Id
-        {
-            get { return _id; }
-            set { Set(() => Id, ref _id, value); }
-        }
-
-        [DeserializeAs(Name = "hi")]
-        public int Hi
-        {
-            get { return _hi; }
-            set { Set(() => Hi, ref _hi, value); }
-        }
-
-        [DeserializeAs(Name = "rating")]
-        public int Rating
-        {
-            get { return _rating; }
-            set { Set(() => Rating, ref _rating, value); }
-        }
-
-        [DeserializeAs(Name = "url")]
-        public string Url
-        {
-            get { return _url; }
-            set { Set(() => Url, ref _url, value); }
-        }
+        private OSDBnet.Subtitle _subtitle;
 
         /// <summary>
-        /// Language's subtitle
+        /// Subtitle
         /// </summary>
-        public ILanguage Language
+        public OSDBnet.Subtitle Sub
         {
-            get { return _language; }
+            get { return _subtitle; }
             set
             {
-                Set(() => Language, ref _language, value);
+                Set(() => Sub, ref _subtitle, value);
                 SetFlagImagePath();
             }
         }
@@ -76,21 +41,11 @@ namespace Popcorn.Models.Subtitle
         }
 
         /// <summary>
-        /// Used to comapre subtitle by english name
-        /// </summary>
-        /// <param name="subtitle">The subtitle to compare with</param>
-        /// <returns></returns>
-        public int CompareTo(SubtitleJson subtitle)
-        {
-            return string.Compare(Language.EnglishName, subtitle.Language.EnglishName, StringComparison.CurrentCulture);
-        }
-
-        /// <summary>
         /// Set file path of flag image depending on its language
         /// </summary>
         private void SetFlagImagePath()
         {
-            switch (Language.EnglishName)
+            switch (Sub.LanguageName.ToLower())
             {
                 case "english":
                     FlagImagePath = Constants.FlagImagesDirectory + "gb.png";

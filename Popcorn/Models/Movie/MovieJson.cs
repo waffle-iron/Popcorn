@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using GalaSoft.MvvmLight;
 using Popcorn.Models.Cast;
-using Popcorn.Models.Subtitle;
+using Popcorn.Models.Subtitles;
 using Popcorn.Models.Torrent;
 using RestSharp.Deserializers;
 
@@ -13,8 +13,8 @@ namespace Popcorn.Models.Movie
     {
         private List<CastJson> _cast;
 
-        private ObservableCollection<SubtitleJson> _availableSubtitles =
-            new ObservableCollection<SubtitleJson>();
+        private ObservableCollection<Subtitle> _availableSubtitles =
+            new ObservableCollection<Subtitle>();
 
         private string _dateUploaded;
         private string _posterImage;
@@ -44,7 +44,7 @@ namespace Popcorn.Models.Movie
         private string _mpaRating;
         private double _rating;
         private int _runtime;
-        private SubtitleJson _selectedSubtitle;
+        private Subtitle _selectedSubtitle;
         private string _title;
         private string _titleLong;
         private string _slug;
@@ -308,7 +308,7 @@ namespace Popcorn.Models.Movie
         /// <summary>
         /// Available subtitles
         /// </summary>
-        public ObservableCollection<SubtitleJson> AvailableSubtitles
+        public ObservableCollection<Subtitle> AvailableSubtitles
         {
             get { return _availableSubtitles; }
             set { Set(() => AvailableSubtitles, ref _availableSubtitles, value); }
@@ -317,7 +317,7 @@ namespace Popcorn.Models.Movie
         /// <summary>
         /// Selected subtitle
         /// </summary>
-        public SubtitleJson SelectedSubtitle
+        public Subtitle SelectedSubtitle
         {
             get { return _selectedSubtitle; }
             set { Set(() => SelectedSubtitle, ref _selectedSubtitle, value); }

@@ -167,17 +167,14 @@
                 VerticalAlignment="Center"
                 FontSize="18"
                 Text="{lex:LocText DownloadingSubtitlesLabel}" />
-            <controls:MetroProgressBar
+            <controls:ProgressRing
                 Grid.Row="3"
                 Grid.Column="1"
                 Grid.ColumnSpan="3"
                 Height="7"
                 Margin="0"
                 VerticalAlignment="Center"
-                Foreground="{DynamicResource AccentColorBrush}"
-                Maximum="1.0"
-                Minimum="0.0"
-                Value="{Binding SubtitlesDownloadProgress}" />
+                Foreground="{DynamicResource AccentColorBrush}" />
             <Button
                 Grid.Row="7"
                 Grid.Column="2"

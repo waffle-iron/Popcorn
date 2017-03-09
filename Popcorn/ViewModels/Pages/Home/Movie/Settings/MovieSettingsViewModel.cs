@@ -76,14 +76,14 @@ namespace Popcorn.ViewModels.Pages.Home.Movie.Settings
         public RelayCommand SetSubtitlesCommand => _setSubtitlesCommand ??
                                                    (_setSubtitlesCommand =
                                                        new RelayCommand(
-                                                           async () => { await Subtitles.LoadSubtitlesAsync(Movie); }));
+                                                           () => { Subtitles.LoadSubtitles(Movie); }));
 
         /// <summary>
         /// Command used to unset the movie's subtitles
         /// </summary>
         public RelayCommand UnSetSubtitlesCommand
             => _unSetSubtitlesCommand ?? (_unSetSubtitlesCommand = new RelayCommand(
-                () => Subtitles.ClearSubtitles()));
+                   () => Subtitles.ClearSubtitles()));
 
         /// <summary>
         /// Command used to download the movie

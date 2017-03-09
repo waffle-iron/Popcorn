@@ -9,6 +9,7 @@ using Popcorn.Models.Movie;
 using Popcorn.Services.Language;
 using Popcorn.Services.Movies.Movie;
 using Popcorn.Services.Movies.Trailer;
+using Popcorn.Services.Subtitles;
 using Popcorn.ViewModels.Pages.Home.Movie.Download;
 
 namespace Popcorn.ViewModels.Pages.Home.Movie.Details
@@ -79,13 +80,14 @@ namespace Popcorn.ViewModels.Pages.Home.Movie.Details
         /// <param name="movieService">Service used to interact with movies</param>
         /// <param name="languageService">Language service</param>
         /// <param name="movieTrailerService">The movie trailer service</param>
-        public MovieDetailsViewModel(IMovieService movieService, ILanguageService languageService, IMovieTrailerService movieTrailerService)
+        /// <param name="subtitlesService">The subtitles service</param>
+        public MovieDetailsViewModel(IMovieService movieService, ILanguageService languageService, IMovieTrailerService movieTrailerService, ISubtitlesService subtitlesService)
         {
             _movieTrailerService = movieTrailerService;
             _movieService = movieService;
             _cancellationLoadingToken = new CancellationTokenSource();
             _cancellationLoadingTrailerToken = new CancellationTokenSource();
-            DownloadMovie = new DownloadMovieViewModel(movieService, languageService);
+            DownloadMovie = new DownloadMovieViewModel(subtitlesService, languageService);
             RegisterMessages();
             RegisterCommands();
         }

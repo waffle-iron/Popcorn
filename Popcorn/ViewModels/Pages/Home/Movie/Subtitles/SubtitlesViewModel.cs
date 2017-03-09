@@ -1,9 +1,15 @@
-﻿using System.Threading;
+﻿using System;
+using System.Collections.ObjectModel;
+using System.Globalization;
+using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using GalaSoft.MvvmLight;
+using GalaSoft.MvvmLight.Threading;
 using NLog;
 using Popcorn.Models.Movie;
-using Popcorn.Services.Movies.Movie;
+using Popcorn.Models.Subtitles;
+using Popcorn.Services.Subtitles;
 
 namespace Popcorn.ViewModels.Pages.Home.Movie.Subtitles
 {
@@ -15,9 +21,9 @@ namespace Popcorn.ViewModels.Pages.Home.Movie.Subtitles
         private static readonly Logger Logger = LogManager.GetCurrentClassLogger();
 
         /// <summary>
-        /// The service used to interact with movies
+        /// The service used to interact with subtitles
         /// </summary>
-        private readonly IMovieService _movieService;
+        private readonly ISubtitlesService _subtitlesService;
 
         /// <summary>
         /// Token to cancel downloading subtitles
@@ -35,12 +41,17 @@ namespace Popcorn.ViewModels.Pages.Home.Movie.Subtitles
         private MovieJson _movie;
 
         /// <summary>
+        /// True if subtitles are loading
+        /// </summary>
+        private bool _loadingSubtitles;
+
+        /// <summary>
         /// Initializes a new instance of the SubtitlesViewModel class.
         /// </summary>
-        /// <param name="movieService">The movie service</param>
-        public SubtitlesViewModel(IMovieService movieService)
+        /// <param name="subtitlesService">The subtitles service</param>
+        public SubtitlesViewModel(ISubtitlesService subtitlesService)
         {
-            _movieService = movieService;
+            _subtitlesService = subtitlesService;
             _cancellationDownloadingSubtitlesToken = new CancellationTokenSource();
         }
 
@@ -51,6 +62,15 @@ namespace Popcorn.ViewModels.Pages.Home.Movie.Subtitles
         {
             get { return _movie; }
             set { Set(() => Movie, ref _movie, value); }
+        }
+
+        /// <summary>
+        /// True if subtitles are loading
+        /// </summary>
+        public bool LoadingSubtitles
+        {
+            get { return _loadingSubtitles; }
+            set { Set(() => LoadingSubtitles, ref _loadingSubtitles, value); }
         }
 
         /// <summary>
@@ -66,13 +86,54 @@ namespace Popcorn.ViewModels.Pages.Home.Movie.Subtitles
         /// Load the movie's subtitles asynchronously
         /// </summary>
         /// <param name="movie">The movie</param>
-        public async Task LoadSubtitlesAsync(MovieJson movie)
+        public void LoadSubtitles(MovieJson movie)
         {
             Logger.Debug(
                 $"Load subtitles for movie: {movie.Title}");
             Movie = movie;
             EnabledSubtitles = true;
-            await _movieService.LoadSubtitlesAsync(movie, _cancellationDownloadingSubtitlesToken.Token);
+            LoadingSubtitles = true;
+            Task.Run(() =>
+            {
+                try
+                {
+                    var languages = _subtitlesService.GetSubLanguages();
+
+                    var imdbId = 0;
+                    if (int.TryParse(new string(movie.ImdbCode
+                        .SkipWhile(x => !char.IsDigit(x))
+                        .TakeWhile(char.IsDigit)
+                        .ToArray()), out imdbId))
+                    {
+                        var subtitles = _subtitlesService.SearchSubtitlesFromImdb(
+                            languages.Select(lang => lang.SubLanguageID).Aggregate((a, b) => a + "," + b),
+                            imdbId.ToString());
+                        DispatcherHelper.CheckBeginInvokeOnUI(() =>
+                        {
+                            movie.AvailableSubtitles =
+                                new ObservableCollection<Subtitle>(subtitles.Select(sub => new Subtitle
+                                {
+                                    Sub = sub
+                                }).GroupBy(x => x.Sub.LanguageName,
+                                    (k, g) =>
+                                        g.Aggregate(
+                                            (a, x) =>
+                                                (Convert.ToDouble(x.Sub.Rating, CultureInfo.InvariantCulture) >=
+                                                 Convert.ToDouble(a.Sub.Rating, CultureInfo.InvariantCulture))
+                                                    ? x
+                                                    : a)));
+                            LoadingSubtitles = false;
+                        });
+                    }
+                }
+                catch (Exception)
+                {
+                    DispatcherHelper.CheckBeginInvokeOnUI(() =>
+                    {
+                        LoadingSubtitles = false;
+                    });
+                }
+            });
         }
 
         /// <summary>

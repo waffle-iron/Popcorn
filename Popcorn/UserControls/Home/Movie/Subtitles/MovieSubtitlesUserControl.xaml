@@ -2,10 +2,12 @@
     x:Class="Popcorn.UserControls.Home.Movie.Subtitles.MovieSubtitlesUserControl"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:controls="http://metro.mahapps.com/winfx/xaml/controls"
     xmlns:converters="clr-namespace:Popcorn.Converters"
     xmlns:customControls="clr-namespace:Popcorn.Controls"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:panels="clr-namespace:Popcorn.Panels"
     xmlns:subtitles1="clr-namespace:Popcorn.ViewModels.Pages.Home.Movie.Subtitles"
     d:DataContext="{d:DesignInstance subtitles1:SubtitlesViewModel}"
     d:DesignHeight="300"
@@ -14,18 +16,27 @@
     <UserControl.Resources>
         <ResourceDictionary>
             <converters:StringToUriConverter x:Key="UriToCachedImageConverter" />
+            <converters:BoolToVisibilityConverter x:Key="BoolToVisibilityConverter" />
+            <converters:BoolToInverseVisibilityConverter x:Key="BoolToInverseVisibilityConverter" />
         </ResourceDictionary>
     </UserControl.Resources>
     <Grid>
-        <ListBox
+        <controls:ProgressRing
+            HorizontalAlignment="Center"
+            VerticalAlignment="Center"
+            Foreground="{DynamicResource AccentColorBrush}"
+            Visibility="{Binding LoadingSubtitles, Converter={StaticResource BoolToInverseVisibilityConverter}}" />
+        <ListView
             ItemsSource="{Binding Movie.AvailableSubtitles}"
-            ScrollViewer.VerticalScrollBarVisibility="Disabled"
-            SelectedItem="{Binding Movie.SelectedSubtitle}">
-            <ListBox.Resources>
-                <Style x:Key="StandardListBox" TargetType="{x:Type ListBox}">
+            ScrollViewer.HorizontalScrollBarVisibility="Auto"
+            ScrollViewer.VerticalScrollBarVisibility="Auto"
+            SelectedItem="{Binding Movie.SelectedSubtitle}"
+            Visibility="{Binding LoadingSubtitles, Converter={StaticResource BoolToVisibilityConverter}}">
+            <ListView.Resources>
+                <Style x:Key="StandardListBox" TargetType="{x:Type ListView}">
                     <Setter Property="ItemContainerStyle">
                         <Setter.Value>
-                            <Style TargetType="ListBoxItem">
+                            <Style TargetType="ListViewItem">
                                 <Setter Property="HorizontalContentAlignment" Value="Stretch" />
                                 <Setter Property="VerticalContentAlignment" Value="Stretch" />
                                 <Setter Property="FocusVisualStyle" Value="{x:Null}" />
@@ -33,7 +44,7 @@
                                 <Setter Property="BorderBrush" Value="Transparent" />
                                 <Setter Property="Template">
                                     <Setter.Value>
-                                        <ControlTemplate TargetType="{x:Type ListBoxItem}">
+                                        <ControlTemplate TargetType="{x:Type ListViewItem}">
                                             <Grid Margin="4,0,4,4">
                                                 <Border
                                                     Background="{TemplateBinding Background}"
@@ -66,13 +77,13 @@
                     <Setter Property="BorderThickness" Value="0" />
                 </Style>
 
-                <Style BasedOn="{StaticResource StandardListBox}" TargetType="ListBox" />
-            </ListBox.Resources>
-            <ListBox.ItemTemplate>
+                <Style BasedOn="{StaticResource StandardListBox}" TargetType="ListView" />
+            </ListView.Resources>
+            <ListView.ItemTemplate>
                 <DataTemplate>
                     <StackPanel>
                         <TextBlock FontSize="40">
-                            <customControls:CapitalizeText Text="{Binding Language.EnglishName}" />
+                            <customControls:CapitalizeText Text="{Binding Sub.LanguageName}" />
                         </TextBlock>
                         <Image
                             HorizontalAlignment="Right"
@@ -81,12 +92,12 @@
                             Source="{Binding FlagImagePath, Converter={StaticResource UriToCachedImageConverter}}" />
                     </StackPanel>
                 </DataTemplate>
-            </ListBox.ItemTemplate>
-            <ListBox.ItemsPanel>
+            </ListView.ItemTemplate>
+            <ListView.ItemsPanel>
                 <ItemsPanelTemplate>
-                    <WrapPanel Orientation="Vertical" />
+                    <UniformGrid Columns="4" />
                 </ItemsPanelTemplate>
-            </ListBox.ItemsPanel>
-        </ListBox>
+            </ListView.ItemsPanel>
+        </ListView>
     </Grid>
 </UserControl>

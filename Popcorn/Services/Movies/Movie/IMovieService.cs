@@ -101,21 +101,5 @@ namespace Popcorn.Services.Movies.Movie
         /// <param name="ct">Used to cancel loading trailer</param>
         /// <returns>Video trailer</returns>
         Task<ResultContainer<Video>> GetMovieTrailerAsync(MovieJson movie, CancellationToken ct);
-
-        /// <summary>
-        /// Get the movie's subtitles according to a language
-        /// </summary>
-        /// <param name="movie">The movie of which to retrieve its subtitles</param>
-        /// <param name="ct">Cancellation token</param>
-        Task LoadSubtitlesAsync(MovieJson movie,
-            CancellationToken ct);
-
-        /// <summary>
-        /// Download a subtitle
-        /// </summary>
-        /// <param name="movie">The movie of which to retrieve its subtitles</param>
-        /// <param name="progress">Report the progress of the download</param>
-        /// <param name="ct">Cancellation token</param>
-        Task DownloadSubtitleAsync(MovieJson movie, IProgress<long> progress, CancellationTokenSource ct);
     }
 }

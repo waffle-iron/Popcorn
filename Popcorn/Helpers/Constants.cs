@@ -33,16 +33,6 @@ namespace Popcorn.Helpers
         public const string PopcornApi = "https://popcornapi.azurewebsites.net/api";
 
         /// <summary>
-        /// Endpoint to Yify Subtitles
-        /// </summary>
-        public const string YifySubtitles = "http://yifysubtitles.com";
-
-        /// <summary>
-        /// Endpoint to Yify Subtitles API
-        /// </summary>
-        public const string YifySubtitlesApi = "http://api.yifysubtitles.com/subs/";
-
-        /// <summary>
         /// Client ID for TMDb
         /// </summary>
         public const string TmDbClientId = "a21fe922d3bac6654e93450e9a18af1c";

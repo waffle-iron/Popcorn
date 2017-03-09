@@ -1,9 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.Diagnostics;
-using System.IO;
-using System.IO.Compression;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
@@ -12,7 +9,6 @@ using Popcorn.Helpers;
 using Popcorn.Models.Genre;
 using Popcorn.Models.Localization;
 using Popcorn.Models.Movie;
-using Popcorn.Models.Subtitle;
 using RestSharp;
 using TMDbLib.Client;
 using TMDbLib.Objects.General;
@@ -445,139 +441,6 @@ namespace Popcorn.Services.Movies.Movie
             }
 
             return trailers;
-        }
-
-        /// <summary>
-        /// Get the movie's subtitles according to a language
-        /// </summary>
-        /// <param name="movie">The movie of which to retrieve its subtitles</param>
-        /// <param name="ct">Cancellation token</param>
-        public async Task LoadSubtitlesAsync(MovieJson movie,
-            CancellationToken ct)
-        {
-            var watch = Stopwatch.StartNew();
-
-            var restClient = new RestClient(Constants.YifySubtitlesApi);
-            var request = new RestRequest("/{segment}", Method.GET);
-            request.AddUrlSegment("segment", movie.ImdbCode);
-
-            try
-            {
-                var response = await restClient.ExecuteGetTaskAsync<SubtitlesWrapper>(request, ct);
-                if (response.ErrorException != null)
-                    throw response.ErrorException;
-
-                var wrapper = response.Data;
-
-                var subtitles = new ObservableCollection<SubtitleJson>();
-                Dictionary<string, List<SubtitleJson>> movieSubtitles;
-                if (wrapper.Subtitles == null)
-                {
-                    await Task.CompletedTask;
-                    return;
-                }
-                if (wrapper.Subtitles.TryGetValue(movie.ImdbCode, out movieSubtitles))
-                {
-                    foreach (var subtitle in movieSubtitles)
-                    {
-                        var sub = subtitle.Value.Aggregate((sub1, sub2) => sub1.Rating > sub2.Rating ? sub1 : sub2);
-                        subtitles.Add(new SubtitleJson
-                        {
-                            Id = sub.Id,
-                            Language = new CustomLanguage
-                            {
-                                Culture = string.Empty,
-                                EnglishName = subtitle.Key,
-                                LocalizedName = string.Empty
-                            },
-                            Hi = sub.Hi,
-                            Rating = sub.Rating,
-                            Url = sub.Url
-                        });
-                    }
-                }
-
-                subtitles.Sort();
-                movie.AvailableSubtitles = subtitles;
-            }
-            catch (Exception exception) when (exception is TaskCanceledException)
-            {
-                Logger.Debug(
-                    "LoadSubtitlesAsync cancelled.");
-            }
-            catch (Exception exception)
-            {
-                Logger.Error(
-                    $"LoadSubtitlesAsync: {exception.Message}");
-                throw;
-            }
-            finally
-            {
-                watch.Stop();
-                var elapsedMs = watch.ElapsedMilliseconds;
-                Logger.Debug(
-                    $"LoadSubtitlesAsync ({movie.ImdbCode}) in {elapsedMs} milliseconds.");
-            }
-        }
-
-        /// <summary>
-        /// Download a subtitle
-        /// </summary>
-        /// <param name="movie">The movie of which to retrieve its subtitles</param>
-        /// <param name="progress">Report the progress of the download</param>
-        /// <param name="ct">Cancellation token</param>
-        public async Task DownloadSubtitleAsync(MovieJson movie, IProgress<long> progress, CancellationTokenSource ct)
-        {
-            if (movie.SelectedSubtitle == null)
-                return;
-
-            var watch = Stopwatch.StartNew();
-
-            var filePath = Constants.Subtitles + movie.ImdbCode + "\\" + movie.SelectedSubtitle.Language.EnglishName +
-                           ".zip";
-
-            try
-            {
-                var result = await
-                    DownloadFileHelper.DownloadFileTaskAsync(
-                        Constants.YifySubtitles + movie.SelectedSubtitle.Url, filePath, progress: progress, ct: ct);
-
-                if (result.Item3 == null && !string.IsNullOrEmpty(result.Item2))
-                {
-                    using (var archive = ZipFile.OpenRead(result.Item2))
-                    {
-                        foreach (var entry in archive.Entries)
-                        {
-                            if (entry.FullName.StartsWith("_") ||
-                                !entry.FullName.EndsWith(".srt", StringComparison.OrdinalIgnoreCase)) continue;
-                            var subtitlePath = Path.Combine(Constants.Subtitles + movie.ImdbCode,
-                                entry.FullName);
-                            if (!File.Exists(subtitlePath))
-                                entry.ExtractToFile(subtitlePath);
-
-                            movie.SelectedSubtitle.FilePath = subtitlePath;
-                        }
-                    }
-                }
-            }
-            catch (Exception exception) when (exception is TaskCanceledException)
-            {
-                Logger.Debug(
-                    "DownloadSubtitleAsync cancelled.");
-            }
-            catch (Exception exception)
-            {
-                Logger.Error(
-                    $"DownloadSubtitleAsync: {exception.Message}");
-                throw;
-            }
-            finally
-            {
-                watch.Stop();
-                var elapsedMs = watch.ElapsedMilliseconds;
-                Logger.Debug(
-                    $"DownloadSubtitleAsync ({movie.ImdbCode}) in {elapsedMs} milliseconds.");
-            }
         }
     }
 }
